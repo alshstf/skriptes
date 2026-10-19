@@ -1,0 +1,772 @@
+{
+  "qid": "Q28494",
+  "name": "Генрих фон Клейст",
+  "born": "1777-10-18",
+  "died": "1811-11-21",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%BB%D0%B5%D0%B9%D1%81%D1%82%2C_%D0%93%D0%B5%D0%BD%D1%80%D0%B8%D1%85_%D1%84%D0%BE%D0%BD",
+      "rev": 155314716
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Heinrich_von_Kleist",
+      "rev": 1380417652
+    },
+    {
+      "id": "dewiki",
+      "url": "https://de.wikipedia.org/wiki/Heinrich_von_Kleist",
+      "rev": 271158522
+    }
+  ],
+  "chapters": [
+    {
+      "key": "army-years",
+      "title": "Сирота, гвардия, война",
+      "from": 1777,
+      "to": 1799
+    },
+    {
+      "key": "search-years",
+      "title": "Поиски себя: Париж, Тун, разрыв",
+      "from": 1800,
+      "to": 1803
+    },
+    {
+      "key": "koenigsberg-captivity",
+      "title": "Кёнигсберг и французский плен",
+      "from": 1804,
+      "to": 1807
+    },
+    {
+      "key": "dresden-years",
+      "title": "Дрезден и «Феб»",
+      "from": 1808,
+      "to": 1809
+    },
+    {
+      "key": "berlin-end",
+      "title": "Берлин, цензура, Ванзее",
+      "from": 1810,
+      "to": 1811
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1777",
+      "date": {
+        "from": "1777-10-18",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение во Франкфурте-на-Одере",
+      "long": "Родился во Франкфурте-на-Одере в старинной дворянской семье; отец служил штабс-капитаном в местном гарнизоне. В немецкой статье дата рождения указана также как 10 октября.",
+      "place": {
+        "label": "Франкфурт-на-Одере"
+      },
+      "chapter": "army-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Бернд Генрих Вильгельм фон Клейст (нем. Bernd Heinrich Wilhelm von Kleist; 18 октября 1777, Франкфурт-на-Одере"
+      }
+    },
+    {
+      "key": "loss-1788",
+      "date": {
+        "from": "1788",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца, отъезд учиться в Берлин",
+      "long": "После смерти отца Иоахима Фридриха фон Клейста Генриха отправили учиться в Берлин.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "army-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После смерти отца в 1788 году Генриха послали учиться в Берлин."
+      }
+    },
+    {
+      "key": "war-1792",
+      "date": {
+        "from": "1792",
+        "to": "1799",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Служба в гвардейском полку",
+      "long": "Поступил в гвардейский полк в Потсдаме; в армии подружился с Эрнстом фон Пфулем и Августом Рюле фон Лилиенштерном. Вышел в отставку лейтенантом.",
+      "place": {
+        "label": "Потсдам"
+      },
+      "chapter": "army-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1792 году он поступил на службу в гвардейский полк в Потсдаме.… Ушел со службы в 1799 году в ранге лейтенанта."
+      }
+    },
+    {
+      "key": "war-1793",
+      "date": {
+        "from": "1793",
+        "to": "1795",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Война против Франции",
+      "long": "Участвовал в войне против революционной Франции, в частности в осаде Майнца.",
+      "chapter": "army-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1793—1795 годы Клейст участвовал в войне против Франции."
+      }
+    },
+    {
+      "key": "loss-1793",
+      "date": {
+        "from": "1793-02-03",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Умерла мать, Юлиана Ульрике фон Клейст (урождённая фон Паннвиц).",
+      "chapter": "army-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "3 февраля 1793 года умирает мать Генриха."
+      }
+    },
+    {
+      "key": "education-1799",
+      "date": {
+        "from": "1799",
+        "to": "1800",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в университете Виадрина",
+      "long": "После отставки изучал математику, физику, естественное право и латынь во Франкфурте-на-Одере; через три семестра учёбу бросил.",
+      "place": {
+        "label": "Франкфурт-на-Одере"
+      },
+      "chapter": "army-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "begann Kleist im April 1799 an der Universität Frankfurt an der Oder neben Mathematik als Hauptfach Physik"
+      }
+    },
+    {
+      "key": "career-1800",
+      "date": {
+        "from": "1800",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Служба чиновником в Берлине",
+      "long": "Получил низшую должность в берлинском министерстве; решение было связано с помолвкой.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "search-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1800 году получил пост чиновника в министерстве финансов в Берлине."
+      }
+    },
+    {
+      "key": "love-1800",
+      "date": {
+        "from": "1800-01",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Помолвка с Вильгельминой фон Ценге",
+      "long": "Обручился с Вильгельминой фон Ценге, дочерью коменданта гарнизона. Семья невесты требовала, чтобы он занял государственную должность.",
+      "chapter": "search-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "1799 lernte er Wilhelmine von Zenge, die Tochter eines Garnisonskommandanten, kennen, mit der er sich Januar 1800 verlobte."
+      }
+    },
+    {
+      "key": "other-1800",
+      "date": {
+        "from": "1800-09-09",
+        "to": "1800-10-22",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Тайная поездка в Вюрцбург",
+      "long": "Шесть недель провёл в Вюрцбурге по поручению министерства под вымышленным именем; письма этого времени невесте и сестре Ульрике показывают его литературный дар.",
+      "place": {
+        "label": "Вюрцбург"
+      },
+      "chapter": "search-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Für das Ministerium war Kleist im Sommer 1800 in geheimer Mission… von 9. September bis 22. Oktober in Würzburg"
+      }
+    },
+    {
+      "key": "relocation-1801",
+      "date": {
+        "from": "1801",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Поездка в Париж с сестрой Ульрикой",
+      "long": "Поехал с сестрой Ульрикой в Париж; город показался ему безнравственным, он задумался о жизни земледельца.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "search-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Frühjahr 1801 reiste er zusammen mit seiner Schwester Ulrike über Dresden nach Paris."
+      }
+    },
+    {
+      "key": "other-1801",
+      "date": {
+        "from": "1801-03-22",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Жизненный кризис, письмо о Канте",
+      "long": "В письме Вильгельмине описал крушение прежнего жизненного плана; прежняя наука связывает его с чтением Канта («кризис Канта»), хотя часть исследователей оспаривает эту трактовку.",
+      "chapter": "search-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "In einem berühmten Brief an Wilhelmine vom 22. März 1801 notierte Kleist:"
+      }
+    },
+    {
+      "key": "love-1802",
+      "date": {
+        "from": "1802",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Разрыв помолвки с Вильгельминой",
+      "long": "Вильгельмина не захотела жить с ним как крестьянка; помолвка расторгнута.",
+      "place": {
+        "label": "Тун"
+      },
+      "chapter": "search-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "und er löste 1802 die Verlobung mit ihr."
+      }
+    },
+    {
+      "key": "illness-1802",
+      "date": {
+        "from": "1802",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Депрессия, «чёрная меланхолия»",
+      "long": "После ссоры с невестой впал в депрессию, врачи диагностировали «чёрную меланхолию»; Ульрика вернула его в Веймар.",
+      "chapter": "search-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1802 году ссорится со своей невестой Вильгельминой и впадает в депрессию. Врачи диагностируют «чёрную меланхолию»."
+      }
+    },
+    {
+      "key": "relocation-1802",
+      "date": {
+        "from": "1802-04",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь на острове в Тун, Швейцария",
+      "long": "Поселился в домике на острове Шерцлиг близ Туна; здесь работал над первой пьесой, «Робертом Гискаром» и комедией о разбитом кувшине.",
+      "place": {
+        "label": "Тун"
+      },
+      "works": [
+        {
+          "ref": "family-schroffenstein",
+          "note": "работа над трагедией шла в Туне, начата в Париже"
+        },
+        {
+          "ref": "robert-guiskard",
+          "note": "продолжал работу над трагедией в Туне"
+        },
+        {
+          "ref": "the-broken-jug",
+          "note": "начал комедию в Туне"
+        }
+      ],
+      "chapter": "search-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Ab April 1802 wohnte er auf der Scherzliginsel in der Aare in Thun in der Schweiz."
+      }
+    },
+    {
+      "key": "creation-1803",
+      "date": {
+        "from": "1803-10",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Уничтожение рукописи, творческий кризис",
+      "long": "В Париже сжёг готовые части трагедии, отчаявшись воплотить замысел; сообщил сестре, что небо отказывает ему в славе, и решил искать смерти в бою во французской армии.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "robert-guiskard",
+          "note": "сожжённые части трагедии; письмо Ульрике от 26 октября 1803"
+        }
+      ],
+      "chapter": "search-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Dort verbrannte er die fertiggestellten Teile des Guiskard in tiefer Verzweiflung… schrieb er am 26. Oktober 1803 an Ulrike."
+      }
+    },
+    {
+      "key": "career-1805",
+      "date": {
+        "from": "1805-05-06",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Служба в Кёнигсберге",
+      "long": "Начал службу диатаром в Кёнигсберге и должен был обучаться у Кристиана Якоба Крауса; здесь закончил комедию о разбитом кувшине и работал над другими вещами.",
+      "place": {
+        "label": "Кёнигсберг"
+      },
+      "works": [
+        {
+          "ref": "the-broken-jug",
+          "note": "закончил в Кёнигсберге"
+        },
+        {
+          "ref": "amphitryon",
+          "note": "работа в Кёнигсберге"
+        },
+        {
+          "ref": "penthesilea",
+          "note": "работа в Кёнигсберге"
+        },
+        {
+          "ref": "michael-kohlhaas",
+          "note": "работа в Кёнигсберге"
+        },
+        {
+          "ref": "earthquake-in-chile",
+          "note": "работа в Кёнигсберге"
+        }
+      ],
+      "chapter": "koenigsberg-captivity",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "arbeitete er ab dem 6. Mai 1805 auf dessen Empfehlung als Diätar"
+      }
+    },
+    {
+      "key": "career-1806",
+      "date": {
+        "from": "1806-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Решение уйти с госслужбы",
+      "long": "Сообщил Рюле фон Лилиенштерну о намерении уйти с государственной службы и жить «драматическими работами».",
+      "chapter": "koenigsberg-captivity",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im August 1806 teilte Kleist seinem Freund Rühle von Lilienstern seine Absicht mit, aus dem Staatsdienst zu scheiden"
+      }
+    },
+    {
+      "key": "persecution-1807",
+      "date": {
+        "from": "1807-01",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Арест французами как шпиона",
+      "long": "По дороге в Берлин арестован французскими властями как шпион, содержался в форте-де-Жу, затем в лагере для военнопленных в Шалон-сюр-Марн. Там, вероятно, написана «Маркиза д’О».",
+      "place": {
+        "label": "Шалон-сюр-Марн"
+      },
+      "works": [
+        {
+          "ref": "marquise-of-o",
+          "note": "по предположению исследователей, написана в плену"
+        },
+        {
+          "ref": "penthesilea",
+          "note": "работа над пьесой продолжалась в плену"
+        }
+      ],
+      "chapter": "koenigsberg-captivity",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "wurden Kleist und seine Begleiter im Januar 1807 von den französischen Behörden als angebliche Spione verhaftet"
+      }
+    },
+    {
+      "key": "relocation-1807",
+      "date": {
+        "from": "1807-08",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Дрезден",
+      "long": "Поселился в Дрездене, где сблизился с Кёрнером, Тиком, Каспаром Давидом Фридрихом и Адамом Мюллером.",
+      "place": {
+        "label": "Дрезден"
+      },
+      "chapter": "koenigsberg-captivity",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В конце августа 1807 года поселился в Дрездене, где стал учителем принца саксен-веймарского Бернхарда."
+      }
+    },
+    {
+      "key": "career-1808",
+      "date": {
+        "from": "1808-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Издание журнала «Феб»",
+      "long": "Вместе с Адамом Мюллером начал издавать журнал «Феб»; Гёте, получивший первый номер, ответил непониманием. Журнал выходил около года.",
+      "place": {
+        "label": "Дрезден"
+      },
+      "works": [
+        {
+          "ref": "penthesilea",
+          "note": "фрагмент напечатан в первом номере журнала"
+        },
+        {
+          "ref": "the-broken-jug",
+          "note": "пьеса представлена публике в это время"
+        }
+      ],
+      "chapter": "dresden-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Zusammen mit Müller gab Kleist ab Januar 1808 das Journal für die Kunst (so der Untertitel) Phöbus heraus."
+      }
+    },
+    {
+      "key": "creation-1808",
+      "date": {
+        "from": "1808-12",
+        "precision": "month"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Антинаполеоновская драма об Арминии",
+      "long": "Закончил антинаполеоновскую драму об Арминии под впечатлением сопротивления Испании и оккупации Пруссии.",
+      "place": {
+        "label": "Дрезден"
+      },
+      "works": [
+        {
+          "ref": "hermannsschlacht",
+          "note": "написана под впечатлением от сопротивления Испании Наполеону"
+        }
+      ],
+      "chapter": "dresden-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Dezember 1808 vollendete Kleist unter dem Eindruck des Widerstands Spaniens gegen Napoleon, der Besetzung Preußens und der Anfänge des österreichischen Freiheitskampfes das Drama Die Hermannsschlacht."
+      }
+    },
+    {
+      "key": "career-1809",
+      "date": {
+        "from": "1809",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Несостоявшийся патриотический еженедельник",
+      "long": "В Праге вместе с Дальманом планировал патриотический еженедельник; из-за капитуляции Австрии замысел не осуществился.",
+      "place": {
+        "label": "Прага"
+      },
+      "chapter": "dresden-years",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Am 31. Mai 1809 kehrten sie nach Prag zurück… planten, ein Wochenblatt mit dem Titel Germania herauszugeben"
+      }
+    },
+    {
+      "key": "love-1810",
+      "date": {
+        "from": "1810",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Дружба с Генриеттой Фогель",
+      "long": "Сблизился с Генриеттой Фогель, смертельно больной раком; близкими их отношения стали осенью 1811 года.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "berlin-end",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1810 году Клейст подружился с Генриеттой Фогель, больной раком."
+      }
+    },
+    {
+      "key": "career-1810",
+      "date": {
+        "from": "1810",
+        "to": "1811",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Издание «Берлинских вечерних листков»",
+      "long": "С 1 октября 1810 года издавал ежедневную газету «Берлинские вечерние листки» с местными новостями и полицейскими сводками; печатал в ней эссе и прозу.",
+      "place": {
+        "label": "Берлин"
+      },
+      "works": [
+        {
+          "ref": "marionette-theatre",
+          "note": "эссе опубликовано в этой газете"
+        }
+      ],
+      "chapter": "berlin-end",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "основанная им газета «Berliner Abendblätter» просуществовала лишь полгода, до 1811 года."
+      }
+    },
+    {
+      "key": "career-1810-2",
+      "date": {
+        "from": "1810-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отказ Ифланда ставить пьесу",
+      "long": "Директор берлинского театра Иффланд отклонил постановку пьесы.",
+      "place": {
+        "label": "Берлин"
+      },
+      "works": [
+        {
+          "ref": "kathchen-von-heilbronn",
+          "note": "пьеса отвергнута театром"
+        }
+      ],
+      "chapter": "berlin-end",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im April 1810 erschien der erste Band seiner Erzählungen… und im September Das Käthchen von Heilbronn, dessen Aufführung Iffland als Direktor der Berliner Bühne jedoch ablehnte."
+      }
+    },
+    {
+      "key": "persecution-1811",
+      "date": {
+        "from": "1811",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Закрытие газеты из-за цензуры",
+      "long": "Газету пришлось закрыть из-за ужесточения цензуры; попытка получить должность в прусской администрации не удалась.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "berlin-end",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Im Frühjahr 1811 musste die Herausgabe der Zeitung wegen verschärfter Zensurbestimmungen eingestellt werden."
+      }
+    },
+    {
+      "key": "poverty-1811",
+      "date": {
+        "from": "1811",
+        "precision": "year"
+      },
+      "type": "poverty",
+      "tier": "major",
+      "short": "Нищета, письма с просьбой о ссуде",
+      "long": "Почти без средств, он рассылал просьбы о ссуде королю, принцу и канцлеру Харденбергу без ответа; писал рассказы ради заработка.",
+      "place": {
+        "label": "Берлин"
+      },
+      "works": [
+        {
+          "ref": "betrothal-st-domingo",
+          "note": "рассказы написаны в сжатые сроки ради заработка"
+        }
+      ],
+      "chapter": "berlin-end",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Nahezu mittellos… (Brief an Marie von Kleist vom 10. November 1811)"
+      }
+    },
+    {
+      "key": "death-1811",
+      "date": {
+        "from": "1811-11-21",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Самоубийство вместе с Генриеттой Фогель",
+      "long": "Застрелил Генриетту Фогель с её согласия, затем застрелился на берегу Кляйнер-Ванзее. Оба похоронены на месте.",
+      "place": {
+        "label": "Клайнер-Ванзе"
+      },
+      "chapter": "berlin-end",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Mit ihrem Einverständnis erschoss Kleist am 21. November 1811 am Stolper Loch, dem heutigen Kleinen Wannsee"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "family-schroffenstein",
+      "title": "Семейство Шроффенштейн",
+      "written": {
+        "from": 1801,
+        "to": 1802
+      }
+    },
+    {
+      "ref": "robert-guiskard",
+      "title": "Роберт Гискар",
+      "written": {
+        "from": 1802,
+        "to": 1803
+      }
+    },
+    {
+      "ref": "the-broken-jug",
+      "title": "Разбитый кувшин",
+      "qid": "Q486602",
+      "written": {
+        "from": 1802,
+        "to": 1806
+      }
+    },
+    {
+      "ref": "penthesilea",
+      "title": "Пентесилея",
+      "qid": "Q451932",
+      "written": {
+        "from": 1805,
+        "to": 1807
+      }
+    },
+    {
+      "ref": "amphitryon",
+      "title": "Амфитрион",
+      "written": {
+        "from": 1805,
+        "to": 1806
+      }
+    },
+    {
+      "ref": "michael-kohlhaas",
+      "title": "Михаэль Кольхаас",
+      "written": {
+        "from": 1805,
+        "to": 1808
+      }
+    },
+    {
+      "ref": "earthquake-in-chile",
+      "title": "Землетрясение в Чили",
+      "written": {
+        "from": 1805,
+        "to": 1807
+      }
+    },
+    {
+      "ref": "marquise-of-o",
+      "title": "Маркиза д'О",
+      "qid": "Q1214716",
+      "written": {
+        "from": 1807,
+        "to": 1808
+      }
+    },
+    {
+      "ref": "kathchen-von-heilbronn",
+      "title": "Кэтхен из Гейльбронна",
+      "written": {
+        "from": 1807,
+        "to": 1808
+      }
+    },
+    {
+      "ref": "hermannsschlacht",
+      "title": "Битва Германа",
+      "written": {
+        "from": 1808,
+        "to": 1808
+      }
+    },
+    {
+      "ref": "prince-of-homburg",
+      "title": "Принц Фридрих Гомбургский",
+      "written": {
+        "from": 1809,
+        "to": 1811
+      }
+    },
+    {
+      "ref": "marionette-theatre",
+      "title": "О театре марионеток",
+      "qid": "Q330958",
+      "written": {
+        "from": 1810,
+        "to": 1810
+      }
+    },
+    {
+      "ref": "betrothal-st-domingo",
+      "title": "Обручение на Сан-Доминго",
+      "written": {
+        "from": 1811,
+        "to": 1811
+      }
+    }
+  ]
+}

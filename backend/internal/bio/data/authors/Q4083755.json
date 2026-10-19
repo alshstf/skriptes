@@ -1,0 +1,270 @@
+{
+  "qid": "Q4083755",
+  "name": "Кирилл Станиславович Бенедиктов",
+  "born": "1969-03-02",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%B5%D0%BD%D0%B5%D0%B4%D0%B8%D0%BA%D1%82%D0%BE%D0%B2%2C_%D0%9A%D0%B8%D1%80%D0%B8%D0%BB%D0%BB_%D0%A1%D1%82%D0%B0%D0%BD%D0%B8%D1%81%D0%BB%D0%B0%D0%B2%D0%BE%D0%B2%D0%B8%D1%87",
+      "rev": 152998264
+    }
+  ],
+  "chapters": [
+    {
+      "key": "moscow-msu",
+      "title": "Минск, Москва, университет",
+      "from": 1969,
+      "to": 1992
+    },
+    {
+      "key": "europe-abroad",
+      "title": "Бельгия и работа за рубежом",
+      "from": 1993,
+      "to": 2003
+    },
+    {
+      "key": "debut-prizes",
+      "title": "Дебют и премии",
+      "from": 2004,
+      "to": 2008
+    },
+    {
+      "key": "editor-ethnogenesis",
+      "title": "Редактор «Этногенеза»",
+      "from": 2009,
+      "to": 2016
+    },
+    {
+      "key": "analytics-montenegro",
+      "title": "Аналитика и Черногория",
+      "from": 2017,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1969",
+      "date": {
+        "from": "1969-03-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Минске",
+      "long": "Родился в Минске 2 марта 1969 года.",
+      "place": {
+        "label": "Минск"
+      },
+      "chapter": "moscow-msu",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 2 марта 1969, Минск"
+      }
+    },
+    {
+      "key": "education-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Окончание истфака МГУ",
+      "long": "Окончил исторический факультет МГУ, где занимался доколумбовыми цивилизациями Латинской Америки и новейшей историей Европы и Америки. Кандидат исторических наук.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "moscow-msu",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1990 году закончил исторический факультет МГУ"
+      }
+    },
+    {
+      "key": "relocation-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отъезд в Бельгию, Колледж Европы",
+      "long": "Уехал в Бельгию и окончил Колледж Европы в Брюгге. Затем работал за рубежом, в том числе в ОБСЕ и в Южной Корее.",
+      "place": {
+        "label": "Брюгге"
+      },
+      "chapter": "europe-abroad",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1993 году уехал в Бельгию, где окончил Колледж Европы в городе Брюгге."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия имени Манфреда Вёрнера",
+      "long": "Стал лауреатом премии по исследованию демократических институтов имени Манфреда Вёрнера.",
+      "chapter": "europe-abroad",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1996 году стал лауреатом премии по исследованию демократических институтов имени Манфреда Вёрнера."
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "«Бронзовая улитка», «Странник», дебют года",
+      "long": "Получил премии «Бронзовая улитка» и «Странник» в категории крупной формы, а также «Еврокон» как лучший дебют.",
+      "works": [
+        {
+          "ref": "war-for-asgard",
+          "note": "премии 2004 года присуждены за этот роман"
+        }
+      ],
+      "chapter": "debut-prizes",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2004 — Бронзовая улитка, Крупная форма, «Война за „Асгард“» (2003)."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "to": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Главный редактор проекта «Этногенез»",
+      "long": "После возвращения в Россию был главным редактором литературного проекта «Этногенез».",
+      "chapter": "editor-ethnogenesis",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 2009—2012 годах был главным редактором литературного проекта «Этногенез»"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Юбилейная медаль имени Чехова",
+      "long": "Союз писателей России вручил ему юбилейную медаль имени Чехова в Центральном доме литераторов.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "editor-ethnogenesis",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В марте 2010 Кириллу Бенедиктову была вручена юбилейная медаль имени Чехова от Союза писателей России."
+      }
+    },
+    {
+      "key": "career-2017",
+      "date": {
+        "from": "2017-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Колонки на сайте RT",
+      "long": "Пишет авторские колонки на сайте телеканала RT, а также в «Известиях» и «Взгляде».",
+      "chapter": "analytics-montenegro",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "на сайте телеканала RT (с января 2017 года)"
+      }
+    },
+    {
+      "key": "relocation-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Черногории",
+      "long": "По данным страницы в Facebook, в начале 2020 года жил в городе Бар в Черногории.",
+      "place": {
+        "label": "Бар"
+      },
+      "chapter": "analytics-montenegro",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "по состоянию на начало 2020 года проживает в городе Бар (Черногория)"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "war-for-asgard",
+      "title": "Война за «Асгард»",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "voskhod-shestogo-solntsa",
+      "title": "Восход шестого солнца",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "tochka-lagranzha",
+      "title": "Точка Лагранжа",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "coral-island",
+      "title": "Коралловый остров",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "blockade-hunt-for-monster",
+      "title": "Блокада. Охота на монстра",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "zayib",
+      "title": "Зайиб",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "godzilla-i-habermas",
+      "title": "Годзилла и Хабермас",
+      "written": {
+        "from": 2013,
+        "to": 2013
+      }
+    }
+  ]
+}

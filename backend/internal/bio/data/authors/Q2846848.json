@@ -1,0 +1,269 @@
+{
+  "qid": "Q2846848",
+  "name": "Андрей Викторович Рубанов",
+  "born": "1969-07-25",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A0%D1%83%D0%B1%D0%B0%D0%BD%D0%BE%D0%B2%2C_%D0%90%D0%BD%D0%B4%D1%80%D0%B5%D0%B9_%D0%92%D0%B8%D0%BA%D1%82%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87",
+      "rev": 153949866
+    }
+  ],
+  "chapters": [
+    {
+      "key": "podmoskovye",
+      "title": "Подмосковное детство",
+      "from": 1969,
+      "to": 1986
+    },
+    {
+      "key": "armiya-devyanostye",
+      "title": "Армия и девяностые",
+      "from": 1987,
+      "to": 1995
+    },
+    {
+      "key": "sledstvie-chechnya",
+      "title": "Арест, оправдание, Чечня",
+      "from": 1996,
+      "to": 2000
+    },
+    {
+      "key": "proza",
+      "title": "Проза и признание",
+      "from": 2001,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1969",
+      "date": {
+        "from": "1969-07-25",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в селе Узуново",
+      "long": "Родился в селе Узуново Серебряно-Прудского района Московской области, где провёл детство.",
+      "place": {
+        "label": "Узуново"
+      },
+      "chapter": "podmoskovye",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 25 июля 1969, с. Узуново, Серебряно-Прудский район, Московская область"
+      }
+    },
+    {
+      "key": "relocation-1982",
+      "date": {
+        "from": "1982",
+        "to": "1991",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Электростали",
+      "long": "С 1982 по 1991 год жил в Электростали на востоке Московской области.",
+      "place": {
+        "label": "Электросталь"
+      },
+      "chapter": "podmoskovye",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1982—1991 годах проживал на востоке Московской области в городе Электростали."
+      }
+    },
+    {
+      "key": "war-1987",
+      "date": {
+        "from": "1987",
+        "to": "1989",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Срочная служба в войсках ПВО",
+      "long": "В 1987–1989 годах проходил срочную службу в войсках ПВО.",
+      "chapter": "armiya-devyanostye",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1987—1989 годах проходил срочную службу в войсках ПВО."
+      }
+    },
+    {
+      "key": "child-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Антона",
+      "long": "Родился сын Антон.",
+      "chapter": "armiya-devyanostye",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Сын — Антон Рубанов (род. 1995)"
+      }
+    },
+    {
+      "key": "persecution-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Арест по обвинению в мошенничестве",
+      "long": "В 1996 году заключён под стражу по обвинению в мошенничестве.",
+      "works": [
+        {
+          "ref": "sazhajte-i-vyrastet"
+        }
+      ],
+      "chapter": "sledstvie-chechnya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1996 году был заключён под стражу по обвинению в мошенничестве."
+      }
+    },
+    {
+      "key": "persecution-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Полное оправдание по суду",
+      "long": "В 1999 году был полностью оправдан по делу о мошенничестве.",
+      "chapter": "sledstvie-chechnya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1999 году полностью оправдан."
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "to": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Жизнь и работа в Чечне",
+      "long": "В 1999–2000 годах жил в Чечне, работал пресс-секретарём Бислана Гантамирова, первого заместителя полномочного представителя Правительства РФ.",
+      "place": {
+        "label": "Чечня"
+      },
+      "chapter": "sledstvie-chechnya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1999—2000 годах жил в Чечне, где работал пресс-секретарем первого заместителя полномочного представителя Правительства РФ в Чеченской республике Бислана Гантамирова."
+      }
+    },
+    {
+      "key": "child-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Ариадны",
+      "long": "Родилась дочь Ариадна.",
+      "chapter": "proza",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дочь — Ариадна Рубанова (род. 2012)"
+      }
+    },
+    {
+      "key": "career-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Ясная Поляна»",
+      "long": "Получил премию «Ясная Поляна» в номинации «Современная русская проза».",
+      "works": [
+        {
+          "ref": "patriot"
+        }
+      ],
+      "chapter": "proza",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат литературной премии «Ясная Поляна» в номинации «Современная русская проза» за роман «Патриот» (2017 г)."
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Национальный бестселлер»",
+      "long": "Стал лауреатом премии «Национальный бестселлер».",
+      "works": [
+        {
+          "ref": "finist-yasnyj-sokol"
+        }
+      ],
+      "chapter": "proza",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат литературной премии «Национальный бестселлер» за роман «Финист-Ясный Сокол» (2019 г)."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "sazhajte-i-vyrastet",
+      "title": "Сажайте, и вырастет",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "hlorofiliya",
+      "title": "Хлорофилия",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "zhivaya-zemlya",
+      "title": "Живая земля",
+      "written": {
+        "from": 2011,
+        "to": 2011
+      }
+    },
+    {
+      "ref": "patriot",
+      "title": "Патриот",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "finist-yasnyj-sokol",
+      "title": "Финист — Ясный Сокол",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    }
+  ]
+}

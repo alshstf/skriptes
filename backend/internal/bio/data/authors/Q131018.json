@@ -1,0 +1,532 @@
+{
+  "qid": "Q131018",
+  "name": "Франсуа Рабле",
+  "born": "1494",
+  "died": "1553-04-09",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A0%D0%B0%D0%B1%D0%BB%D0%B5%2C_%D0%A4%D1%80%D0%B0%D0%BD%D1%81%D1%83%D0%B0",
+      "rev": 154859162
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Fran%C3%A7ois_Rabelais",
+      "rev": 1371560560
+    }
+  ],
+  "chapters": [
+    {
+      "key": "cloister-years",
+      "title": "Туренское детство и монастыри",
+      "from": 1494,
+      "to": 1526
+    },
+    {
+      "key": "medical-studies",
+      "title": "Уход из монастыря, медицина",
+      "from": 1527,
+      "to": 1531
+    },
+    {
+      "key": "lyon-years",
+      "title": "Лион, врачебная практика и книги",
+      "from": 1532,
+      "to": 1539
+    },
+    {
+      "key": "censure-patrons",
+      "title": "Покровители дю Белле, запреты, Мец",
+      "from": 1540,
+      "to": 1547
+    },
+    {
+      "key": "last-years",
+      "title": "Рим, привилегия и последние годы",
+      "from": 1548,
+      "to": 1553
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1494",
+      "date": {
+        "from": "1494",
+        "precision": "year"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Турени",
+      "long": "Родился около 1494 года в Шиноне или в поместье Девинье в Сёйи, в Турени; точная дата рождения неизвестна.",
+      "place": {
+        "label": "Сёйи"
+      },
+      "chapter": "cloister-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Рабле родился около 1494 года, в Шиноне, небольшом городке провинции Турень"
+      }
+    },
+    {
+      "key": "career-1520",
+      "date": {
+        "from": "1520",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Францисканский монастырь в Фонтене-ле-Конт",
+      "long": "К 1520 году жил в Фонтене-ле-Конт, подружился с францисканцем Пьером Ламі и переписывался с Гийомом Бюде.",
+      "place": {
+        "label": "Фонтене-ле-Конт"
+      },
+      "chapter": "cloister-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "By 1520, he was at Fontenay-le-Comte in Poitou where he became friends with Pierre Lamy, a fellow Franciscan, and corresponded with Guillaume Budé"
+      }
+    },
+    {
+      "key": "persecution-1523",
+      "date": {
+        "from": "1523",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Запрет греческого, конфискация книг",
+      "long": "После запрета Сорбонной изучения греческого у Рабле и Ламі конфисковали греческие книги; Рабле обратился к папе Клименту VII и перешёл к бенедиктинцам в Мальезе.",
+      "place": {
+        "label": "Фонтене-ле-Конт"
+      },
+      "chapter": "cloister-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the Sorbonne banned the study of Greek in 1523… both Lamy and Rabelais had their Greek books confiscated"
+      }
+    },
+    {
+      "key": "faith-1527",
+      "date": {
+        "from": "1527",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Уход из монастыря ради медицины",
+      "long": "Около 1527 года покинул монастырь ради изучения медицины в университетах Пуатье и Монпелье; по английской статье, уход был самовольным.",
+      "chapter": "medical-studies",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Позднее, вероятно около 1527 года, Рабле покинул монастырь для обучения медицине в университетах Пуатье и Монпелье."
+      }
+    },
+    {
+      "key": "education-1530",
+      "date": {
+        "from": "1530-09-17",
+        "precision": "day"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Медицинский факультет в Монпелье",
+      "long": "17 сентября 1530 года зачислен на медицинский факультет в Монпелье, 1 ноября получил степень бакалавра.",
+      "place": {
+        "label": "Монпелье"
+      },
+      "chapter": "medical-studies",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "17 сентября 1530 года он был зачислен слушателем медицинского факультета университета в Монпелье, а 1 ноября получил степень бакалавра."
+      }
+    },
+    {
+      "key": "relocation-1532",
+      "date": {
+        "from": "1532",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Лион, врач и редактор",
+      "long": "Переехал в Лион, где совмещал врачебную практику с редактированием латинских трудов для печатника Себастьяна Грифа.",
+      "place": {
+        "label": "Лион"
+      },
+      "works": [
+        {
+          "ref": "pantagruel"
+        }
+      ],
+      "chapter": "lyon-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1532 году он перебрался в Лион, один из культурных центров Франции."
+      }
+    },
+    {
+      "key": "career-1534",
+      "date": {
+        "from": "1534-01",
+        "to": "1534-04",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Поездка в Рим с Жаном дю Белле",
+      "long": "Сопровождал Жана дю Белле в Рим как секретарь и личный врач с января по апрель 1534 года; город произвёл на него сильное впечатление.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "lyon-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "when du Bellay was sent to Rome in January 1534 to convince Pope Clément VII not to excommunicate Henry VIII, he was accompanied by Rabelais"
+      }
+    },
+    {
+      "key": "persecution-1535",
+      "date": {
+        "from": "1535-02",
+        "to": "1535-08",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Исчезновение из Лиона после дела о листовках",
+      "long": "13 февраля 1535 года тихо оставил лионский Отель-Дьё и скрывался до августа из-за дела о листовках, после которого Франциск I запретил книгопечатание.",
+      "place": {
+        "label": "Лион"
+      },
+      "chapter": "lyon-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Rabelais quietly left the Hôtel Dieu de Lyon on 13 February 1535 after receiving his salary, disappearing until August 1535 as a result of the tumultuous Affair of the Placards"
+      }
+    },
+    {
+      "key": "faith-1536",
+      "date": {
+        "from": "1536-01-17",
+        "precision": "day"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Папское прощение и разрешение практиковать",
+      "long": "Папа Павел III разрешил ему вступить в бенедиктинский монастырь и заниматься медициной, кроме хирургии; прежде самовольный уход считался вероотступничеством.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "lyon-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 17 January 1536, Paul III issued a papal brief authorizing Rabelais to join a Benedictine monastery and practice medicine, as long as he refrained from surgery."
+      }
+    },
+    {
+      "key": "education-1537",
+      "date": {
+        "from": "1537-05-22",
+        "precision": "day"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень доктора медицины",
+      "long": "22 мая 1537 года получил в Монпелье звание доктора медицины.",
+      "place": {
+        "label": "Монпелье"
+      },
+      "chapter": "lyon-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "22 мая 1537 года получил там звание доктора медицины."
+      }
+    },
+    {
+      "key": "child-1540",
+      "date": {
+        "from": "1540",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Узаконение двоих детей",
+      "long": "При содействии семьи дю Белле двое детей Рабле, Франсуа и Жюни, были узаконены папой Павлом III.",
+      "chapter": "censure-patrons",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Семейство дю Белле снова помогло Рабле в 1540 году — в легализации двух его детей (Огюста Франсуа и Жюни)."
+      }
+    },
+    {
+      "key": "loss-1540",
+      "date": {
+        "from": "1540",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть двухлетнего сына Теодюля",
+      "long": "В 1540 году в Лионе умер двухлетний третий ребёнок Рабле, Теодюль.",
+      "place": {
+        "label": "Лион"
+      },
+      "chapter": "censure-patrons",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1540, Rabelais lived for a short time in Turin as part of the household of du Bellay's brother, Guillaume. It was at this time that his two children were legitimized by Paul III, the same year that his third child (Théodule) died in Lyon at the age of two."
+      }
+    },
+    {
+      "key": "persecution-1543",
+      "date": {
+        "from": "1543",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Осуждение книг Сорбонной",
+      "long": "Сорбонна осудила обе книги; от последствий Рабле спасло покровительство дю Белле.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "pantagruel"
+        },
+        {
+          "ref": "gargantua"
+        }
+      ],
+      "chapter": "censure-patrons",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1543, both Gargantua and Pantagruel were condemned by the Sorbonne, then a theological college."
+      }
+    },
+    {
+      "key": "relocation-1545",
+      "date": {
+        "from": "1545",
+        "to": "1547",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Укрытие в Меце от парижских богословов",
+      "long": "Жил в вольном имперском городе Меце, спасаясь от осуждения парижских богословов; там начал работу над Четвёртой книгой.",
+      "place": {
+        "label": "Мец"
+      },
+      "works": [
+        {
+          "ref": "fourth-book",
+          "note": "работа над Четвёртой книгой начата ещё в Меце"
+        }
+      ],
+      "chapter": "censure-patrons",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1545—1547 годах Рабле жил в Меце, республиканском имперском вольном городе, где нашёл укрытие от осуждения парижских богословов."
+      }
+    },
+    {
+      "key": "career-1545",
+      "date": {
+        "from": "1545-09-19",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Королевская привилегия на шесть лет",
+      "long": "19 сентября 1545 года получил от Франциска I разрешение на продолжение публикаций сроком на шесть лет.",
+      "chapter": "censure-patrons",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Rabelais had received approval from King Francis I to continue to publish his collection on 19 September 1545 for six years."
+      }
+    },
+    {
+      "key": "persecution-1546",
+      "date": {
+        "from": "1546-12-31",
+        "precision": "day"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Запрет Третьей книги Сорбонной",
+      "long": "Третья книга, вышедшая под настоящим именем автора, вошла в список книг, запрещённых Сорбонной.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "third-book"
+        }
+      ],
+      "chapter": "censure-patrons",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "on 31 December 1546, the Tiers Livre joined the Sorbonne's list of banned books"
+      }
+    },
+    {
+      "key": "career-1547",
+      "date": {
+        "from": "1547",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Приходы Сен-Кристоф-дю-Жамбе и Мёдон",
+      "long": "Назначен священником (кюре) приходов Сен-Кристоф-дю-Жамбе и Мёдон; от должности отказался незадолго до смерти.",
+      "place": {
+        "label": "Мёдон"
+      },
+      "chapter": "censure-patrons",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1547 году он был назначен викарием Сен-Кристоф-дю-Жамбе и Мёдона"
+      }
+    },
+    {
+      "key": "career-1548",
+      "date": {
+        "from": "1548",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Рим, врач кардинала дю Белле",
+      "long": "Отправился в Рим личным врачом кардинала дю Белле, оставив в Лионе рукопись из одиннадцати глав Четвёртой книги.",
+      "place": {
+        "label": "Рим"
+      },
+      "works": [
+        {
+          "ref": "fourth-book",
+          "note": "по Ж. Платтару, публикация части принесла деньги и позволила ответить критикам"
+        }
+      ],
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He dropped off a manuscript containing eleven chapters and ending mid-sentence in Lyon on his way to Rome to work as Cardinal du Bellay's personal physician in 1548."
+      }
+    },
+    {
+      "key": "career-1550",
+      "date": {
+        "from": "1550-08-06",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Королевская привилегия на издание",
+      "long": "6 августа 1550 года получил королевскую привилегию на исключительное право издавать свои сочинения; помог молодой кардинал Шатильон.",
+      "works": [
+        {
+          "ref": "fourth-book"
+        }
+      ],
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Rabelais received a royal privilege on 6 Aug 1550 for the exclusive right to publish his work in French, Tuscan, Greek, and Latin."
+      }
+    },
+    {
+      "key": "persecution-1552",
+      "date": {
+        "from": "1552",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Приостановка продаж Четвёртой книги",
+      "long": "Парижский парламент приостановил продажу Четвёртой книги; король вскоре подтвердил поддержку книги.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "fourth-book"
+        }
+      ],
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the Paris Parlement suspended the sale of The Fourth Book, published in 1552, despite Henry II having accorded him the royal privilege"
+      }
+    },
+    {
+      "key": "career-1553",
+      "date": {
+        "from": "1553-01",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Отказ от должности кюре",
+      "long": "В январе 1553 года отказался от должности кюре.",
+      "chapter": "last-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Rabelais resigned from the curacy in January 1553 and died in Paris later that year."
+      }
+    },
+    {
+      "key": "death-1553",
+      "date": {
+        "from": "1553-04-09",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Париже",
+      "long": "Умер в Париже 9 апреля 1553 года; похоронен на кладбище церкви Сен-Поль.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "last-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Рабле умер 9 апреля 1553 года в возрасте семидесяти лет и был похоронен на кладбище церкви святого Павла в Париже"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "pantagruel",
+      "title": "Пантагрюэль",
+      "written": {
+        "from": 1532,
+        "to": 1532
+      }
+    },
+    {
+      "ref": "gargantua",
+      "title": "Гаргантюа",
+      "written": {
+        "from": 1533,
+        "to": 1534
+      }
+    },
+    {
+      "ref": "third-book",
+      "title": "Третья книга",
+      "written": {
+        "from": 1546,
+        "to": 1546
+      }
+    },
+    {
+      "ref": "fourth-book",
+      "title": "Четвёртая книга",
+      "written": {
+        "from": 1545,
+        "to": 1552
+      }
+    }
+  ]
+}

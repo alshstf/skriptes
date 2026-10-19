@@ -1,0 +1,277 @@
+{
+  "qid": "Q236660",
+  "name": "Лиза Марклунд",
+  "born": "1962-09-09",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B0%D1%80%D0%BA%D0%BB%D1%83%D0%BD%D0%B4%2C_%D0%9B%D0%B8%D0%B7%D0%B0",
+      "rev": 147653718
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Liza_Marklund",
+      "rev": 1371733754
+    },
+    {
+      "id": "svwiki",
+      "url": "https://sv.wikipedia.org/wiki/Liza_Marklund",
+      "rev": 59774217
+    }
+  ],
+  "chapters": [
+    {
+      "key": "north-and-wandering",
+      "title": "Норрботтен и годы скитаний",
+      "from": 1962,
+      "to": 1985
+    },
+    {
+      "key": "journalism",
+      "title": "Репортёр в газетах и на ТВ",
+      "from": 1986,
+      "to": 1994
+    },
+    {
+      "key": "debut-and-bomber",
+      "title": "Дебют и Анника Бенгтзон",
+      "from": 1995,
+      "to": 2003
+    },
+    {
+      "key": "fame-and-unicef",
+      "title": "Признание, ЮНИСЕФ, споры",
+      "from": 2004,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1962",
+      "date": {
+        "from": "1962-09-09",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Польмарке близ Питео",
+      "long": "Родилась в Польмарке под Питео, Норрботтен; старшая из трёх детей в семье.",
+      "place": {
+        "label": "Польмарк, Питео"
+      },
+      "chapter": "north-and-wandering",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "född 9 september 1962 i Pålmark i Piteå landsförsamling i Norrbottens län"
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют документальным романом с Марией Эрикссон",
+      "long": "Дебютировала как писательница книгой, написанной вместе с Марией Эрикссон; книга позже стала предметом публичных споров о достоверности.",
+      "works": [
+        {
+          "ref": "gomda"
+        }
+      ],
+      "chapter": "debut-and-bomber",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "debuterade Marklund som författare 1995 med boken Gömda, skriven tillsammans med Maria Eriksson"
+      }
+    },
+    {
+      "key": "creation-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первый детектив о журналистке Аннике Бенгтзон",
+      "long": "Первый криминальный роман вышел в малом издательстве Ordupplaget и получил премию Полони и дебютный приз Шведской академии детектива.",
+      "works": [
+        {
+          "ref": "sprangaren"
+        }
+      ],
+      "chapter": "debut-and-bomber",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "1998 gav hon ut sin första kriminalroman, Sprängaren, på det lilla förlaget Ordupplaget"
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Основание издательства «Пиратфёрлагет»",
+      "long": "Вместе с Сигге Сигфридссоном, Яном Гийу и Анн-Мари Скарп основала издательство, где авторы и издатель делят прибыль поровну.",
+      "chapter": "debut-and-bomber",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "År 1999 startade Marklund Piratförlaget tillsammans med Sigge Sigfridsson, Jan Guillou och Ann-Marie Skarp"
+      }
+    },
+    {
+      "key": "career-1999-2",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание «Автор года» от профсоюза SKTF",
+      "long": "Признана автором года профсоюза SKTF.",
+      "works": [
+        {
+          "ref": "studio-69"
+        }
+      ],
+      "chapter": "debut-and-bomber",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "Marklund utsågs till Årets författare 1999"
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая экранизация — фильм по мотивам романа",
+      "long": "Вышел шведский фильм по её роману в постановке Колина Натли; второй фильм вышел в 2003 году.",
+      "works": [
+        {
+          "ref": "sprangaren"
+        }
+      ],
+      "chapter": "debut-and-bomber",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They premiered in 2001 and 2003."
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Назначение послом ЮНИСЕФ",
+      "long": "Назначена послом Детского фонда ООН из-за интереса к правам человека, прежде всего детей; освещает детское рабство и ВИЧ у детей.",
+      "chapter": "fame-and-unicef",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "2004 utnämndes Marklund till ambassadör för FN:s barnfond, Unicef"
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Шведская литературная премия",
+      "long": "Получила Шведскую литературную премию за лучший роман года.",
+      "chapter": "fame-and-unicef",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "vann Svenska Litteraturpriset 2007"
+      }
+    },
+    {
+      "key": "other-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Спор о достоверности документальной книги",
+      "long": "Журналистка Моника Антонссон выпустила книгу, оспорившую правдивость документального романа; издание стали обозначать как «основано на реальной истории».",
+      "works": [
+        {
+          "ref": "gomda"
+        }
+      ],
+      "chapter": "fame-and-unicef",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "2008 gav journalisten Monica Antonsson ut boken Mia – sanningen om Gömda"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первое место в списке «Нью-Йорк Таймс»",
+      "long": "Роман, написанный совместно с Джеймсом Паттерсоном, возглавил список бестселлеров; Марклунд стала вторым шведским автором после Ларссона.",
+      "works": [
+        {
+          "ref": "postcard-killers"
+        }
+      ],
+      "chapter": "fame-and-unicef",
+      "evidence": {
+        "source": "svwiki",
+        "quote": "I augusti 2010 blev hon den andra skandinaviska författaren någonsin som toppade New York Times bestsellerlista."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "gomda",
+      "title": "Гёмда (Погребённая заживо)",
+      "written": {
+        "from": 1995,
+        "to": 1995
+      }
+    },
+    {
+      "ref": "sprangaren",
+      "title": "Сprängaren (Бомбист)",
+      "written": {
+        "from": 1998,
+        "to": 1998
+      }
+    },
+    {
+      "ref": "studio-69",
+      "title": "Студия 69",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "postcard-killers",
+      "title": "Убийцы по открыткам",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    }
+  ]
+}

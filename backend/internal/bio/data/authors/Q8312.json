@@ -1,0 +1,379 @@
+{
+  "qid": "Q8312",
+  "name": "Николас Мейер",
+  "born": "1945-12-24",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B5%D0%B9%D0%B5%D1%80%2C_%D0%9D%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D1%81",
+      "rev": 152165598
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Nicholas_Meyer",
+      "rev": 1376908914
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-ayova",
+      "title": "Нью-Йорк и Айова",
+      "from": 1945,
+      "to": 1972
+    },
+    {
+      "key": "kholms-i-kino",
+      "title": "Холмс и первые фильмы",
+      "from": 1973,
+      "to": 1981
+    },
+    {
+      "key": "zvezdny-put",
+      "title": "«Звёздный путь» и ядерная война на экране",
+      "from": 1982,
+      "to": 1992
+    },
+    {
+      "key": "utrata-i-televidenie",
+      "title": "Утрата и телевидение",
+      "from": 1993,
+      "to": 2005
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Поздние годы",
+      "from": 2006,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1945",
+      "date": {
+        "from": "1945-12-24",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Нью-Йорке",
+      "long": "Родился в семье психиатра и психоаналитика Бернарда Мейера и пианистки Элли Мейер; у него три сестры.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "detstvo-ayova",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Николас Мейер (англ. Nicholas Meyer, 24 декабря 1945, Нью-Йорк, штат Нью-Йорк, США)"
+      }
+    },
+    {
+      "key": "loss-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери, пианистки Элли",
+      "long": "В 1960 году умерла мать Мейера, концертная пианистка Элли (урождённая Кассман), первая жена его отца.",
+      "chapter": "detstvo-ayova",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his first wife, concert pianist Elly (died 1960; née Kassman)"
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало работы сценаристом в кино",
+      "long": "В 1973 году начал карьеру в кино как сценарист фильма «Вторжение девушек-пчёл».",
+      "chapter": "kholms-i-kino",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Карьеру в кино начал в 1973 году как сценарист к фильму «Вторжение девушек-пчёл»."
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Известность после романа о Холмсе",
+      "long": "Известность пришла после публикации романа о Шерлоке Холмсе, который борется с кокаиновой зависимостью с помощью Зигмунда Фрейда.",
+      "works": [
+        {
+          "ref": "seven-per-cent-solution"
+        }
+      ],
+      "chapter": "kholms-i-kino",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Известность пришла после публикации романа «The Seven-Per-Cent Solution» (1974)"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Номинация на «Оскар» за адаптацию романа",
+      "long": "Фильм по роману Мейера вышел в 1976 году; за сценарий-адаптацию собственного романа он был номинирован на «Оскар».",
+      "works": [
+        {
+          "ref": "seven-per-cent-solution",
+          "note": "Мейер сам адаптировал свой роман в сценарий"
+        }
+      ],
+      "chapter": "kholms-i-kino",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1976 году по роману был снят фильм «Критическое решение», за который Мейер был номинирован на «Оскар» в категории: «Лучший адаптированный сценарий»."
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Режиссёрский дебют в кино",
+      "long": "Дебютировал как режиссёр фантастическим фильмом; получил премию «Сатурн» за сценарий и Гран-при фестиваля в Авориазе.",
+      "chapter": "kholms-i-kino",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Режиссёрским дебютом для Мейера стал фантастический фильм «Путешествие в машине времени» (1979), за который он был награждён кинопремией «Сатурн» за лучший сценарий"
+      }
+    },
+    {
+      "key": "career-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Приход в «Звёздный путь»",
+      "long": "Снял второй полнометражный фильм серии «Звёздный путь»; по английской статье, сценарий переписал за двенадцать дней, отказавшись от переговоров о контракте. Принёс вторую премию «Сатурн».",
+      "chapter": "zvezdny-put",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Следующей режиссёрской работой стал фильм Звёздный путь 2: Гнев Хана (1982), который принёс Мейеру вторую премию «Сатурн» (на этот раз за режиссуру)."
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Телефильм о ядерной войне",
+      "long": "Поставил телевизионный фильм о последствиях ядерной атаки на США; номинирован на «Эмми». Согласился работать на телевидении после прочтения сценария Эдварда Хьюма.",
+      "chapter": "zvezdny-put",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1983 году был режиссёром телевизионного фильма о ядерной войне «На следующий день» (номинация на премию «Эмми»)."
+      }
+    },
+    {
+      "key": "child-1987",
+      "date": {
+        "from": "1987-12-04",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Дилан",
+      "long": "Родилась дочь Дилан, впоследствии сценарист.",
+      "chapter": "zvezdny-put",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Dylan Meyer 1987-12-04"
+      }
+    },
+    {
+      "key": "loss-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "В 1988 году умер отец, нью-йоркский психиатр и психоаналитик Бернард Константин Мейер.",
+      "chapter": "zvezdny-put",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bernard Constant Meyer (1910–1988), a Manhattan psychiatrist and psychoanalyst"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Шестой фильм «Звёздного пути»",
+      "long": "Снял шестой фильм серии и стал соавтором сценария; он остался последним для оригинального актёрского состава.",
+      "chapter": "zvezdny-put",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Путешествие домой» (1986) и «Неоткрытая страна» (1991) также номинировался на премию «Сатурн» как лучший сценарист"
+      }
+    },
+    {
+      "key": "loss-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Лорен от рака",
+      "long": "В 1993 году от рака молочной железы умерла жена Мейера Лорен Тейлор Мейер, с которой у него было две дочери.",
+      "chapter": "utrata-i-televidenie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Lauren died of breast cancer in 1993."
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Последняя режиссёрская работа",
+      "long": "В 1999 году в последний раз выступил режиссёром — телефильм для HBO; позже работал главным образом как продюсер и сценарист.",
+      "chapter": "utrata-i-televidenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Последний раз садился в режиссёрское кресло в 1999 году, на съёмках телефильма «Вендетта»."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сценарий для Мартина Скорсезе",
+      "long": "В 2006 году вместе со Скорсезе работал над сценарием по биографии Теодора Рузвельта.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2006, he teamed with Martin Scorsese to write the screenplay for Scorsese's adaptation"
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Мини-сериал о Гудини",
+      "long": "Сценарий мини-сериала телеканала History Channel о Гудини был номинирован на премию Гильдии сценаристов, сам сериал получил семь номинаций на «Эмми».",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The two part, four hour, History Channel event miniseries, Houdini, starring Adrien Brody, aired over Labor Day 2014."
+      }
+    },
+    {
+      "key": "career-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия за снижение угрозы ядерной войны",
+      "long": "Получил Future of Life Award за уменьшение риска ядерной войны средствами повествования.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2023, Meyer won the Future of Life Award, for reducing the risk of nuclear war through the power of storytelling."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "seven-per-cent-solution",
+      "title": "Вам вреден кокаин, мистер Холмс",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "west-end-horror",
+      "title": "The West End Horror",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "canary-trainer",
+      "title": "The Canary Trainer",
+      "written": {
+        "from": 1993,
+        "to": 1993
+      }
+    },
+    {
+      "ref": "peculiar-protocols",
+      "title": "The Adventure of the Peculiar Protocols",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "return-of-the-pharaoh",
+      "title": "The Return of the Pharaoh",
+      "written": {
+        "from": 2021,
+        "to": 2021
+      }
+    },
+    {
+      "ref": "telegram-from-hell",
+      "title": "The Telegram From Hell",
+      "written": {
+        "from": 2024,
+        "to": 2024
+      }
+    },
+    {
+      "ref": "the-real-thing",
+      "title": "The Real Thing",
+      "written": {
+        "from": 2025,
+        "to": 2025
+      }
+    }
+  ]
+}

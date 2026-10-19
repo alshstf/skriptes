@@ -1,0 +1,141 @@
+{
+  "qid": "Q3809058",
+  "name": "Джон Болл",
+  "born": "1911-07-08",
+  "died": "1988-10-15",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%BE%D0%BB%D0%BB%2C_%D0%94%D0%B6%D0%BE%D0%BD_%28%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%29",
+      "rev": 154708080
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/John_Ball_%28novelist%29",
+      "rev": 1370088348
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-milwaukee",
+      "title": "Скенектади и Милуоки",
+      "from": 1911,
+      "to": 1932
+    },
+    {
+      "key": "magiya-i-redakcii",
+      "title": "Магия, небо и редакции",
+      "from": 1933,
+      "to": 1964
+    },
+    {
+      "key": "virdzhil-tibbs",
+      "title": "Вирджил Тиббс и поздние годы",
+      "from": 1965,
+      "to": 1988
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1911",
+      "date": {
+        "from": "1911-07-08",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Скенектади",
+      "long": "Родился в Скенектади, штат Нью-Йорк; вырос в Милуоки, штат Висконсин.",
+      "place": {
+        "label": "Скенектади"
+      },
+      "chapter": "detstvo-milwaukee",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "John Dudley Ball Jr. (July 8, 1911 – October 15, 1988)"
+      }
+    },
+    {
+      "key": "career-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Карьера фокусника-полупрофессионала",
+      "long": "Во время учёбы в колледже выступал как полупрофессиональный фокусник под именами «Жак Моринтелл» и «Хаудузи»; в 1933 году попал в справочник «Кто есть кто в магии».",
+      "chapter": "magiya-i-redakcii",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was listed in the \"Who's Who in Magic\" in the May 1933 issue of The Sphinx"
+      }
+    },
+    {
+      "key": "other-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Приём в «Нерегулярные части с Бейкер-стрит»",
+      "long": "Принят в общество «Нерегулярные части с Бейкер-стрит» (поклонники Шерлока Холмса) под титулом «Оксфордский летун».",
+      "chapter": "magiya-i-redakcii",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was invested in the BSI in 1960 as \"The Oxford Flier.\""
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Эдгара По за лучший первый роман",
+      "long": "Премия Эдгара Аллана По за лучший первый роман — за книгу о чернокожем детективе Вирджиле Тиббсе, позднее экранизированную.",
+      "works": [
+        {
+          "ref": "in-the-heat-of-the-night"
+        }
+      ],
+      "chapter": "virdzhil-tibbs",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Эдгара Аллана По 1966-01-01"
+      }
+    },
+    {
+      "key": "death-1988",
+      "date": {
+        "from": "1988-10-15",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Энсино",
+      "long": "Умер в Энсино, Калифорния; похоронен на кладбище Форест-Лаун в Голливуд-Хиллз, Лос-Анджелес.",
+      "place": {
+        "label": "Энсино"
+      },
+      "chapter": "virdzhil-tibbs",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He died in 1988 and was buried at the Forest Lawn, Hollywood Hills Cemetery in Los Angeles."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "in-the-heat-of-the-night",
+      "title": "Душной ночью в Каролине",
+      "written": {
+        "from": 1965,
+        "to": 1965
+      }
+    }
+  ]
+}

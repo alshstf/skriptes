@@ -1,0 +1,393 @@
+{
+  "qid": "Q4113348",
+  "name": "Владимир Николаевич Владко",
+  "born": "1901-01-08",
+  "died": "1974-04-21",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%92%D0%BB%D0%B0%D0%B4%D0%BA%D0%BE%2C_%D0%92%D0%BB%D0%B0%D0%B4%D0%B8%D0%BC%D0%B8%D1%80_%D0%9D%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0%D0%B5%D0%B2%D0%B8%D1%87",
+      "rev": 153447207
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Volodymyr_Vladko",
+      "rev": 1350651910
+    }
+  ],
+  "chapters": [
+    {
+      "key": "petersburg-voronezh",
+      "title": "Петербург и Воронеж",
+      "from": 1901,
+      "to": 1920
+    },
+    {
+      "key": "kharkiv",
+      "title": "Харьков: фантастика и цензура",
+      "from": 1921,
+      "to": 1940
+    },
+    {
+      "key": "war",
+      "title": "Война у микрофона",
+      "from": 1941,
+      "to": 1945
+    },
+    {
+      "key": "kyiv",
+      "title": "Киев: посты и возвращение в фантастику",
+      "from": 1946,
+      "to": 1974
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1901",
+      "date": {
+        "from": "1901-01-08",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Санкт-Петербурге",
+      "long": "Родился в Санкт-Петербурге в семье газетного техника и акушерки; настоящая фамилия — Еремченко.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "petersburg-voronezh",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Санкт-Петербург 1901-01-08"
+      }
+    },
+    {
+      "key": "career-1917",
+      "date": {
+        "from": "1917",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первые публикации, работа репортёром",
+      "long": "Первые публикации относятся к 1917 году, когда он начал работать репортёром.",
+      "chapter": "petersburg-voronezh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first publications dates to 1917, when he began working as a reporter."
+      }
+    },
+    {
+      "key": "career-1917-2",
+      "date": {
+        "from": "1917",
+        "to": "1921",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Журналистская работа в Воронеже",
+      "long": "В 1917–1919 годах сотрудник газеты «Воронежская коммуна», в 1919–1921 годах — заведующий отделом пропаганды Центропечати в Воронеже.",
+      "place": {
+        "label": "Воронеж"
+      },
+      "chapter": "petersburg-voronezh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1917 to 1919 he worked as a feature writer for the Voronezh Commune newspaper, and from 1919 to 1921, as head of the propaganda department of Tsentropechat in Voronezh."
+      }
+    },
+    {
+      "key": "education-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Воронежского института народного просвещения",
+      "long": "Окончил Воронежский институт народного просвещения и начал работать журналистом.",
+      "place": {
+        "label": "Воронеж"
+      },
+      "chapter": "petersburg-voronezh",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1921 год — окончил Воронежский институт народного просвещения, начал работать журналистом"
+      }
+    },
+    {
+      "key": "relocation-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Харьков",
+      "long": "Переехал в Харьков, где работал в редакции газеты «Харьковский пролетарий», затем в других изданиях.",
+      "place": {
+        "label": "Харьков"
+      },
+      "chapter": "kharkiv",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He moved to Kharkov in 1921, where he worked as a literary employee of the editorial office of Kharkov Proletarian newspaper"
+      }
+    },
+    {
+      "key": "career-1929",
+      "date": {
+        "from": "1929",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Фантастический дебют и премия на конкурсе",
+      "long": "Дебютировал как автор фантастики повестью, отмеченной премией на всеукраинском конкурсе.",
+      "works": [
+        {
+          "ref": "robots-go"
+        }
+      ],
+      "chapter": "kharkiv",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He made his debut as a science fiction writer, with the story The Robots Go, which was awarded a prize at the all-Ukrainian competition in 1929."
+      }
+    },
+    {
+      "key": "career-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вступление в Союз писателей",
+      "long": "Стал членом Союза писателей СССР.",
+      "chapter": "kharkiv",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was a member of the Union of Soviet Writers (1934)."
+      }
+    },
+    {
+      "key": "persecution-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Изъятие тиража романа цензурой",
+      "long": "Роман, где европейская страна нападает на СССР, вышел в 1934 году; почти весь тираж был изъят из продажи и уничтожен по цензурным причинам.",
+      "works": [
+        {
+          "ref": "aerotorpedoes-turn-back"
+        }
+      ],
+      "chapter": "kharkiv",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "\"Aerotorpedoes turn back\", published by Dytvydav in 1934."
+      }
+    },
+    {
+      "key": "career-1935",
+      "date": {
+        "from": "1935-10",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Успех романа о полёте на Венеру",
+      "long": "Киевский журнал завершил публикацию романа; он имел большой успех, и издательство «Дитвидав» сразу заключило с автором договор.",
+      "place": {
+        "label": "Киев"
+      },
+      "works": [
+        {
+          "ref": "argonauts-of-the-universe",
+          "note": "журнальная публикация романа завершилась в октябре 1935 года"
+        }
+      ],
+      "chapter": "kharkiv",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In October 1935 the Kyiv magazine completed the publication of Volodymyr Vladko's fantastic novel"
+      }
+    },
+    {
+      "key": "war-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Радиокомментатор в Саратове, корреспондент Совинформбюро",
+      "long": "В годы войны — политический комментатор украинской радиостанции имени Т. Г. Шевченко в Саратове и специальный корреспондент Совинформбюро.",
+      "place": {
+        "label": "Саратов"
+      },
+      "chapter": "war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1941 — политический комментатор украинской радиостанции имени Т. Г. Шевченко в Саратове, специальный корреспондент Совинформбюро"
+      }
+    },
+    {
+      "key": "career-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Корреспондент «Правды» в Харьковской области",
+      "long": "Работал корреспондентом газеты «Правда» в Харьковской области.",
+      "chapter": "war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1943 — корреспондент газеты «Правда» в Харьковской области"
+      }
+    },
+    {
+      "key": "career-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вступление в КПСС",
+      "long": "Вступил в Коммунистическую партию Советского Союза.",
+      "chapter": "war",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1944 — вступил в ряды КПСС"
+      }
+    },
+    {
+      "key": "career-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Руководство Главреперткомом УССР",
+      "long": "Возглавил Главный репертуарный комитет УССР.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "kyiv",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1947 — начальник Главреперткома УССР"
+      }
+    },
+    {
+      "key": "career-1951",
+      "date": {
+        "from": "1951",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Главный редактор киевской «Литературной газеты»",
+      "long": "Стал главным редактором киевской «Литературной газеты».",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "kyiv",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "1951 — главный редактор киевской «Литературной газеты»"
+      }
+    },
+    {
+      "key": "creation-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Возвращение к фантастике после долгого молчания",
+      "long": "После примерно пятнадцати лет молчания вернулся к фантастике: новые повести, сборник, переиздание прежнего романа.",
+      "chapter": "kyiv",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1956, Vladko returned to writing science fiction"
+      }
+    },
+    {
+      "key": "persecution-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Цензурная переработка романа при переиздании",
+      "long": "Издание романа существенно переработано по требованию цензуры: заменены персонажи, добавлены новые научные данные.",
+      "works": [
+        {
+          "ref": "argonauts-of-the-universe"
+        }
+      ],
+      "chapter": "kyiv",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The 1956 edition underwent a significant revision by Soviet Union censorship committee."
+      }
+    },
+    {
+      "key": "death-1974",
+      "date": {
+        "from": "1974-04-21",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Киеве",
+      "long": "Умер в Киеве, похоронен на Байковом кладбище.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "kyiv",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Скончался 21 апреля 1974 года. Похоронен на Байковом кладбище в Киеве."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "robots-go",
+      "title": "Роботы идут",
+      "written": {
+        "from": 1929,
+        "to": 1929
+      }
+    },
+    {
+      "ref": "aerotorpedoes-turn-back",
+      "title": "Аэроторпеды поворачивают назад",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    },
+    {
+      "ref": "argonauts-of-the-universe",
+      "title": "Аргонавты Вселенной",
+      "written": {
+        "from": 1935,
+        "to": 1935
+      }
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "qid": "Q2602846",
+  "name": "Аллан Коул",
+  "born": "1943-11-19",
+  "died": "2019-03-29",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D1%83%D0%BB%2C_%D0%90%D0%BB%D0%BB%D0%B0%D0%BD",
+      "rev": 147533906
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Allan_Cole",
+      "rev": 1372765937
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-v-raz-ezdakh",
+      "title": "Детство в разъездах",
+      "from": 1943,
+      "to": 1981
+    },
+    {
+      "key": "sten-i-soavtorstvo",
+      "title": "Стэн, сценарии и соавторство",
+      "from": 1982,
+      "to": 2019
+    }
+  ],
+  "events": [
+    {
+      "key": "relocation-1943",
+      "date": {
+        "from": "1943",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Детство в Европе и на Востоке",
+      "long": "Из-за особенностей работы отца вырос в Европе, на Среднем Востоке и на Дальнем Востоке.",
+      "chapter": "detstvo-v-raz-ezdakh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The son of a CIA operative, Cole was born in Philadelphia, Pennsylvania, and raised in Europe, the Middle East and the Far East."
+      }
+    },
+    {
+      "key": "birth-1943",
+      "date": {
+        "from": "1943-11-19",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье сотрудника ЦРУ",
+      "long": "Родился в Филадельфии, штат Пенсильвания, в семье оперативника ЦРУ.",
+      "place": {
+        "label": "Филадельфия"
+      },
+      "chapter": "detstvo-v-raz-ezdakh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Allan Cole (November 19, 1943 – March 29, 2019)"
+      }
+    },
+    {
+      "key": "death-2019",
+      "date": {
+        "from": "2019-03-29",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака",
+      "long": "Умер от рака в Бока-Ратоне, штат Флорида, в возрасте 75 лет.",
+      "place": {
+        "label": "Бока-Ратон"
+      },
+      "chapter": "sten-i-soavtorstvo",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He died of cancer in Boca Raton, Florida, aged 75, on March 29, 2019."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "sten",
+      "title": "Стэн",
+      "written": {
+        "from": 1982,
+        "to": 1982
+      }
+    },
+    {
+      "ref": "the-wolf-worlds",
+      "title": "Волчьи миры",
+      "written": {
+        "from": 1984,
+        "to": 1984
+      }
+    },
+    {
+      "ref": "the-far-kingdoms",
+      "title": "Далёкие королевства",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "a-reckoning-for-kings",
+      "title": "A Reckoning for Kings",
+      "written": {
+        "from": 1987,
+        "to": 1987
+      }
+    }
+  ]
+}

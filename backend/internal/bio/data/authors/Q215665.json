@@ -1,0 +1,207 @@
+{
+  "qid": "Q215665",
+  "name": "Арнальдюр Индридасон",
+  "born": "1961-01-28",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%B4%D0%BD%D0%B0%D0%BB%D1%8C%D0%B4%D1%8E%D1%80_%D0%98%D0%BD%D0%B4%D1%80%D0%B8%D0%B4%D0%B0%D1%81%D0%BE%D0%BD",
+      "rev": 148942344
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Arnaldur_Indri%C3%B0ason",
+      "rev": 1372654720
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Рейкьявик, журналистика и университет",
+      "from": 1961,
+      "to": 1996
+    },
+    {
+      "key": "detektivy",
+      "title": "Детектив Эрленд и признание",
+      "from": 1997,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1961",
+      "date": {
+        "from": "1961-01-28",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Рейкьявике",
+      "long": "Родился в Рейкьявике в семье писателя Индриди Торстейнссона.",
+      "place": {
+        "label": "Рейкьявик"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Arnaldur was born in Reykjavík on 28 January 1961, the son of writer Indriði G. Þorsteinsson."
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "to": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа журналистом в «Моргюнбладид»",
+      "long": "В 1981–1982 годах работал журналистом в газете Morgunblaðið, затем занимался свободным литературным трудом.",
+      "place": {
+        "label": "Рейкьявик"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He worked as a journalist for the newspaper Morgunblaðið from 1981 to 1982"
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "to": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Кинокритик «Моргюнбладид»",
+      "long": "С 1986 по 2001 год был кинокритиком газеты Morgunblaðið.",
+      "place": {
+        "label": "Рейкьявик"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "From 1986 to 2001, he was a film critic for Morgunblaðið."
+      }
+    },
+    {
+      "key": "education-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Диплом историка в Исландском университете",
+      "long": "В 1996 году окончил Исландский университет со степенью по истории.",
+      "place": {
+        "label": "Рейкьявик"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He graduated with a degree in history from the University of Iceland (Háskóli Íslands) in 1996."
+      }
+    },
+    {
+      "key": "career-2002",
+      "date": {
+        "from": "2002",
+        "to": "2003",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Две премии «Стеклянный ключ» подряд",
+      "long": "В 2002 и 2003 годах получил премию «Стеклянный ключ» за лучшую скандинавскую детективную книгу.",
+      "chapter": "detektivy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2002 и 2003 году стал лауреатом премии «Стеклянный ключ»"
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Золотой кинжал»",
+      "long": "В 2005 году получил премию «Золотой кинжал» Британской ассоциации детективных писателей.",
+      "works": [
+        {
+          "ref": "grafarthogn"
+        }
+      ],
+      "chapter": "detektivy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "а в 2005 — премии «Золотой кинжал» Британской ассоциации детективных писателей за роман «Каменный мешок»"
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Экранизация романа Балтасаром Кормакуром",
+      "long": "В 2006 году роман был экранизирован Балтазаром Кормакуром.",
+      "works": [
+        {
+          "ref": "myrin"
+        }
+      ],
+      "chapter": "detektivy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2006 году его роман «Трясина» был экранизирован Балтазаром Кормакуром."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "synir-duftsins",
+      "title": "Сыновья праха",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "myrin",
+      "title": "Трясина",
+      "qid": "Q140016",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "grafarthogn",
+      "title": "Каменный мешок",
+      "qid": "Q3208727",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "roddin",
+      "title": "Голос",
+      "qid": "Q3213896",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    }
+  ]
+}

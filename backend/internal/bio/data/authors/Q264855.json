@@ -1,0 +1,374 @@
+{
+  "qid": "Q264855",
+  "name": "Май Шёвалль",
+  "born": "1935-09-25",
+  "died": "2020-04-29",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A8%D1%91%D0%B2%D0%B0%D0%BB%D0%BB%D1%8C%2C_%D0%9C%D0%B0%D0%B9",
+      "rev": 149794066
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Maj_Sj%C3%B6wall",
+      "rev": 1371365846
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo",
+      "title": "Стокгольм, ранние годы",
+      "from": 1935,
+      "to": 1953
+    },
+    {
+      "key": "izdatelstva",
+      "title": "Издательства и два брака",
+      "from": 1954,
+      "to": 1960
+    },
+    {
+      "key": "valle",
+      "title": "Пер Валё и Мартин Бек",
+      "from": 1961,
+      "to": 1975
+    },
+    {
+      "key": "vdova",
+      "title": "Вдова, переводчица, соавтор",
+      "from": 1976,
+      "to": 2020
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1935",
+      "date": {
+        "from": "1935-09-25",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье Вилли и Маргит Шёвалль",
+      "long": "Родилась в Стокгольме в семье Вилли и Маргит Шёвалль.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "detstvo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Май Шёвалль (швед. Maj Sjöwall, 25 сентября 1935, Стокгольм, Швеция — 29 апреля 2020)"
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "to": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в издательствах и концерне Esselte",
+      "long": "Работала в издательствах «Олен и Окерлунд», «Валстрём и Видстранд» и в полиграфическом концерне Esselte; изучала графику и журналистику, была репортёром и художественным редактором.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "chapter": "izdatelstva",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1954 по 1959 г. работала в издательстве «Елена и Окерлунда»шв., с 1959 по 1961 г. — в издательстве Вальстрёма и Видстрандашв., а с 1961 по 1963-й — в полиграфическом концерне Esselte."
+      }
+    },
+    {
+      "key": "love-1955",
+      "date": {
+        "from": "1955",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Первый брак с Гуннаром Исаксоном",
+      "long": "Вышла замуж за редактора журнала Гуннара Исаксона; в 1958 году они развелись.",
+      "chapter": "izdatelstva",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Sjöwall married her first husband, magazine editor Gunnar Isaksson, in 1955, and they divorced in 1958."
+      }
+    },
+    {
+      "key": "love-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Второй брак с фотографом Хансом Флодквистом",
+      "long": "Вышла замуж за фотографа Ханса Й. Флодквиста; в 1962 году они развелись.",
+      "chapter": "izdatelstva",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She married again in 1959 to photographer Hans J. Flodquist; they divorced in 1962."
+      }
+    },
+    {
+      "key": "love-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Знакомство с Пером Валё, начало совместной жизни",
+      "long": "Познакомилась с Пером Валё, с 1962 года они жили вместе; официально брак не оформляли.",
+      "chapter": "valle",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1961 году Май Шёвалль познакомилась с Пером Валё, таким же непримиримым марксистом, как и она сама, а со следующего года стали жить вместе"
+      }
+    },
+    {
+      "key": "creation-1963",
+      "date": {
+        "from": "1963",
+        "to": "1975",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Совместная работа с Валё над циклом о Мартине Беке",
+      "long": "Вместе с Валё писала цикл из десяти детективных романов о стокгольмском полицейском Мартине Беке; работали по вечерам, «уложив детей спать».",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "works": [
+        {
+          "ref": "roseanna"
+        },
+        {
+          "ref": "man-on-the-balcony"
+        },
+        {
+          "ref": "laughing-policeman"
+        }
+      ],
+      "chapter": "valle",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1963 года вплоть до смерти Валё в 1975 году они вдвоем создали цикл из десяти детективных повестей"
+      }
+    },
+    {
+      "key": "child-1966",
+      "date": {
+        "from": "1966-06-14",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына",
+      "long": "Родился сын; у Шёвалль и Валё было двое сыновей, Тетс и Йенс.",
+      "chapter": "valle",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Q133539500 1966-06-14"
+      }
+    },
+    {
+      "key": "career-1971",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Эдгара По за лучший роман",
+      "long": "Американская организация авторов криминальных романов присудила премию Эдгара По за «Смеющегося полицейского».",
+      "works": [
+        {
+          "ref": "laughing-policeman"
+        }
+      ],
+      "chapter": "valle",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Премия имени Эдгара По (от американской организации авторов криминальных романов) — 1971 год (за «Смеющегося полицейского»)"
+      }
+    },
+    {
+      "key": "career-1971-2",
+      "date": {
+        "from": "1971",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Учреждение премии имени Мартина Бека",
+      "long": "Шведская академия детектива учредила премию имени Мартина Бека в честь Шёвалль и Валё.",
+      "chapter": "valle",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1971 году Шведская академия детектива отдала честь супругам, основав литературную Премию имени Мартина Бека."
+      }
+    },
+    {
+      "key": "career-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Большая жёлтая премия города Каттолика",
+      "long": "Получила Большую жёлтую премию города Каттолика (Италия).",
+      "works": [
+        {
+          "ref": "laughing-policeman"
+        }
+      ],
+      "chapter": "valle",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Большая жёлтая премия города Каттолика (Италия) — 1973 год (за «Смеющегося полицейского»)"
+      }
+    },
+    {
+      "key": "loss-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть Пера Валё, соавтора и спутника",
+      "long": "Умер Пер Валё, соавтор и спутник жизни; на нём завершился цикл о Мартине Беке.",
+      "chapter": "valle",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Sjöwall had a 13-year relationship with Wahlöö, which lasted until his death in 1975."
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "to": "1990",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа без Валё: переводы и новые соавторы",
+      "long": "После смерти Валё работала переводчицей, писала колонки и прозу, в том числе в соавторстве с Бьярне Нильсеном и Томасом Россом.",
+      "works": [
+        {
+          "ref": "dansk-intermezzo"
+        },
+        {
+          "ref": "woman-like-greta-garbo"
+        }
+      ],
+      "chapter": "vdova",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "With Danish author Bjarne Nielsen, she published the novel Dansk Intermezzo in 1989. In 1990, she and author Tomas Ross published the thriller Kvinnan som liknade Greta Garbo."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Норвежская премия «Золотой револьвер»",
+      "long": "Получила норвежскую литературную премию «Золотой револьвер».",
+      "chapter": "vdova",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Норвежская литературная премия «Золотой револьвер» — 2006 год"
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Гран-при Яна Мюрдаля — Ленинская премия",
+      "long": "Получила премию Яна Мюрдаля — Ленинскую премию.",
+      "chapter": "vdova",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2013, Sjöwall received a fifth Lenin Award."
+      }
+    },
+    {
+      "key": "death-2020",
+      "date": {
+        "from": "2020-04-29",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть после продолжительной болезни",
+      "long": "Умерла в Ландскруне в возрасте 84 лет после продолжительной болезни.",
+      "place": {
+        "label": "Ландскруна"
+      },
+      "chapter": "vdova",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Sjöwall died on 29 April 2020, at the age of 84, after a prolonged illness."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "roseanna",
+      "title": "Розанна",
+      "written": {
+        "from": 1965,
+        "to": 1965
+      }
+    },
+    {
+      "ref": "man-on-the-balcony",
+      "title": "Мужчина на балконе",
+      "qid": "Q1195460",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "laughing-policeman",
+      "title": "Смеющийся полицейский",
+      "qid": "Q917554",
+      "written": {
+        "from": 1968,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "dansk-intermezzo",
+      "title": "Датский интермеццо",
+      "written": {
+        "from": 1989,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "woman-like-greta-garbo",
+      "title": "Женщина, похожая на Грету Гарбо",
+      "written": {
+        "from": 1990,
+        "to": 1990
+      }
+    }
+  ]
+}

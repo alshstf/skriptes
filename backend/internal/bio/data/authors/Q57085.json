@@ -1,0 +1,571 @@
+{
+  "qid": "Q57085",
+  "name": "Эрих Фромм",
+  "born": "1900-03-23",
+  "died": "1980-03-18",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A4%D1%80%D0%BE%D0%BC%D0%BC%2C_%D0%AD%D1%80%D0%B8%D1%85",
+      "rev": 155511996
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Erich_Fromm",
+      "rev": 1379453981
+    }
+  ],
+  "chapters": [
+    {
+      "key": "frankfurt-heidelberg",
+      "title": "Франкфурт, Гейдельберг, диссертация",
+      "from": 1900,
+      "to": 1925
+    },
+    {
+      "key": "berlin-institut",
+      "title": "Берлин и Институт социальных исследований",
+      "from": 1926,
+      "to": 1932
+    },
+    {
+      "key": "exile-new-york",
+      "title": "Изгнание и Нью-Йорк",
+      "from": 1933,
+      "to": 1949
+    },
+    {
+      "key": "mexico",
+      "title": "Мексика и общественная работа",
+      "from": 1950,
+      "to": 1973
+    },
+    {
+      "key": "muralto",
+      "title": "Муральто и последние книги",
+      "from": 1974,
+      "to": 1980
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1900",
+      "date": {
+        "from": "1900-03-23",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в ортодоксальной еврейской семье",
+      "long": "Родился во Франкфурте-на-Майне в ортодоксальной еврейской семье, единственный ребёнок Нафтали и Розы Фромм.",
+      "place": {
+        "label": "Франкфурт-на-Майне"
+      },
+      "chapter": "frankfurt-heidelberg",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "23 марта 1900[…], Франкфурт-на-Майне, Пруссия"
+      }
+    },
+    {
+      "key": "education-1918",
+      "date": {
+        "from": "1918",
+        "to": "1922",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Гейдельбергском университете",
+      "long": "После школы поступил в Гейдельбергский университет, где изучал философию, социологию и психологию.",
+      "place": {
+        "label": "Гейдельберг"
+      },
+      "chapter": "frankfurt-heidelberg",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Окончив её в 1918 году, он поступил в Гейдельбергский университет, где изучал философию, социологию и психологию."
+      }
+    },
+    {
+      "key": "education-1922",
+      "date": {
+        "from": "1922",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Докторская диссертация по социологии",
+      "long": "Под руководством Альфреда Вебера защитил докторскую диссертацию по социологии, посвящённую иудейскому закону и диаспорному еврейству.",
+      "place": {
+        "label": "Гейдельберг"
+      },
+      "chapter": "frankfurt-heidelberg",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1922 году под руководством Альфреда Вебера защитил докторскую диссертацию по социологии по теме «Иудейский Закон. К социологии диаспорного еврейства»."
+      }
+    },
+    {
+      "key": "career-1925",
+      "date": {
+        "from": "1925",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Завершение психоаналитической подготовки, практика",
+      "long": "Завершил обязательную психоаналитическую подготовку и открыл частную практику в Берлине.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "frankfurt-heidelberg",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1925 году Фромм завершил обязательную психоаналитическую подготовку и затем открыл собственную частную практику в Берлине."
+      }
+    },
+    {
+      "key": "faith-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Разрыв с ортодоксальным иудаизмом",
+      "long": "Отошёл от ортодоксального иудаизма к светскому толкованию библейских идеалов.",
+      "chapter": "berlin-institut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "However, Fromm turned away from orthodox Judaism in 1926, towards secular interpretations of scriptural ideals."
+      }
+    },
+    {
+      "key": "love-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Фридой Райхман",
+      "long": "Женился на психоаналитике Фриде Райхман; вскоре супруги расстались.",
+      "chapter": "berlin-institut",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married in 1926, but separated shortly after and divorced in 1942."
+      }
+    },
+    {
+      "key": "career-1929",
+      "date": {
+        "from": "1929",
+        "to": "1932",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в Институте социальных исследований",
+      "long": "Работал в Институте социальных исследований во Франкфурте-на-Майне, где анализировал эмпирический материал своей практики.",
+      "place": {
+        "label": "Франкфурт-на-Майне"
+      },
+      "chapter": "berlin-institut",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в период работы в Институте социальных исследований во Франкфурте-на-Майне (1929—1932)"
+      }
+    },
+    {
+      "key": "relocation-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отъезд из нацистской Германии в Женеву",
+      "long": "После прихода Гитлера к власти покинул Германию и переехал в Женеву.",
+      "place": {
+        "label": "Женева"
+      },
+      "chapter": "exile-new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После прихода Гитлера к власти в 1933 году Фромм переехал сначала в Женеву, а затем в 1934 году в Нью-Йорк, США."
+      }
+    },
+    {
+      "key": "relocation-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в США, Колумбийский университет",
+      "long": "Переехал в Нью-Йорк, продолжил психоаналитическую практику и преподавал в Колумбийском университете.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "exile-new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После прихода Гитлера к власти в 1933 году Фромм переехал сначала в Женеву, а затем в 1934 году в Нью-Йорк, США."
+      }
+    },
+    {
+      "key": "career-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Переход на английский язык",
+      "long": "Начал писать работы на английском языке, до этого писал на немецком.",
+      "chapter": "exile-new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1938 года начал писать работы на английском языке (до этого — на немецком)."
+      }
+    },
+    {
+      "key": "career-1941",
+      "date": {
+        "from": "1941",
+        "to": "1949",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание в Беннингтонском колледже",
+      "long": "Преподавал в Беннингтонском колледже, а также в Новой школе социальных исследований в Нью-Йорке.",
+      "place": {
+        "label": "Беннингтон"
+      },
+      "chapter": "exile-new-york",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was on the faculty of Bennington College from 1941 to 1949, and taught courses at the New School for Social Research in New York from 1941 to 1959."
+      }
+    },
+    {
+      "key": "family-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Фридой Фромм-Райхман",
+      "long": "Развод с Фридой Фромм-Райхман.",
+      "chapter": "exile-new-york",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married in 1926, but separated shortly after and divorced in 1942."
+      }
+    },
+    {
+      "key": "love-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Хенни Гурланд",
+      "long": "Второй брак — с Хенни Гурланд; он длился до 1952 года.",
+      "chapter": "exile-new-york",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P26: Henny Gurland 1944-01-01"
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Сооснование Института Уильяма Алансона Уайта",
+      "long": "Стал сооснователем Института психиатрии Уильяма Алансона Уайта в Нью-Йорке; в 1943 году помог создать нью-йоркское отделение Вашингтонской школы психиатрии.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "exile-new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1946 году выступил в качестве сооснователя Института психиатрии Уильяма Алансона Уайта"
+      }
+    },
+    {
+      "key": "relocation-1950",
+      "date": {
+        "from": "1950",
+        "to": "1965",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Мексику, преподавание в UNAM",
+      "long": "Переехал в Мехико и преподавал в Национальном автономном университете Мексики до 1965 года.",
+      "place": {
+        "label": "Мехико"
+      },
+      "chapter": "mexico",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1950 году Фромм переехал в Мехико, где преподавал в Национальном автономном университете Мексики до 1965 года."
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировой успех самой известной книги",
+      "long": "Книга об искусстве любви стала самой известной у Фромма; общий тираж превысил 25 миллионов экземпляров.",
+      "works": [
+        {
+          "ref": "art-of-loving"
+        }
+      ],
+      "chapter": "mexico",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Наиболее известной книгой стало «Искусство любить» (1956), её общий тираж превысил 25 миллионов экземпляров."
+      }
+    },
+    {
+      "key": "career-1957",
+      "date": {
+        "from": "1957",
+        "to": "1961",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание в Мичиганском университете",
+      "long": "Параллельно с работой в Мексике преподавал психологию в Мичиганском государственном университете.",
+      "chapter": "mexico",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В период с 1957 по 1961 год также преподавал психологию в Мичиганском государственном университете"
+      }
+    },
+    {
+      "key": "other-1960",
+      "date": {
+        "from": "1960",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Вступление в Социалистическую партию США",
+      "long": "Вступил в Социалистическую партию США и написал её Программу, которую из-за партийных споров отвергли.",
+      "chapter": "mexico",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1960 году Фромм вступил в Социалистическую партию США и написал её Программу, которая, впрочем, из-за партийных споров была отвергнута."
+      }
+    },
+    {
+      "key": "other-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Конференция по разоружению в Москве",
+      "long": "Участвовал наблюдателем в конференции по разоружению в Москве; в том же году инициировал создание Международной федерации обществ психоанализа.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "mexico",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1962 году участвовал в качестве наблюдателя на конференции по разоружению в Москве."
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание «Гуманист года»",
+      "long": "Американская гуманистическая ассоциация назвала его «Гуманистом года».",
+      "chapter": "mexico",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1966, the American Humanist Association named him Humanist of the Year."
+      }
+    },
+    {
+      "key": "illness-1968",
+      "date": {
+        "from": "1968",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Первый инфаркт",
+      "long": "Перенёс первый инфаркт.",
+      "chapter": "mexico",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1968 году у Фромма случился первый инфаркт."
+      }
+    },
+    {
+      "key": "relocation-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Швейцарию",
+      "long": "Покинул Мексику и поселился в Муральто в Швейцарии.",
+      "place": {
+        "label": "Муральто"
+      },
+      "chapter": "muralto",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1974 году он переехал в Муральто (или Локарно)."
+      }
+    },
+    {
+      "key": "illness-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Второй и третий инфаркты",
+      "long": "Вскоре после завершения работы над книгой «Иметь или быть» перенёс второй инфаркт, в 1978 году — третий.",
+      "works": [
+        {
+          "ref": "to-have-or-to-be",
+          "note": "второй инфаркт случился вскоре после окончания работы над книгой"
+        }
+      ],
+      "chapter": "muralto",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Вскоре после окончания работы «Иметь или быть», в 1977 году, с ним случается второй, а потом и третий (1978 год) инфаркт."
+      }
+    },
+    {
+      "key": "career-1979",
+      "date": {
+        "from": "1979",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Нелли Закс",
+      "long": "Получил премию Нелли Закс.",
+      "chapter": "muralto",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Fromm was awarded the Nelly Sachs Prize in 1979."
+      }
+    },
+    {
+      "key": "death-1980",
+      "date": {
+        "from": "1980-03-18",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Муральто",
+      "long": "Умер дома в Муральто за пять дней до восьмидесятилетия.",
+      "place": {
+        "label": "Муральто"
+      },
+      "chapter": "muralto",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Он скончался в Швейцарии в своем доме в 1980 году, не дожив несколько дней до своего 80-летия."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "escape-from-freedom",
+      "title": "Бегство от свободы",
+      "qid": "Q1277598",
+      "written": {
+        "from": 1941,
+        "to": 1941
+      }
+    },
+    {
+      "ref": "man-for-himself",
+      "title": "Человек для самого себя",
+      "qid": "Q12299227",
+      "written": {
+        "from": 1947,
+        "to": 1947
+      }
+    },
+    {
+      "ref": "psychoanalysis-and-religion",
+      "title": "Психоанализ и религия",
+      "qid": "Q7256329",
+      "written": {
+        "from": 1950,
+        "to": 1950
+      }
+    },
+    {
+      "ref": "sane-society",
+      "title": "Здоровое общество",
+      "written": {
+        "from": 1955,
+        "to": 1955
+      }
+    },
+    {
+      "ref": "art-of-loving",
+      "title": "Искусство любить",
+      "qid": "Q973382",
+      "written": {
+        "from": 1956,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "anatomy-of-human-destructiveness",
+      "title": "Анатомия человеческой деструктивности",
+      "qid": "Q488331",
+      "written": {
+        "from": 1973,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "to-have-or-to-be",
+      "title": "Иметь или быть?",
+      "qid": "Q1566734",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    }
+  ]
+}

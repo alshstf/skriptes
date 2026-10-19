@@ -1,0 +1,171 @@
+{
+  "qid": "Q15069159",
+  "name": "Дмитрий Колодан",
+  "born": "1979-11-20",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BB%D0%BE%D0%B4%D0%B0%D0%BD%2C_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%B8%D0%B9_%D0%93%D0%B5%D0%BD%D0%BD%D0%B0%D0%B4%D1%8C%D0%B5%D0%B2%D0%B8%D1%87",
+      "rev": 153156096
+    }
+  ],
+  "chapters": [
+    {
+      "key": "leningrad-university",
+      "title": "Ленинград и университет",
+      "from": 1979,
+      "to": 2004
+    },
+    {
+      "key": "debut-and-prizes",
+      "title": "Дебют и премии",
+      "from": 2005,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1979",
+      "date": {
+        "from": "1979-11-20",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ленинграде",
+      "long": "Родился 20 ноября 1979 года в Ленинграде.",
+      "place": {
+        "label": "Ленинград"
+      },
+      "chapter": "leningrad-university",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 20 ноября 1979 года в Ленинграде."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Дебют в фантастике в журнале «Если»",
+      "long": "Дебютировал в фантастике рассказом в журнале «Если».",
+      "chapter": "debut-and-prizes",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В фантастике дебютировал в 2005 году в журнале «Если» с рассказом «Покупатель камней»."
+      }
+    },
+    {
+      "key": "career-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Победа в конкурсе «Роскон-Грелка»",
+      "long": "Победа в конкурсе «Роскон-Грелка».",
+      "chapter": "debut-and-prizes",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2006 году победил в конкурсе «Роскон-Грелка»."
+      }
+    },
+    {
+      "key": "career-2008",
+      "date": {
+        "from": "2008",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Признание дебютного романа, премия «Звёздный мост»",
+      "long": "Дебютный роман получил премию «Звёздный мост», позднее — «РосКон», «Странник» и «Серебряная стрела».",
+      "works": [
+        {
+          "ref": "drugaya-storona"
+        }
+      ],
+      "chapter": "debut-and-prizes",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дебютный роман «Другая сторона» получил премии «Звёздный мост» (2008), «РосКон» (2009), «Странник» (2009), «Серебряная стрела» (2009)."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Европейского общества научной фантастики",
+      "long": "Получил поощрительную премию Европейского общества научной фантастики молодому автору; писателя выдвинула делегация России.",
+      "chapter": "debut-and-prizes",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2009 году получил поощрительную премию Европейского общества научной фантастики молодому автору (ESFS Encouragement Award)."
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Участие в проекте «Этногенез»",
+      "long": "Стал участником литературного проекта «Этногенез».",
+      "chapter": "debut-and-prizes",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 2011 года — участник литературного проекта «Этногенез»."
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Дебют» в номинации «Фантастика»",
+      "long": "Получил независимую литературную премию «Дебют» в номинации «Фантастика».",
+      "works": [
+        {
+          "ref": "vremya-barmaglota"
+        }
+      ],
+      "chapter": "debut-and-prizes",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2012 году за повесть и цикл рассказов «Время Бармаглота» получил премию «Дебют» в номинации «Фантастика»."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "drugaya-storona",
+      "title": "Другая сторона",
+      "written": {
+        "from": 2007,
+        "to": 2008
+      }
+    },
+    {
+      "ref": "vremya-barmaglota",
+      "title": "Время Бармаглота",
+      "written": {
+        "from": 2010,
+        "to": 2011
+      }
+    }
+  ]
+}

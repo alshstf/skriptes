@@ -1,0 +1,118 @@
+{
+  "qid": "Q264517",
+  "name": "Ло Гуаньчжун",
+  "born": "1330",
+  "died": "1400",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9B%D0%BE_%D0%93%D1%83%D0%B0%D0%BD%D1%8C%D1%87%D0%B6%D1%83%D0%BD",
+      "rev": 144945323
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Luo_Guanzhong",
+      "rev": 1377071329
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-ucheba",
+      "title": "Шёлк, школа, Сучжоу",
+      "from": 1330,
+      "to": 1355
+    },
+    {
+      "key": "vosstaniya-i-pismo",
+      "title": "Восстания и литературные труды",
+      "from": 1356,
+      "to": 1400
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1330",
+      "date": {
+        "from": "1330",
+        "precision": "year"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Тайюане",
+      "long": "По Wikidata, родился около 1330 года, место рождения традиционно считается Тайюань; в статье дата и место оспариваются (по другим оценкам, между 1315 и 1318 годами).",
+      "place": {
+        "label": "Тайюань"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Тайюань 1330-01-01"
+      }
+    },
+    {
+      "key": "loss-1344",
+      "date": {
+        "from": "1344",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери и переезд в Сучжоу",
+      "long": "После смерти матери в 1344 году Ло, семья которого торговала шёлком, переехал в Сучжоу и стал помогать отцу в торговле.",
+      "place": {
+        "label": "Сучжоу"
+      },
+      "chapter": "detstvo-i-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "после смерти матери в 1344 году переехал в город Сучжоу, где стал помогать отцу в торговле"
+      }
+    },
+    {
+      "key": "war-1356",
+      "date": {
+        "from": "1356",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Участие в антимонгольских восстаниях",
+      "long": "Когда в 1356 году начались антимонгольские восстания, Ло Гуаньчжун присоединился к ним, но через несколько лет вернулся в родной город.",
+      "chapter": "vosstaniya-i-pismo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Когда в 1356 году в Китае начались антимонгольские восстания, Ло Гуаньчжун присоединился к ним"
+      }
+    },
+    {
+      "key": "death-1400",
+      "date": {
+        "from": "1400",
+        "precision": "year"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от болезни",
+      "long": "Умер в 1400 году от болезни; по Wikidata, в Ханчжоу.",
+      "place": {
+        "label": "Ханчжоу"
+      },
+      "chapter": "vosstaniya-i-pismo",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Скончался Ло Гуаньчжун в 1400 году из-за болезни."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "three-kingdoms",
+      "title": "Троецарствие",
+      "qid": "Q70806",
+      "written": {
+        "from": 1330,
+        "to": 1400
+      }
+    }
+  ]
+}

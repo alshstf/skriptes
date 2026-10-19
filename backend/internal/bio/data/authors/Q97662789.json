@@ -1,0 +1,223 @@
+{
+  "qid": "Q97662789",
+  "name": "Александр Сергеевич Пелевин",
+  "born": "1988-09-20",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9F%D0%B5%D0%BB%D0%B5%D0%B2%D0%B8%D0%BD%2C_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80_%D0%A1%D0%B5%D1%80%D0%B3%D0%B5%D0%B5%D0%B2%D0%B8%D1%87",
+      "rev": 154686434
+    }
+  ],
+  "chapters": [
+    {
+      "key": "leningrad-first-verses",
+      "title": "Ленинград и первые стихи",
+      "from": 1988,
+      "to": 2008
+    },
+    {
+      "key": "runet-years",
+      "title": "Рунет и журналистика",
+      "from": 2009,
+      "to": 2018
+    },
+    {
+      "key": "donbass-recognition",
+      "title": "Донбасс и признание",
+      "from": 2019,
+      "to": 2023
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1988",
+      "date": {
+        "from": "1988-09-20",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ленинграде",
+      "long": "Родился 20 сентября 1988 года в Ленинграде.",
+      "place": {
+        "label": "Ленинград"
+      },
+      "chapter": "leningrad-first-verses",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 20 сентября 1988 года в Ленинграде."
+      }
+    },
+    {
+      "key": "career-2009",
+      "date": {
+        "from": "2009",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало публикаций стихов в интернете",
+      "long": "С 2009 года публикует стихи в Живом Журнале, на портале Стихи.ру, во ВКонтакте и на «Сетевой словесности».",
+      "chapter": "runet-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 2009 года публикуется в Живом Журнале, на портале Стихи.ру"
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Короткий список «Национального бестселлера»",
+      "long": "Роман попал в короткий список премии «Национальный бестселлер», а также в длинные списки АБС-премии и Премии читателя.",
+      "works": [
+        {
+          "ref": "chetvero"
+        }
+      ],
+      "chapter": "donbass-recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2019 — короткий список премии «Национальный бестселлер» (роман «Четверо»)"
+      }
+    },
+    {
+      "key": "other-2019",
+      "date": {
+        "from": "2019-01",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Поездка в Луганск, внесение в базу «Миротворца»",
+      "long": "В январе 2019 года посетил Луганск и был внесён в базу сайта «Миротворец».",
+      "place": {
+        "label": "Луганск"
+      },
+      "chapter": "donbass-recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В январе 2019 года Пелевин посетил Луганск и был внесён в базу сайта «Миротворец»."
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Завершение работы в «Деловом Петербурге»",
+      "long": "Работал журналистом в «Деловом Петербурге» до 2020 года.",
+      "place": {
+        "label": "Санкт-Петербург"
+      },
+      "chapter": "donbass-recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "до 2020 года — журналистом в «Деловом Петербурге»"
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Победа в премии «Национальный бестселлер»",
+      "long": "Стал лауреатом премии «Национальный бестселлер»; номинатором выступила поэтесса Анна Долгарева.",
+      "works": [
+        {
+          "ref": "pokrov-17"
+        }
+      ],
+      "chapter": "donbass-recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2021 году стал лауреатом премии «Национальный бестселлер» (номинатор — поэтесса Анна Долгарева)."
+      }
+    },
+    {
+      "key": "career-2022",
+      "date": {
+        "from": "2022",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Второе место Московской арт-премии",
+      "long": "Стал лауреатом Московской арт-премии (II место).",
+      "place": {
+        "label": "Москва"
+      },
+      "works": [
+        {
+          "ref": "gori-ognem"
+        }
+      ],
+      "chapter": "donbass-recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2022 — лауреат Московской арт-премии (II место) (повесть «Гори огнем»)"
+      }
+    },
+    {
+      "key": "other-2023",
+      "date": {
+        "from": "2023",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Публичные выступления с чтением стихов",
+      "long": "Весной 2023 года публично читал стихи в Санкт-Петербурге и Москве; журналисты отметили исполнение стихотворения с оскорблениями в адрес украинцев.",
+      "chapter": "donbass-recognition",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "публичное исполнение Пелевиным в Санкт-Петербурге и Москве весной 2023 года стихотворения"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "kalinova-yama",
+      "title": "Калинова Яма",
+      "written": {
+        "from": 2018,
+        "to": 2018
+      }
+    },
+    {
+      "ref": "chetvero",
+      "title": "Четверо",
+      "written": {
+        "from": 2019,
+        "to": 2019
+      }
+    },
+    {
+      "ref": "pokrov-17",
+      "title": "Покров-17",
+      "written": {
+        "from": 2021,
+        "to": 2021
+      }
+    },
+    {
+      "ref": "gori-ognem",
+      "title": "Гори огнём",
+      "written": {
+        "from": 2022,
+        "to": 2022
+      }
+    }
+  ]
+}

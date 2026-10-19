@@ -1,0 +1,82 @@
+{
+  "qid": "Q4447107",
+  "name": "Александр Евгеньевич Сухов",
+  "born": "1956",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D1%83%D1%85%D0%BE%D0%B2%2C_%D0%90%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80_%D0%95%D0%B2%D0%B3%D0%B5%D0%BD%D1%8C%D0%B5%D0%B2%D0%B8%D1%87",
+      "rev": 149431161
+    }
+  ],
+  "chapters": [
+    {
+      "key": "rodina-i-uchyoba",
+      "title": "Калужская земля и университет",
+      "from": 1956,
+      "to": 1985
+    },
+    {
+      "key": "pisatel",
+      "title": "Путь в фантастику",
+      "from": 1986,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Калужской области",
+      "long": "Родился в Калужской области.",
+      "place": {
+        "label": "Калужская область"
+      },
+      "chapter": "rodina-i-uchyoba",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: 1956-01-01"
+      }
+    },
+    {
+      "key": "education-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Окончание МГУ по специальности «океанолог»",
+      "long": "Получил высшее образование в МГУ по специальности «океанолог».",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "rodina-i-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Высшее образование получил в 1983 году в Московском Государственном Университете по специальности «океанолог»."
+      }
+    },
+    {
+      "key": "career-2007",
+      "date": {
+        "from": "2007",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая книга в издательстве «Эксмо»",
+      "long": "Первая книга писателя вышла в издательстве «Эксмо».",
+      "chapter": "pisatel",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первая книга вышла в 2007 году в издательстве «Эксмо»."
+      }
+    }
+  ]
+}

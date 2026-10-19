@@ -1,0 +1,221 @@
+{
+  "qid": "Q4440094",
+  "name": "Анна Старобинец",
+  "born": "1978-10-25",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D1%82%D0%B0%D1%80%D0%BE%D0%B1%D0%B8%D0%BD%D0%B5%D1%86%2C_%D0%90%D0%BD%D0%BD%D0%B0_%D0%90%D0%BB%D1%8C%D1%84%D1%80%D0%B5%D0%B4%D0%BE%D0%B2%D0%BD%D0%B0",
+      "rev": 154759051
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Anna_Starobinets",
+      "rev": 1366421311
+    }
+  ],
+  "chapters": [
+    {
+      "key": "moskva-i-mgu",
+      "title": "Москва и университет",
+      "from": 1978,
+      "to": 2001
+    },
+    {
+      "key": "zhurnalistika-i-uzhasy",
+      "title": "Журналистика и первые книги",
+      "from": 2002,
+      "to": 2016
+    },
+    {
+      "key": "utrata",
+      "title": "Вдовство и новая проза",
+      "from": 2017,
+      "to": 2021
+    },
+    {
+      "key": "gruziya",
+      "title": "Отъезд и Грузия",
+      "from": 2022,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1978",
+      "date": {
+        "from": "1978-10-25",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Москве",
+      "long": "Родилась в Москве в семье геолога Альфреда Старобинца и бывшего программиста Эмилии Невельской.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "moskva-i-mgu",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родилась в Москве 25 октября 1978 года"
+      }
+    },
+    {
+      "key": "education-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание филологического факультета МГУ",
+      "long": "Училась в лицее при ИСАА МГУ, затем на филологическом факультете МГУ; обучение закончилось в 2001 году.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "moskva-i-mgu",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P69: Московский государственный университет 2001"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Финал «Национального бестселлера» с первым сборником",
+      "long": "Первый сборник рассказов вышел в 2010 году и стал финалистом премии «Национальный бестселлер».",
+      "works": [
+        {
+          "ref": "awkward-age"
+        }
+      ],
+      "chapter": "zhurnalistika-i-uzhasy",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "first published work, the short story collection An Awkward Age (2010), was a finalist in the Russian National Bestseller Prize"
+      }
+    },
+    {
+      "key": "other-2014",
+      "date": {
+        "from": "2014-03",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Обращение против политики властей в Крыму и на Украине",
+      "long": "В марте 2014 года вместе с мужем Александром Гарросом подписала обращение против политики российских властей на востоке Украины и в Крыму.",
+      "chapter": "zhurnalistika-i-uzhasy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В марте 2014 года вместе с мужем Александром Гарросом подписала обращение против политики российской власти на востоке Украины и в Крыму."
+      }
+    },
+    {
+      "key": "loss-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть мужа Александра Гарроса",
+      "long": "В 2017 году умер муж, писатель Александр Гаррос; после этого у неё был творческий кризис длиной 18 месяцев.",
+      "chapter": "utrata",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her husband, writer Alexander Garros, died in 2017, after which she had \"writer's block\" for 18 months."
+      }
+    },
+    {
+      "key": "career-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Imaginales за иноязычный роман",
+      "long": "Получила премию Imaginales за лучший иноязычный роман.",
+      "chapter": "utrata",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Imaginales award for best foreign-language novel 2017-01-01"
+      }
+    },
+    {
+      "key": "career-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Европейская премия научной фантастики",
+      "long": "В 2018 году получила Европейскую премию научной фантастики в номинации «Зал славы: лучший автор».",
+      "chapter": "utrata",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Starobinets was awarded the European SF Award in the category of \"Hall of Fame: Best Author\" in 2018."
+      }
+    },
+    {
+      "key": "relocation-2022",
+      "date": {
+        "from": "2022-03",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Отъезд из России с детьми, жизнь в Грузии",
+      "long": "В марте 2022 года, в связи с вторжением России на Украину, уехала из страны с детьми; живёт в Грузии.",
+      "place": {
+        "label": "Грузия"
+      },
+      "chapter": "gruziya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В марте 2022 году в связи с российским вооружённым вторжением на Украину покинула страну вместе с детьми"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "awkward-age",
+      "title": "Переходный возраст",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "catlantis",
+      "title": "Котлантида",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "look-at-him",
+      "title": "Посмотри на него",
+      "written": {
+        "from": 2017,
+        "to": 2017
+      }
+    },
+    {
+      "ref": "lisi-brody",
+      "title": "Лисьи броды",
+      "written": {
+        "from": 2022,
+        "to": 2022
+      }
+    }
+  ]
+}

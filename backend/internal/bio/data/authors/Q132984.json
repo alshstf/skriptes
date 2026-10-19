@@ -1,0 +1,132 @@
+{
+  "qid": "Q132984",
+  "name": "Шота Руставели",
+  "born": "1172",
+  "died": "1216",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A0%D1%83%D1%81%D1%82%D0%B0%D0%B2%D0%B5%D0%BB%D0%B8%2C_%D0%A8%D0%BE%D1%82%D0%B0",
+      "rev": 154896670
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Shota_Rustaveli",
+      "rev": 1378532790
+    },
+    {
+      "id": "kawiki",
+      "url": "https://ka.wikipedia.org/wiki/%E1%83%A8%E1%83%9D%E1%83%97%E1%83%90_%E1%83%A0%E1%83%A3%E1%83%A1%E1%83%97%E1%83%90%E1%83%95%E1%83%94%E1%83%9A%E1%83%98",
+      "rev": 5540447
+    }
+  ],
+  "chapters": [
+    {
+      "key": "early-years",
+      "title": "Неведомое начало",
+      "from": 1172,
+      "to": 1189
+    },
+    {
+      "key": "tamar-court",
+      "title": "Казнохранитель при дворе Тамары",
+      "from": 1190,
+      "to": 1204
+    },
+    {
+      "key": "poem-and-jerusalem",
+      "title": "Поэма и Иерусалим",
+      "from": 1205,
+      "to": 1216
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1172",
+      "date": {
+        "from": "1172",
+        "precision": "year"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение",
+      "long": "Родился, по данным Wikidata, около 1172 года в Рустави; точные даты рождения и происхождение поэта неизвестны, в источниках называют и около 1160 года.",
+      "place": {
+        "label": "Рустави (Аспиндзский муниципалитет)"
+      },
+      "chapter": "early-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Рустави (Аспиндзский муниципалитет) 1172-01-01"
+      }
+    },
+    {
+      "key": "career-1190",
+      "date": {
+        "from": "1190",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Служба казнохранителем царицы Тамары",
+      "long": "Служил казнохранителем при дворе царицы Тамары; его подпись найдена на акте 1190 года. В английской статье начало службы отнесено к 1191 году.",
+      "chapter": "tamar-court",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "затем был казнохранителем царицы Тамары (найдена его подпись на акте 1190 года)"
+      }
+    },
+    {
+      "key": "creation-1205",
+      "date": {
+        "from": "1205",
+        "to": "1207",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Работа над главной поэмой",
+      "long": "Главное произведение создано не ранее 1180-х и не позднее первого десятилетия XIII века, наиболее вероятно в 1205–1207 годах.",
+      "works": [
+        {
+          "ref": "knight-in-the-panthers-skin"
+        }
+      ],
+      "chapter": "poem-and-jerusalem",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He must have produced his major work no earlier than the 1180s and no later than the first decade of the 13th century, most probably 1205-1207."
+      }
+    },
+    {
+      "key": "death-1216",
+      "date": {
+        "from": "1216",
+        "precision": "year"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть",
+      "long": "Умер, по данным Wikidata, около 1216 года в Иерусалиме; точная дата и обстоятельства смерти в источниках оспариваются.",
+      "place": {
+        "label": "Иерусалим"
+      },
+      "chapter": "poem-and-jerusalem",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P570: Иерусалим 1216-01-01"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "knight-in-the-panthers-skin",
+      "title": "Витязь в тигровой шкуре",
+      "qid": "Q204208",
+      "written": {
+        "from": 1205,
+        "to": 1207
+      }
+    }
+  ]
+}

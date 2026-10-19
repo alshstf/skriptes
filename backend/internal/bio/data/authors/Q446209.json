@@ -1,0 +1,179 @@
+{
+  "qid": "Q446209",
+  "name": "Шеррилин Кеньон",
+  "born": "1965-12-11",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%B5%D0%BD%D1%8C%D0%BE%D0%BD%2C_%D0%A8%D0%B5%D1%80%D1%80%D0%B8%D0%BB%D0%B8%D0%BD",
+      "rev": 145166626
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Sherrilyn_Kenyon",
+      "rev": 1377071641
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-yunost",
+      "title": "Детство и первые тексты",
+      "from": 1965,
+      "to": 1989
+    },
+    {
+      "key": "brak-i-nuzhda",
+      "title": "Брак, Миссисипи, нужда",
+      "from": 1990,
+      "to": 1998
+    },
+    {
+      "key": "dark-hunter",
+      "title": "Прорыв с «Тёмными охотниками»",
+      "from": 1999,
+      "to": 2017
+    },
+    {
+      "key": "razvod-i-sud",
+      "title": "Развод и судебный иск",
+      "from": 2018,
+      "to": 2019
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1965",
+      "date": {
+        "from": "1965-12-11",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Колумбусе, Джорджия",
+      "long": "Родилась в Колумбусе, штат Джорджия, четвёртым из пятерых детей в семье.",
+      "place": {
+        "label": "Колумбус"
+      },
+      "chapter": "detstvo-i-yunost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Sherrilyn Kenyon was born on 11 December 1965 in Columbus, Georgia."
+      }
+    },
+    {
+      "key": "career-1975",
+      "date": {
+        "from": "1975",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый опубликованный рассказ",
+      "long": "Опубликовала свой первый рассказ.",
+      "chapter": "detstvo-i-yunost",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Previously, Kenyon had published her first story in 1975"
+      }
+    },
+    {
+      "key": "love-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Лоуренсом Кеньоном, переезд в Миссисипи",
+      "long": "Вышла замуж за Лоуренса Кеньона, с которым познакомилась в колледже; пара переехала в Джексон, Миссисипи, где он учился на юриста.",
+      "place": {
+        "label": "Джексон"
+      },
+      "chapter": "brak-i-nuzhda",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married in 1990, and they moved to Jackson, Mississippi, while he studied law."
+      }
+    },
+    {
+      "key": "career-1999",
+      "date": {
+        "from": "1999",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Контракт с St. Martin's Press, большой прорыв",
+      "long": "Издательство St. Martin's Press взяло первые две книги цикла о Тёмных охотниках в рамках контракта на три книги.",
+      "works": [
+        {
+          "ref": "dark-hunter",
+          "note": "первые две книги цикла приняты издательством; рассказы цикла написаны в 1984, работа над романами начата в 1986"
+        }
+      ],
+      "chapter": "dark-hunter",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "her big break came in 1999 when the first two books of her \"Dark-Hunter\" sequence were picked up by St. Martin's Press as part of a three-book deal"
+      }
+    },
+    {
+      "key": "family-2018",
+      "date": {
+        "from": "2018-03",
+        "precision": "month"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Иск мужа о разводе",
+      "long": "Муж подал на развод.",
+      "chapter": "razvod-i-sud",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After her husband filed for divorce in March 2018"
+      }
+    },
+    {
+      "key": "other-2019",
+      "date": {
+        "from": "2019-01-07",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Иск против мужа об отравлении",
+      "long": "Подала иск против мужа и его помощников, утверждая, что они годами её отравляли; результаты анализов не интерпретировал токсиколог.",
+      "chapter": "razvod-i-sud",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On January 7, 2019, Kenyon filed a lawsuit against her husband and his assistants, claiming they had poisoned her over a number of years"
+      }
+    },
+    {
+      "key": "other-2019-2",
+      "date": {
+        "from": "2019-07-26",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Отзыв судебного иска",
+      "long": "Отозвала свой иск.",
+      "chapter": "razvod-i-sud",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She dropped her lawsuit on July 26, 2019."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "dark-hunter",
+      "title": "Тёмные охотники",
+      "written": {
+        "from": 1986,
+        "to": 1999
+      }
+    }
+  ]
+}

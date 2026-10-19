@@ -1,0 +1,207 @@
+{
+  "qid": "Q6984190",
+  "name": "Нил Шустерман",
+  "born": "1962-11-12",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A8%D1%83%D1%81%D1%82%D0%B5%D1%80%D0%BC%D0%B0%D0%BD%2C_%D0%9D%D0%B8%D0%BB",
+      "rev": 152488238
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Neal_Shusterman",
+      "rev": 1380896900
+    }
+  ],
+  "chapters": [
+    {
+      "key": "brooklyn-mexico-irvine",
+      "title": "Бруклин, Мехико, Ирвин",
+      "from": 1962,
+      "to": 1993
+    },
+    {
+      "key": "screen-and-first-books",
+      "title": "Сценарии и первые книги",
+      "from": 1994,
+      "to": 2004
+    },
+    {
+      "key": "recognition",
+      "title": "Первые награды",
+      "from": 2005,
+      "to": 2014
+    },
+    {
+      "key": "national-book-award",
+      "title": "Национальная премия и «Жнец»",
+      "from": 2015,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1962",
+      "date": {
+        "from": "1962-11-12",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бруклине",
+      "long": "Родился 12 ноября 1962 года в Бруклине, Нью-Йорк, в еврейской семье; там же вырос.",
+      "place": {
+        "label": "Бруклин"
+      },
+      "chapter": "brooklyn-mexico-irvine",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Shusterman was born on November 12, 1962, and raised in Brooklyn, New York City."
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в кино: сценарий фильма",
+      "long": "Среди первых кинематографических работ — фильм «Double Dragon» (1994).",
+      "chapter": "screen-and-first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Double Dragon (1994)"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "to": "1998",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа сценаристом на телевидении",
+      "long": "В 1996–1998 годах писал сценарии для телесериала «Goosebumps»; позже работал и над сериалом «Animorphs» (1998).",
+      "chapter": "screen-and-first-books",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Goosebumps (1996–1998)"
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Boston Globe–Horn Book",
+      "long": "Получил премию Boston Globe–Horn Book Award; в 2008 году за роман «Здесь был Шва» получил медаль California Young Reader Medal.",
+      "chapter": "recognition",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "including the 2005 Boston Globe–Horn Book Award and 2008 California Young Reader Medal for The Schwa Was Here"
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Национальная книжная премия для юношества",
+      "long": "Получил Национальную книжную премию США в категории литературы для юношества за роман «Бездна Челленджера».",
+      "works": [
+        {
+          "ref": "challenger-deep"
+        }
+      ],
+      "chapter": "national-book-award",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He won the 2015 National Book Award for Young People's Literature for his book Challenger Deep"
+      }
+    },
+    {
+      "key": "career-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Почётное отличие премии Принца",
+      "long": "Роман «Жнец» вошёл в список почётных книг премии Майкла Л. Принца.",
+      "works": [
+        {
+          "ref": "scythe"
+        }
+      ],
+      "chapter": "national-book-award",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "his novel, Scythe, was a 2017 Michael L. Printz Honor book"
+      }
+    },
+    {
+      "key": "career-2019",
+      "date": {
+        "from": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия молодёжного жюри в Германии",
+      "long": "Получил премию молодёжного жюри Немецкой премии юношеской литературы (Deutscher Jugendliteraturpreis).",
+      "chapter": "national-book-award",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "won the Youth Jury Prize in 2019"
+      }
+    },
+    {
+      "key": "career-2024",
+      "date": {
+        "from": "2024",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Маргарет Эдвардс",
+      "long": "Получил премию Маргарет Эдвардс за значительный и устойчивый вклад в литературу для подростков.",
+      "chapter": "national-book-award",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He won the Margaret Edwards Award in 2024"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "challenger-deep",
+      "title": "Бездна Челленджера",
+      "qid": "Q122199113",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "scythe",
+      "title": "Жнец",
+      "qid": "Q48967442",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    }
+  ]
+}

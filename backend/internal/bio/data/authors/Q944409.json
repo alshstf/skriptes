@@ -1,0 +1,213 @@
+{
+  "qid": "Q944409",
+  "name": "Стенли Вейнбаум",
+  "born": "1902-04-04",
+  "died": "1935-12-14",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%92%D0%B5%D0%B9%D0%BD%D0%B1%D0%B0%D1%83%D0%BC%2C_%D0%A1%D1%82%D0%B5%D0%BD%D0%BB%D0%B8",
+      "rev": 149934830
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Stanley_G._Weinbaum",
+      "rev": 1371565541
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-ucheba",
+      "title": "Луисвилл, Милуоки, университет",
+      "from": 1902,
+      "to": 1923
+    },
+    {
+      "key": "molchanie",
+      "title": "Кинотеатр и годы молчания",
+      "from": 1924,
+      "to": 1932
+    },
+    {
+      "key": "slava",
+      "title": "Марсианская слава и болезнь",
+      "from": 1933,
+      "to": 1935
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1902",
+      "date": {
+        "from": "1902-04-04",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Луисвилле",
+      "long": "Стенли Грумен Вейнбаум родился в Луисвилле, штат Кентукки, в еврейской семье Стеллы (урождённой Грумен) и Натана Вейнбаума.",
+      "place": {
+        "label": "Луисвилл"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Стенли Грумен Вейнбаум (англ. Stanley Grauman Weinbaum; 4 апреля 1902, Луисвилл, США"
+      }
+    },
+    {
+      "key": "education-1920",
+      "date": {
+        "from": "1920-07",
+        "precision": "month"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Поступление в Висконсинский университет",
+      "long": "После школы в Милуоки принят в университет в Мадисоне; сначала изучал химические технологии, затем перешёл на английский язык.",
+      "place": {
+        "label": "Мадисон"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was granted admission to the University of Wisconsin–Madison in Madison in July 1920."
+      }
+    },
+    {
+      "key": "creation-1921",
+      "date": {
+        "from": "1921",
+        "to": "1923",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первые поэтические публикации",
+      "long": "В 1921–1923 годах вышли первые стихи Вейнбаума, затем последовал значительный перерыв в публикациях.",
+      "chapter": "molchanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первые поэтические публикации состоялись в 1921—1923 годах."
+      }
+    },
+    {
+      "key": "education-1923",
+      "date": {
+        "from": "1923",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Уход из университета после экзамена за друга",
+      "long": "Сдав на спор экзамен за друга, Вейнбаум был уличён и покинул университет, так и не получив высшего образования.",
+      "place": {
+        "label": "Мадисон"
+      },
+      "chapter": "detstvo-ucheba",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he left the university in 1923."
+      }
+    },
+    {
+      "key": "career-1923",
+      "date": {
+        "from": "1923",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа управляющим в кинотеатре",
+      "long": "После ухода из университета Вейнбаум устроился управляющим в кинотеатр.",
+      "chapter": "molchanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "покинул университет в 1923 году. После этого устроился работать управляющим в кинотеатре."
+      }
+    },
+    {
+      "key": "career-1933",
+      "date": {
+        "from": "1933",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Продажа романа газетному синдикату",
+      "long": "В 1933 году Вейнбаум продал романтический роман синдикату King Features, публиковавшему его в газетах в начале 1934 года.",
+      "chapter": "slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1933 he had sold a romantic novel, The Lady Dances, to King Features Syndicate"
+      }
+    },
+    {
+      "key": "career-1934",
+      "date": {
+        "from": "1934-07",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая фантастика и громкий успех",
+      "long": "Первый фантастический рассказ был опубликован в июле 1934 года и принёс Вейнбауму широкую известность; он стал одним из самых перспективных фантастов 1930-х.",
+      "works": [
+        {
+          "ref": "martian-odyssey"
+        }
+      ],
+      "chapter": "slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His first story, \"A Martian Odyssey\", was published to great acclaim in July 1934"
+      }
+    },
+    {
+      "key": "illness-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Рак лёгких",
+      "long": "Менее чем через два года после дебюта в фантастике Вейнбаум болел раком лёгких; к моменту смерти работал над романом.",
+      "chapter": "slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Однако всего через полтора года после этой публикации в возрасте 33 лет Стенли Вейнбаум умер от рака лёгких."
+      }
+    },
+    {
+      "key": "death-1935",
+      "date": {
+        "from": "1935-12-14",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака лёгких",
+      "long": "Стенли Вейнбаум умер от рака лёгких в Луисвилле в возрасте 33 лет.",
+      "place": {
+        "label": "Луисвилл"
+      },
+      "chapter": "slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "14 декабря 1935, Луисвилл, США"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "martian-odyssey",
+      "title": "Марсианская Одиссея",
+      "qid": "Q2462056",
+      "written": {
+        "from": 1934,
+        "to": 1934
+      }
+    }
+  ]
+}

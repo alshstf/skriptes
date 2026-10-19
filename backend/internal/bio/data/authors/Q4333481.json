@@ -1,0 +1,100 @@
+{
+  "qid": "Q4333481",
+  "name": "Олег Таругин",
+  "born": "1973-01-16",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9E%D0%BB%D0%B5%D0%B3_%D0%A2%D0%B0%D1%80%D1%83%D0%B3%D0%B8%D0%BD",
+      "rev": 154106560
+    }
+  ],
+  "chapters": [
+    {
+      "key": "omsk-odessa",
+      "title": "Омск и Одесса",
+      "from": 1973,
+      "to": 1989
+    },
+    {
+      "key": "medicine-and-writing",
+      "title": "Медицина и первые тексты",
+      "from": 1990,
+      "to": 2002
+    },
+    {
+      "key": "novels",
+      "title": "Романы",
+      "from": 2003,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1973",
+      "date": {
+        "from": "1973-01-16",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Омске",
+      "long": "Родился в Омске; будущий писатель-фантаст Олег Витальевич Горошков.",
+      "place": {
+        "label": "Омск"
+      },
+      "chapter": "omsk-odessa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Оле́г Тару́гин (род. 16 января 1973)"
+      }
+    },
+    {
+      "key": "creation-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Начало литературных опытов в студенчестве",
+      "long": "Начал писать в начале 1990-х, во время учёбы в медицинском институте; часть текстов, в первую очередь поэзия, существует только в сетевых публикациях.",
+      "chapter": "medicine-and-writing",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Писать начал в начале 1990-х, во время учёбы в медицинском институте"
+      }
+    },
+    {
+      "key": "creation-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Завершение первого романа спустя десятилетие",
+      "long": "Первый роман, начатый в студенческие годы, был дописан только в 2002 году.",
+      "works": [
+        {
+          "ref": "sleeping-city"
+        }
+      ],
+      "chapter": "medicine-and-writing",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "однако первый роман «Спящий город», был дописан только в 2002 году"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "sleeping-city",
+      "title": "Спящий город",
+      "written": {
+        "from": 1990,
+        "to": 2002
+      }
+    }
+  ]
+}

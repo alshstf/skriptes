@@ -1,0 +1,156 @@
+{
+  "qid": "Q118449",
+  "name": "Сергей Стефанович Сухинов",
+  "born": "1950-01-14",
+  "died": "2024-01-10",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D1%83%D1%85%D0%B8%D0%BD%D0%BE%D0%B2%2C_%D0%A1%D0%B5%D1%80%D0%B3%D0%B5%D0%B9_%D0%A1%D1%82%D0%B5%D1%84%D0%B0%D0%BD%D0%BE%D0%B2%D0%B8%D1%87",
+      "rev": 151188610
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-uchyoba",
+      "title": "Москва и авиационный институт",
+      "from": 1950,
+      "to": 1980
+    },
+    {
+      "key": "fantastika-i-priznanie",
+      "title": "Конструктор, фантаст, кандидат наук",
+      "from": 1981,
+      "to": 2009
+    },
+    {
+      "key": "pozdnie-nagrady",
+      "title": "Премии и последние годы",
+      "from": 2010,
+      "to": 2024
+    }
+  ],
+  "events": [
+    {
+      "key": "education-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Московском авиационном институте",
+      "long": "Окончил Московский авиационный институт; точные годы учёбы в источниках не указаны.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P69: Московский авиационный институт"
+      }
+    },
+    {
+      "key": "birth-1950",
+      "date": {
+        "from": "1950-01-14",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Москве",
+      "long": "Родился в Москве 14 января 1950 года.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Москва 1950-01-14"
+      }
+    },
+    {
+      "key": "career-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Победа на конкурсе писателей-фантастов",
+      "long": "Стал лауреатом Международного конкурса писателей-фантастов.",
+      "chapter": "fantastika-i-priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат Международного конкурса писателей-фантастов (1981)"
+      }
+    },
+    {
+      "key": "education-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Степень кандидата технических наук",
+      "long": "Получил степень кандидата технических наук; 15 лет проработал в авиационном конструкторском бюро.",
+      "chapter": "fantastika-i-priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "кандидат технических наук (1983)"
+      }
+    },
+    {
+      "key": "career-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия имени Ефремова",
+      "long": "Получил премию имени Ефремова за вклад в развитие отечественной фантастики как писатель и организатор литературного процесса.",
+      "chapter": "pozdnie-nagrady",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Лауреат премии имени И. А. Ефремова Союза писателей России и Совета по фантастической и приключенческой литературе (2010)"
+      }
+    },
+    {
+      "key": "career-2014",
+      "date": {
+        "from": "2014",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Правительства России в области культуры",
+      "long": "Удостоен премии Правительства РФ в области культуры за трилогию для юношества «Клад и крест».",
+      "chapter": "pozdnie-nagrady",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2014 году Сергей Сухинов был удостоен премии Правительства Российской Федерации в области культуры"
+      }
+    },
+    {
+      "key": "death-2024",
+      "date": {
+        "from": "2024-01-10",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Москве",
+      "long": "Умер в Москве 10 января 2024 года.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "pozdnie-nagrady",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P570: Москва 2024-01-10"
+      }
+    }
+  ]
+}

@@ -1,0 +1,271 @@
+{
+  "qid": "Q60903",
+  "name": "Юрий Нестеренко (Джордж Юрий Райт)",
+  "born": "1972-10-09",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9D%D0%B5%D1%81%D1%82%D0%B5%D1%80%D0%B5%D0%BD%D0%BA%D0%BE%2C_%D0%AE%D1%80%D0%B8%D0%B9_%D0%9B%D0%B5%D0%BE%D0%BD%D0%B8%D0%B4%D0%BE%D0%B2%D0%B8%D1%87",
+      "rev": 155363482
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/George_Yury_Right",
+      "rev": 1378527426
+    }
+  ],
+  "chapters": [
+    {
+      "key": "moskva-i-mifi",
+      "title": "Москва и МИФИ",
+      "from": 1972,
+      "to": 1995
+    },
+    {
+      "key": "fantastika-i-publicistika",
+      "title": "Фантастика и публицистика",
+      "from": 1996,
+      "to": 2009
+    },
+    {
+      "key": "ssha",
+      "title": "Убежище и жизнь в США",
+      "from": 2010,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1972",
+      "date": {
+        "from": "1972-10-09",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Москве",
+      "long": "Юрий Леонидович Нестеренко родился в Москве.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "moskva-i-mifi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 9 октября 1972, Москва"
+      }
+    },
+    {
+      "key": "education-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Окончание МИФИ с красным дипломом",
+      "long": "После физматшколы № 542 учился в МИФИ и окончил его с красным дипломом.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "moskva-i-mifi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Продолжил образование в МИФИ, который окончил в 1995 году с красным дипломом."
+      }
+    },
+    {
+      "key": "other-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Основание первого антисексуального общества",
+      "long": "По английской статье, создал первое в России Антисексуальное общество; позднее стал одним из основателей Международного антисексуального движения.",
+      "place": {
+        "label": "Россия"
+      },
+      "chapter": "moskva-i-mifi",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "It was Yuri Nesterenko who established the first Antisexual Society in Russia (1995)"
+      }
+    },
+    {
+      "key": "relocation-2010",
+      "date": {
+        "from": "2010",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в США и политическое убежище",
+      "long": "С 2010 года живёт в США, где получил политическое убежище.",
+      "place": {
+        "label": "США"
+      },
+      "chapter": "ssha",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 2010 года живёт в США, где получил политическое убежище."
+      }
+    },
+    {
+      "key": "other-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Предоставление политического убежища в США",
+      "long": "Убежища в США он попросил в 2010 году, оно было предоставлено в 2011 году.",
+      "place": {
+        "label": "США"
+      },
+      "chapter": "ssha",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He asked the US for political asylum in 2010, which was granted to him in 2011."
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "to": "2019",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Колонки в газете «7 дней»",
+      "long": "Был колумнистом американской газеты «7 дней».",
+      "place": {
+        "label": "США"
+      },
+      "chapter": "ssha",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "C 2013 по 2019 гг. колумнист газеты «7 дней» (США)."
+      }
+    },
+    {
+      "key": "other-2018",
+      "date": {
+        "from": "2018",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Американское гражданство и смена имени",
+      "long": "Получил гражданство США и взял имя Джордж Юрий Райт, сохранив прежнее имя как творческий псевдоним.",
+      "place": {
+        "label": "США"
+      },
+      "chapter": "ssha",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2018 году получил американское гражданство и взял имя Джордж Юрий Райт"
+      }
+    },
+    {
+      "key": "other-2025",
+      "date": {
+        "from": "2025",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Удаление канала на YouTube",
+      "long": "В знак протеста против цензуры в соцсетях удалил свой канал на YouTube.",
+      "chapter": "ssha",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "По этой причине в 2025 г. удалил свой канал на YouTube."
+      }
+    },
+    {
+      "key": "other-2026",
+      "date": {
+        "from": "2026",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Отказ от отчества",
+      "long": "В 2026 году отказался от отчества.",
+      "chapter": "ssha",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2026 году отказался от отчества."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "chernaya-top",
+      "title": "Чёрная Топь",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "vremya-mecha",
+      "title": "Время меча",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "krylya",
+      "title": "Крылья",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "pilot-s-granitsy",
+      "title": "Пилот с Границы",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "plyushch-na-ruinakh",
+      "title": "Плющ на руинах",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "lichnaya-neprikosnovennost",
+      "title": "Личная неприкосновенность",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    },
+    {
+      "ref": "prigovor",
+      "title": "Приговор",
+      "written": {
+        "from": 2015,
+        "to": 2015
+      }
+    },
+    {
+      "ref": "ya-ne-vernus",
+      "title": "Я не вернусь",
+      "written": {
+        "from": 2010,
+        "to": 2018
+      }
+    }
+  ]
+}

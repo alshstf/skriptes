@@ -1,0 +1,398 @@
+{
+  "qid": "Q4054424",
+  "name": "Наринэ Абгарян",
+  "born": "1971-01-14",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%90%D0%B1%D0%B3%D0%B0%D1%80%D1%8F%D0%BD%2C_%D0%9D%D0%B0%D1%80%D0%B8%D0%BD%D1%8D_%D0%AE%D1%80%D1%8C%D0%B5%D0%B2%D0%BD%D0%B0",
+      "rev": 154357291
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Narine_Abgaryan",
+      "rev": 1375832059
+    }
+  ],
+  "chapters": [
+    {
+      "key": "berd-erevan",
+      "title": "Берд и Ереван",
+      "from": 1971,
+      "to": 1992
+    },
+    {
+      "key": "moskva-zhzh",
+      "title": "Москва, работа, Живой Журнал",
+      "from": 1993,
+      "to": 2009
+    },
+    {
+      "key": "manyunya-priznanie",
+      "title": "«Манюня» и признание",
+      "from": 2010,
+      "to": 2016
+    },
+    {
+      "key": "razvod-armeniya",
+      "title": "Развод и возвращение в Армению",
+      "from": 2017,
+      "to": 2021
+    },
+    {
+      "key": "germaniya",
+      "title": "Германия",
+      "from": 2022,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1971",
+      "date": {
+        "from": "1971-01-14",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в посёлке Берд",
+      "long": "Родилась в посёлке Берд в семье врача и учительницы; у неё брат и три сестры.",
+      "place": {
+        "label": "Берд"
+      },
+      "chapter": "berd-erevan",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "род. 14 января 1971, пгт Берд, Шамшадинский район, Армянская ССР"
+      }
+    },
+    {
+      "key": "education-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание школы в Берде",
+      "long": "Окончила школу в Берде; училась также в музыкальной школе по классу фортепиано.",
+      "place": {
+        "label": "Берд"
+      },
+      "chapter": "berd-erevan",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1988, Abgaryan graduated from high school in Berd, Armenia."
+      }
+    },
+    {
+      "key": "education-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Ереванского лингвистического университета",
+      "long": "Получила специальность учителя русского языка и литературы в Ереванском лингвистическом университете имени Брюсова.",
+      "place": {
+        "label": "Ереван"
+      },
+      "chapter": "moskva-zhzh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1993, she graduated from Yerevan Brusov University of Languages."
+      }
+    },
+    {
+      "key": "relocation-1993",
+      "date": {
+        "from": "1993",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Москву",
+      "long": "Переехала в Москву; работала в пункте обмена валюты, пыталась заниматься бизнесом, затем работала бухгалтером.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "moskva-zhzh",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1993 году переехала в Москву, чтобы получить журналистское образование"
+      }
+    },
+    {
+      "key": "child-1995",
+      "date": {
+        "from": "1995-11-26",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение сына Эмиля",
+      "long": "В первом браке родился сын Эмиль.",
+      "chapter": "moskva-zhzh",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "сын Эмиль Медников (род. 26 ноября 1995 года)"
+      }
+    },
+    {
+      "key": "career-2011",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Рукопись года»",
+      "long": "Автобиографическая повесть о девочке Манюне, начавшаяся с историй в Живом Журнале, получила премию «Рукопись года».",
+      "works": [
+        {
+          "ref": "manyunya"
+        }
+      ],
+      "chapter": "manyunya-priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "«Манюня» — лауреат премии «Рукопись года» (2011)"
+      }
+    },
+    {
+      "key": "career-2011-2",
+      "date": {
+        "from": "2011",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Длинный список «Большой книги»",
+      "long": "Вошла в длинный список премии «Большая книга».",
+      "chapter": "manyunya-priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2011 — Лонг-лист «Большая книга» 2011 года."
+      }
+    },
+    {
+      "key": "career-2013",
+      "date": {
+        "from": "2013",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «BABY-НОС»",
+      "long": "Получила премию «BABY-НОС».",
+      "chapter": "manyunya-priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2013 — Премия «BABY-НОС» (Новая русская словесность)."
+      }
+    },
+    {
+      "key": "career-2015",
+      "date": {
+        "from": "2015-08",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия имени Александра Грина",
+      "long": "Стала одним из двух лауреатов Российской литературной премии имени Александра Грина за вклад в отечественную литературу.",
+      "chapter": "manyunya-priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В августе 2015 года Наринэ Абгарян была названа одним из двух лауреатов"
+      }
+    },
+    {
+      "key": "career-2016",
+      "date": {
+        "from": "2016",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия «Ясная Поляна»",
+      "long": "Получила премию «Ясная Поляна» в номинации «XXI век».",
+      "works": [
+        {
+          "ref": "three-apples-fell-from-the-sky"
+        }
+      ],
+      "chapter": "manyunya-priznanie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2016 — за книгу «С неба упали три яблока» Н. Абгарян получила премию «Ясная поляна»."
+      }
+    },
+    {
+      "key": "family-2017",
+      "date": {
+        "from": "2017",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод после двадцати лет брака",
+      "long": "После более чем двадцати лет брака развелась.",
+      "chapter": "razvod-armeniya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 2017 году, после 20 с лишним лет в браке, развелась"
+      }
+    },
+    {
+      "key": "other-2018",
+      "date": {
+        "from": "2018-04",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Публичное выступление против Саргсяна",
+      "long": "Публично выступила против премьер-министра Армении С. Саргсяна, опубликовав текст в Фейсбуке.",
+      "chapter": "razvod-armeniya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В апреле 2018 года выступила против премьера С. Саргсяна, опубликовав текст в Фейсбуке."
+      }
+    },
+    {
+      "key": "love-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Возвращение в Армению и второй брак",
+      "long": "Вернулась в Армению и вышла замуж во второй раз.",
+      "chapter": "razvod-armeniya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2020 году писательница вернулась в Армению, где снова вышла замуж."
+      }
+    },
+    {
+      "key": "career-2020",
+      "date": {
+        "from": "2020",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Признание The Guardian",
+      "long": "Газета The Guardian включила её в число самых ярких авторов Европы.",
+      "chapter": "razvod-armeniya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2020 году The Guardian назвала её в числе самых ярких авторов Европы."
+      }
+    },
+    {
+      "key": "career-2020-2",
+      "date": {
+        "from": "2020-03",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый перевод на английский",
+      "long": "Вышел первый английский перевод её книги, роман «С неба упали три яблока».",
+      "works": [
+        {
+          "ref": "three-apples-fell-from-the-sky"
+        }
+      ],
+      "chapter": "razvod-armeniya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В марте 2020 года на английском — первый её перевод на него — вышел роман"
+      }
+    },
+    {
+      "key": "career-2021",
+      "date": {
+        "from": "2021",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Короткий список «Большой книги»",
+      "long": "Роман вошёл в короткий список «Большой книги» и получил приз читательских симпатий.",
+      "works": [
+        {
+          "ref": "simon"
+        }
+      ],
+      "chapter": "razvod-armeniya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2021 — роман «Симон» вошёл в короткий список 16-го сезона"
+      }
+    },
+    {
+      "key": "relocation-2022",
+      "date": {
+        "from": "2022",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Германию",
+      "long": "Вместе со вторым мужем переехала в Германию.",
+      "chapter": "germaniya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "C 2022 года Наринэ Абгарян живет в Германии."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "manyunya",
+      "title": "Манюня",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    },
+    {
+      "ref": "semen-andreich",
+      "title": "Семен Андреич. Летопись в каракулях",
+      "written": {
+        "from": 2012,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "shokoladny-dedushka",
+      "title": "Шоколадный дедушка",
+      "written": {
+        "from": 2014,
+        "to": 2014
+      }
+    },
+    {
+      "ref": "three-apples-fell-from-the-sky",
+      "title": "С неба упали три яблока",
+      "qid": "Q126490687",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "simon",
+      "title": "Симон",
+      "written": {
+        "from": 2021,
+        "to": 2021
+      }
+    }
+  ]
+}

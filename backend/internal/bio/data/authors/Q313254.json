@@ -1,0 +1,597 @@
+{
+  "qid": "Q313254",
+  "name": "Питер Кэри",
+  "born": "1943-05-07",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9A%D1%8D%D1%80%D0%B8%2C_%D0%9F%D0%B8%D1%82%D0%B5%D1%80",
+      "rev": 149888961
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Peter_Carey_%28novelist%29",
+      "rev": 1377981502
+    }
+  ],
+  "chapters": [
+    {
+      "key": "bacchus-marsh",
+      "title": "Бакшус Марш и школа",
+      "from": 1943,
+      "to": 1961
+    },
+    {
+      "key": "advertising-london",
+      "title": "Реклама, брак и непринятые рукописи",
+      "from": 1962,
+      "to": 1975
+    },
+    {
+      "key": "starlight-bellingen",
+      "title": "Звёздный свет и Беллинген",
+      "from": 1976,
+      "to": 1989
+    },
+    {
+      "key": "new-york",
+      "title": "Нью-Йорк и две Букеровские премии",
+      "from": 1990,
+      "to": 2005
+    },
+    {
+      "key": "later-years",
+      "title": "Новый брак и поздние книги",
+      "from": 2006,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1943",
+      "date": {
+        "from": "1943-05-07",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Бакшус Марше",
+      "long": "Родился в Бакшус Марше, штат Виктория. Родители держали дилерский центр Holden.",
+      "place": {
+        "label": "Бакшус Марш"
+      },
+      "chapter": "bacchus-marsh",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Родился 7 мая 1943 года в маленьком австралийском городке Бакшус Марш."
+      }
+    },
+    {
+      "key": "education-1954",
+      "date": {
+        "from": "1954",
+        "to": "1960",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Школа-интернат в Джилонге",
+      "long": "С 1954 по 1960 год учился в закрытой школе Geelong Grammar School.",
+      "place": {
+        "label": "Джилонг"
+      },
+      "chapter": "bacchus-marsh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "boarded at Geelong Grammar School between 1954 and 1960"
+      }
+    },
+    {
+      "key": "education-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Университет Монаша, брошенная учёба",
+      "long": "Поступил в Университет Монаша изучать химию и зоологию, но из-за аварии и отсутствия интереса прервал учёбу.",
+      "place": {
+        "label": "Мельбурн"
+      },
+      "chapter": "bacchus-marsh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1961, Carey enrolled in a science degree at the new Monash University in Melbourne, majoring in chemistry and zoology, but cut his studies short because of a car accident and a lack of interest."
+      }
+    },
+    {
+      "key": "career-1962",
+      "date": {
+        "from": "1962",
+        "to": "1967",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа в рекламных агентствах",
+      "long": "Работал в разных мельбурнских рекламных агентствах; коллеги Барри Окли и Моррис Лурье познакомили его с новой европейской и американской прозой.",
+      "place": {
+        "label": "Мельбурн"
+      },
+      "chapter": "advertising-london",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1962, he began to work in advertising."
+      }
+    },
+    {
+      "key": "love-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Ли Уитман",
+      "long": "Женился на Ли Уитман, с которой познакомился в университете.",
+      "chapter": "advertising-london",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1964 году женится на Ли Уитман."
+      }
+    },
+    {
+      "key": "creation-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Первые рукописи и отказы издателей",
+      "long": "Начал писать сам; за несколько лет написал пять романов, ни один из которых не был издан.",
+      "chapter": "advertising-london",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "began writing on his own, receiving his first rejection slip in 1964"
+      }
+    },
+    {
+      "key": "relocation-1968",
+      "date": {
+        "from": "1968",
+        "to": "1970",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Европа, Иран и Лондон",
+      "long": "С женой уехал из Австралии, проехал через Европу и Иран и поселился в Лондоне, где продолжил работать в рекламе.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "advertising-london",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "travelling through Europe and Iran before settling in London in 1968"
+      }
+    },
+    {
+      "key": "relocation-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение в Австралию",
+      "long": "Вернулся в Австралию, работал в рекламе в Мельбурне и Сиднее и публиковал рассказы в журналах.",
+      "chapter": "advertising-london",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Returning to Australia in 1970, Carey once again did advertising work in Melbourne and Sydney."
+      }
+    },
+    {
+      "key": "relocation-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Переезд в Сидней, агентство Grey",
+      "long": "Переехал в Бэлмейн, пригород Сиднея, на работу в агентство Grey Advertising.",
+      "place": {
+        "label": "Сидней"
+      },
+      "chapter": "advertising-london",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The Fat Man in History, which appeared in 1974. In the same year, Carey moved to Balmain in Sydney to work for Grey Advertising."
+      }
+    },
+    {
+      "key": "relocation-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Община «Звёздный свет» в Квинсленде",
+      "long": "Вместе с художницей Марго Хатчесон поселился в общине «Звёздный свет» в Яндине, продолжая работать в Grey: три недели писал, четвёртую проводил в агентстве.",
+      "place": {
+        "label": "Яндина"
+      },
+      "works": [
+        {
+          "ref": "war-crimes",
+          "note": "большая часть рассказов сборника создана в это время"
+        },
+        {
+          "ref": "bliss",
+          "note": "первый изданный роман написан в этот период"
+        }
+      ],
+      "chapter": "starlight-bellingen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1976, Carey moved to Queensland and joined an alternative community named Starlight in Yandina, north of Brisbane…It was during this time that he produced most of the stories collected in War Crimes (1979), as well as Bliss (1981)"
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Собственное рекламное агентство",
+      "long": "Основал в Сиднее собственное рекламное агентство вместе с Бани Макспедден.",
+      "place": {
+        "label": "Сидней"
+      },
+      "chapter": "starlight-bellingen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Carey started his own advertising agency in 1980, the Sydney-based McSpedden Carey Advertising Consultants, in partnership with Bani McSpedden."
+      }
+    },
+    {
+      "key": "family-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Ли Уитман",
+      "long": "После долгой разлуки Ли Уитман попросила развод, чтобы выйти замуж снова; Кэри согласился.",
+      "chapter": "starlight-bellingen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Leigh Weetman asked for a divorce in 1980 so that she could remarry and Peter agreed."
+      }
+    },
+    {
+      "key": "relocation-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Беллинген",
+      "long": "Переехал в Беллинген на севере Нового Южного Уэльса. По словам Кэри, вид местной церкви, которую собирались увезти, подсказал образ «Оскара и Люсинды».",
+      "place": {
+        "label": "Беллинген"
+      },
+      "works": [
+        {
+          "ref": "illywhacker",
+          "note": "роман написан в Беллингене"
+        },
+        {
+          "ref": "oscar-and-lucinda",
+          "note": "замысел отчасти вдохновлён жизнью в Беллингене (слова Кэри)"
+        }
+      ],
+      "chapter": "starlight-bellingen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1981, he moved to Bellingen in northern New South Wales. There he wrote Illywhacker, published in 1985."
+      }
+    },
+    {
+      "key": "love-1985",
+      "date": {
+        "from": "1985",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Элисон Саммерс",
+      "long": "Женился на театральном режиссёре Элисон Саммерс.",
+      "chapter": "starlight-bellingen",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1985 году Кэри женится на директоре театра Элисон Саммерс."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первая Букеровская премия",
+      "long": "Первая Букеровская премия принесла международное признание.",
+      "works": [
+        {
+          "ref": "oscar-and-lucinda"
+        }
+      ],
+      "chapter": "starlight-bellingen",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Carey won his first Booker Prize in 1988, for Oscar and Lucinda"
+      }
+    },
+    {
+      "key": "relocation-1990",
+      "date": {
+        "from": "1990",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Нью-Йорк, преподавание",
+      "long": "Продал долю в рекламной компании и переехал с семьёй в Нью-Йорк преподавать писательское мастерство.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "tax-inspector",
+          "note": "начат в Австралии, первая книга, законченная в США"
+        }
+      ],
+      "chapter": "new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1990 году Кэри продаёт свою долю в рекламной компании и вместе с женой и сыном переезжает в Нью-Йорк, чтобы преподавать писательское мастерство в Нью-Йоркском Университете."
+      }
+    },
+    {
+      "key": "other-1998",
+      "date": {
+        "from": "1998",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Спор вокруг аудиенции у королевы",
+      "long": "Отказ от аудиенции у королевы вызвал обвинения в республиканских демонстрациях; сам Кэри объяснял это совпадением по датам. Встреча позже состоялась.",
+      "works": [
+        {
+          "ref": "jack-maggs"
+        }
+      ],
+      "chapter": "new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1998 году писателя приглашают на аудиенцию к королеве Елизавете II, но он отказывается от приглашения."
+      }
+    },
+    {
+      "key": "career-2001",
+      "date": {
+        "from": "2001",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Вторая Букеровская премия",
+      "long": "Вторая Букеровская премия, за роман о Неде Келли.",
+      "works": [
+        {
+          "ref": "true-history-of-the-kelly-gang"
+        }
+      ],
+      "chapter": "new-york",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "won his second Booker Prize in 2001, for True History of the Kelly Gang"
+      }
+    },
+    {
+      "key": "family-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Развод с Элисон Саммерс",
+      "long": "Развод с Элисон Саммерс после четырёх лет раздельной жизни; затем отношения с издателем Фрэнсис Коди, ставшей его женой.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-york",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 2005 году Кэри разводится со второй женой, и вскоре начинает встречаться с подданной Великобритании Фрэнсис Коди."
+      }
+    },
+    {
+      "key": "other-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Огласка обстоятельств развода",
+      "long": "Обстоятельства расставания стали известны публике после выхода романа, где изображены отношения героя с бывшей женой.",
+      "works": [
+        {
+          "ref": "theft",
+          "note": "роман изображает токсичные отношения героя с бывшей женой (по мнению прессы — отражение развода)"
+        }
+      ],
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The unhappy circumstances of Carey's breakup with Alison Summers became public in 2006 when Theft: A Love Story appeared"
+      }
+    },
+    {
+      "key": "career-2012",
+      "date": {
+        "from": "2012-06-11",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Офицер ордена Австралии",
+      "long": "Награждён как офицер ордена Австралии.",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: офицер ордена Австралии 2012-06-11"
+      }
+    },
+    {
+      "key": "other-2015",
+      "date": {
+        "from": "2015-04",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Отказ участвовать в гала PEN",
+      "long": "Вместе с другими писателями отказался быть хозяином стола на гала PEN, где награду должен был получить Charlie Hebdo.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In April 2015 he, alongside Michael Ondaatje, Francine Prose, Teju Cole, Rachel Kushner and Taiye Selasi, withdrew as table hosts from the PEN American Center gala"
+      }
+    },
+    {
+      "key": "creation-2025",
+      "date": {
+        "from": "2025",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Отказ от писательства романов",
+      "long": "Заявил, что больше не пишет романы, и продолжит писать нехудожественную прозу.",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In a 2025 interview Carey said \"I'm finished with novels\"."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "fat-man-in-history",
+      "title": "Толстяк в истории",
+      "written": {
+        "from": 1970,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "war-crimes",
+      "title": "Военные преступления",
+      "written": {
+        "from": 1976,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "bliss",
+      "title": "Блаженство",
+      "written": {
+        "from": 1976,
+        "to": 1981
+      }
+    },
+    {
+      "ref": "illywhacker",
+      "title": "Иллюзионист",
+      "written": {
+        "from": 1981,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "oscar-and-lucinda",
+      "title": "Оскар и Люсинда",
+      "qid": "Q1060522",
+      "written": {
+        "from": 1988,
+        "to": 1988
+      }
+    },
+    {
+      "ref": "tax-inspector",
+      "title": "Налоговый инспектор",
+      "written": {
+        "from": 1990,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "jack-maggs",
+      "title": "Джек Мэггс",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "true-history-of-the-kelly-gang",
+      "title": "Истинная история шайки Келли",
+      "qid": "Q3821351",
+      "written": {
+        "from": 2000,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "my-life-as-a-fake",
+      "title": "Моя жизнь как фальшивка",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "theft",
+      "title": "Кража",
+      "written": {
+        "from": 2006,
+        "to": 2006
+      }
+    },
+    {
+      "ref": "parrot-and-olivier-in-america",
+      "title": "Попугай и Оливье в Америке",
+      "written": {
+        "from": 2010,
+        "to": 2010
+      }
+    }
+  ]
+}

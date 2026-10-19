@@ -1,0 +1,514 @@
+{
+  "qid": "Q44836",
+  "name": "Эрик Берн",
+  "born": "1910-05-10",
+  "died": "1970-07-15",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%BD%2C_%D0%AD%D1%80%D0%B8%D0%BA",
+      "rev": 150172363
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Eric_Berne",
+      "rev": 1379731769
+    }
+  ],
+  "chapters": [
+    {
+      "key": "montreal",
+      "title": "Монреаль, детство",
+      "from": 1910,
+      "to": 1930
+    },
+    {
+      "key": "medicine-usa",
+      "title": "Медицина и переезд в США",
+      "from": 1931,
+      "to": 1942
+    },
+    {
+      "key": "army",
+      "title": "Армейский психиатр",
+      "from": 1943,
+      "to": 1946
+    },
+    {
+      "key": "carmel-breakaway",
+      "title": "Кармел и разрыв с психоанализом",
+      "from": 1947,
+      "to": 1963
+    },
+    {
+      "key": "fame",
+      "title": "Слава и последние годы",
+      "from": 1964,
+      "to": 1970
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1910",
+      "date": {
+        "from": "1910-05-10",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Монреале",
+      "long": "Родился в Монреале в семье врача Давида Бернстайна и писательницы и редактора Сары Гордон; имя при рождении — Леонард Бернстайн.",
+      "place": {
+        "label": "Монреаль"
+      },
+      "chapter": "montreal",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "10 мая 1910, Монреаль, Канада"
+      }
+    },
+    {
+      "key": "education-1931",
+      "date": {
+        "from": "1931",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Бакалавр Университета Макгилла",
+      "long": "Окончил Университет Макгилла в Монреале со степенью бакалавра гуманитарных наук.",
+      "place": {
+        "label": "Монреаль"
+      },
+      "chapter": "medicine-usa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1931, Berne graduated from McGill"
+      }
+    },
+    {
+      "key": "relocation-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в США, интернатура",
+      "long": "Получив в Макгилле степени доктора медицины и магистра хирургии, уехал в США и начал интернатуру в Инглвудской больнице в Нью-Джерси.",
+      "place": {
+        "label": "Инглвуд, Нью-Джерси"
+      },
+      "chapter": "medicine-usa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Berne came to the United States in 1935 when he began an internship at Englewood Hospital in New Jersey."
+      }
+    },
+    {
+      "key": "education-1936",
+      "date": {
+        "from": "1936",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Психиатрическая ординатура в Йеле",
+      "long": "После интернатуры начал психиатрическую ординатуру в клинике Медицинской школы Йельского университета, где проработал два года.",
+      "place": {
+        "label": "Нью-Хейвен"
+      },
+      "chapter": "medicine-usa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After completing his one-year internship in 1936, he began his psychiatric residency at the Psychiatric Clinic of  Yale University School of Medicine"
+      }
+    },
+    {
+      "key": "other-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Гражданство США и новая фамилия",
+      "long": "Стал гражданином США и сократил фамилию Бернстайн до Берн.",
+      "chapter": "medicine-usa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1939, Berne became an American citizen and shortened his name from Eric Lennard Bernstein to Eric Berne."
+      }
+    },
+    {
+      "key": "education-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Психоаналитическое обучение в Нью-Йорке",
+      "long": "Начал психоаналитическое обучение в Нью-Йорке; личный анализ проходил у Поля Федерна, бывшего коллеги Фрейда.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "medicine-usa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1941 году начал проходить специальный курс в Нью-Йоркском психоаналитическом институте"
+      }
+    },
+    {
+      "key": "love-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Первый брак, с Рут Харви",
+      "long": "Первый брак с Рут Харви; в нём родились двое детей.",
+      "chapter": "medicine-usa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married in 1942, had two children, and divorced acrimoniously in 1945."
+      }
+    },
+    {
+      "key": "war-1943",
+      "date": {
+        "from": "1943",
+        "to": "1946",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Служба армейским психиатром",
+      "long": "Служил психиатром в Армейском медицинском корпусе США, дослужился от лейтенанта до майора; во время войны начал работать с группами. Уволен в 1946 году.",
+      "chapter": "army",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1943 году Берн вступил в Армейский медицинский корпус как психиатр и именно во время войны он начал работать с группами."
+      }
+    },
+    {
+      "key": "family-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с первой женой",
+      "long": "Развод с первой женой Рут Харви.",
+      "chapter": "army",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married in 1942, had two children, and divorced acrimoniously in 1945."
+      }
+    },
+    {
+      "key": "relocation-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Кармел после увольнения",
+      "long": "После увольнения из армии поселился в Кармеле, Калифорния, где жил до конца жизни, и закончил работу над рукописью первой книги.",
+      "place": {
+        "label": "Кармел"
+      },
+      "works": [
+        {
+          "ref": "mind-in-action",
+          "note": "книга завершена после переезда"
+        }
+      ],
+      "chapter": "army",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После увольнения в 1946 году Берн переехал в Кармел, штат Калифорния, и закончил работу над книгой «Психика в действии»"
+      }
+    },
+    {
+      "key": "education-1947",
+      "date": {
+        "from": "1947",
+        "to": "1949",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Обучение у Эрика Эриксона",
+      "long": "Возобновил психоаналитическое обучение в Психоаналитическом институте Сан-Франциско и занимался под руководством Эрика Эриксона.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "chapter": "carmel-breakaway",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During 1947–1949 Berne studied under Erik Erikson."
+      }
+    },
+    {
+      "key": "love-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Второй брак, с Дороти Уэй",
+      "long": "Второй брак с Дороти Де Масс Уэй; в браке родились двое детей.",
+      "chapter": "carmel-breakaway",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1949 he married Dorothy DeMass Way, with whom he also had two children before their divorce in 1964."
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954-09",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая группа трансакционного анализа",
+      "long": "Сформировалась первая группа трансакционного анализа; с неё началось развитие метода.",
+      "chapter": "carmel-breakaway",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первая группа трансактного анализа Берна сформировалась в сентябре 1954 года."
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Отказ в членстве в Психоаналитическом институте",
+      "long": "После пятнадцати лет психоаналитической подготовки заявление о членстве в Психоаналитическом институте Сан-Франциско отклонили в третий раз; Берн отошёл от ортодоксального психоанализа.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "chapter": "carmel-breakaway",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1956 году его заявление о членстве в Психоаналитическом институте Сан-Франциско было отклонено в третий раз"
+      }
+    },
+    {
+      "key": "career-1957",
+      "date": {
+        "from": "1957-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Доклад о трансакционном анализе",
+      "long": "Выступил на конференции в Лос-Анджелесе с докладом о трансакционном анализе как новом методе групповой терапии; доклад опубликован в 1958 году.",
+      "place": {
+        "label": "Лос-Анджелес"
+      },
+      "works": [
+        {
+          "ref": "transactional-analysis-in-psychotherapy"
+        }
+      ],
+      "chapter": "carmel-breakaway",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В ноябре 1957 года на Западной Региональной конференции Американской Ассоциации групповой психотерапии в Лос-Анджелесе Берн выступил с научным докладом"
+      }
+    },
+    {
+      "key": "career-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор «Бюллетеня трансакционного анализа»",
+      "long": "Начал выходить «Бюллетень трансакционного анализа»; несколько лет Берн был его редактором.",
+      "chapter": "carmel-breakaway",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1962 году начал издаваться журнал «Бюллетень трансакционного анализа» («Transactionai Analysis Bulletin»), редактором которого в течение нескольких лет был Берн."
+      }
+    },
+    {
+      "key": "career-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Основание Международной ассоциации ТА",
+      "long": "Образована Международная Ассоциация трансакционного анализа (ITAA) для подготовки и аккредитации специалистов.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1964 году была образована Международная Ассоциация трансакционного анализа"
+      }
+    },
+    {
+      "key": "career-1964-2",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Всемирная известность после бестселлера",
+      "long": "Книга, написанная для профессиональных терапевтов, стала бестселлером New York Times и сделала Берна знаменитым.",
+      "works": [
+        {
+          "ref": "games-people-play"
+        }
+      ],
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "is a bestselling 1964 book by Berne that has sold more than five million copies… the book became a New York Times bestseller and made Berne famous"
+      }
+    },
+    {
+      "key": "family-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод со второй женой",
+      "long": "Развод со второй женой Дороти Уэй.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "before their divorce in 1964"
+      }
+    },
+    {
+      "key": "other-1964",
+      "date": {
+        "from": "1964",
+        "to": "1970",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Беспокойные годы, упор на писательство",
+      "long": "Личная жизнь была неустроенной, Берн сосредоточился на писательской работе.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The years from 1964 to 1970 were restless ones for Berne. His personal life became chaotic and he concentrated on his writing."
+      }
+    },
+    {
+      "key": "love-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Третий брак, с Торре Питерсон",
+      "long": "Третий брак, с Торре Питерсон; супруги жили в Кармеле.",
+      "place": {
+        "label": "Кармел"
+      },
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Berne married a third time, to Torre Peterson in 1967."
+      }
+    },
+    {
+      "key": "family-1970",
+      "date": {
+        "from": "1970",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с третьей женой",
+      "long": "Третий брак распался в начале 1970 года.",
+      "chapter": "fame",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В начале 1970 года Берн и его третья жена развелись."
+      }
+    },
+    {
+      "key": "death-1970",
+      "date": {
+        "from": "1970-07-15",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от сердечного приступа",
+      "long": "Умер от сердечного приступа в Кармеле в возрасте 60 лет.",
+      "place": {
+        "label": "Кармел"
+      },
+      "chapter": "fame",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Berne died of a heart attack in Carmel on July 15, 1970."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "mind-in-action",
+      "title": "Психика в действии",
+      "written": {
+        "from": 1946,
+        "to": 1946
+      }
+    },
+    {
+      "ref": "transactional-analysis-in-psychotherapy",
+      "title": "Трансакционный анализ в психотерапии",
+      "written": {
+        "from": 1957,
+        "to": 1961
+      }
+    },
+    {
+      "ref": "structure-and-dynamics-of-organizations-and-groups",
+      "title": "Структура и динамика организаций и групп",
+      "written": {
+        "from": 1963,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "games-people-play",
+      "title": "Игры, в которые играют люди",
+      "written": {
+        "from": 1961,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "principles-of-group-treatment",
+      "title": "Принципы группового лечения",
+      "written": {
+        "from": 1966,
+        "to": 1966
+      }
+    }
+  ]
+}

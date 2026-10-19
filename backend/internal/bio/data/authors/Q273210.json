@@ -1,0 +1,765 @@
+{
+  "qid": "Q273210",
+  "name": "Джеймс Болдуин",
+  "born": "1924-08-02",
+  "died": "1987-12-01",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%BE%D0%BB%D0%B4%D1%83%D0%B8%D0%BD%2C_%D0%94%D0%B6%D0%B5%D0%B9%D0%BC%D1%81",
+      "rev": 154923861
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/James_Baldwin",
+      "rev": 1380728365
+    }
+  ],
+  "chapters": [
+    {
+      "key": "harlem-church",
+      "title": "Гарлем, церковь, отчим",
+      "from": 1924,
+      "to": 1941
+    },
+    {
+      "key": "new-york-years",
+      "title": "Чернорабочий и Гринвич-Виллидж",
+      "from": 1942,
+      "to": 1947
+    },
+    {
+      "key": "paris-years",
+      "title": "Париж: бедность и первые книги",
+      "from": 1948,
+      "to": 1956
+    },
+    {
+      "key": "return-america",
+      "title": "Возвращение и борьба за права",
+      "from": 1957,
+      "to": 1969
+    },
+    {
+      "key": "provence",
+      "title": "Прованс",
+      "from": 1970,
+      "to": 1987
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1924",
+      "date": {
+        "from": "1924-08-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Гарлеме",
+      "long": "Родился в Гарлемской больнице Нью-Йорка как Джеймс Артур Джонс, внебрачный сын Эммы Берди Джонс. Имя биологического отца мать ему так и не открыла.",
+      "place": {
+        "label": "Гарлем, Нью-Йорк"
+      },
+      "chapter": "harlem-church",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Baldwin was born as James Arthur Jones to Emma Berdis Jones on August 2, 1924, at Harlem Hospital in New York City."
+      }
+    },
+    {
+      "key": "family-1927",
+      "date": {
+        "from": "1927",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Брак матери с проповедником Дэвидом Болдуином",
+      "long": "Мать вышла замуж за рабочего и баптистского проповедника Дэвида Болдуина; Джеймс взял его фамилию. В семье родилось ещё восемь детей, Джеймс был старшим.",
+      "place": {
+        "label": "Гарлем, Нью-Йорк"
+      },
+      "chapter": "harlem-church",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "However, in 1927, she married David Baldwin, a laborer and Baptist preacher."
+      }
+    },
+    {
+      "key": "faith-1937",
+      "date": {
+        "from": "1937",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "minor",
+      "short": "Уход в пятидесятническую церковь",
+      "long": "Смущённый влечением к мужчинам, искал прибежища в религии; в 14 лет начал проповедовать в пятидесятнической церкви.",
+      "place": {
+        "label": "Гарлем, Нью-Йорк"
+      },
+      "chapter": "harlem-church",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He joined the later demolished Mount Calvary of the Pentecostal Faith Church on Lenox Avenue in 1937."
+      }
+    },
+    {
+      "key": "career-1937",
+      "date": {
+        "from": "1937",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое опубликованное эссе в школьной газете",
+      "long": "В школьной газете Douglass Pilot, редактором которой он позже стал, вышло его первое эссе о Гарлеме.",
+      "place": {
+        "label": "Гарлем, Нью-Йорк"
+      },
+      "chapter": "harlem-church",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "which appeared in the autumn 1937 issue of the Douglass Pilot"
+      }
+    },
+    {
+      "key": "education-1938",
+      "date": {
+        "from": "1938",
+        "to": "1941",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Школа ДеВитта Клинтона в Бронксе",
+      "long": "Учился в преимущественно белой и еврейской школе в Бронксе, работал в журнале Magpie вместе с Ричардом Аведоном и будущими издателями. Аттестат получил в 1941 году.",
+      "place": {
+        "label": "Бронкс, Нью-Йорк"
+      },
+      "chapter": "harlem-church",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1938, Baldwin applied to and was accepted at De Witt Clinton High School in the Bronx"
+      }
+    },
+    {
+      "key": "family-1940",
+      "date": {
+        "from": "1940",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Известие, что отчим ему не отец",
+      "long": "Подслушав разговор родителей, узнал, что человек, которого он всегда называл отцом, не его биологический отец.",
+      "place": {
+        "label": "Гарлем, Нью-Йорк"
+      },
+      "chapter": "harlem-church",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He learned that he was not his father's biological son through overhearing a comment to that effect during one of his parents' conversations late in 1940."
+      }
+    },
+    {
+      "key": "faith-1941",
+      "date": {
+        "from": "1941",
+        "precision": "year"
+      },
+      "type": "faith",
+      "tier": "major",
+      "short": "Последняя проповедь, разрыв с церковью",
+      "long": "Покинул церковь, в которой проповедовал с 14 лет; позже писал, что церковь была маской самоненависти и отчаяния. В том же году оставил школу, чтобы помогать семье деньгами.",
+      "place": {
+        "label": "Гарлем, Нью-Йорк"
+      },
+      "chapter": "harlem-church",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He delivered his final sermon at Fireside Pentecostal in 1941."
+      }
+    },
+    {
+      "key": "career-1942",
+      "date": {
+        "from": "1942",
+        "to": "1943",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Работа на железной дороге в Нью-Джерси, расизм",
+      "long": "На стройке в Нью-Джерси столкнулся с расовыми оскорблениями и отказами в обслуживании; эти случаи он описал в эссе и называл частичной причиной эмиграции.",
+      "place": {
+        "label": "Белл-Мид, Нью-Джерси"
+      },
+      "works": [
+        {
+          "ref": "notes-of-a-native-son",
+          "note": "случаи в ресторанах Принстона описаны самим Болдуином в эссе «Notes of a Native Son»"
+        }
+      ],
+      "chapter": "new-york-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the middle of 1942, Emile Capouya helped Baldwin get a job laying tracks for the military in Belle Mead, New Jersey."
+      }
+    },
+    {
+      "key": "loss-1943",
+      "date": {
+        "from": "1943-07-29",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отчима",
+      "long": "Отчим, помещённый в психиатрическую лечебницу, умер от туберкулёза; Болдуин навестил его накануне по просьбе матери. В тот же день родилась младшая сестра Паула.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "notes-of-a-native-son",
+          "note": "примирение с отчимом Болдуин описал в эссе «Notes of a Native Son»"
+        }
+      ],
+      "chapter": "new-york-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was committed to a mental asylum in 1943 and died of tuberculosis on July 29 of that year, the same day Emma had their last child, Paula."
+      }
+    },
+    {
+      "key": "other-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Знакомство с Марлоном Брандо",
+      "long": "На театральном курсе Новой школы познакомился с Марлоном Брандо; дружба продолжалась десятилетия, в том числе в годы движения за гражданские права.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-york-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1944, Baldwin met Marlon Brando, to whom he was also attracted, at a theater class at The New School."
+      }
+    },
+    {
+      "key": "career-1945",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Собственный литературный журнал",
+      "long": "Вместе с Клэр Бёрч основал литературный журнал The Generation.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-york-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1945, Baldwin started a literary magazine called The Generation with Claire Burch"
+      }
+    },
+    {
+      "key": "career-1945-2",
+      "date": {
+        "from": "1945",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Знакомство с Ричардом Райтом",
+      "long": "Показал Райту ранний вариант будущего первого романа; Райт поддержал его, но аванс от издательства Harper пропал без книги, а позже отношения с Райтом разладились.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "go-tell-it-on-the-mountain",
+          "note": "Райту был показан ранний вариант рукописи под названием «Crying Holy»"
+        }
+      ],
+      "chapter": "new-york-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Towards the end of 1945, Baldwin met Richard Wright"
+      }
+    },
+    {
+      "key": "loss-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Самоубийство Юджина Уорта",
+      "long": "Покончил с собой Юджин Уорт, чернокожий друг, главная любовь Болдуина виллиджских лет; Болдуин никогда не говорил ему о своих чувствах.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-york-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Worth died by suicide after jumping from the George Washington Bridge in 1946."
+      }
+    },
+    {
+      "key": "career-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация в The Nation",
+      "long": "Первая публикация — рецензия на рассказы Горького в журнале The Nation; с ним Болдуин сотрудничал до конца жизни.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "new-york-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Baldwin's first published work, a review of the writer Maxim Gorky, appeared in The Nation in 1947."
+      }
+    },
+    {
+      "key": "relocation-1948",
+      "date": {
+        "from": "1948-11-11",
+        "precision": "day"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Эмиграция в Париж с сорока долларами",
+      "long": "Улетел в Париж на стипендию Розенвальда, имея сорок долларов; большую часть денег отдал матери. Причиной называл прежде всего расовую проблему. В Париже жил в бедности.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Baldwin flew from New York to Paris on November 11, 1948."
+      }
+    },
+    {
+      "key": "love-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Любовь к Люсьену Хапперсбергеру",
+      "long": "Влюбился в швейцарца Люсьена Хапперсбергера; его женитьба в 1952 году стала для Болдуина тяжёлым ударом, но дружба длилась до конца жизни.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1949, Baldwin met and fell in love with Lucien Happersberger, a boy aged 17, though Happersberger's marriage three years later left Baldwin distraught."
+      }
+    },
+    {
+      "key": "persecution-1949",
+      "date": {
+        "from": "1949-12",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Арест за краденые простыни",
+      "long": "Арестован за приём краденого из-за простыней, принесённых американским другом; через несколько дней обвинения сняли. Об этом написал эссе «Equal in Paris».",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In December 1949, Baldwin was arrested and jailed for receiving stolen goods after an American friend brought him bedsheets that the friend had taken from another Paris hotel."
+      }
+    },
+    {
+      "key": "career-1954",
+      "date": {
+        "from": "1954",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Гуггенхайма",
+      "long": "Получил стипендию Гуггенхайма и место в писательской колонии Мак-Дауэлл для работы над новым романом.",
+      "chapter": "paris-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1954, Baldwin accepted a fellowship at the MacDowell writer's colony in New Hampshire to support the writing of a new novel and he also won a Guggenheim Fellowship."
+      }
+    },
+    {
+      "key": "career-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Споры вокруг романа о любви двух мужчин",
+      "long": "Роман вызвал споры из-за откровенной гомоэротической темы, хотя рецензии были положительными и семья не осудила книгу.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "giovannis-room"
+        }
+      ],
+      "chapter": "paris-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Giovanni's Room, caused great controversy when it was first published in 1956 due to its explicit homoerotic content."
+      }
+    },
+    {
+      "key": "illness-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Попытка самоубийства",
+      "long": "Летом после неудачного романа с музыкантом принял снотворное; почти сразу пожалел и позвонил другу, который помог вызвать рвоту до прихода врача.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "paris-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the summer of 1956—after a seemingly failed affair with a Black musician named Arnold, Baldwin's first serious relationship since Happersberger—Baldwin overdosed on sleeping pills during a suicide attempt."
+      }
+    },
+    {
+      "key": "relocation-1957",
+      "date": {
+        "from": "1957-07",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Возвращение в США",
+      "long": "Вернулся в США, чувствуя, что теряет время в Париже, и надеясь следить за борьбой за гражданские права; поехал на Юг с репортажами. Работа над романом шла медленно.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "another-country",
+          "note": "роман шёл медленно, и это ускорило отъезд из Парижа"
+        }
+      ],
+      "chapter": "return-america",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Nonetheless, after a brief visit with Édith Piaf, Baldwin set sail for New York in July 1957."
+      }
+    },
+    {
+      "key": "relocation-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Первое пребывание в Стамбуле",
+      "long": "Во время первого двухмесячного пребывания в Стамбуле закончил роман; в 1960-е он ещё не раз жил в городе.",
+      "place": {
+        "label": "Стамбул"
+      },
+      "works": [
+        {
+          "ref": "another-country",
+          "note": "роман завершён в Стамбуле, датирован 10 декабря 1961 года"
+        }
+      ],
+      "chapter": "return-america",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Baldwin completed Another Country during his first, two-month stay in Istanbul (which ends with the note, Istanbul, December 10, 1961)."
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963-05-17",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Обложка журнала Time",
+      "long": "После публикации эссе о расовых отношениях стал известным защитником гражданских прав, часто выступал по телевидению и в университетах.",
+      "works": [
+        {
+          "ref": "the-fire-next-time",
+          "note": "эссе «Down at the Cross» вывело Болдуина на обложку Time"
+        }
+      ],
+      "chapter": "return-america",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Time featured Baldwin on the cover of its May 17, 1963, issue."
+      }
+    },
+    {
+      "key": "other-1963",
+      "date": {
+        "from": "1963-08-28",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Марш на Вашингтон",
+      "long": "Присутствовал на марше вместе с Белафонте, Пуатье и Брандо, но из-за своей сексуальной ориентации не был приглашён выступить.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "chapter": "return-america",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Baldwin also made a prominent appearance at the March on Washington for Jobs and Freedom on August 28, 1963"
+      }
+    },
+    {
+      "key": "career-1965",
+      "date": {
+        "from": "1965-02-18",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Дебаты с Уильямом Бакли",
+      "long": "В Кембриджском союзе спорил с Уильямом Бакли о том, достигнута ли американская мечта за счёт афроамериканцев; студенты проголосовали в его пользу.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "return-america",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On February 18, 1965, Baldwin participated in a much publicized debate with William F. Buckley"
+      }
+    },
+    {
+      "key": "other-1965",
+      "date": {
+        "from": "1965-03",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Марш от Сельмы до Монтгомери",
+      "long": "Присоединился к маршу от Сельмы до Монтгомери под охраной федеральных войск.",
+      "place": {
+        "label": "Сельма, Алабама"
+      },
+      "chapter": "return-america",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In March 1965, Baldwin joined marchers who walked 50 miles from Selma, Alabama"
+      }
+    },
+    {
+      "key": "relocation-1970",
+      "date": {
+        "from": "1970",
+        "to": "1987",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Дом в Сен-Поль-де-Вансе",
+      "long": "Поселился в старом провансальском доме под стенами городка; дом был открыт для друзей-музыкантов и художников. Здесь же написаны последние книги.",
+      "place": {
+        "label": "Сен-Поль-де-Ванс"
+      },
+      "works": [
+        {
+          "ref": "just-above-my-head",
+          "note": "роман написан в этом доме"
+        },
+        {
+          "ref": "evidence-of-things-not-seen",
+          "note": "книга написана в этом доме"
+        }
+      ],
+      "chapter": "provence",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Baldwin settled in Saint-Paul-de-Vence in the south of France in 1970, in an old Provençal house beneath the ramparts of the village. … He wrote several of his last works in his house in Saint-Paul-de-Vence, including Just Above My Head in 1979 and Evidence of Things Not Seen in 1985."
+      }
+    },
+    {
+      "key": "career-1978",
+      "date": {
+        "from": "1978",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Медаль Лэнгстона Хьюза",
+      "long": "Получил медаль Лэнгстона Хьюза.",
+      "chapter": "provence",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: медаль Лэнгтона Хьюза 1978-01-01"
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Командор ордена Почётного легиона",
+      "long": "Французское правительство сделало его командором ордена Почётного легиона.",
+      "chapter": "provence",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Baldwin was made a Commandeur de la Légion d'Honneur by the French government in 1986."
+      }
+    },
+    {
+      "key": "death-1987",
+      "date": {
+        "from": "1987-12-01",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть от рака в Сен-Поль-де-Вансе",
+      "long": "Умер от рака желудка; у постели находились Люсьен Хапперсбергер и Фред Налл Холлис. Похоронен на кладбище Ферклифф близ Нью-Йорка. Рукопись книги о Эверсе, Малколме Икс и Кинге осталась неоконченной.",
+      "place": {
+        "label": "Сен-Поль-де-Ванс"
+      },
+      "chapter": "provence",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On December 1, 1987, Baldwin died from stomach cancer in Saint-Paul-de-Vence, France."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "go-tell-it-on-the-mountain",
+      "title": "Иди, вещай с горы",
+      "qid": "Q1444052",
+      "written": {
+        "from": 1938,
+        "to": 1952
+      }
+    },
+    {
+      "ref": "the-amen-corner",
+      "title": "阿мен-корнер",
+      "written": {
+        "from": 1954,
+        "to": 1954
+      }
+    },
+    {
+      "ref": "notes-of-a-native-son",
+      "title": "Notes of a Native Son",
+      "qid": "Q7062618",
+      "written": {
+        "from": 1955,
+        "to": 1955
+      }
+    },
+    {
+      "ref": "giovannis-room",
+      "title": "Комната Джованни",
+      "qid": "Q5563645",
+      "written": {
+        "from": 1956,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "another-country",
+      "title": "Другая страна",
+      "written": {
+        "from": 1957,
+        "to": 1961
+      }
+    },
+    {
+      "ref": "the-fire-next-time",
+      "title": "В следующий раз пожар",
+      "written": {
+        "from": 1962,
+        "to": 1963
+      }
+    },
+    {
+      "ref": "tell-me-how-long-the-trains-been-gone",
+      "title": "Скажи мне, когда ушёл поезд",
+      "written": {
+        "from": 1968,
+        "to": 1968
+      }
+    },
+    {
+      "ref": "no-name-in-the-street",
+      "title": "Имя на улице",
+      "written": {
+        "from": 1972,
+        "to": 1972
+      }
+    },
+    {
+      "ref": "if-beale-street-could-talk",
+      "title": "Если Бил-стрит могла бы заговорить",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "just-above-my-head",
+      "title": "Прямо над моей головой",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "jimmys-blues",
+      "title": "Jimmy's Blues",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "evidence-of-things-not-seen",
+      "title": "Evidence of Things Not Seen",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    }
+  ]
+}

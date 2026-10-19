@@ -1,0 +1,508 @@
+{
+  "qid": "Q272706",
+  "name": "Джорджетт Хейер",
+  "born": "1902-08-16",
+  "died": "1974-07-04",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A5%D0%B5%D0%B9%D0%B5%D1%80%2C_%D0%94%D0%B6%D0%BE%D1%80%D0%B4%D0%B6%D0%B5%D1%82%D1%82",
+      "rev": 147487148
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Georgette_Heyer",
+      "rev": 1372781619
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-pervyj-roman",
+      "title": "Детство и первый роман",
+      "from": 1902,
+      "to": 1924
+    },
+    {
+      "key": "brak-i-afrika",
+      "title": "Брак, Танганьика, Македония",
+      "from": 1925,
+      "to": 1931
+    },
+    {
+      "key": "roman-za-romanom",
+      "title": "Сын, триллеры и Регентство",
+      "from": 1932,
+      "to": 1949
+    },
+    {
+      "key": "nalogi-i-podrazhateli",
+      "title": "Налоги, компания и подражатели",
+      "from": 1950,
+      "to": 1966
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Болезни и последние годы",
+      "from": 1967,
+      "to": 1974
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1902",
+      "date": {
+        "from": "1902-08-16",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Уимблдоне",
+      "long": "Джорджетт Хейер родилась в Уимблдоне, старшей из трёх детей. Её назвали в честь отца, Джорджа Хейера.",
+      "place": {
+        "label": "Уимблдон"
+      },
+      "chapter": "detstvo-i-pervyj-roman",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Georgette Heyer (; 16 August 1902 – 4 July 1974)"
+      }
+    },
+    {
+      "key": "relocation-1914",
+      "date": {
+        "from": "1914",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь семьи в Париже и возвращение в Англию",
+      "long": "Часть детства семья провела в Париже, но вскоре после начала Первой мировой войны в 1914 году вернулась в Англию.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "detstvo-i-pervyj-roman",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the family lived in Paris but they returned to England shortly after World War I broke out in 1914"
+      }
+    },
+    {
+      "key": "love-1920",
+      "date": {
+        "from": "1920-12",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Джорджем Ружье",
+      "long": "Во время семейного отдыха в декабре 1920 года Хейер познакомилась с Джорджем Рональдом Ружье, будущим горным инженером.",
+      "chapter": "detstvo-i-pervyj-roman",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "While holidaying with her family in December 1920 Heyer met George Ronald Rougier"
+      }
+    },
+    {
+      "key": "loss-1925",
+      "date": {
+        "from": "1925",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Весной 1925 года отец умер от сердечного приступа, не оставив пенсии. Хейер взяла на себя финансовую ответственность за младших братьев.",
+      "chapter": "brak-i-afrika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In the spring of 1925, shortly after the publication of her fifth novel, they became engaged. One month later Heyer's father died of a heart attack."
+      }
+    },
+    {
+      "key": "career-1926",
+      "date": {
+        "from": "1926",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Успех без рекламы во время всеобщей стачки",
+      "long": "Роман вышел во время всеобщей стачки 1926 года без рецензий и рекламы, но разошёлся тиражом 190 тысяч. С тех пор Хейер отказывалась от интервью и публичности.",
+      "works": [
+        {
+          "ref": "these-old-shades"
+        }
+      ],
+      "chapter": "brak-i-afrika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1926 she released These Old Shades"
+      }
+    },
+    {
+      "key": "illness-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Едва не умерла в Македонии из-за наркоза",
+      "long": "В 1928 году в Македонии Хейер чуть не погибла после неправильно введённой стоматологом анестезии.",
+      "place": {
+        "label": "Македония"
+      },
+      "chapter": "brak-i-afrika",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1928 Heyer followed her husband to Macedonia, where she almost died after a dentist improperly administered an anaesthetic."
+      }
+    },
+    {
+      "key": "career-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый роман эпохи Регентства",
+      "long": "В 1935 году вышел первый роман Хейер об эпохе Регентства, фактически создавший жанр.",
+      "works": [
+        {
+          "ref": "regency-buck"
+        }
+      ],
+      "chapter": "roman-za-romanom",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1935 she released Regency Buck, her first novel set in the Regency period."
+      }
+    },
+    {
+      "key": "career-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Муж принят в адвокатуру, переезд в Брайтон и Хоув",
+      "long": "В 1939 году Ружье был принят в адвокатуру, и семья переехала сначала в Брайтон, затем в Хоув.",
+      "place": {
+        "label": "Брайтон"
+      },
+      "chapter": "roman-za-romanom",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1939, Rougier was called to the Bar, and the family moved first to Brighton, then to Hove"
+      }
+    },
+    {
+      "key": "relocation-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Лондон",
+      "long": "В 1942 году, из-за бомбардировок и работы мужа, семья переехала в Лондон.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "roman-za-romanom",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1942 г. Джорджетт Хэйер переехала из Сассекса в Лондон."
+      }
+    },
+    {
+      "key": "career-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Разрыв с издателями из-за книги",
+      "long": "Хейер написала книгу, отвергнутую Hodder \u0026 Stoughton, что положило конец их сотрудничеству; позже с ней расстался и американский издатель Doubleday.",
+      "works": [
+        {
+          "ref": "penhallow",
+          "note": "написан отчасти ради расторжения контракта с издателем"
+        }
+      ],
+      "chapter": "roman-za-romanom",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the 1944 Book Review Digest described as \"a murder story but not a mystery story\". Hodder \u0026 Stoughton turned the book down"
+      }
+    },
+    {
+      "key": "creation-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Замысел средневековой трилогии о Ланкастерах",
+      "long": "С 1950 года Хейер работала над задуманным как «magnum opus» циклом о Ланкастерах, но откладывала его ради коммерчески успешных романов.",
+      "works": [
+        {
+          "ref": "my-lord-john",
+          "note": "первый том трилогии, изданный посмертно"
+        }
+      ],
+      "chapter": "nalogi-i-podrazhateli",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1950, Heyer began working on what she called \"the magnum opus of my latter years\", a medieval trilogy"
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Создание компании Heron Enterprises",
+      "long": "Около 1950 года для снижения налогов Хейер создала компанию с ограниченной ответственностью, позднее вызвавшую споры с налоговыми инспекторами.",
+      "chapter": "nalogi-i-podrazhateli",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "To minimize her tax liability, Heyer formed a limited liability company called Heron Enterprises around 1950."
+      }
+    },
+    {
+      "key": "persecution-1950",
+      "date": {
+        "from": "1950-05",
+        "precision": "month"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Дело о заимствованиях у Барбары Картленд",
+      "long": "В мае 1950 года читательница сообщила Хейер о сходстве книг Барбары Картленд с её романами; Хейер подготовила анализ для юристов, но не стала доводить дело до суда.",
+      "chapter": "nalogi-i-podrazhateli",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In May 1950, one of her readers notified her that Barbara Cartland had written several novels in a style similar to Heyer's"
+      }
+    },
+    {
+      "key": "career-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Муж стал королевским адвокатом",
+      "long": "В 1959 году Ружье получил звание королевского адвоката (Queen's Counsel).",
+      "chapter": "nalogi-i-podrazhateli",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1959, Rougier became a Queen's Counsel."
+      }
+    },
+    {
+      "key": "persecution-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Дело о заимствованиях у Кэтлин Линдсей",
+      "long": "В 1961 году читатель указал на сходство романов Кэтлин Линдсей с книгами Хейер; юристы рекомендовали запрет, но она отказалась от иска.",
+      "chapter": "nalogi-i-podrazhateli",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1961, another reader wrote of similarities found in the works of Kathleen Lindsay"
+      }
+    },
+    {
+      "key": "illness-1964",
+      "date": {
+        "from": "1964-06",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Операция по удалению камня из почки",
+      "long": "В июне 1964 года Хейер перенесла операцию; выздоровление затянулось на месяцы.",
+      "chapter": "nalogi-i-podrazhateli",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In June 1964, she underwent surgery to remove a kidney stone."
+      }
+    },
+    {
+      "key": "child-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение внука Николаса",
+      "long": "В 1966 году у сына родился Николас Ружье, единственный биологический внук Хейер.",
+      "chapter": "nalogi-i-podrazhateli",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "provided Heyer with her only biological grandchild in 1966, when their son Nicholas Rougier was born."
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Увольнение бухгалтеров, разрыв с компанией",
+      "long": "В 1966 году после долга перед компанией в 20 тысяч фунтов Хейер уволила бухгалтеров; затем продала компанию Booker-McConnell вместе с правами на 17 романов.",
+      "works": [
+        {
+          "ref": "black-sheep",
+          "note": "права на книгу Хейер потребовала оформить лично на себя"
+        }
+      ],
+      "chapter": "nalogi-i-podrazhateli",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1966 she sold the company and the rights to seventeen of her novels to Booker-McConnell"
+      }
+    },
+    {
+      "key": "illness-1973",
+      "date": {
+        "from": "1973-07",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Инсульт и смерть брата Бориса",
+      "long": "В июле 1973 года Хейер перенесла лёгкий инсульт; позже в том же году умер брат Борис, на похороны она приехать не смогла.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In July 1973 she suffered a slight stroke and spent three weeks in a nursing home. When her brother Boris died later that year"
+      }
+    },
+    {
+      "key": "illness-1974",
+      "date": {
+        "from": "1974-02",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Второй инсульт и рак лёгких",
+      "long": "В феврале 1974 года Хейер перенесла ещё один инсульт, спустя три месяца ей диагностировали рак лёгких.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She suffered another stroke in February 1974. Three months later, she was diagnosed with lung cancer"
+      }
+    },
+    {
+      "key": "death-1974",
+      "date": {
+        "from": "1974-07-04",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Лондоне",
+      "long": "Хейер умерла 4 июля 1974 года в больнице Гая в Лондоне. Своё замужнее имя читатели впервые узнали из некрологов.",
+      "place": {
+        "label": "Лондон"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On 4 July 1974, Heyer died."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "the-black-moth",
+      "title": "Чёрный мотылёк",
+      "written": {
+        "from": 1919,
+        "to": 1921
+      }
+    },
+    {
+      "ref": "these-old-shades",
+      "title": "Эти старые тени",
+      "written": {
+        "from": 1925,
+        "to": 1926
+      }
+    },
+    {
+      "ref": "the-masqueraders",
+      "title": "Маскарад",
+      "written": {
+        "from": 1927,
+        "to": 1928
+      }
+    },
+    {
+      "ref": "the-conqueror",
+      "title": "Завоеватель",
+      "written": {
+        "from": 1930,
+        "to": 1931
+      }
+    },
+    {
+      "ref": "footsteps-in-the-dark",
+      "title": "Шаги во тьме",
+      "written": {
+        "from": 1931,
+        "to": 1932
+      }
+    },
+    {
+      "ref": "regency-buck",
+      "title": "Денди эпохи Регентства",
+      "written": {
+        "from": 1935,
+        "to": 1935
+      }
+    },
+    {
+      "ref": "penhallow",
+      "title": "Пенхэллоу",
+      "written": {
+        "from": 1942,
+        "to": 1944
+      }
+    },
+    {
+      "ref": "black-sheep",
+      "title": "Паршивая овца",
+      "written": {
+        "from": 1966,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "my-lord-john",
+      "title": "Милорд Джон",
+      "written": {
+        "from": 1950,
+        "to": 1974
+      }
+    }
+  ]
+}

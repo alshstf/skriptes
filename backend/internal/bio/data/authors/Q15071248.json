@@ -1,0 +1,175 @@
+{
+  "qid": "Q15071248",
+  "name": "Елена Топильская",
+  "born": "1959-01-27",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A2%D0%BE%D0%BF%D0%B8%D0%BB%D1%8C%D1%81%D0%BA%D0%B0%D1%8F%2C_%D0%95%D0%BB%D0%B5%D0%BD%D0%B0_%D0%92%D0%B0%D0%BB%D0%B5%D0%BD%D1%82%D0%B8%D0%BD%D0%BE%D0%B2%D0%BD%D0%B0",
+      "rev": 153612710
+    }
+  ],
+  "chapters": [
+    {
+      "key": "leningrad-prokuratura",
+      "title": "Ленинград, университет и прокуратура",
+      "from": 1959,
+      "to": 1990
+    },
+    {
+      "key": "dissertaciya",
+      "title": "Кандидатская и первые книги",
+      "from": 1991,
+      "to": 1999
+    },
+    {
+      "key": "detektivy-i-serial",
+      "title": "Детективы и «Тайны следствия»",
+      "from": 2000,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1959",
+      "date": {
+        "from": "1959-01-27",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Ленинграде",
+      "long": "Родилась в Ленинграде 27 января 1959 года.",
+      "place": {
+        "label": "Ленинград"
+      },
+      "chapter": "leningrad-prokuratura",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Елена Топильская родилась в Ленинграде 27 января 1959 года."
+      }
+    },
+    {
+      "key": "education-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Защита кандидатской диссертации по юриспруденции",
+      "long": "В 1991 году защитила кандидатскую диссертацию по теме «Беспомощное состояние потерпевшего от преступления».",
+      "chapter": "dissertaciya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1991 году защитила кандидатскую диссертацию по теме «Беспомощное состояние потерпевшего от преступления»."
+      }
+    },
+    {
+      "key": "career-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Первый сезон сериала «Тайны следствия» по её сценариям",
+      "long": "Вышел первый сезон телесериала «Тайны следствия» по мотивам детективов о Марии Швецовой; Топильская написала к нему сценарии.",
+      "chapter": "detektivy-i-serial",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "2000 — Тайны следствия (1 сезон) — режиссёр Илья Макаров, 16 серий"
+      }
+    },
+    {
+      "key": "career-2017",
+      "date": {
+        "from": "2017-09-01",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Медаль «За содействие» Следственного комитета",
+      "long": "Награждена медалью «За содействие» Следственного комитета РФ за вклад в формирование образа следователя в сериале «Тайны следствия».",
+      "chapter": "detektivy-i-serial",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Медаль «За содействие» Следственного комитета Российской Федерации (1 сентября 2017 года)"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "zhizn-chestnyh-i-nechestnyh",
+      "title": "Жизнь честных и нечестных",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "pomni-o-smerti",
+      "title": "Помни о смерти",
+      "written": {
+        "from": 1999,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "hod-s-damy-piki",
+      "title": "Ход с дамы пик",
+      "written": {
+        "from": 2001,
+        "to": 2001
+      }
+    },
+    {
+      "ref": "zapiski-sumasshedshego-sledovatelya",
+      "title": "Записки сумасшедшего следователя",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "geroev-ne-ubivayut",
+      "title": "Героев не убивают",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "ohota-na-vampirov",
+      "title": "Охота на вампиров",
+      "written": {
+        "from": 2003,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "ispanskaya-noch",
+      "title": "Испанская ночь",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "tajny-realnogo-sledstviya",
+      "title": "Тайны реального следствия. Записки следователя прокуратуры по особо важным делам",
+      "written": {
+        "from": 2007,
+        "to": 2007
+      }
+    },
+    {
+      "ref": "kriminalistika-po-pyatnicam",
+      "title": "Криминалистика по пятницам",
+      "written": {
+        "from": 2009,
+        "to": 2009
+      }
+    }
+  ]
+}

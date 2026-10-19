@@ -1,0 +1,489 @@
+{
+  "qid": "Q1026532",
+  "name": "Кэлеб Кэрр",
+  "born": "1955-08-02",
+  "died": "2024-05-23",
+  "sources": [
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Caleb_Carr",
+      "rev": 1380486759
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-manhattan",
+      "title": "Детство среди битников",
+      "from": 1955,
+      "to": 1972
+    },
+    {
+      "key": "ucheba-i-istoriya",
+      "title": "Учёба, Foreign Affairs, первый роман",
+      "from": 1973,
+      "to": 1993
+    },
+    {
+      "key": "alienist-i-gollivud",
+      "title": "«Алиенист» и Голливуд",
+      "from": 1994,
+      "to": 1999
+    },
+    {
+      "key": "terror-i-lektsii",
+      "title": "Книги о терроре, Бард-колледж",
+      "from": 2000,
+      "to": 2005
+    },
+    {
+      "key": "cherry-plain",
+      "title": "Cherry Plain и последние годы",
+      "from": 2006,
+      "to": 2024
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1955",
+      "date": {
+        "from": "1955-08-02",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение на Манхэттене",
+      "long": "Родился на Манхэттене, второй из трёх сыновей Люсьена Карра, фигуры поколения битников, и Франчески фон Харц. В доме часто бывали Берроуз, Керуак и Гинзберг.",
+      "place": {
+        "label": "Манхэттен"
+      },
+      "chapter": "detstvo-manhattan",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Carr was born on August 2, 1955, in Manhattan, one of three sons born to Beat Generation figure Lucien Carr and Francesca von Hartz."
+      }
+    },
+    {
+      "key": "education-1973",
+      "date": {
+        "from": "1973",
+        "to": "1975",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Кеньон-колледже",
+      "long": "Учился в Кеньон-колледже в Гамбире, штат Огайо; в Гарвард его не приняли из-за пометки «социально нежелательный» в школьной характеристике.",
+      "place": {
+        "label": "Гамбир"
+      },
+      "chapter": "ucheba-i-istoriya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He attended Kenyon College, in Gambier, Ohio, from 1973 to 1975"
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Письмо в редакцию с критикой Киссинджера",
+      "long": "Письмо в The New York Times с критикой внешней политики Генри Киссинджера стало его первым заметным выступлением; оно помогло найти работу в Foreign Affairs.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "ucheba-i-istoriya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Carr, Caleb (1974). \"Letters to the Editor: Kissinger's 19th-Century Diplomacy\" (PDF). The New York Times."
+      }
+    },
+    {
+      "key": "education-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Диплом по военной истории в NYU",
+      "long": "Вернулся в Нью-Йорк и окончил Нью-Йоркский университет со степенью бакалавра по военной и дипломатической истории.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "ucheba-i-istoriya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "returned to New York City in 1975 to complete his education at New York University, where, in 1977, he was awarded a Bachelor of Arts in military and diplomatic history"
+      }
+    },
+    {
+      "key": "career-1980",
+      "date": {
+        "from": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Уход из Foreign Affairs ради первого романа",
+      "long": "Ушёл из Foreign Affairs, чтобы закончить и издать первый роман. Позже назвал его «ромaном с ключом», от которого каждому писателю приходится освободиться в начале пути.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "casing-the-promised-land"
+        }
+      ],
+      "chapter": "ucheba-i-istoriya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1980, Carr left Foreign Affairs to fine-tune and publish his first novel, Casing the Promised Land"
+      }
+    },
+    {
+      "key": "career-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор журнала MHQ",
+      "long": "Стал внештатным редактором журнала MHQ: The Quarterly Journal of Military History.",
+      "chapter": "ucheba-i-istoriya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1989 he became a contributing editor to MHQ: The Quarterly Journal of Military History"
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое широкое признание как историка",
+      "long": "Биография Фредерика Тауншенда Уорда стала первой книгой Кэрра, получившей широкое признание.",
+      "works": [
+        {
+          "ref": "the-devil-soldier"
+        }
+      ],
+      "chapter": "ucheba-i-istoriya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1991 Carr published The Devil Soldier: The Story of Frederick Townsend Ward, the American Soldier of Fortune Who Became a God in China, a biography, and the first of his books to receive wide recognition."
+      }
+    },
+    {
+      "key": "career-1994",
+      "date": {
+        "from": "1994",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Прорыв: международный бестселлер",
+      "long": "Вернулся в Нью-Йорк работать над романом, ставшим прорывом: международный бестселлер, переведённый более чем на 24 языка. Консультировался с психиатром Дэвидом Абрахамсеном.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "the-alienist",
+          "note": "работа шла в ходе встреч с психиатром Д. Абрахамсеном, обследовавшим Дэвида Берковица"
+        }
+      ],
+      "chapter": "alienist-i-gollivud",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Carr returned to New York to begin researching and writing what would prove his breakthrough novel, The Alienist, published in 1994."
+      }
+    },
+    {
+      "key": "career-1995",
+      "date": {
+        "from": "1995",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Энтони за лучший дебютный роман",
+      "long": "Получил премию Энтони за лучший дебютный роман; книга была также номинирована на премию Брэма Стокера.",
+      "works": [
+        {
+          "ref": "the-alienist"
+        }
+      ],
+      "chapter": "alienist-i-gollivud",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Winner of the 1995 Anthony Award for best first novel (although technically it was his second)"
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Гран-при полицейской литературы",
+      "long": "Получил Гран-при полицейской литературы.",
+      "chapter": "alienist-i-gollivud",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Гран-при полицейской литературы 1996-01-01"
+      }
+    },
+    {
+      "key": "relocation-2000",
+      "date": {
+        "from": "2000",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Покупка участка «Гора Невзгод»",
+      "long": "Купил собственный участок «Гора Невзгод» в Черри-Плейн, штат Нью-Йорк, где прежде проводил лето в семейном доме.",
+      "place": {
+        "label": "Черри-Плейн"
+      },
+      "chapter": "terror-i-lektsii",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2000, he bought his own property, known as Misery Mountain, in Cherry Plain; and in 2006 he moved there permanently."
+      }
+    },
+    {
+      "key": "other-2002",
+      "date": {
+        "from": "2002-02-04",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Отмена выступления в Совете по международным отношениям",
+      "long": "Выступление в Совете по международным отношениям отменили за два дня до срока; Кэрр считал причиной свою критику Киссинджера, члена совета.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "the-lessons-of-terror",
+          "note": "выступление было посвящено этой книге"
+        }
+      ],
+      "chapter": "terror-i-lektsii",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Carr was scheduled to appear on February 6, 2002, at the Council on Foreign Relations to discuss his book, The Lessons of Terror. On February 4, 2002, the appearance was cancelled."
+      }
+    },
+    {
+      "key": "career-2004",
+      "date": {
+        "from": "2004",
+        "to": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Приглашённый профессор Бард-колледжа",
+      "long": "Приглашённый профессор истории в Бард-колледже: курсы по мировой военной истории, истории американской разведки и борьбы с повстанцами.",
+      "place": {
+        "label": "Бард-колледж"
+      },
+      "chapter": "terror-i-lektsii",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He furthered his relationship with Bard as a visiting professor of history from 2004 to 2005"
+      }
+    },
+    {
+      "key": "loss-2005",
+      "date": {
+        "from": "2005-01-28",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца Люсьена Карра",
+      "long": "Умер отец, Люсьен Карр, жестокое обращение которого с семьёй Кэрр считал истоком темы насилия в своих книгах.",
+      "chapter": "cherry-plain",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Люсьен Карр 1925-03-01 — 2005-01-28"
+      }
+    },
+    {
+      "key": "relocation-2006",
+      "date": {
+        "from": "2006",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Окончательный переезд в Черри-Плейн",
+      "long": "Окончательно переехал из Нью-Йорка в Черри-Плейн, где прожил до конца жизни.",
+      "place": {
+        "label": "Черри-Плейн"
+      },
+      "chapter": "cherry-plain",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2000, he bought his own property, known as Misery Mountain, in Cherry Plain; and in 2006 he moved there permanently."
+      }
+    },
+    {
+      "key": "loss-2022",
+      "date": {
+        "from": "2022-04",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть кошки Маши",
+      "long": "Умерла сибирская кошка Маша, прожившая с Кэрром 17 лет; ей посвящены его мемуары.",
+      "place": {
+        "label": "Черри-Плейн"
+      },
+      "works": [
+        {
+          "ref": "my-beloved-monster",
+          "note": "мемуары посвящены отношениям с Машей"
+        }
+      ],
+      "chapter": "cherry-plain",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Masha died in April 2022."
+      }
+    },
+    {
+      "key": "illness-2024",
+      "date": {
+        "from": "2024",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Диагноз: неизлечимый рак",
+      "long": "В 2024 году ему поставили диагноз неизлечимого рака.",
+      "chapter": "cherry-plain",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Carr revealed he had been diagnosed with terminal cancer in 2024"
+      }
+    },
+    {
+      "key": "death-2024",
+      "date": {
+        "from": "2024-05-23",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Черри-Плейн",
+      "long": "Умер дома в Черри-Плейн в возрасте 68 лет.",
+      "place": {
+        "label": "Черри-Плейн"
+      },
+      "chapter": "cherry-plain",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Carr revealed he had been diagnosed with terminal cancer in 2024, and died at his home in Cherry Plain on May 23, aged 68."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "the-alienist",
+      "title": "Алиенист",
+      "qid": "Q3201712",
+      "written": {
+        "from": 1994,
+        "to": 1994
+      }
+    },
+    {
+      "ref": "the-angel-of-darkness",
+      "title": "Ангел тьмы",
+      "written": {
+        "from": 1997,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "casing-the-promised-land",
+      "title": "Casing the Promised Land",
+      "written": {
+        "from": 1980,
+        "to": 1980
+      }
+    },
+    {
+      "ref": "the-devil-soldier",
+      "title": "The Devil Soldier",
+      "written": {
+        "from": 1991,
+        "to": 1991
+      }
+    },
+    {
+      "ref": "killing-time",
+      "title": "Killing Time",
+      "written": {
+        "from": 1999,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "the-lessons-of-terror",
+      "title": "The Lessons of Terror",
+      "written": {
+        "from": 2002,
+        "to": 2002
+      }
+    },
+    {
+      "ref": "the-italian-secretary",
+      "title": "The Italian Secretary",
+      "written": {
+        "from": 2005,
+        "to": 2005
+      }
+    },
+    {
+      "ref": "the-legend-of-broken",
+      "title": "The Legend of Broken",
+      "written": {
+        "from": 1980,
+        "to": 2012
+      }
+    },
+    {
+      "ref": "surrender-new-york",
+      "title": "Surrender, New York",
+      "written": {
+        "from": 2016,
+        "to": 2016
+      }
+    },
+    {
+      "ref": "my-beloved-monster",
+      "title": "My Beloved Monster",
+      "written": {
+        "from": 2022,
+        "to": 2024
+      }
+    }
+  ]
+}

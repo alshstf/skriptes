@@ -1,0 +1,606 @@
+{
+  "qid": "Q312407",
+  "name": "Джон Дос Пассос",
+  "born": "1896-01-14",
+  "died": "1970-09-28",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%94%D0%BE%D1%81_%D0%9F%D0%B0%D1%81%D1%81%D0%BE%D1%81%2C_%D0%94%D0%B6%D0%BE%D0%BD",
+      "rev": 153633107
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/John_Dos_Passos",
+      "rev": 1373328798
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-garvard",
+      "title": "Внебрачный сын, Европа, Гарвард",
+      "from": 1896,
+      "to": 1916
+    },
+    {
+      "key": "voyna-parizh",
+      "title": "Санитарные отряды и Париж",
+      "from": 1917,
+      "to": 1924
+    },
+    {
+      "key": "manhattan-sssr-usa",
+      "title": "Нью-Йорк, СССР и трилогия",
+      "from": 1925,
+      "to": 1936
+    },
+    {
+      "key": "ispaniya-voyna",
+      "title": "Испания и разрыв с левыми",
+      "from": 1937,
+      "to": 1946
+    },
+    {
+      "key": "utrata-povorot",
+      "title": "Утрата, второй брак, поворот вправо",
+      "from": 1947,
+      "to": 1959
+    },
+    {
+      "key": "pozdnie-gody",
+      "title": "Поздние годы",
+      "from": 1960,
+      "to": 1970
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1896",
+      "date": {
+        "from": "1896-01-14",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Чикаго",
+      "long": "Родился в Чикаго внебрачным сыном юриста Джона Рэндольфа Дос Пассоса, происходившего из семьи выходцев с Мадейры.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "detstvo-garvard",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Джон Дос Пассос родился 14 января 1896 года в Чикаго в семье богатого юриста."
+      }
+    },
+    {
+      "key": "education-1907",
+      "date": {
+        "from": "1907",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Школа Чоут в Коннектикуте",
+      "long": "Поступил в частную подготовительную школу Чоут в Уоллингфорде (Коннектикут) под именем Джон Родериго Мэдисон; затем родители отправили его с наставником в полугодовую поездку по Европе и Ближнему Востоку.",
+      "place": {
+        "label": "Уоллингфорд"
+      },
+      "chapter": "detstvo-garvard",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Dos Passos was enrolled in 1907 at the Choate School (now Choate Rosemary Hall)"
+      }
+    },
+    {
+      "key": "family-1910",
+      "date": {
+        "from": "1910",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Брак родителей и поздно признанное отцовство",
+      "long": "После смерти первой жены в 1910 году отец женился на матери писателя, но официально признал сына лишь спустя два года.",
+      "chapter": "detstvo-garvard",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "John's father married Lucy after the death of his first wife in 1910, when John was 14, but he refused to formally acknowledge John for another two years."
+      }
+    },
+    {
+      "key": "education-1913",
+      "date": {
+        "from": "1913",
+        "to": "1916",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Гарварде",
+      "long": "Учился в Гарварде, где подружился с поэтом Э. Э. Каммингсом; окончил курс в 1916 году с отличием.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "detstvo-garvard",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Обучался в Гарвардском университете с 1913 по 1916 год."
+      }
+    },
+    {
+      "key": "loss-1915",
+      "date": {
+        "from": "1915-05-15",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть матери",
+      "long": "Умерла мать писателя Люси Эддисон Спригг, с которой он много путешествовал в детстве.",
+      "chapter": "detstvo-garvard",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P25: Lucy Addison Sprigg Dos Passos 1915-05-15"
+      }
+    },
+    {
+      "key": "education-1916",
+      "date": {
+        "from": "1916",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Испании",
+      "long": "После окончания Гарварда уехал в Испанию изучать искусство и архитектуру.",
+      "place": {
+        "label": "Испания"
+      },
+      "chapter": "detstvo-garvard",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Following his graduation cum laude in 1916, Dos Passos traveled to Spain to study art and architecture."
+      }
+    },
+    {
+      "key": "loss-1917",
+      "date": {
+        "from": "1917",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "В 1917 году умер отец писателя, юрист Джон Рэндольф Дос Пассос.",
+      "chapter": "voyna-parizh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "John Randolph Dos Passos (1844–1917), a lawyer of half-Madeiran Portuguese descent"
+      }
+    },
+    {
+      "key": "war-1917",
+      "date": {
+        "from": "1917",
+        "to": "1918",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Санитарный шофёр на фронтах Первой мировой",
+      "long": "Служил добровольцем-водителем санитарной машины во Франции и на севере Италии; по статье, первый роман был написан в окопах.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "one-mans-initiation",
+          "note": "роман, по статье, написан в окопах во время войны"
+        },
+        {
+          "ref": "three-soldiers",
+          "note": "роман построен на военном опыте автора"
+        }
+      ],
+      "chapter": "voyna-parizh",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Во время Первой мировой войны в 1917—1918 году работал добровольцем-шофёром в Париже и на севере Италии в санитарном подразделении."
+      }
+    },
+    {
+      "key": "war-1918",
+      "date": {
+        "from": "1918",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Призыв в армию США, курсы в Сорбонне",
+      "long": "Летом 1918 года призван в армию США; в Париже ему разрешили посещать курсы антропологии в Сорбонне.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "three-soldiers",
+          "note": "герой романа повторяет военную карьеру автора и остаётся в Париже"
+        }
+      ],
+      "chapter": "voyna-parizh",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Летом 1918 года был мобилизован в армию США. Армейское начальство разрешило ему посещать курсы антропологии в Сорбонне."
+      }
+    },
+    {
+      "key": "education-1922",
+      "date": {
+        "from": "1922",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Занятия живописью, первая выставка",
+      "long": "Занимался живописью в художественной колонии в Огункуите; в том же году прошла его первая выставка в Нью-Йорке. Позже сам оформлял обложки своих книг.",
+      "place": {
+        "label": "Огункуит"
+      },
+      "chapter": "voyna-parizh",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "During the summer of 1922, he studied at Hamilton Easter Field's art colony in Ogunquit, Maine."
+      }
+    },
+    {
+      "key": "career-1925",
+      "date": {
+        "from": "1925",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Коммерческий успех романа о Нью-Йорке",
+      "long": "Роман о Нью-Йорке имел коммерческий успех и ввёл экспериментальные приёмы потока сознания.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "manhattan-transfer"
+        }
+      ],
+      "chapter": "manhattan-sssr-usa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His 1925 novel about life in New York City, titled Manhattan Transfer, was a commercial success"
+      }
+    },
+    {
+      "key": "career-1925-2",
+      "date": {
+        "from": "1925",
+        "to": "1927",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа для театра New Playwrights",
+      "long": "Писал пьесы, делал афиши и оформление спектаклей для театра New Playwrights Theatre.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "manhattan-sssr-usa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Between 1925 and 1927, Dos Passos wrote plays as well as created posters and set designs for the New Playwrights Theatre in New York City."
+      }
+    },
+    {
+      "key": "other-1928",
+      "date": {
+        "from": "1928",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Несколько месяцев в СССР",
+      "long": "Несколько месяцев провёл в СССР, встречался с Корнеем и Николаем Чуковскими; остался со смешанными впечатлениями.",
+      "place": {
+        "label": "СССР"
+      },
+      "chapter": "manhattan-sssr-usa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1928 году провёл несколько месяцев в СССР, «изучая коммунизм»."
+      }
+    },
+    {
+      "key": "other-1932",
+      "date": {
+        "from": "1932",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Резкая статья о съезде демократов",
+      "long": "После съезда Демократической партии опубликовал в журнале The New Republic резкую статью о выдвижении Рузвельта.",
+      "chapter": "manhattan-sssr-usa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Dos Passos had attended the 1932 Democratic National Convention and subsequently wrote an article for The New Republic in which he harshly criticized the selection of Franklin Delano Roosevelt"
+      }
+    },
+    {
+      "key": "other-1935",
+      "date": {
+        "from": "1935-04",
+        "precision": "month"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Первый конгресс американских писателей",
+      "long": "Был одним из ведущих участников Первого конгресса американских писателей, но отказался принять идею контроля Сталина над писателями США.",
+      "chapter": "manhattan-sssr-usa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was a leading participant in the April 1935 First American Writers' Congress"
+      }
+    },
+    {
+      "key": "other-1936",
+      "date": {
+        "from": "1936",
+        "to": "1937",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Работа в комиссии Дьюи",
+      "long": "Участвовал в комиссии Дьюи, расследовавшей обвинения против Троцкого после первого Московского процесса.",
+      "chapter": "manhattan-sssr-usa",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1936–1937, Dos Passos served on the American Committee for the Defense of Leon Trotsky, commonly known as the \"Dewey Commission\""
+      }
+    },
+    {
+      "key": "war-1937",
+      "date": {
+        "from": "1937",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Гражданская война в Испании, разрыв с Хемингуэем",
+      "long": "Поездка в Испанию с Хемингуэем; после расстрела друга и переводчика Хосе Роблеса порвал с Хемингуэем и постепенно отошёл от левого движения.",
+      "place": {
+        "label": "Испания"
+      },
+      "chapter": "ispaniya-voyna",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1937, during the Spanish Civil War, Dos Passos returned to Spain with writer Ernest Hemingway"
+      }
+    },
+    {
+      "key": "career-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Гуггенхайма",
+      "long": "Получил стипендию Гуггенхайма; впоследствии ещё дважды — в 1940 и 1942 годах.",
+      "chapter": "ispaniya-voyna",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: стипендия Гуггенхайма 1939-01-01"
+      }
+    },
+    {
+      "key": "war-1942",
+      "date": {
+        "from": "1942",
+        "to": "1945",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Военный корреспондент на Тихом океане и в Европе",
+      "long": "Работал военным корреспондентом: освещал действия американцев на Тихом океане и послевоенную обстановку во Франкфурте, Берлине, Мюнхене и Вене.",
+      "chapter": "ispaniya-voyna",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Between 1942 and 1945, Dos Passos worked as a journalist and war correspondent, covering American operations in the Pacific"
+      }
+    },
+    {
+      "key": "career-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Избрание в Американскую академию",
+      "long": "Избран в Американскую академию искусств и литературы.",
+      "chapter": "utrata-povorot",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1947, he was elected to the American Academy of Arts and Letters."
+      }
+    },
+    {
+      "key": "love-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Элизабет Холдридж",
+      "long": "Женился на Элизабет Хэмлин Холдридж.",
+      "chapter": "utrata-povorot",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Dos Passos married Elizabeth Hamlyn Holdridge (1909–1998) in 1949, by whom he had one daughter, Lucy Hamlin Dos Passos (b. 1950)."
+      }
+    },
+    {
+      "key": "child-1950",
+      "date": {
+        "from": "1950",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение дочери Люси",
+      "long": "В браке с Элизабет Холдридж родилась дочь Люси Хэмлин Дос Пассос.",
+      "chapter": "utrata-povorot",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Dos Passos married Elizabeth Hamlyn Holdridge (1909–1998) in 1949, by whom he had one daughter, Lucy Hamlin Dos Passos (b. 1950)."
+      }
+    },
+    {
+      "key": "other-1960",
+      "date": {
+        "from": "1960",
+        "to": "1968",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Агитация за Голдуотера и Никсона",
+      "long": "Вёл агитацию за Барри Голдуотера (1964) и Ричарда Никсона (1960 и 1968), был связан с организацией Young Americans for Freedom.",
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "he actively campaigned for Barry Goldwater's 1964 presidential campaign and Richard M. Nixon's 1960 and 1968 presidential campaigns"
+      }
+    },
+    {
+      "key": "career-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Премия Фельтринелли в Риме",
+      "long": "Приглашён в Рим для получения международной премии Фельтринелли за достижения в литературе.",
+      "place": {
+        "label": "Рим"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Recognition for his significant contributions to literature came 30 years later in Europe, when, in 1967, he was invited to Rome to accept the prestigious Antonio Feltrinelli Prize"
+      }
+    },
+    {
+      "key": "death-1970",
+      "date": {
+        "from": "1970-09-28",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Балтиморе",
+      "long": "Умер в Балтиморе; похоронен на кладбище Йекомико в штате Виргиния, недалеко от своего дома.",
+      "place": {
+        "label": "Балтимор"
+      },
+      "chapter": "pozdnie-gody",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He continued to write until his death in Baltimore, Maryland, in 1970."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "one-mans-initiation",
+      "title": "Посвящение одного человека",
+      "written": {
+        "from": 1917,
+        "to": 1920
+      }
+    },
+    {
+      "ref": "three-soldiers",
+      "title": "Три солдата",
+      "written": {
+        "from": 1918,
+        "to": 1921
+      }
+    },
+    {
+      "ref": "manhattan-transfer",
+      "title": "Манхэттен",
+      "written": {
+        "from": 1925,
+        "to": 1925
+      }
+    },
+    {
+      "ref": "the-42nd-parallel",
+      "title": "42-я параллель",
+      "written": {
+        "from": 1930,
+        "to": 1930
+      }
+    },
+    {
+      "ref": "nineteen-nineteen",
+      "title": "1919",
+      "written": {
+        "from": 1932,
+        "to": 1932
+      }
+    },
+    {
+      "ref": "the-big-money",
+      "title": "Большие деньги",
+      "written": {
+        "from": 1936,
+        "to": 1936
+      }
+    },
+    {
+      "ref": "adventures-of-a-young-man",
+      "title": "Приключения молодого человека",
+      "written": {
+        "from": 1939,
+        "to": 1939
+      }
+    },
+    {
+      "ref": "number-one",
+      "title": "Первый номер",
+      "written": {
+        "from": 1943,
+        "to": 1943
+      }
+    },
+    {
+      "ref": "the-grand-design",
+      "title": "Великий замысел",
+      "written": {
+        "from": 1949,
+        "to": 1949
+      }
+    },
+    {
+      "ref": "head-and-heart-of-thomas-jefferson",
+      "title": "Голова и сердце Томаса Джефферсона",
+      "written": {
+        "from": 1954,
+        "to": 1954
+      }
+    }
+  ]
+}

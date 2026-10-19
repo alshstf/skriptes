@@ -1,0 +1,758 @@
+{
+  "qid": "Q23441",
+  "name": "Октав Мирбо",
+  "born": "1848-02-16",
+  "died": "1917-02-16",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%9C%D0%B8%D1%80%D0%B1%D0%BE%2C_%D0%9E%D0%BA%D1%82%D0%B0%D0%B2",
+      "rev": 141377767
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Octave_Mirbeau",
+      "rev": 1380240373
+    },
+    {
+      "id": "frwiki",
+      "url": "https://fr.wikipedia.org/wiki/Octave_Mirbeau",
+      "rev": 240367919
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-voyna",
+      "title": "Нормандия, иезуиты, война",
+      "from": 1848,
+      "to": 1871
+    },
+    {
+      "key": "prete-plume-i-zhurnalist",
+      "title": "Секретарь, журналист, «негр»",
+      "from": 1872,
+      "to": 1885
+    },
+    {
+      "key": "romany-i-krizis",
+      "title": "Первые романы и семилетний кризис",
+      "from": 1886,
+      "to": 1897
+    },
+    {
+      "key": "dreyfus-i-slava",
+      "title": "Дело Дрейфуса и европейская слава",
+      "from": 1898,
+      "to": 1907
+    },
+    {
+      "key": "bolezn-i-konets",
+      "title": "Болезнь и последние годы",
+      "from": 1908,
+      "to": 1917
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1848",
+      "date": {
+        "from": "1848-02-16",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Тревьере в семье врача",
+      "long": "Родился в Тревьере (Кальвадос) в семье врача; детство прошло в Ремаларе.",
+      "place": {
+        "label": "Тревьер"
+      },
+      "chapter": "detstvo-i-voyna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Октав Мирбо родился 16 февраля 1848 года в семье врача."
+      }
+    },
+    {
+      "key": "education-1859",
+      "date": {
+        "from": "1859",
+        "to": "1863",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "major",
+      "short": "Иезуитский коллеж в Ванне",
+      "long": "Учился в иезуитском коллеже Св. Франциска-Ксавьера в Ванне; школьные годы оставили в нём душевную рану.",
+      "place": {
+        "label": "Ванн"
+      },
+      "works": [
+        {
+          "ref": "sebastien-roch",
+          "note": "в романе автор рассказал о душевной ране, причинённой школьными годами"
+        }
+      ],
+      "chapter": "detstvo-i-voyna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1859 по 1863 год учился в иезуитском коллеже св. Франциска-Ксавьера в Ванне"
+      }
+    },
+    {
+      "key": "education-1863",
+      "date": {
+        "from": "1863",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Исключение из коллежа",
+      "long": "В 1863 году исключён из иезуитского коллежа при подозрительных обстоятельствах, которые позже отразились в романе.",
+      "place": {
+        "label": "Ванн"
+      },
+      "works": [
+        {
+          "ref": "sebastien-roch",
+          "note": "обстоятельства исключения отражены в романе"
+        }
+      ],
+      "chapter": "detstvo-i-voyna",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "d'où il est chassé en 1863 dans des conditions plus que suspectes, qu'il évoquera en 1890 dans son roman Sébastien Roch"
+      }
+    },
+    {
+      "key": "education-1866",
+      "date": {
+        "from": "1866-11-14",
+        "precision": "day"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Юридический факультет в Париже",
+      "long": "Записался на юридический факультет Парижского университета, но занимался вполсилы и курса не закончил.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "detstvo-i-voyna",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Il s'inscrit à la Faculté de droit de Paris le 14 novembre 1866 mais suit les cours en dilettante et n'achève pas ses études."
+      }
+    },
+    {
+      "key": "war-1870",
+      "date": {
+        "from": "1870",
+        "to": "1871",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "major",
+      "short": "Франко-прусская война",
+      "long": "Мобилизован, служил в Луарской армии; опыт разгрома лёг в основу нескольких рассказов и глав романов.",
+      "works": [
+        {
+          "ref": "le-calvaire",
+          "note": "опыт разгрома дал главы романа"
+        },
+        {
+          "ref": "sebastien-roch",
+          "note": "опыт разгрома дал главы романа"
+        }
+      ],
+      "chapter": "detstvo-i-voyna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Во время франко-прусской войны 1870—1871 г. вступает в национальную гвардию."
+      }
+    },
+    {
+      "key": "loss-1870",
+      "date": {
+        "from": "1870",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть матери",
+      "long": "Мать, Эжени-Огюстин Дюбоск (1825–1870), умерла в 1870 году.",
+      "chapter": "detstvo-i-voyna",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "d'Eugénie-Augustine Dubosq (1825-1870)"
+      }
+    },
+    {
+      "key": "career-1872",
+      "date": {
+        "from": "1872",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переезд в Париж, секретарь Дюге де Ла Фоконри",
+      "long": "Приехал в Париж, начал работать в бонапартистской газете «Л’Ордр де Пари» и стал личным секретарём её директора.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "prete-plume-i-zhurnalist",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1872, il monte à Paris et fait ses débuts journalistiques dans le quotidien de l’Appel au peuple"
+      }
+    },
+    {
+      "key": "career-1880",
+      "date": {
+        "from": "1880",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа литературным «негром»",
+      "long": "В начале 1880-х писал за других под псевдонимами, около десяти томов.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "prete-plume-i-zhurnalist",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Au début des années 1880, Mirbeau fait aussi « le nègre » et ainsi produit une dizaine de volumes"
+      }
+    },
+    {
+      "key": "career-1883",
+      "date": {
+        "from": "1883",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор газеты «Пари-миди — Пари-минюи»",
+      "long": "Три месяца почти в одиночку выпускал двухразовую газету, затем стал главным редактором еженедельника «Гримас».",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "prete-plume-i-zhurnalist",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1883, pendant trois mois, il dirige et rédige presque seul un biquotidien d'informations rapides"
+      }
+    },
+    {
+      "key": "love-1884",
+      "date": {
+        "from": "1884",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Страсть к Жюдит Винмер и уединение в Одьерне",
+      "long": "Разрушительная связь с куртизанкой Жюдит Винмер; чтобы оправиться, семь месяцев провёл в Одьерне в Бретани.",
+      "place": {
+        "label": "Одьерн"
+      },
+      "works": [
+        {
+          "ref": "le-calvaire",
+          "note": "этот опыт вдохновил первый официальный роман; героиня — Жюльетт Ру"
+        }
+      ],
+      "chapter": "prete-plume-i-zhurnalist",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1884, pour se remettre et se « purger » d’une passion dévastatrice pour une femme galante, Judith Vinmer"
+      }
+    },
+    {
+      "key": "other-1884",
+      "date": {
+        "from": "1884",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Начало дружбы с Моне и Роденом",
+      "long": "В конце 1884 года началась его долгая дружба с Клодом Моне и Огюстом Роденом.",
+      "chapter": "prete-plume-i-zhurnalist",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "C’est à la fin de 1884 que commence sa longue amitié pour les deux « grands dieux de [son] cœur », Claude Monet et Auguste Rodin."
+      }
+    },
+    {
+      "key": "career-1886",
+      "date": {
+        "from": "1886",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Скандальный успех первого романа",
+      "long": "Роман вышел в ноябре 1886 года и принёс успех скандала, особенно из-за главы о разгроме Луарской армии.",
+      "works": [
+        {
+          "ref": "le-calvaire"
+        }
+      ],
+      "chapter": "romany-i-krizis",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Le Calvaire, qui paraît en novembre 1886, lui vaut un succès de scandale"
+      }
+    },
+    {
+      "key": "other-1887",
+      "date": {
+        "from": "1887",
+        "to": "1894",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Семь лет нравственного и творческого кризиса",
+      "long": "Сомнения в литературных формах, пессимизм и затяжной супружеский кризис; в эти годы увлёкся анархизмом и открыл Ван Гога, Гогена, Камиллу Клодель.",
+      "works": [
+        {
+          "ref": "dans-le-ciel"
+        },
+        {
+          "ref": "les-mauvais-bergers"
+        }
+      ],
+      "chapter": "romany-i-krizis",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Pendant les sept années qui suivent (1887-1894), Mirbeau traverse une interminable crise morale"
+      }
+    },
+    {
+      "key": "love-1887",
+      "date": {
+        "from": "1887-05-25",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на Алисе Реньо",
+      "long": "Тайно обвенчался в Лондоне с бывшей актрисой Алисой Реньо после двух с половиной лет совместной жизни.",
+      "place": {
+        "label": "Лондон"
+      },
+      "works": [
+        {
+          "ref": "la-628-e8",
+          "note": "двадцать лет спустя этот опыт повлиял на трактовку отношений Бальзака и Ганской в «Смерти Бальзака»"
+        }
+      ],
+      "chapter": "romany-i-krizis",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Alice Regnault, une ancienne actrice de théâtre, qu’il épouse, honteusement et en catimini, à Londres, le 25 mai 1887"
+      }
+    },
+    {
+      "key": "relocation-1889",
+      "date": {
+        "from": "1889-08",
+        "to": "1893-02",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Жизнь в Ле-Дан",
+      "long": "С августа 1889 по февраль 1893 жил в Ле-Дан близ Пон-де-л’Арш, затем переехал в Карьер-су-Пуасси.",
+      "place": {
+        "label": "Ле-Дан"
+      },
+      "chapter": "romany-i-krizis",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "du 3 août 1889 à février 1893, il a habité Les Damps, près de Pont-de-l'Arche, dans l’Eure"
+      }
+    },
+    {
+      "key": "other-1890",
+      "date": {
+        "from": "1890",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Официальный переход к анархизму",
+      "long": "В 1890 году открыто примкнул к анархизму, оставаясь вне каких-либо анархистских групп.",
+      "chapter": "romany-i-krizis",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Mirbeau s’est rallié officiellement à l'anarchisme en 1890."
+      }
+    },
+    {
+      "key": "persecution-1890",
+      "date": {
+        "from": "1890",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Заговор молчания вокруг табуированной темы",
+      "long": "Роман о насилии священников над подростками вызвал настоящий заговор молчания.",
+      "works": [
+        {
+          "ref": "sebastien-roch"
+        }
+      ],
+      "chapter": "romany-i-krizis",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Sébastien Roch (mars 1890) porte sur un sujet tabou, le viol d’adolescents par des prêtres, ce qui lui vaut une véritable conspiration du silence."
+      }
+    },
+    {
+      "key": "career-1892",
+      "date": {
+        "from": "1892",
+        "to": "1902",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Десять лет колонок в «Журналь»",
+      "long": "С осени 1892 года десять лет вёл хронику в «Журналь», получая 350 франков за статью.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "romany-i-krizis",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "pendant dix ans, à partir de l’automne 1892, au Journal, où il touche 350 francs par article"
+      }
+    },
+    {
+      "key": "career-1897",
+      "date": {
+        "from": "1897-12-15",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премьера первой пьесы с Сарой Бернар",
+      "long": "Пролетарская трагедия поставлена в театре Ренессанс; играли Сара Бернар и Люсьен Гитри.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "les-mauvais-bergers"
+        }
+      ],
+      "chapter": "romany-i-krizis",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "créée au théâtre de la Renaissance, le 15 décembre 1897, par deux monstres sacrés de la scène"
+      }
+    },
+    {
+      "key": "other-1898",
+      "date": {
+        "from": "1898",
+        "to": "1899",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "major",
+      "short": "Участие в защите Дрейфуса",
+      "long": "Написал текст петиции интеллектуалов, печатался в «Орор», выступал на митингах; пессимизм после дела усилился.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "le-jardin-des-supplices",
+          "note": "после дела Дрейфуса усилился пессимизм автора, и вышли два скандальных романа"
+        },
+        {
+          "ref": "journal-femme-de-chambre",
+          "note": "после дела Дрейфуса усилился пессимизм автора, и вышли два скандальных романа"
+        }
+      ],
+      "chapter": "dreyfus-i-slava",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Ardent dreyfusard, il s’engage avec passion dans ce combat pour « la Vérité et la Justice » (1898-1899)."
+      }
+    },
+    {
+      "key": "other-1898-2",
+      "date": {
+        "from": "1898-08-08",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Оплата штрафа Золя из своего кармана",
+      "long": "Заплатил крупный штраф и судебные издержки, к которым был приговорён Эмиль Золя за «Я обвиняю».",
+      "chapter": "dreyfus-i-slava",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "et, le 8 août 1898, il paye de sa poche la grosse amende d’un montant de 7 555,25 francs avec les frais du procès à laquelle a été condamné Émile Zola"
+      }
+    },
+    {
+      "key": "loss-1900",
+      "date": {
+        "from": "1900",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца",
+      "long": "Отец, Ладислас-Франсуа Мирбо (1815–1900), умер в 1900 году.",
+      "chapter": "dreyfus-i-slava",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Ladislas-François Mirbeau (1815-1900, officier de santé)"
+      }
+    },
+    {
+      "key": "career-1903",
+      "date": {
+        "from": "1903",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Гонкуровская академия",
+      "long": "Член Гонкуровской академии по завещанию Эдмона де Гонкура; с 1903 года отстаивал там молодых оригинальных авторов.",
+      "chapter": "dreyfus-i-slava",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Nommé membre de l’Académie Goncourt par la volonté testamentaire d’Edmond de Goncourt… à partir de 1903"
+      }
+    },
+    {
+      "key": "career-1903-2",
+      "date": {
+        "from": "1903-04-20",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Мировой триумф комедии в «Комеди Франсез»",
+      "long": "Комедия поставлена после долгой борьбы за сцену «Комеди Франсез» и принесла автору мировой успех, особенно в Германии и России.",
+      "place": {
+        "label": "Париж"
+      },
+      "works": [
+        {
+          "ref": "les-affaires-sont-les-affaires"
+        }
+      ],
+      "chapter": "dreyfus-i-slava",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "Les affaires sont les affaires, créée le 20 avril 1903."
+      }
+    },
+    {
+      "key": "career-1907",
+      "date": {
+        "from": "1907-11",
+        "precision": "month"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Скандал вокруг очерка о последних днях Бальзака",
+      "long": "Книга вызвала скандальный успех из-за глав о смерти Бальзака.",
+      "works": [
+        {
+          "ref": "la-628-e8"
+        }
+      ],
+      "chapter": "dreyfus-i-slava",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "La 628-E8 connaît également un succès de scandale en novembre 1907"
+      }
+    },
+    {
+      "key": "illness-1908",
+      "date": {
+        "from": "1908",
+        "to": "1917",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Постоянная болезнь, невозможность писать",
+      "long": "Почти постоянно болел и не мог писать; «Динго» закончил Леон Верт.",
+      "works": [
+        {
+          "ref": "dingo",
+          "note": "роман закончил Леон Верт, так как автор был болен"
+        }
+      ],
+      "chapter": "bolezn-i-konets",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "presque constamment malade, à partir de 1908, il est désormais incapable d’écrire"
+      }
+    },
+    {
+      "key": "relocation-1909",
+      "date": {
+        "from": "1909",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Вилла «Шевершемон» в Триеле",
+      "long": "Построил виллу в Триель-сюр-Сен, где написал последние книги; затем вернулся в Париж ближе к врачу.",
+      "place": {
+        "label": "Триель-сюр-Сен"
+      },
+      "chapter": "bolezn-i-konets",
+      "evidence": {
+        "source": "frwiki",
+        "quote": "En 1909, il se fait construire la villa de « Cheverchemont » à Triel-sur-Seine, où il écrit ses derniers livres"
+      }
+    },
+    {
+      "key": "death-1917",
+      "date": {
+        "from": "1917-02-16",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Париже",
+      "long": "Умер в день своего 69-летия в Париже в разгар Первой мировой войны; похоронен на кладбище Пасси.",
+      "place": {
+        "label": "Париж"
+      },
+      "chapter": "bolezn-i-konets",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Мирбо умер 16 февраля 1917 года в Париже, в разгар Первой мировой войны."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "lettres-de-ma-chaumiere",
+      "title": "Письма из моей хижины",
+      "written": {
+        "from": 1885,
+        "to": 1885
+      }
+    },
+    {
+      "ref": "le-calvaire",
+      "title": "Голгофа",
+      "written": {
+        "from": 1886,
+        "to": 1886
+      }
+    },
+    {
+      "ref": "abbe-jules",
+      "title": "Аббат Жюль",
+      "written": {
+        "from": 1888,
+        "to": 1888
+      }
+    },
+    {
+      "ref": "sebastien-roch",
+      "title": "Себастьян Рок",
+      "written": {
+        "from": 1888,
+        "to": 1890
+      }
+    },
+    {
+      "ref": "dans-le-ciel",
+      "title": "В небе",
+      "written": {
+        "from": 1892,
+        "to": 1893
+      }
+    },
+    {
+      "ref": "les-mauvais-bergers",
+      "title": "Дурные пастыри",
+      "written": {
+        "from": 1897,
+        "to": 1897
+      }
+    },
+    {
+      "ref": "le-jardin-des-supplices",
+      "title": "Сад пыток",
+      "written": {
+        "from": 1899,
+        "to": 1899
+      }
+    },
+    {
+      "ref": "journal-femme-de-chambre",
+      "title": "Дневник горничной",
+      "qid": "Q384635",
+      "written": {
+        "from": 1900,
+        "to": 1900
+      }
+    },
+    {
+      "ref": "vingt-et-un-jours-neurasthenique",
+      "title": "Двадцать один день неврастеника",
+      "written": {
+        "from": 1901,
+        "to": 1901
+      }
+    },
+    {
+      "ref": "les-affaires-sont-les-affaires",
+      "title": "Дела есть дела",
+      "written": {
+        "from": 1903,
+        "to": 1903
+      }
+    },
+    {
+      "ref": "farces-et-moralites",
+      "title": "Аллегории и фарсы",
+      "written": {
+        "from": 1904,
+        "to": 1904
+      }
+    },
+    {
+      "ref": "la-628-e8",
+      "title": "Автомобиль 628-Е8",
+      "written": {
+        "from": 1907,
+        "to": 1907
+      }
+    },
+    {
+      "ref": "le-foyer",
+      "title": "Очаг",
+      "written": {
+        "from": 1908,
+        "to": 1908
+      }
+    },
+    {
+      "ref": "dingo",
+      "title": "Динго",
+      "written": {
+        "from": 1913,
+        "to": 1913
+      }
+    }
+  ]
+}

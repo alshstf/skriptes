@@ -1,0 +1,210 @@
+{
+  "qid": "Q4429307",
+  "name": "Нина Матвеевна Соротокина",
+  "born": "1935-01-01",
+  "died": "2019-05-07",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%BE%D1%80%D0%BE%D1%82%D0%BE%D0%BA%D0%B8%D0%BD%D0%B0%2C_%D0%9D%D0%B8%D0%BD%D0%B0_%D0%9C%D0%B0%D1%82%D0%B2%D0%B5%D0%B5%D0%B2%D0%BD%D0%B0",
+      "rev": 146444028
+    }
+  ],
+  "chapters": [
+    {
+      "key": "detstvo-i-uchyoba",
+      "title": "Урал и учёба на инженера",
+      "from": 1935,
+      "to": 1959
+    },
+    {
+      "key": "inzhener-i-pedagog",
+      "title": "Москва: инженер и преподаватель",
+      "from": 1960,
+      "to": 1975
+    },
+    {
+      "key": "pisatelnitsa",
+      "title": "Писательство и «Гардемарины»",
+      "from": 1976,
+      "to": 2019
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1935",
+      "date": {
+        "from": "1935-01-01",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Дегтярске",
+      "long": "Родилась 1 января 1935 года в посёлке Дегтярск Свердловской области.",
+      "place": {
+        "label": "Дегтярск"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Дегтярск 1935-01-01"
+      }
+    },
+    {
+      "key": "education-1958",
+      "date": {
+        "from": "1958",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание института инженеров водного транспорта",
+      "long": "Окончила Новосибирский институт инженеров водного транспорта в 1958 году.",
+      "place": {
+        "label": "Новосибирск"
+      },
+      "chapter": "detstvo-i-uchyoba",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Окончила Новосибирский институт инженеров водного транспорта (1958)"
+      }
+    },
+    {
+      "key": "career-1960",
+      "date": {
+        "from": "1960",
+        "to": "1963",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа в тресте «Водоканалпроект»",
+      "long": "Переехала с мужем и сыном в Москву; в 1960–1963 годах работала в тресте «Водоканалпроект».",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "inzhener-i-pedagog",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Работала в тресте «Водоканалпроект» (1960—1963)"
+      }
+    },
+    {
+      "key": "career-1963",
+      "date": {
+        "from": "1963",
+        "to": "1980",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Преподавание в строительном техникуме",
+      "long": "В 1963–1980 годах преподавала в строительном техникуме.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "inzhener-i-pedagog",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "преподавала в строительном техникуме «наружную канализацию и водопровод» (1963—1980)"
+      }
+    },
+    {
+      "key": "education-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание аспирантуры",
+      "long": "Окончила аспирантуру в 1964 году.",
+      "chapter": "inzhener-i-pedagog",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Окончила Новосибирский институт инженеров водного транспорта (1958) и аспирантуру (1964)"
+      }
+    },
+    {
+      "key": "career-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Начало публикаций как прозаика",
+      "long": "Начала печататься как прозаик в 1976 году; ранее посещала семинар при Союзе писателей, где познакомилась с Юрием Нагибиным.",
+      "chapter": "pisatelnitsa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Печаталась как прозаик с 1976 года."
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вступление в Союз писателей СССР",
+      "long": "В 1991 году принята в Союз писателей СССР.",
+      "chapter": "pisatelnitsa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Член Союза писателей СССР с 1991 года."
+      }
+    },
+    {
+      "key": "other-2012",
+      "date": {
+        "from": "2012",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Звание почётного гражданина Троицка",
+      "long": "Жила в Троицке; в 2012 году стала почётным гражданином города.",
+      "place": {
+        "label": "Троицк"
+      },
+      "chapter": "pisatelnitsa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Почётный гражданин этого города (2012)."
+      }
+    },
+    {
+      "key": "death-2019",
+      "date": {
+        "from": "2019-05-07",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Москве",
+      "long": "Умерла 7 мая 2019 года в Москве, похоронена на Троицком городском кладбище.",
+      "place": {
+        "label": "Москва"
+      },
+      "chapter": "pisatelnitsa",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умерла 7 мая 2019 года на 85 году жизни."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "troe-iz-navigatskoy-shkoly",
+      "title": "Трое из навигацкой школы",
+      "qid": "Q122889473",
+      "written": {
+        "from": 1992,
+        "to": 1992
+      }
+    }
+  ]
+}

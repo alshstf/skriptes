@@ -1,0 +1,707 @@
+{
+  "qid": "Q182804",
+  "name": "Карен Бликсен",
+  "born": "1885-04-17",
+  "died": "1962-09-07",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%91%D0%BB%D0%B8%D0%BA%D1%81%D0%B5%D0%BD%2C_%D0%9A%D0%B0%D1%80%D0%B5%D0%BD",
+      "rev": 154114088
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Karen_Blixen",
+      "rev": 1378438426
+    }
+  ],
+  "chapters": [
+    {
+      "key": "rungstedlund",
+      "title": "Рунгстедлунд, ранняя смерть отца и учёба",
+      "from": 1885,
+      "to": 1912
+    },
+    {
+      "key": "kenya",
+      "title": "Кения: плантация, брак и Финч Хаттон",
+      "from": 1913,
+      "to": 1931
+    },
+    {
+      "key": "return-to-writing",
+      "title": "Возвращение в Данию и первые книги",
+      "from": 1932,
+      "to": 1945
+    },
+    {
+      "key": "late-years",
+      "title": "Признание и болезнь",
+      "from": 1946,
+      "to": 1962
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1885",
+      "date": {
+        "from": "1885-04-17",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Рунгстедлунне",
+      "long": "Карен Кристенце Динесен родилась в семейном поместье Рунгстедлунд к северу от Копенгагена.",
+      "place": {
+        "label": "Рунгстедлунд"
+      },
+      "chapter": "rungstedlund",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Karen Christentze Dinesen was born on 17 April 1885 in Rungstedlund, north of Copenhagen."
+      }
+    },
+    {
+      "key": "loss-1895",
+      "date": {
+        "from": "1895-03-28",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца Вильхельма Динесена",
+      "long": "Отец, писатель и офицер, покончил с собой, когда Карен было девять лет; с этого времени её жизнь определяла семья матери, Вестенхольц.",
+      "place": {
+        "label": "Рунгстедлунд"
+      },
+      "chapter": "rungstedlund",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He hanged himself on 28 March 1895 when Karen was nine years old."
+      }
+    },
+    {
+      "key": "education-1898",
+      "date": {
+        "from": "1898",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Год в Швейцарии с сёстрами",
+      "long": "Карен и две её сестры провели год в Швейцарии, где она выучила французский язык.",
+      "chapter": "rungstedlund",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1898, Dinesen and her two sisters spent a year in Switzerland, where she learned to speak French."
+      }
+    },
+    {
+      "key": "education-1903",
+      "date": {
+        "from": "1903",
+        "to": "1906",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Королевской академии художеств",
+      "long": "Училась в Датской королевской академии изящных искусств у Виго Йохансена; позже ездила на учёбу в Париж, Лондон и Рим.",
+      "place": {
+        "label": "Копенгаген"
+      },
+      "chapter": "rungstedlund",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "continuing her studies at the Royal Danish Academy of Fine Arts under Viggo Johansen from 1903 to 1906"
+      }
+    },
+    {
+      "key": "career-1907",
+      "date": {
+        "from": "1907",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первая публикация под псевдонимом Оцеола",
+      "long": "Дебютировала как автор художественной прозы сказкой, подписанной псевдонимом Оцеола (кличка собаки отца); из-за недостатка внимания к текстам вскоре перестала писать.",
+      "chapter": "rungstedlund",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Как писательница художественных произведений она дебютировала в 1907 году публикацией сказки Eneboerne под псевдонимом Оцеола"
+      }
+    },
+    {
+      "key": "love-1912",
+      "date": {
+        "from": "1912-12-23",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Помолвка с Бройром фон Бликсен-Финеке",
+      "long": "Объявила о помолвке с шведским бароном Бройром Бликсен-Финеке, братом-близнецом своей первой любви.",
+      "chapter": "rungstedlund",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The couple announced their engagement on 23 December 1912, to the family's surprise."
+      }
+    },
+    {
+      "key": "relocation-1913",
+      "date": {
+        "from": "1913-12",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Британскую Восточную Африку",
+      "long": "Следом за женихом отправилась в Кению, где семья затеяла кофейную плантацию, на которую вложили деньги дядя и мать.",
+      "place": {
+        "label": "Кения"
+      },
+      "chapter": "kenya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was followed by his fiancée Karen in December 1913."
+      }
+    },
+    {
+      "key": "love-1914",
+      "date": {
+        "from": "1914-01-14",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Венчание с Бройром Бликсеном в Момбасе",
+      "long": "Брак заключён сразу после прибытия в Африку; Карен стала именоваться баронессой Бликсен.",
+      "place": {
+        "label": "Момбаса"
+      },
+      "chapter": "kenya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "she and Blixen were married in Mombasa on 14 January 1914"
+      }
+    },
+    {
+      "key": "illness-1915",
+      "date": {
+        "from": "1915",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Заражение сифилисом от мужа",
+      "long": "По словам самой Карен, в письме брату, она заразилась сифилисом от мужа; болезнь и её лечение (ртуть, мышьяк) сопровождали её долгие годы.",
+      "chapter": "kenya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "to syphilis acquired at 29 years old from her husband toward the end of their first year of marriage in 1915"
+      }
+    },
+    {
+      "key": "relocation-1915",
+      "date": {
+        "from": "1915-06",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение в Данию на лечение",
+      "long": "Вернулась в Данию для лечения сальварсаном, которое оказалось полезным.",
+      "place": {
+        "label": "Дания"
+      },
+      "chapter": "kenya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She returned to Denmark in June 1915 for treatment with the newly discovered antibiotic Salvarsan which proved helpful."
+      }
+    },
+    {
+      "key": "career-1916",
+      "date": {
+        "from": "1916",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Покупка фермы Мбогани у холмов Нгонг",
+      "long": "Компания «Карен Кофи» приобрела большую ферму площадью 6000 акров; позже земля оказалась плохо пригодной для кофе из-за высоты.",
+      "place": {
+        "label": "Найроби"
+      },
+      "chapter": "kenya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "in 1916, the Karen Coffee Company purchased a larger farm, Mbogani, near the Ngong Hills"
+      }
+    },
+    {
+      "key": "relocation-1917",
+      "date": {
+        "from": "1917",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "minor",
+      "short": "Возвращение в Африку с братом Томасом",
+      "long": "Вернулась в Кению вместе с братом Томасом Динесеном, который помогал вести хозяйство до 1923 года.",
+      "place": {
+        "label": "Кения"
+      },
+      "chapter": "kenya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В Африку она вернулась в 1917 году со своим братом Томасом Динесеном, который помогал в ведении хозяйства"
+      }
+    },
+    {
+      "key": "love-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Расставание с мужем",
+      "long": "Вопреки её желанию, Бройр и Карен разъехались; причиной называют неудачное ведение дел и неверность мужа.",
+      "chapter": "kenya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Against her wishes, Bror and Karen separated in 1921."
+      }
+    },
+    {
+      "key": "career-1921",
+      "date": {
+        "from": "1921",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Управление плантацией переходит к Карен",
+      "long": "После отстранения Бройра дядя Оге Вестенхольц передал управление фермой Карен.",
+      "place": {
+        "label": "Найроби"
+      },
+      "chapter": "kenya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Bror was dismissed as the farm manager by their uncle, Aage Westenholz, chair of the Karen Coffee Company, and Karen took over its management in 1921."
+      }
+    },
+    {
+      "key": "family-1925",
+      "date": {
+        "from": "1925",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Официальный развод с Бройром Бликсеном",
+      "long": "Брак расторгнут официально; дружеские отношения с бывшим мужем сохранились.",
+      "chapter": "kenya",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Karen and Bror were officially divorced in 1925."
+      }
+    },
+    {
+      "key": "love-1926",
+      "date": {
+        "from": "1926",
+        "to": "1931",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Близость с пилотом Деннисом Финчем Хаттоном",
+      "long": "Сблизилась с британским охотником и лётчиком Деннисом Финчем Хаттоном, с которым познакомилась в 1918 году; он жил на её ферме между сафари.",
+      "place": {
+        "label": "Найроби"
+      },
+      "works": [
+        {
+          "ref": "out-of-africa",
+          "note": "их последняя встреча и прощание описаны автором в книге об Африке"
+        }
+      ],
+      "chapter": "kenya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1926—1931 годах Бликсен сблизилась с пилотом британских ВВС, путешественником и охотником Деннисом Финчем Хаттоном"
+      }
+    },
+    {
+      "key": "loss-1931",
+      "date": {
+        "from": "1931-05-14",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Гибель Дениса Финча Хаттона в авиакатастрофе",
+      "long": "Финч Хаттон погиб при крушении самолёта; вскоре после этого плантация, и без того убыточная, была оставлена.",
+      "place": {
+        "label": "Кения"
+      },
+      "works": [
+        {
+          "ref": "out-of-africa",
+          "note": "автор описала последнюю встречу и расставание с Финчем Хаттоном"
+        }
+      ],
+      "chapter": "kenya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После гибели Дениса Финча Хаттона в авиакатастрофе (14 мая 1931)"
+      }
+    },
+    {
+      "key": "relocation-1931",
+      "date": {
+        "from": "1931-07",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Окончательный отъезд из Африки",
+      "long": "После краха плантации навсегда покинула Кению и вернулась в Европу через Марсель; поселилась у матери в Рунгстедлунне.",
+      "place": {
+        "label": "Кения"
+      },
+      "works": [
+        {
+          "ref": "out-of-africa"
+        }
+      ],
+      "chapter": "kenya",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В июле 1931 года Карен Бликсен навсегда покинула Африку, вернувшись в Европу через Марсель."
+      }
+    },
+    {
+      "key": "career-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Принятие первой книги американским издателем",
+      "long": "После многочисленных отказов сборник был принят в печать Робертом Хаасом и вышел под псевдонимом Исак Динесен; позже стал выбором «Книги месяца».",
+      "works": [
+        {
+          "ref": "seven-gothic-tales",
+          "note": "рукопись завершена в 1933 году, издателя искали с трудом (письма и биография)"
+        }
+      ],
+      "chapter": "return-to-writing",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После многочисленных отказов, её сборник «Семь готических рассказов» был принят в 1934 году в печать американским издателем Робертом Хаасом."
+      }
+    },
+    {
+      "key": "career-1937",
+      "date": {
+        "from": "1937",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Успех книги об Африке, прочная репутация",
+      "long": "Книга о жизни в Кении вышла сначала в Дании и Великобритании, затем в США и закрепила репутацию писательницы.",
+      "works": [
+        {
+          "ref": "out-of-africa"
+        }
+      ],
+      "chapter": "return-to-writing",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Her second book, now the best known of her works, Out of Africa, was published in 1937. Its success firmly established her reputation."
+      }
+    },
+    {
+      "key": "career-1939",
+      "date": {
+        "from": "1939",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Тагеи Брандт",
+      "long": "Получила датскую премию для женщин в искусстве и науке.",
+      "chapter": "return-to-writing",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "She was awarded the Tagea Brandt Rejselegat (a Danish prize for women in the arts or academic life) in 1939."
+      }
+    },
+    {
+      "key": "creation-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Отправка рукописи за границу в годы оккупации",
+      "long": "Из-за войны для издания сборника в США пришлось ездить в Стокгольм и через британское посольство пересылать рукопись издателю.",
+      "place": {
+        "label": "Стокгольм"
+      },
+      "works": [
+        {
+          "ref": "winters-tales"
+        }
+      ],
+      "chapter": "return-to-writing",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Winter's Tales (1942; Danish: Vinter-eventyr)… Because of the war, she had to be creative about getting the manuscript published, travelling to Stockholm"
+      }
+    },
+    {
+      "key": "creation-1944",
+      "date": {
+        "from": "1944",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Роман под французским псевдонимом в оккупации",
+      "long": "Единственный полноразмерный роман, начатый в оккупированной Дании, вышел под псевдонимом Пьер Андрезель; автор называла его отвлечением от ощущения плена войны.",
+      "works": [
+        {
+          "ref": "angelic-avengers",
+          "note": "автор называла роман отвлечением от ощущения плена войны (позднейшие интервью)"
+        }
+      ],
+      "chapter": "return-to-writing",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Blixen started her only full-length novel, the introspective tale The Angelic Avengers, under a French pseudonym, Pierre Andrezel… The book was published in 1944"
+      }
+    },
+    {
+      "key": "illness-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Операция на позвоночнике из-за болей",
+      "long": "Нейрохирург Эдуард Буш провёл поясничную симпатэктомию (повторно в 1955 году), но боли вернулись.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1946 and 1955 the neurosurgeon Eduard Busch performed a lumbar sympathectomy on Blixen's spinal cord"
+      }
+    },
+    {
+      "key": "career-1949",
+      "date": {
+        "from": "1949",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Медаль Хольберга",
+      "long": "Получила медаль Хольберга.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: медаль Хольберга 1949-01-01"
+      }
+    },
+    {
+      "key": "career-1950",
+      "date": {
+        "from": "1950",
+        "to": "1962",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Девять номинаций на Нобелевскую премию",
+      "long": "Девять раз выдвигалась на Нобелевскую премию по литературе, но не получила её.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В период между 1950 и 1962 годами Бликсен девять раз выдвигалась на Нобелевскую премию по литературе"
+      }
+    },
+    {
+      "key": "illness-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "minor",
+      "short": "Язва желудка и операция",
+      "long": "После диагноза «язва желудка» перенесла операцию в Копенгагене; затем несколько раз госпитализировалась из-за обезвоживания и истощения.",
+      "place": {
+        "label": "Копенгаген"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1956 when she was diagnosed with the stomach ulcer, Professor Torben Knudtzon performed surgery at Copenhagen University Hospital"
+      }
+    },
+    {
+      "key": "creation-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Признание авторства романа под псевдонимом",
+      "long": "В интервью The Paris Review открыто признала себя автором романа, ранее изданного под именем Пьера Андрезеля.",
+      "works": [
+        {
+          "ref": "angelic-avengers"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1956, in an interview for The Paris Review, she finally acknowledged that she was the author of the novel"
+      }
+    },
+    {
+      "key": "career-1957",
+      "date": {
+        "from": "1957",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия датских литературных критиков",
+      "long": "Удостоена Датской литературной премии критиков.",
+      "chapter": "late-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: Датская литературная премия критиков 1957-01-01"
+      }
+    },
+    {
+      "key": "career-1959",
+      "date": {
+        "from": "1959",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Поездка в США и триумфальный приём",
+      "long": "Единственная поездка в США, несмотря на болезнь; встречалась с литераторами, в числе которых Артур Миллер и Мэрилин Монро.",
+      "works": [
+        {
+          "ref": "shadows-on-the-grass"
+        }
+      ],
+      "chapter": "late-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1959 году Карен Бликсен, несмотря на болезненное состояние, посетила США, где ей оказали триумфальный приём."
+      }
+    },
+    {
+      "key": "death-1962",
+      "date": {
+        "from": "1962-09-07",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Рунгстедлунне",
+      "long": "Умерла в семейном поместье в 77 лет, не имея возможности есть; предположительно от истощения.",
+      "place": {
+        "label": "Рунгстедлунд"
+      },
+      "chapter": "late-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Unable to eat, Blixen died on 7 September 1962 at Rungstedlund, her family's estate, at the age of 77"
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "seven-gothic-tales",
+      "title": "Семь готических рассказов",
+      "written": {
+        "from": 1931,
+        "to": 1933
+      }
+    },
+    {
+      "ref": "out-of-africa",
+      "title": "Из Африки",
+      "qid": "Q1756234",
+      "written": {
+        "from": 1937,
+        "to": 1937
+      }
+    },
+    {
+      "ref": "winters-tales",
+      "title": "Зимние сказки",
+      "written": {
+        "from": 1942,
+        "to": 1942
+      }
+    },
+    {
+      "ref": "angelic-avengers",
+      "title": "Ангелы мщения",
+      "written": {
+        "from": 1940,
+        "to": 1944
+      }
+    },
+    {
+      "ref": "last-tales",
+      "title": "Последние сказки",
+      "written": {
+        "from": 1957,
+        "to": 1957
+      }
+    },
+    {
+      "ref": "anecdotes-of-destiny",
+      "title": "Анекдоты судьбы",
+      "written": {
+        "from": 1958,
+        "to": 1958
+      }
+    },
+    {
+      "ref": "babettes-feast",
+      "title": "Пир Бабетты",
+      "qid": "Q1762979",
+      "written": {
+        "from": 1958,
+        "to": 1958
+      }
+    },
+    {
+      "ref": "shadows-on-the-grass",
+      "title": "Тени на траве",
+      "written": {
+        "from": 1960,
+        "to": 1960
+      }
+    }
+  ]
+}

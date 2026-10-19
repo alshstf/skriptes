@@ -1,0 +1,481 @@
+{
+  "qid": "Q313246",
+  "name": "Дэвид Фостер Уоллес",
+  "born": "1962-02-21",
+  "died": "2008-09-12",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A3%D0%BE%D0%BB%D0%BB%D0%B5%D1%81%2C_%D0%94%D1%8D%D0%B2%D0%B8%D0%B4_%D0%A4%D0%BE%D1%81%D1%82%D0%B5%D1%80",
+      "rev": 154544552
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/David_Foster_Wallace",
+      "rev": 1380243429
+    }
+  ],
+  "chapters": [
+    {
+      "key": "uchyoba-i-pervyj-roman",
+      "title": "Итака, Амхерст, Аризона",
+      "from": 1962,
+      "to": 1987
+    },
+    {
+      "key": "krizis-i-lechenie",
+      "title": "Больница, Бостон, Мэри Карр",
+      "from": 1988,
+      "to": 1995
+    },
+    {
+      "key": "slava",
+      "title": "Бесконечная шутка и признание",
+      "from": 1996,
+      "to": 2001
+    },
+    {
+      "key": "klermont",
+      "title": "Клермонт, брак, последние годы",
+      "from": 2002,
+      "to": 2008
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1962",
+      "date": {
+        "from": "1962-02-21",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в семье профессоров",
+      "long": "Родился в Итаке (штат Нью-Йорк) в семье философа Джеймса Д. Уоллеса и преподавательницы английского Салли Джин Уоллес; вырос в Шампейне и Урбане, Иллинойс.",
+      "place": {
+        "label": "Итака"
+      },
+      "chapter": "uchyoba-i-pervyj-roman",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Дэвид Фостер Уоллес родился 21 февраля 1962 года в Итаке, США."
+      }
+    },
+    {
+      "key": "education-1980",
+      "date": {
+        "from": "1980",
+        "to": "1985",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Учёба в Амхерстском колледже",
+      "long": "Учился в Амхерстском колледже, где раньше учился отец; изучал английский язык и философию, окончил с отличием summa cum laude в 1985 году. Дипломная работа по модальной логике стала основой первого романа.",
+      "place": {
+        "label": "Амхерст"
+      },
+      "works": [
+        {
+          "ref": "broom-of-the-system",
+          "note": "дипломная работа по английскому стала рукописью первого романа"
+        }
+      ],
+      "chapter": "uchyoba-i-pervyj-roman",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Wallace attended Amherst College, his father's alma mater, where he majored in English and philosophy and graduated summa cum laude in 1985."
+      }
+    },
+    {
+      "key": "creation-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Открытие писательства как призвания",
+      "long": "По собственным словам из письма Джонатану Франзену, в 1983 году открыл для себя писательство и решил стать писателем.",
+      "chapter": "uchyoba-i-pervyj-roman",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Когда в 1983 году я открыл для себя писательство, я обнаружил нечто, что давало мне комбинацию удовлетворения"
+      }
+    },
+    {
+      "key": "education-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Магистр изящных искусств в Аризоне",
+      "long": "Получил степень магистра изящных искусств по словесности в Аризонском университете.",
+      "place": {
+        "label": "Тусон"
+      },
+      "chapter": "uchyoba-i-pervyj-roman",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1987 году получил степень магистра изящных искусств (словесность) в Аризонском университете."
+      }
+    },
+    {
+      "key": "career-1987",
+      "date": {
+        "from": "1987",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Уайтинг",
+      "long": "Получил премию Уайтинг.",
+      "chapter": "uchyoba-i-pervyj-roman",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Уайтинг 1987-01-01"
+      }
+    },
+    {
+      "key": "illness-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Лечение от зависимости в клинике Маклин",
+      "long": "Четыре недели провёл в психиатрической клинике Маклин в Бельмонте, где прошёл программу лечения от алкогольной и наркотической зависимости; позже говорил, что это время изменило его жизнь.",
+      "place": {
+        "label": "Бельмонт"
+      },
+      "chapter": "krizis-i-lechenie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1989, Wallace spent four weeks at McLean Hospital, a psychiatric institute in Belmont, Massachusetts, affiliated with Harvard Medical School, where he completed a drug and alcohol detoxification program"
+      }
+    },
+    {
+      "key": "education-1989",
+      "date": {
+        "from": "1989",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Гарвардская аспирантура, быстро оставленная",
+      "long": "Осенью 1989 года поступил в аспирантуру по философии в Гарварде, но вскоре оставил программу.",
+      "place": {
+        "label": "Кембридж"
+      },
+      "chapter": "krizis-i-lechenie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He moved back to Massachusetts to attend graduate school in philosophy at Harvard University in fall 1989, but soon left the program."
+      }
+    },
+    {
+      "key": "career-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Преподавание в Эмерсон-колледже",
+      "long": "Начал преподавать литературу в Эмерсон-колледже в Бостоне.",
+      "place": {
+        "label": "Бостон"
+      },
+      "chapter": "krizis-i-lechenie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1991, Wallace began teaching literature as an adjunct professor at Emerson College in Boston."
+      }
+    },
+    {
+      "key": "creation-1991",
+      "date": {
+        "from": "1991",
+        "to": "1993",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Работа над вторым романом, Сиракьюс",
+      "long": "Начал второй роман в 1991 году, в декабре 1993-го передал черновик редактору; около года работал над книгой в Сиракьюсе.",
+      "place": {
+        "label": "Сиракьюс"
+      },
+      "works": [
+        {
+          "ref": "infinite-jest"
+        }
+      ],
+      "chapter": "krizis-i-lechenie",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Walace began his second novel, Infinite Jest, in 1991, and submitted a draft to his editor in December 1993. He worked on the book while living in Syracuse, N.Y., for about a year."
+      }
+    },
+    {
+      "key": "love-1992",
+      "date": {
+        "from": "1992",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Отношения с Мэри Карр",
+      "long": "В начале 1990-х встречался с поэтессой Мэри Карр; по мнению биографа Д. Т. Макса, безответная влюблённость и постоянные разрывы вдохновили роман.",
+      "works": [
+        {
+          "ref": "infinite-jest",
+          "note": "связь романа с влюблённостью выводит биограф Д. Т. Макс; запись Уоллеса на полях 1992 года"
+        }
+      ],
+      "chapter": "krizis-i-lechenie",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1992 Уоллес написал на полях одной из книг: «Ключ к 92 году — это то, что МК была самым важным."
+      }
+    },
+    {
+      "key": "career-1996",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Широкое признание после второго романа",
+      "long": "Второй роман принёс широкую известность; позднее журнал Time включил его в число лучших англоязычных романов.",
+      "works": [
+        {
+          "ref": "infinite-jest"
+        }
+      ],
+      "chapter": "slava",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Тысячестраничный роман «Бесконечная шутка» (1996) журнал Time включил в число ста лучших англоязычных романов XX века."
+      }
+    },
+    {
+      "key": "career-1996-2",
+      "date": {
+        "from": "1996",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Литературная премия Лэннана",
+      "long": "Получил литературную премию Лэннана.",
+      "chapter": "slava",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: литературная премия Лэннана 1996-01-01"
+      }
+    },
+    {
+      "key": "career-1997",
+      "date": {
+        "from": "1997",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Стипендия Макартура",
+      "long": "Получил стипендию Макартура; тогда же редакторы The Paris Review присудили ему премию Ага-хана за рассказ.",
+      "chapter": "slava",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 1997, Wallace received a MacArthur Fellowship."
+      }
+    },
+    {
+      "key": "relocation-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Переезд в Клермонт, кафедра в Помона-колледже",
+      "long": "Переехал в Клермонт и стал первым профессором творческого письма и английского языка, получившим кафедру Роя Диснея в Помона-колледже.",
+      "place": {
+        "label": "Клермонт"
+      },
+      "chapter": "klermont",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2002, Wallace became the first Roy E. Disney-endowed Professor of Creative Writing and Professor of English at Pomona College in Claremont, California."
+      }
+    },
+    {
+      "key": "love-2002",
+      "date": {
+        "from": "2002",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "minor",
+      "short": "Знакомство с Карен Грин",
+      "long": "Познакомился с художницей Карен Грин.",
+      "chapter": "klermont",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2002, Wallace met painter Karen L. Green."
+      }
+    },
+    {
+      "key": "love-2004",
+      "date": {
+        "from": "2004-12-27",
+        "precision": "day"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с художницей Карен Грин",
+      "long": "Женился на художнице Карен Грин; жили в Клермонте.",
+      "chapter": "klermont",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They married on December 27, 2004."
+      }
+    },
+    {
+      "key": "career-2005",
+      "date": {
+        "from": "2005",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Речь перед выпускниками Кенион-колледжа",
+      "long": "Выступил с речью перед выпускниками Кенион-колледжа; позже она вышла отдельной книгой.",
+      "chapter": "klermont",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "In 2005, Wallace delivered the commencement address at Kenyon College."
+      }
+    },
+    {
+      "key": "illness-2007",
+      "date": {
+        "from": "2007-06",
+        "precision": "month"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Отказ от антидепрессантов, возврат депрессии",
+      "long": "После приступа сильных болей в желудке по совету врача перестал принимать антидепрессант; депрессия вернулась, лечение, включая электросудорожную терапию, не помогло.",
+      "chapter": "klermont",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в июне 2007 года по совету врача перестал их принимать."
+      }
+    },
+    {
+      "key": "death-2008",
+      "date": {
+        "from": "2008-09-12",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Клермонте",
+      "long": "Покончил с собой в своём доме в Клермонте после более чем двадцати лет депрессии. Рукопись последнего романа осталась неоконченной.",
+      "place": {
+        "label": "Клермонт"
+      },
+      "works": [
+        {
+          "ref": "the-pale-king",
+          "note": "в день смерти разложил часть рукописи"
+        }
+      ],
+      "chapter": "klermont",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On September 12, 2008, at age 46, Wallace wrote a suicide note to his wife, arranged part of the manuscript for The Pale King, and hanged himself on the back porch of his house."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "broom-of-the-system",
+      "title": "The Broom of the System",
+      "qid": "Q3824074",
+      "written": {
+        "from": 1985,
+        "to": 1987
+      }
+    },
+    {
+      "ref": "girl-with-curious-hair",
+      "title": "Girl with Curious Hair",
+      "qid": "Q3823784",
+      "written": {
+        "from": 1987,
+        "to": 1989
+      }
+    },
+    {
+      "ref": "infinite-jest",
+      "title": "Бесконечная шутка",
+      "qid": "Q1077445",
+      "written": {
+        "from": 1991,
+        "to": 1996
+      }
+    },
+    {
+      "ref": "a-supposedly-fun-thing",
+      "title": "A Supposedly Fun Thing I'll Never Do Again",
+      "qid": "Q4004190",
+      "written": {
+        "from": 1990,
+        "to": 1997
+      }
+    },
+    {
+      "ref": "brief-interviews-with-hideous-men",
+      "title": "Brief Interviews with Hideous Men",
+      "qid": "Q3644406",
+      "written": {
+        "from": 1996,
+        "to": 1999
+      }
+    },
+    {
+      "ref": "everything-and-more",
+      "title": "Everything and More",
+      "qid": "Q1503890",
+      "written": {
+        "from": 2001,
+        "to": 2003
+      }
+    },
+    {
+      "ref": "oblivion-stories",
+      "title": "Oblivion: Stories",
+      "qid": "Q3880601",
+      "written": {
+        "from": 2000,
+        "to": 2004
+      }
+    },
+    {
+      "ref": "the-pale-king",
+      "title": "The Pale King",
+      "qid": "Q1642719",
+      "written": {
+        "from": 2008,
+        "to": 2008
+      }
+    }
+  ]
+}

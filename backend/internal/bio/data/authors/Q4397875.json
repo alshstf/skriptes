@@ -1,0 +1,136 @@
+{
+  "qid": "Q4397875",
+  "name": "Игорь Маркович Росоховатский",
+  "born": "1929-08-30",
+  "died": "2015-06-07",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A0%D0%BE%D1%81%D0%BE%D1%85%D0%BE%D0%B2%D0%B0%D1%82%D1%81%D0%BA%D0%B8%D0%B9%2C_%D0%98%D0%B3%D0%BE%D1%80%D1%8C_%D0%9C%D0%B0%D1%80%D0%BA%D0%BE%D0%B2%D0%B8%D1%87",
+      "rev": 149419153
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Igor_Rosokhovatski",
+      "rev": 1341350645
+    }
+  ],
+  "chapters": [
+    {
+      "key": "shpola-and-youth",
+      "title": "Шпола и юность",
+      "from": 1929,
+      "to": 1945
+    },
+    {
+      "key": "press-and-fantasy",
+      "title": "Журналистика и фантастика",
+      "from": 1946,
+      "to": 1981
+    },
+    {
+      "key": "writers-union-kyiv",
+      "title": "Союз писателей и киевские годы",
+      "from": 1982,
+      "to": 2015
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1929",
+      "date": {
+        "from": "1929-08-30",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Шполе",
+      "long": "Родился в Шполе (Черкасская область, УССР). В статье Википедии дата рождения указана как 27 августа, в Wikidata — 30 августа 1929 года.",
+      "place": {
+        "label": "Шпола"
+      },
+      "chapter": "shpola-and-youth",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Шпола 1929-08-30"
+      }
+    },
+    {
+      "key": "career-1946",
+      "date": {
+        "from": "1946",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Начало публикаций",
+      "long": "Начал печататься в 1946 году; впоследствии работал научным журналистом в редакциях украинских газет, в том числе «Юный ленинец».",
+      "chapter": "press-and-fantasy",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Печатался с 1946 года."
+      }
+    },
+    {
+      "key": "career-1982",
+      "date": {
+        "from": "1982",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Вступление в Союз писателей СССР",
+      "long": "Вступил в Союз писателей СССР; к этому времени уже был членом Союза журналистов СССР.",
+      "chapter": "writers-union-kyiv",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Член Союза журналистов СССР и Союза писателей СССР (1982)."
+      }
+    },
+    {
+      "key": "death-2015",
+      "date": {
+        "from": "2015-06-07",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Киеве",
+      "long": "Умер 7 июня 2015 года в Киеве, где жил.",
+      "place": {
+        "label": "Киев"
+      },
+      "chapter": "writers-union-kyiv",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Умер 7 июня 2015 года."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "i-vsyo-taki-eto-bylo",
+      "title": "И всё-таки это было",
+      "written": {
+        "from": 1966,
+        "to": 1966
+      }
+    },
+    {
+      "ref": "kd-kiberneticheskiy-dvoynik",
+      "title": "КД — кибернетический двойник",
+      "written": {
+        "from": 1975,
+        "to": 1975
+      }
+    },
+    {
+      "ref": "dvoynik-konstruktora-vasilchenko",
+      "title": "Двойник конструктора Васильченко",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    }
+  ]
+}

@@ -1,0 +1,657 @@
+{
+  "qid": "Q506885",
+  "name": "Уильям Голдман",
+  "born": "1931-08-12",
+  "died": "2018-11-16",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%93%D0%BE%D0%BB%D0%B4%D0%BC%D0%B0%D0%BD%2C_%D0%A3%D0%B8%D0%BB%D1%8C%D1%8F%D0%BC",
+      "rev": 155130204
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/William_Goldman",
+      "rev": 1380610530
+    }
+  ],
+  "chapters": [
+    {
+      "key": "chicago-army-columbia",
+      "title": "Чикаго, армия, Колумбия",
+      "from": 1931,
+      "to": 1955
+    },
+    {
+      "key": "first-novels-and-family",
+      "title": "Первые романы, брак, театр",
+      "from": 1956,
+      "to": 1967
+    },
+    {
+      "key": "hollywood-rise",
+      "title": "Бутч Кэссиди и болезнь",
+      "from": 1968,
+      "to": 1977
+    },
+    {
+      "key": "lean-years",
+      "title": "Контракты, неснятые сценарии",
+      "from": 1978,
+      "to": 1985
+    },
+    {
+      "key": "return-to-hollywood",
+      "title": "Возвращение и работа «доктором сценариев»",
+      "from": 1986,
+      "to": 2000
+    },
+    {
+      "key": "later-years",
+      "title": "Поздние годы",
+      "from": 2001,
+      "to": 2018
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1931",
+      "date": {
+        "from": "1931-08-12",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Чикаго",
+      "long": "Родился в Чикаго в еврейской семье, вырос в пригороде Хайленд-Парк, в семье Мориса Кларенса и Марион Голдман.",
+      "place": {
+        "label": "Чикаго"
+      },
+      "chapter": "chicago-army-columbia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Goldman was born in Chicago on August 12, 1931"
+      }
+    },
+    {
+      "key": "loss-1947",
+      "date": {
+        "from": "1947",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть отца",
+      "long": "Отец, потерявший бизнес из-за алкоголизма, покончил с собой, когда Голдман учился в старших классах; тело обнаружил 15-летний Уильям.",
+      "place": {
+        "label": "Хайленд-Парк"
+      },
+      "chapter": "chicago-army-columbia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the second son of Marion (née Weil; 1904–1993) and Maurice Clarence Goldman (1893–1947)"
+      }
+    },
+    {
+      "key": "education-1952",
+      "date": {
+        "from": "1952",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Окончание Оберлинского колледжа",
+      "long": "Окончил Оберлинский колледж в Огайо, где начал писать на курсе творческого письма, и редактировал студенческий литературный журнал.",
+      "place": {
+        "label": "Оберлин"
+      },
+      "chapter": "chicago-army-columbia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Goldman graduated from college in 1952 during the Korean War"
+      }
+    },
+    {
+      "key": "war-1952",
+      "date": {
+        "from": "1952",
+        "to": "1954",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Служба клерком в Пентагоне",
+      "long": "Призван в армию во время Корейской войны, служил клерком в штабе Министерства обороны в Пентагоне, уволен в звании капрала в сентябре 1954 года.",
+      "place": {
+        "label": "Вашингтон"
+      },
+      "works": [
+        {
+          "ref": "soldier-in-the-rain",
+          "note": "роман основан на опыте военной службы Голдмана"
+        }
+      ],
+      "chapter": "chicago-army-columbia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Goldman graduated from college in 1952 during the Korean War, and he was soon drafted into the Army. … he was discharged with the rank of corporal in September 1954"
+      }
+    },
+    {
+      "key": "education-1956",
+      "date": {
+        "from": "1956",
+        "precision": "year"
+      },
+      "type": "education",
+      "tier": "minor",
+      "short": "Магистратура Колумбийского университета",
+      "long": "Получил степень магистра в Колумбийском университете по программе для ветеранов; защитил работу о комедии нравов в Америке.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "chicago-army-columbia",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "earning a Master of Arts degree at Columbia University and graduating in 1956"
+      }
+    },
+    {
+      "key": "creation-1956",
+      "date": {
+        "from": "1956-06-25",
+        "precision": "day"
+      },
+      "type": "creation",
+      "tier": "major",
+      "short": "Первый роман, написанный за три недели",
+      "long": "Начал первый роман и закончил его менее чем за три недели; агент Джо Маккриндл предложил рукопись издательству Knopf, которое согласилось издать её при удвоении объёма.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "works": [
+        {
+          "ref": "temple-of-gold",
+          "note": "роман написан менее чем за три недели с 25 июня 1956 года"
+        }
+      ],
+      "chapter": "first-novels-and-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "On June 25, 1956, Goldman began writing his first novel The Temple of Gold, completing it in less than three weeks."
+      }
+    },
+    {
+      "key": "love-1961",
+      "date": {
+        "from": "1961",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Илин Джонс",
+      "long": "Женился на Илин Джонс, уроженке Техаса и модели Neiman Marcus; брак продлился до развода в 1991 году.",
+      "chapter": "first-novels-and-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was married to Ilene Jones from 1961 until their divorce in 1991"
+      }
+    },
+    {
+      "key": "career-1961",
+      "date": {
+        "from": "1961",
+        "to": "1962",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Театральные работы с братом Джеймсом",
+      "long": "Вместе с братом Джеймсом написал пьесу и мюзикл (с Джоном Кандером); обе постановки шли недолго.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "first-novels-and-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "They then collaborated on their own play, Blood, Sweat and Stanley Poole (1961), and on the musical, A Family Affair (1962)"
+      }
+    },
+    {
+      "key": "child-1962",
+      "date": {
+        "from": "1962",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Дженни",
+      "long": "В семье родилась дочь Дженни Ребекка.",
+      "chapter": "first-novels-and-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the couple had two daughters, Jenny Rebecca (b. 1962) and Susanna (b 1965)"
+      }
+    },
+    {
+      "key": "creation-1964",
+      "date": {
+        "from": "1964",
+        "precision": "year"
+      },
+      "type": "creation",
+      "tier": "minor",
+      "short": "Творческий кризис и роман под псевдонимом",
+      "long": "На фоне творческого кризиса за две недели написал роман по мотивам дела Бостонского душителя; издан под псевдонимом Гарри Лонгбо.",
+      "works": [
+        {
+          "ref": "no-way-to-treat-a-lady",
+          "note": "роман написан за две недели и издан под псевдонимом"
+        }
+      ],
+      "chapter": "first-novels-and-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His writer's block continued, but he had an idea for the novel No Way to Treat a Lady (1964) based on the Boston Strangler. He wrote it in two weeks, and it was published under the pseudonym Harry Longbaugh"
+      }
+    },
+    {
+      "key": "child-1965",
+      "date": {
+        "from": "1965",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Сюзанны",
+      "long": "В семье родилась вторая дочь, Сюзанна.",
+      "chapter": "first-novels-and-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "the couple had two daughters, Jenny Rebecca (b. 1962) and Susanna (b 1965)"
+      }
+    },
+    {
+      "key": "career-1966",
+      "date": {
+        "from": "1966",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый успешный фильм по его сценарию",
+      "long": "Предложил продюсеру Эллиоту Кастнеру экранизировать романы Росса Макдональда и написал сценарий «Харпера» с Полом Ньюманом; фильм имел успех.",
+      "chapter": "first-novels-and-family",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "The result was Harper (1966) starring Paul Newman, which was a big hit."
+      }
+    },
+    {
+      "key": "career-1967",
+      "date": {
+        "from": "1967",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия Эдгара Аллана По",
+      "long": "Получил премию Эдгара Аллана По.",
+      "chapter": "first-novels-and-family",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Эдгара Аллана По 1967-01-01"
+      }
+    },
+    {
+      "key": "career-1969",
+      "date": {
+        "from": "1969",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Рекордная продажа оригинального сценария",
+      "long": "Первый оригинальный сценарий, над которым он работал восемь лет, продан за 400 тысяч долларов — рекордную по тем временам сумму; фильм 1969 года имел успех у критики и зрителей.",
+      "chapter": "hollywood-rise",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He sold it for $400,000, the highest price ever paid for an original screenplay at that time. The movie was released in 1969, a critical and commercial success"
+      }
+    },
+    {
+      "key": "career-1970",
+      "date": {
+        "from": "1970-04-07",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первый «Оскар»",
+      "long": "Получил первую премию «Оскар» — за лучший оригинальный сценарий.",
+      "chapter": "hollywood-rise",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Оскар» за лучший оригинальный сценарий 1970-04-07"
+      }
+    },
+    {
+      "key": "illness-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "illness",
+      "tier": "major",
+      "short": "Тяжёлая пневмония",
+      "long": "Редкая форма пневмонии привела к госпитализации и месяцам плохого самочувствия; после болезни последовал период активной работы над романами и сценариями.",
+      "chapter": "hollywood-rise",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Goldman's next novel was The Princess Bride (1973); he also wrote a screenplay, but it was more than a decade before the film was made. That same year, he contracted a rare strain of pneumonia, which resulted in his being hospitalized and affected his health for months."
+      }
+    },
+    {
+      "key": "loss-1973",
+      "date": {
+        "from": "1973",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть редактора Хайрама Хайдна",
+      "long": "После смерти редактора Хайрама Хайдна поздней осенью 1973 года проза Голдмана стала заметно более коммерческой.",
+      "works": [
+        {
+          "ref": "marathon-man",
+          "note": "коммерческий поворот в прозе начался после смерти редактора"
+        }
+      ],
+      "chapter": "hollywood-rise",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Goldman's novel writing moved in a more commercial direction following the death of his editor Hiram Haydn in late 1973."
+      }
+    },
+    {
+      "key": "career-1974",
+      "date": {
+        "from": "1974",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Контракт на три книги на 2 миллиона",
+      "long": "Подписал с издательством Delacorte контракт на три книги на сумму 2 миллиона долларов.",
+      "works": [
+        {
+          "ref": "marathon-man"
+        }
+      ],
+      "chapter": "hollywood-rise",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "followed by the thriller Marathon Man (1974), which he sold to Delacorte as part of a three-book deal worth $2 million."
+      }
+    },
+    {
+      "key": "career-1977",
+      "date": {
+        "from": "1977",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Трёхфильмовый контракт с Джозефом Левином",
+      "long": "Подписал с продюсером Джозефом Левином контракт на три фильма на сумму 1,5 миллиона долларов.",
+      "chapter": "hollywood-rise",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Goldman later wrote a promotional book, Story of A Bridge Too Far (1977), as a favor to Levine, and signed a three-film contract with the producer worth $1.5 million."
+      }
+    },
+    {
+      "key": "career-1977-2",
+      "date": {
+        "from": "1977-03-28",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Второй «Оскар»",
+      "long": "Получил вторую премию «Оскар» — за адаптированный сценарий.",
+      "chapter": "hollywood-rise",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия «Оскар» за лучший адаптированный сценарий 1977-03-28"
+      }
+    },
+    {
+      "key": "career-1983",
+      "date": {
+        "from": "1983",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Спад спроса на сценариста",
+      "long": "После нескольких неснятых сценариев спрос на Голдмана как сценариста снизился; он переключился на прозу и выпустил мемуары о работе в Голливуде.",
+      "works": [
+        {
+          "ref": "adventures-in-the-screen-trade"
+        }
+      ],
+      "chapter": "lean-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "After several of his screenplays were not filmed, Goldman found himself in less demand as a screenwriter.  He published a memoir about his professional life in Hollywood, Adventures in the Screen Trade (1983)"
+      }
+    },
+    {
+      "key": "career-1986",
+      "date": {
+        "from": "1986",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Возвращение в Голливуд",
+      "long": "После подписания контракта с агентом Майклом Овицем интерес Голливуда к нему возобновился; затем он написал сценарий «Мизери» для Роба Райнера.",
+      "chapter": "return-to-hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Hollywood's interest in Goldman was reawakened; he wrote the scripts for film adaptations of Heat (1986) and The Princess Bride (1987)."
+      }
+    },
+    {
+      "key": "career-1988",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Премия «Хьюго»",
+      "long": "Получил премию «Хьюго» за лучшую постановку.",
+      "chapter": "return-to-hollywood",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: премия Хьюго за лучшую постановку 1988-01-01"
+      }
+    },
+    {
+      "key": "career-1988-2",
+      "date": {
+        "from": "1988",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа «доктором сценариев»",
+      "long": "Стал постоянно работать «доктором сценариев», дорабатывая без указания в титрах многие фильмы, в основном студии Castle Rock.",
+      "chapter": "return-to-hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Goldman began to work steadily as a \"script doctor\", doing uncredited work on films including Twins (1988)"
+      }
+    },
+    {
+      "key": "family-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "minor",
+      "short": "Развод с Илин Джонс",
+      "long": "Брак с Илин Джонс, в котором родились две дочери, закончился разводом.",
+      "chapter": "return-to-hollywood",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "He was married to Ilene Jones from 1961 until their divorce in 1991"
+      }
+    },
+    {
+      "key": "loss-2015",
+      "date": {
+        "from": "2015-01-15",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть дочери Сюзанны",
+      "long": "Умерла младшая дочь Сюзанна.",
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "His daughter Susanna died on 15 January 2015."
+      }
+    },
+    {
+      "key": "death-2018",
+      "date": {
+        "from": "2018-11-16",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть на Манхэттене",
+      "long": "Умер в своей квартире на Манхэттене от рака толстой кишки, осложнённого пневмонией, в возрасте 87 лет.",
+      "place": {
+        "label": "Нью-Йорк"
+      },
+      "chapter": "later-years",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Goldman died at his Manhattan apartment on November 16, 2018, due to colon cancer complicated by pneumonia."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "temple-of-gold",
+      "title": "Храм золота",
+      "written": {
+        "from": 1956,
+        "to": 1956
+      }
+    },
+    {
+      "ref": "soldier-in-the-rain",
+      "title": "Солдат под дождём",
+      "written": {
+        "from": 1960,
+        "to": 1960
+      }
+    },
+    {
+      "ref": "no-way-to-treat-a-lady",
+      "title": "Не обращайся так с леди",
+      "written": {
+        "from": 1964,
+        "to": 1964
+      }
+    },
+    {
+      "ref": "the-thing-of-it-is",
+      "title": "Дело в том...",
+      "written": {
+        "from": 1967,
+        "to": 1967
+      }
+    },
+    {
+      "ref": "the-season",
+      "title": "Сезон: откровенный взгляд на Бродвей",
+      "written": {
+        "from": 1969,
+        "to": 1969
+      }
+    },
+    {
+      "ref": "princess-bride",
+      "title": "Принцесса-невеста",
+      "qid": "Q1935913",
+      "written": {
+        "from": 1973,
+        "to": 1973
+      }
+    },
+    {
+      "ref": "marathon-man",
+      "title": "Марафонец",
+      "written": {
+        "from": 1974,
+        "to": 1974
+      }
+    },
+    {
+      "ref": "magic",
+      "title": "Магия",
+      "written": {
+        "from": 1976,
+        "to": 1976
+      }
+    },
+    {
+      "ref": "tinsel",
+      "title": "Мишура",
+      "written": {
+        "from": 1979,
+        "to": 1979
+      }
+    },
+    {
+      "ref": "adventures-in-the-screen-trade",
+      "title": "Приключения в киноремесле",
+      "written": {
+        "from": 1983,
+        "to": 1983
+      }
+    },
+    {
+      "ref": "heat",
+      "title": "Жара",
+      "written": {
+        "from": 1985,
+        "to": 1985
+      }
+    },
+    {
+      "ref": "brothers",
+      "title": "Братья",
+      "written": {
+        "from": 1986,
+        "to": 1986
+      }
+    },
+    {
+      "ref": "which-lie-did-i-tell",
+      "title": "Какую ложь я сказал?",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    }
+  ]
+}

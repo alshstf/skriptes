@@ -1,0 +1,656 @@
+{
+  "qid": "Q163747",
+  "name": "Феликс Зальтен",
+  "born": "1869-09-06",
+  "died": "1945-10-08",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%97%D0%B0%D0%BB%D1%8C%D1%82%D0%B5%D0%BD%2C_%D0%A4%D0%B5%D0%BB%D0%B8%D0%BA%D1%81",
+      "rev": 152612568
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Felix_Salten",
+      "rev": 1377998279
+    },
+    {
+      "id": "dewiki",
+      "url": "https://de.wikipedia.org/wiki/Felix_Salten",
+      "rev": 271338559
+    }
+  ],
+  "chapters": [
+    {
+      "key": "pest-vienna-youth",
+      "title": "Пешт, Вена, страховое агентство",
+      "from": 1869,
+      "to": 1888
+    },
+    {
+      "key": "young-vienna",
+      "title": "Молодая Вена и театральная критика",
+      "from": 1889,
+      "to": 1900
+    },
+    {
+      "key": "zeit-and-family",
+      "title": "Die Zeit, брак и долги",
+      "from": 1901,
+      "to": 1913
+    },
+    {
+      "key": "war-and-bambi",
+      "title": "Война, фельетоны, звериные истории",
+      "from": 1914,
+      "to": 1932
+    },
+    {
+      "key": "pen-ban-exile",
+      "title": "ПЕН-клуб, запрет книг, Цюрих",
+      "from": 1933,
+      "to": 1945
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1869",
+      "date": {
+        "from": "1869-09-06",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Пеште в еврейской семье",
+      "long": "Зигмунд Зальцман родился в венгерской еврейской семье инженера; вскоре семья переехала в Вену.",
+      "place": {
+        "label": "Пешт"
+      },
+      "chapter": "pest-vienna-youth",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Зигмунд Зальцман родился 6 сентября 1869 года в венгерской еврейской семье, проживавшей в Пеште"
+      }
+    },
+    {
+      "key": "career-1889",
+      "date": {
+        "from": "1889-01-15",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Первое опубликованное стихотворение",
+      "long": "15 января 1889 года в журнале An der Schönen Blauen Donau вышло первое стихотворение Зальтена.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "young-vienna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "15 января 1889 года Зигмунд опубликовал своё первое стихотворение в журнале An der Schönen Blauen Donau"
+      }
+    },
+    {
+      "key": "career-1890",
+      "date": {
+        "from": "1890",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Знакомство с кругом «Молодой Вены»",
+      "long": "В кафе «Гринштайдль» сблизился с Шницлером, Гофмансталем, Бер-Гофманом, Баром и Краусом; в отличие от них жил на литературный заработок.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "young-vienna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1890 году в кафе «Гринштайдль» он познакомился с представителем сообщества литераторов «Молодая Вена»"
+      }
+    },
+    {
+      "key": "career-1894",
+      "date": {
+        "from": "1894",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Редактор и театральный критик газеты",
+      "long": "Осенью 1894 года стал редактором Wiener Allgemeine Zeitung, где работал театральным критиком.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "young-vienna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Осенью 1894 года Зальтен стал редактором Wiener Allgemeine Zeitung, работая там в качестве театрального критика."
+      }
+    },
+    {
+      "key": "child-1895",
+      "date": {
+        "from": "1895-03-24",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "major",
+      "short": "Рождение внебрачной дочери от Лотты Глас",
+      "long": "Любовница Лотта Глас родила общую дочь; ребёнка, как было принято, отдали кормилице в деревню.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "young-vienna",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Am 24. März 1895 gebar Glas eine gemeinsame Tochter."
+      }
+    },
+    {
+      "key": "loss-1895",
+      "date": {
+        "from": "1895-07",
+        "precision": "month"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть дочери в младенчестве, разрыв с Глас",
+      "long": "Дочь умерла в возрасте около четырёх месяцев; после этого Зальтен прекратил отношения с Лоттой Глас.",
+      "place": {
+        "label": "Герасдорф"
+      },
+      "chapter": "young-vienna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1895 году Гляс родила дочь… Вскоре после того, как дочь умерла, Зальтен закончил свои отношения с Гляс"
+      }
+    },
+    {
+      "key": "other-1896",
+      "date": {
+        "from": "1896-12-14",
+        "precision": "day"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Публичный скандал: пощёчина Карлу Краусу",
+      "long": "Зальтен дал пощёчину Краусу после того, как тот обнародовал его отношения с Отилией Метцель; в 1897 году был оштрафован.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "young-vienna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "14 декабря 1896 года доходит до общественного скандала: Зальтен дал пощёчину Краусу"
+      }
+    },
+    {
+      "key": "persecution-1899",
+      "date": {
+        "from": "1899",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Антимилитаристская пьеса, запрещённая к показу",
+      "long": "Пьеса была написана в 1899 году, но из-за антимилитаристской направленности её показали только в 1919 году.",
+      "works": [
+        {
+          "ref": "der-gemeine"
+        }
+      ],
+      "chapter": "young-vienna",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1899 году он написал пьесу «Рядовой» (нем. Der Gemeine), которая из-за своей антимилитаристской направленности была показана только в 1919 году."
+      }
+    },
+    {
+      "key": "career-1901",
+      "date": {
+        "from": "1901-11-16",
+        "to": "1901-11-23",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Провал венского кабаре с убытком 6 тысяч крон",
+      "long": "Основанное Зальтеном кабаре провалилось на первом вечере 16 ноября; последний вечер прошёл 23 ноября, убытки составили 6 тысяч крон.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "zeit-and-family",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Первое мероприятие в театре «Ан дер Вин» 16 ноября 1901 года было, однако, провальным"
+      }
+    },
+    {
+      "key": "career-1902",
+      "date": {
+        "from": "1902",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Переход в Die Zeit, известность репортажами",
+      "long": "Перешёл в газету Die Zeit; сообщения о придворных скандалах Габсбургов сделали его известным за пределами Вены.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "zeit-and-family",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1902 году Зальтен перешёл на работу в венскую газету Die Zeit. Его сообщение о скандале при дворе сделало его известным за пределами Вены."
+      }
+    },
+    {
+      "key": "love-1902",
+      "date": {
+        "from": "1902",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Женитьба на актрисе Отилии Метцель",
+      "long": "Свидетелями на свадьбе были Артур Шницлер и Зигфрид Требиш; долги Зальтена к свадьбе составляли около 60 тысяч крон.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "zeit-and-family",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1902 году он женился на актрисе Отилии Метцель, свидетелями на свадьбе были Артур Шницлер и Зигфрид Требиш."
+      }
+    },
+    {
+      "key": "child-1903",
+      "date": {
+        "from": "1903",
+        "precision": "year"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение сына Пауля",
+      "long": "В браке с Отилией Метцель родился сын Пауль.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "zeit-and-family",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1903 году у них родился сын Пауль, а в 1904 году — дочь Анна-Катарина."
+      }
+    },
+    {
+      "key": "child-1904",
+      "date": {
+        "from": "1904-08-18",
+        "precision": "day"
+      },
+      "type": "child",
+      "tier": "minor",
+      "short": "Рождение дочери Анны-Катарины",
+      "long": "Родилась дочь Анна-Катарина, позже актриса и переводчица в Цюрихе.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "zeit-and-family",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P40: Anna Katharina Rehmann-Salten 1904-08-18"
+      }
+    },
+    {
+      "key": "loss-1905",
+      "date": {
+        "from": "1905-04-02",
+        "precision": "day"
+      },
+      "type": "loss",
+      "tier": "minor",
+      "short": "Смерть отца Филиппа Зальцмана",
+      "long": "Умер отец, инженер Филипп Зальцман.",
+      "chapter": "zeit-and-family",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P22: Philipp Salzmann 1831-12-24 — 1905-04-02"
+      }
+    },
+    {
+      "key": "career-1906",
+      "date": {
+        "from": "1906",
+        "to": "1906",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Главный редактор берлинских газет Ullstein",
+      "long": "Отправился в Берлин главным редактором B.Z. am Mittag и Berliner Morgenpost, но через несколько месяцев вернулся в Вену из-за берлинского климата.",
+      "place": {
+        "label": "Берлин"
+      },
+      "chapter": "zeit-and-family",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1906 году Зальтен отправляется в Берлин в издательство Ullstein Verlag, чтобы работать главным редактором газет B.Z. am Mittag и Berliner Morgenpost."
+      }
+    },
+    {
+      "key": "career-1913",
+      "date": {
+        "from": "1913",
+        "to": "1918",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Работа сценаристом в кино",
+      "long": "С 1913 года писал киносценарии и участвовал минимум в 11 фильмах; первый фильм вышел 16 октября 1913 года в Берлине.",
+      "chapter": "zeit-and-family",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Начиная с 1913 года, Зальтен также писал сценарии к фильмам."
+      }
+    },
+    {
+      "key": "war-1917",
+      "date": {
+        "from": "1917",
+        "precision": "year"
+      },
+      "type": "war",
+      "tier": "minor",
+      "short": "Оценка войны как «катастрофы»",
+      "long": "Приветствовавший начало войны, в 1917 году Зальтен назвал её «катастрофой».",
+      "chapter": "war-and-bambi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1917 году он охарактеризовал войну как «катастрофу»."
+      }
+    },
+    {
+      "key": "career-1919",
+      "date": {
+        "from": "1919",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Воскресный фельетон в Neue Freie Presse",
+      "long": "После закрытия Fremdenblatt занял воскресный фельетон в Neue Freie Presse.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "war-and-bambi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После прекращения выпуска Fremdenblatt в 1919 году Зальтен занял воскресный фельетон в Neue Freie Presse."
+      }
+    },
+    {
+      "key": "career-1927",
+      "date": {
+        "from": "1927",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Президент австрийского ПЕН-клуба",
+      "long": "Стал преемником Артура Шницлера на посту президента австрийского ПЕН-клуба.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "war-and-bambi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1927 году он стал преемником Артура Шницлера в качестве президента австрийского ПЕН-клуба."
+      }
+    },
+    {
+      "key": "other-1930",
+      "date": {
+        "from": "1930",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поездка в США с делегацией писателей",
+      "long": "В составе делегации европейских писателей и журналистов съездил в США.",
+      "works": [
+        {
+          "ref": "fuenf-minuten-amerika",
+          "note": "поездка стала основой книги, вышедшей в 1931 году"
+        }
+      ],
+      "chapter": "war-and-bambi",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1930 году он совершил путешествие в США в составе делегации европейских писателей и журналистов"
+      }
+    },
+    {
+      "key": "career-1931",
+      "date": {
+        "from": "1931",
+        "precision": "year"
+      },
+      "type": "career",
+      "tier": "minor",
+      "short": "Звание почётного гражданина Вены",
+      "long": "Зальтену присвоено звание почётного гражданина Вены.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "war-and-bambi",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P166: почётный гражданин Вены 1931-01-01"
+      }
+    },
+    {
+      "key": "career-1933-2",
+      "date": {
+        "from": "1933-05-21",
+        "to": "1933-06-27",
+        "precision": "day"
+      },
+      "type": "career",
+      "tier": "major",
+      "short": "Конфликт в ПЕН-клубе и отставка с поста президента",
+      "long": "В Дубровнике Зальтен не присоединился к протестам против сожжения книг в Германии, а 27 июня отказался от должности президента.",
+      "place": {
+        "label": "Дубровник"
+      },
+      "chapter": "pen-ban-exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "На встрече в Дубровнике 21 мая 1933 года он оказался неблагоприятной фигурой… На генеральном собрании 27 июня 1933 года он отказался от должности"
+      }
+    },
+    {
+      "key": "other-1934",
+      "date": {
+        "from": "1934",
+        "precision": "year"
+      },
+      "type": "other",
+      "tier": "minor",
+      "short": "Поддержка авторитарного правительства Австрии",
+      "long": "После февральских боёв 1934 года встал на сторону авторитарного правительства, что вызвало критику из-за границы, в частности Йозефа Рота.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "pen-ban-exile",
+      "evidence": {
+        "source": "dewiki",
+        "quote": "Nach den Februarkämpfen 1934 stellte er sich hinter die autoritäre Regierung, was ihm Kritik aus dem Ausland einbrachte"
+      }
+    },
+    {
+      "key": "persecution-1935",
+      "date": {
+        "from": "1935",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "major",
+      "short": "Запрет книг в Германии, финансовые трудности",
+      "long": "Книги запрещены в Германии; вместе с поручительством по кредиту сына это привело к денежным затруднениям.",
+      "chapter": "pen-ban-exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "В 1935 году его книги были запрещены в Германии. Из-за этого и из-за поручительства по кредиту своего сына он начал испытывать финансовые трудности."
+      }
+    },
+    {
+      "key": "loss-1937",
+      "date": {
+        "from": "1937",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть сына Пауля",
+      "long": "Умер сын Пауль, работавший в кино в Вене.",
+      "chapter": "pen-ban-exile",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "had two children: Paul (1903–1937) and Anna Katharina (1904–1977)"
+      }
+    },
+    {
+      "key": "persecution-1938",
+      "date": {
+        "from": "1938",
+        "precision": "year"
+      },
+      "type": "persecution",
+      "tier": "minor",
+      "short": "Аншлюс без личных репрессий",
+      "long": "После аншлюса Австрии избежал личных репрессий, вероятно благодаря международной известности и защите американского дипломата Леланда Морриса.",
+      "place": {
+        "label": "Вена"
+      },
+      "chapter": "pen-ban-exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "После аншлюса в 1938 году он избежал личных репрессий."
+      }
+    },
+    {
+      "key": "relocation-1939",
+      "date": {
+        "from": "1939-02",
+        "precision": "month"
+      },
+      "type": "relocation",
+      "tier": "major",
+      "short": "Вид на жительство в Швейцарии, жизнь в Цюрихе",
+      "long": "Дочь выхлопотала родителям разрешение на проживание в Швейцарии, без права журналистской работы; последние годы прошли в Цюрихе в нужде.",
+      "place": {
+        "label": "Цюрих"
+      },
+      "works": [
+        {
+          "ref": "bambis-kinder"
+        }
+      ],
+      "chapter": "pen-ban-exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в феврале 1939 года получила вид на жительство для своих родителей"
+      }
+    },
+    {
+      "key": "loss-1942",
+      "date": {
+        "from": "1942",
+        "precision": "year"
+      },
+      "type": "loss",
+      "tier": "major",
+      "short": "Смерть жены Отилии",
+      "long": "Умерла жена, актриса Отилия Метцель.",
+      "chapter": "pen-ban-exile",
+      "evidence": {
+        "source": "enwiki",
+        "quote": "Salten married actress Ottilie Metzl (1868–1942) in 1902"
+      }
+    },
+    {
+      "key": "death-1945",
+      "date": {
+        "from": "1945-10-08",
+        "precision": "day"
+      },
+      "type": "death",
+      "tier": "major",
+      "short": "Смерть в Цюрихе",
+      "long": "Умер в Цюрихе, похоронен на еврейском кладбище Унтерер-Фризенберг.",
+      "place": {
+        "label": "Цюрих"
+      },
+      "chapter": "pen-ban-exile",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Феликс Зальтен умер 8 октября 1945 года в Цюрихе, похоронен на еврейском кладбище Унтерер-Фризенберг."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "der-gemeine",
+      "title": "Рядовой",
+      "written": {
+        "from": 1899,
+        "to": 1899
+      }
+    },
+    {
+      "ref": "josephine-mutzenbacher",
+      "title": "Жозефина Мутценбахер",
+      "written": {
+        "from": 1906,
+        "to": 1906
+      }
+    },
+    {
+      "ref": "bambi",
+      "title": "Бэмби",
+      "qid": "Q742753",
+      "written": {
+        "from": 1922,
+        "to": 1923
+      }
+    },
+    {
+      "ref": "hund-von-florenz",
+      "title": "Флорентийская собака",
+      "qid": "Q20036985",
+      "written": {
+        "from": 1923,
+        "to": 1923
+      }
+    },
+    {
+      "ref": "fuenf-minuten-amerika",
+      "title": "Пять минут в Америке",
+      "written": {
+        "from": 1930,
+        "to": 1931
+      }
+    },
+    {
+      "ref": "bambis-kinder",
+      "title": "Дети Бэмби",
+      "written": {
+        "from": 1939,
+        "to": 1939
+      }
+    }
+  ]
+}

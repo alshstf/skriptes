@@ -1,0 +1,92 @@
+{
+  "qid": "Q463279",
+  "name": "Линн Флевелинг",
+  "born": "1958-10-20",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A4%D0%BB%D0%B5%D0%B2%D0%B5%D0%BB%D0%B8%D0%BD%D0%B3%2C_%D0%9B%D0%B8%D0%BD%D0%BD",
+      "rev": 147649865
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Lynn_Flewelling",
+      "rev": 1371986038
+    }
+  ],
+  "chapters": [
+    {
+      "key": "maine-and-study",
+      "title": "Мэн и учёба",
+      "from": 1958,
+      "to": 1980
+    },
+    {
+      "key": "marriage-and-work",
+      "title": "Брак и разные профессии",
+      "from": 1981,
+      "to": 1999
+    },
+    {
+      "key": "writing-years",
+      "title": "Годы романов",
+      "from": 2000,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1958",
+      "date": {
+        "from": "1958-10-20",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Преск-Айле, штат Мэн",
+      "long": "Родилась 20 октября 1958 года в Преск-Айле, штат Мэн, США; выросла на севере Мэна.",
+      "place": {
+        "label": "Преск-Айл"
+      },
+      "chapter": "maine-and-study",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Флевелинг родилась 20 октября 1958 года в городе Преск-Айл штата Мэн, США."
+      }
+    },
+    {
+      "key": "love-1981",
+      "date": {
+        "from": "1981",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Дугласом Флевелингом",
+      "long": "Вышла замуж за Дугласа Флевелинга; у пары двое сыновей.",
+      "chapter": "marriage-and-work",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "Семья: бывший муж Дуглас Флевелинг (с 1981 г.), два сына."
+      }
+    }
+  ],
+  "works": [
+    {
+      "ref": "traitors-moon",
+      "title": "Луна предателя",
+      "written": {
+        "from": 2000,
+        "to": 2000
+      }
+    },
+    {
+      "ref": "hidden-warrior",
+      "title": "Hidden Warrior",
+      "written": {
+        "from": 2004,
+        "to": 2004
+      }
+    }
+  ]
+}

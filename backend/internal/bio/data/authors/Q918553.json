@@ -1,0 +1,115 @@
+{
+  "qid": "Q918553",
+  "name": "Стивен Сейлор",
+  "born": "1956-03-23",
+  "sources": [
+    {
+      "id": "ruwiki",
+      "url": "https://ru.wikipedia.org/wiki/%D0%A1%D0%B5%D0%B9%D0%BB%D0%BE%D1%80%2C_%D0%A1%D1%82%D0%B8%D0%B2%D0%B5%D0%BD",
+      "rev": 138494583
+    },
+    {
+      "id": "enwiki",
+      "url": "https://en.wikipedia.org/wiki/Steven_Saylor",
+      "rev": 1372926033
+    }
+  ],
+  "chapters": [
+    {
+      "key": "texas-years",
+      "title": "Техас: детство и учёба",
+      "from": 1956,
+      "to": 1975
+    },
+    {
+      "key": "life-with-richard",
+      "title": "Начало совместной жизни",
+      "from": 1976,
+      "to": 1990
+    },
+    {
+      "key": "san-francisco-partnership",
+      "title": "Домашнее партнёрство в Сан-Франциско",
+      "from": 1991,
+      "to": 2007
+    },
+    {
+      "key": "marriage-years",
+      "title": "Брак, Беркли и Остин",
+      "from": 2008,
+      "to": 2026
+    }
+  ],
+  "events": [
+    {
+      "key": "birth-1956",
+      "date": {
+        "from": "1956-03-23",
+        "precision": "day"
+      },
+      "type": "birth",
+      "tier": "major",
+      "short": "Рождение в Порт-Лаваке",
+      "long": "Стивен Сейлор родился 23 марта 1956 года в Порт-Лаваке, штат Техас.",
+      "place": {
+        "label": "Порт-Лавака"
+      },
+      "chapter": "texas-years",
+      "evidence": {
+        "source": "wikidata",
+        "quote": "wikidata P569: Порт-Лавака 1956-03-23"
+      }
+    },
+    {
+      "key": "love-1976",
+      "date": {
+        "from": "1976",
+        "precision": "year"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Начало совместной жизни с Ричардом Соломоном",
+      "long": "С 1976 года Сейлор живёт вместе с Ричардом Соломоном.",
+      "chapter": "life-with-richard",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "С 1976 г. Сейлор живёт с Ричардом Соломоном"
+      }
+    },
+    {
+      "key": "family-1991",
+      "date": {
+        "from": "1991",
+        "precision": "year"
+      },
+      "type": "family",
+      "tier": "major",
+      "short": "Регистрация домашнего партнёрства с Соломоном",
+      "long": "В 1991 году Сейлор и Соломон зарегистрировали домашнее партнёрство в Сан-Франциско.",
+      "place": {
+        "label": "Сан-Франциско"
+      },
+      "chapter": "san-francisco-partnership",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в 1991 они зарегистрировали домашнее партнёрство в Сан-Франциско"
+      }
+    },
+    {
+      "key": "love-2008",
+      "date": {
+        "from": "2008-10",
+        "precision": "month"
+      },
+      "type": "love",
+      "tier": "major",
+      "short": "Брак с Ричардом Соломоном",
+      "long": "В октябре 2008 года Сейлор и Соломон заключили брак.",
+      "chapter": "marriage-years",
+      "evidence": {
+        "source": "ruwiki",
+        "quote": "в октябре 2008 заключили брак"
+      }
+    }
+  ]
+}
