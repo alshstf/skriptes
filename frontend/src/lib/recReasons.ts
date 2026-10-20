@@ -16,7 +16,8 @@ export function reasonParts(r: RecReason, now = new Date()): ReasonPart[] {
   switch (r.kind) {
     case 'in_progress': {
       const pct = Math.round(Math.min(1, Math.max(0, r.fraction)) * 100);
-      return [{ text: `Остановились на ${pct} %${when(r.at)}` }];
+      // Неразрывный пробел: «42 %» не переносится по «%».
+      return [{ text: `Остановились на ${pct}\u00a0%${when(r.at)}` }];
     }
     case 'new_by_author':
       return [

@@ -52,7 +52,7 @@ test('home: причины под карточками и ссылка на ав
   await page.goto('/');
 
   await expect(page.getByRole('heading', { name: 'Продолжить чтение' })).toBeVisible({ timeout: 10_000 });
-  await expect(page.getByText('Остановились на 42 % · 3 дня назад')).toBeVisible();
+  await expect(page.getByText(/Остановились на 42\s% · 3 дня назад/)).toBeVisible();
 
   const feedReason = page.getByTestId('rec-reason').filter({ hasText: 'По подписке на автора' });
   await expect(feedReason).toBeVisible();
@@ -90,4 +90,21 @@ test('home: «Уже читал» скрывает новинку с причи�
 
   await expect(page.getByText(/Очень длинное название новинки/)).toHaveCount(0);
   expect(body).toEqual({ work_id: 1012, reason: 'already_read' });
+});
+
+test('home: на телефоне лента без горизонтального переполнения', async ({ mockedPage: page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  mockHome(page, { ref: [FEED, { ...FEED, id: 13, work_id: 1013, title: 'Вторая новинка' }] });
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Новинки по подпискам' })).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByTestId('rec-reason').first()).toBeVisible();
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow).toBeLessThanOrEqual(0);
+  if (process.env.HOME_RECS_SHOTS) {
+    await page.screenshot({ path: `${process.env.HOME_RECS_SHOTS}/home-mobile.png`, fullPage: true });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.screenshot({ path: `${process.env.HOME_RECS_SHOTS}/home-desktop.png`, fullPage: true });
+  }
 });

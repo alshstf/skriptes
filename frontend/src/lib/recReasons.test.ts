@@ -26,9 +26,9 @@ describe('formatRelativeDays', () => {
 describe('reasonParts', () => {
   it('остановились на …', () => {
     expect(reasonText({ kind: 'in_progress', fraction: 0.424, at: daysAgo(3) }, now)).toBe(
-      'Остановились на 42 % · 3 дня назад',
+      'Остановились на 42\u00a0% · 3 дня назад',
     );
-    expect(reasonText({ kind: 'in_progress', fraction: 1.7 }, now)).toBe('Остановились на 100 %');
+    expect(reasonText({ kind: 'in_progress', fraction: 1.7 }, now)).toBe('Остановились на 100\u00a0%');
   });
 
   it('подписка на автора — ссылка на автора', () => {
