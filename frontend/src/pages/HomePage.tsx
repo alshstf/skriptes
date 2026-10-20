@@ -38,6 +38,7 @@ export function HomePage() {
     <div className="mx-auto w-full max-w-5xl space-y-10 px-1 py-6 sm:py-10">
       <HeroSearch />
       <ContinueReadingRow />
+      <SearchedAppearedRow />
       <SubscriptionFeedRow />
       <RateablePromptsRow />
       <ComingSoonRow />
@@ -347,6 +348,20 @@ function ContinueCard({ item }: { item: RecItem }) {
         <RecReasons reasons={item.reasons} />
       </div>
     </CoverCard>
+  );
+}
+
+// ── «Появилось то, что вы искали» ───────────────────────
+
+// SearchedAppearedRow — ненайденный запрос совпал с книгой, появившейся при
+// импорте (лог поиска, recsys/01 1.4). Скрывается с причиной, как новинки.
+function SearchedAppearedRow() {
+  return (
+    <RecShelf
+      kind="searched_appeared"
+      title="Появилось то, что вы искали"
+      renderCard={(it) => <FeedCard item={it} />}
+    />
   );
 }
 

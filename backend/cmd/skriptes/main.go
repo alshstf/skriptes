@@ -41,6 +41,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/metadata"
 	"github.com/skriptes/skriptes/backend/internal/metrics"
 	"github.com/skriptes/skriptes/backend/internal/opds"
+	"github.com/skriptes/skriptes/backend/internal/recsys"
 	"github.com/skriptes/skriptes/backend/internal/settings"
 )
 
@@ -135,6 +136,13 @@ func run() error {
 	// изменённых работ (порядок между отдельными горутинами не гарантирован).
 	// Контроллер группировки создаётся ниже — разовому разбору склеек в цепочке
 	// он нужен; цепочка подождёт его здесь (инициализация main быстрая).
+	// История, каталог книг и лог поиска — до цепочки разовых шагов: импорт в её
+	// конце сопоставляет новые работы с ненайденными запросами (recsys/01, 1.4),
+	// ему нужен поиск по индексу works. Конструкторы без побочных эффектов.
+	historySvc := history.New(pool)
+	booksSvc := books.New(pool, meili, historySvc)
+	searchLog := recsys.NewSearchLog(pool, cfg.SearchLogDays)
+	searchMatcher := recsys.NewMatcher(pool, booksSvc, searchLog)
 	workGroupReady := make(chan *metadata.WorkGroupController, 1)
 	metadata.Go(func(c context.Context) {
 		// Классификация сборников — ДО полного ресинка индекса: бамп схемы
@@ -207,7 +215,7 @@ func run() error {
 		// SKRIPTES_INPX_FILES), дальше раз в SKRIPTES_INPX_WATCH_INTERVAL — новый
 		// или изменённый INPX без рестарта. Повторный старт на тех же файлах —
 		// no-op за счёт хэш-проверки. HTTP не ждёт ни того, ни другого.
-		runImportLoop(c, pool, imp, overrideCtl, cfg.InpxRoot, cfg.InpxFiles, cfg.InpxWatchInterval, logger)
+		runImportLoop(c, pool, imp, overrideCtl, searchMatcher, cfg.InpxRoot, cfg.InpxFiles, cfg.InpxWatchInterval, logger)
 	})
 
 	authSvc := auth.New(pool, 0)
@@ -220,7 +228,6 @@ func run() error {
 		logger.Info("legacy session tokens hashed", "count", n)
 	}
 	catalogSvc := catalog.New(pool)
-	historySvc := history.New(pool)
 	// Популярность works-индекса = вовлечённость инстанса (Σ изданий: views + 3×reads,
 	// считается в workDocSelect). Трекер помечает работу при просмотре/чтении и батчем
 	// (раз в 30с) таргетно ре-апсертит изменившиеся в индекс — свежесть между полными
@@ -230,8 +237,9 @@ func run() error {
 	metadata.Go(func(c context.Context) { popTracker.Run(c, 30*time.Second) })
 	// Хранимые число работ и рейтинг авторов — ключи сортировок /authors (#302).
 	metadata.Go(func(c context.Context) { runAuthorStatsLoop(c, pool, logger) })
-	// Журнал позиций чтения: старше 90 дней — строка в день на книгу (recsys/01, 1.2).
-	metadata.Go(func(c context.Context) { runReadPositionsCompactLoop(c, historySvc, logger) })
+	// Уборка журналов: позиции чтения старше 90 дней — строка в день (recsys/01, 1.2),
+	// лог поиска — по сроку хранения (1.4).
+	metadata.Go(func(c context.Context) { runHousekeepingLoop(c, historySvc, searchLog, logger) })
 	// Состав сборников из оглавления fb2 (#388): новые сборники — раз в 30 минут.
 	metadata.Go(func(c context.Context) {
 		metadata.NewContentsScanner(pool, cfg.BooksRoot, logger).Run(c, 5*time.Minute, 30*time.Minute)
@@ -249,7 +257,6 @@ func run() error {
 		}
 	})
 	collectionsSvc := collections.New(pool)
-	booksSvc := books.New(pool, meili, historySvc)
 	// Премии (#389): лауреаты белого списка с Фантлаба — раз в неделю, сопоставление
 	// с каталогом — раз в сутки (каталог меняется с импортом).
 	metadata.Go(func(c context.Context) {
@@ -722,6 +729,7 @@ func run() error {
 		Collections: api.CollectionsDeps{Service: collectionsSvc},
 		Download:    api.DownloadDeps{Books: booksSvc, Converter: conv, Limiter: downloadLimiter},
 		History:     api.HistoryDeps{Service: historySvc},
+		Recs:        api.RecsDeps{SearchLog: searchLog},
 		Kindle: api.KindleDeps{
 			Service:   kindleSvc,
 			Email:     emailSender,
@@ -844,7 +852,7 @@ func ctx() context.Context { return context.Background() }
 // когда их запись закончилась (#247); файл, импорт которого упал, повторяется
 // на следующей проверке. Один цикл на процесс, поэтому два импорта
 // одновременно не идут. interval <= 0 — только стартовый импорт.
-func runImportLoop(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, overrideCtl *metadata.OverrideController,
+func runImportLoop(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, overrideCtl *metadata.OverrideController, matcher *recsys.Matcher,
 	inpxRoot string, only []string, interval time.Duration, logger *slog.Logger) {
 	watch := importer.NewInpxWatch(inpxRoot, only)
 	files, missing, err := watch.Baseline()
@@ -858,7 +866,7 @@ func runImportLoop(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 			logger.Info("startup import — no INPX files found", "root", inpxRoot)
 		} else {
 			logger.Info("startup import beginning", "count", len(files), "root", inpxRoot)
-			runImportPass(ctx, pool, imp, overrideCtl, watch, files, logger)
+			runImportPass(ctx, pool, imp, overrideCtl, matcher, watch, files, logger)
 			logger.Info("startup import finished")
 		}
 	}
@@ -885,7 +893,7 @@ func runImportLoop(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 		}
 		// Новые, изменённые или не импортировавшиеся из-за ошибки файлы.
 		logger.Info("inpx watch: importing without restart", "files", ready)
-		runImportPass(ctx, pool, imp, overrideCtl, watch, ready, logger)
+		runImportPass(ctx, pool, imp, overrideCtl, matcher, watch, ready, logger)
 		logger.Info("inpx import finished")
 	}
 }
@@ -897,8 +905,9 @@ func runImportLoop(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 // Удачный импорт и осознанный пропуск отмечаются в watch; упавший — нет, его
 // watch вернёт на следующей проверке.
 func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Importer, overrideCtl *metadata.OverrideController,
-	watch *importer.InpxWatch, files []string, logger *slog.Logger) {
+	matcher *recsys.Matcher, watch *importer.InpxWatch, files []string, logger *slog.Logger) {
 	imported := false
+	passStart := time.Now()
 	for _, f := range files {
 		metrics.ImportStarted()
 		stats, err := imp.Run(ctx, f) // статистика логируется изнутри Run
@@ -939,6 +948,10 @@ func runImportPass(ctx context.Context, pool *pgxpool.Pool, imp *importer.Import
 	if !imported {
 		return
 	}
+	// «Появилось то, что вы искали» (recsys/01, 1.4): работы, заведённые этим
+	// проходом, против ненайденных запросов. Индекс works к этому моменту
+	// уже обновлён импортом.
+	matchNewWorks(ctx, pool, matcher, passStart, logger)
 	// Ре-применить ручные оверрайды полей, которые импорт ПЕРЕЗАПИСЫВАЕТ (lang) —
 	// иначе ре-импорт коллекции сбросил бы правки (грабля №19).
 	if n, err := overrideCtl.ReapplyAfterImport(ctx); err != nil {
@@ -2231,9 +2244,10 @@ func newBioTimeline(pool *pgxpool.Pool, path string, logger *slog.Logger) *timel
 	return svc
 }
 
-// runReadPositionsCompactLoop — прореживание журнала позиций чтения
-// (history.CompactReadPositions): на старте и раз в сутки.
-func runReadPositionsCompactLoop(ctx context.Context, hist *history.Service, logger *slog.Logger) {
+// runHousekeepingLoop — уборка пользовательских журналов на старте и раз в
+// сутки: прореживание позиций чтения (history.CompactReadPositions) и срок
+// хранения лога поиска (recsys.SearchLog.Purge).
+func runHousekeepingLoop(ctx context.Context, hist *history.Service, searchLog *recsys.SearchLog, logger *slog.Logger) {
 	compact := func() {
 		n, err := hist.CompactReadPositions(ctx)
 		switch {
@@ -2241,6 +2255,13 @@ func runReadPositionsCompactLoop(ctx context.Context, hist *history.Service, log
 			logger.Warn("read positions compact failed", "err", err)
 		case err == nil && n > 0:
 			logger.Info("read positions compacted", "rows_deleted", n)
+		}
+		n, err = searchLog.Purge(ctx)
+		switch {
+		case err != nil && ctx.Err() == nil:
+			logger.Warn("search log purge failed", "err", err)
+		case err == nil && n > 0:
+			logger.Info("search log purged", "rows_deleted", n, "retention_days", searchLog.RetentionDays)
 		}
 	}
 	compact()
@@ -2253,5 +2274,35 @@ func runReadPositionsCompactLoop(ctx context.Context, hist *history.Service, log
 		case <-t.C:
 			compact()
 		}
+	}
+}
+
+// matchNewWorks — id работ, созданных после since, → recsys.Matcher.
+func matchNewWorks(ctx context.Context, pool *pgxpool.Pool, matcher *recsys.Matcher, since time.Time, logger *slog.Logger) {
+	rows, err := pool.Query(ctx, `SELECT id FROM works WHERE created_at >= $1`, since)
+	if err != nil {
+		logger.Warn("new works for search matching failed", "err", err)
+		return
+	}
+	var ids []int64
+	for rows.Next() {
+		var id int64
+		if err := rows.Scan(&id); err != nil {
+			rows.Close()
+			logger.Warn("new works for search matching failed", "err", err)
+			return
+		}
+		ids = append(ids, id)
+	}
+	rows.Close()
+	if len(ids) == 0 {
+		return
+	}
+	n, err := matcher.MatchNewWorks(ctx, ids)
+	switch {
+	case err != nil && ctx.Err() == nil:
+		logger.Warn("search matching after import failed", "err", err)
+	case n > 0:
+		logger.Info("searched works appeared after import", "matches", n, "new_works", len(ids))
 	}
 }

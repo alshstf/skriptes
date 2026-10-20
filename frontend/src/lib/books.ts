@@ -119,6 +119,8 @@ export type BookListResponse = {
   limit: number;
   offset: number;
   query?: string;
+  /** Строка лога поиска этого запроса — для клика из выдачи (lib/searchLog.ts). */
+  search_log_id?: number;
   processing_ms: number;
   facets?: FacetDistribution;
   /** Запрос — имя известного автора: его работы идут первыми, над выдачей плашка. */

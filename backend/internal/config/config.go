@@ -38,6 +38,11 @@ type Config struct {
 	// новый без рестарта. 0 — только при старте.
 	InpxWatchInterval time.Duration `env:"SKRIPTES_INPX_WATCH_INTERVAL" envDefault:"10m"`
 
+	// SearchLogDays — сколько дней хранить лог поисковых запросов пользователей
+	// (страница «Поиск» в профиле, «появилось то, что вы искали», агрегат
+	// ненайденного для админа). 0 — лог не вести.
+	SearchLogDays int `env:"SKRIPTES_SEARCH_LOG_DAYS" envDefault:"365"`
+
 	// FBCPath — путь к бинарю fb2cng (rupor-github/fb2cng).
 	// В production-образе лежит в /usr/local/bin/fbc; пустая строка =
 	// искать в $PATH.

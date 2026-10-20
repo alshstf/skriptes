@@ -5,10 +5,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AdminTabs } from '@/components/AdminTabs';
 import { SaveBar } from '@/components/SaveBar';
-import { useBrandingSettings, useUpdateBrandingSettings } from '@/lib/admin';
+import { useBrandingSettings, useSearchMisses, useUpdateBrandingSettings } from '@/lib/admin';
 import { DEFAULT_INSTANCE_NAME } from '@/lib/version';
 import { ApiError } from '@/lib/api';
 import { LoadError } from '@/components/LoadError';
+import { SearchMissesCard } from '@/components/SearchMissesCard';
 
 const MAX_NAME_LEN = 60;
 
@@ -80,6 +81,8 @@ export function AdminGeneralPage() {
       {dirty && !tooLong && (
         <SaveBar saving={update.isPending} onSave={onSave} onReset={onReset} />
       )}
+
+      <SearchMissesCard query={useSearchMisses(90)} />
     </article>
   );
 }

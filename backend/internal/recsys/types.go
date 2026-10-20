@@ -13,9 +13,10 @@ import "time"
 type SectionKind string
 
 const (
-	SectionContinueReading SectionKind = "continue_reading" // книги в процессе
-	SectionSubscriptions   SectionKind = "subscriptions"    // новинки по подпискам
-	SectionRatePrompts     SectionKind = "rate_prompts"     // «оцените прочитанное»
+	SectionContinueReading  SectionKind = "continue_reading"  // книги в процессе
+	SectionSubscriptions    SectionKind = "subscriptions"     // новинки по подпискам
+	SectionRatePrompts      SectionKind = "rate_prompts"      // «оцените прочитанное»
+	SectionSearchedAppeared SectionKind = "searched_appeared" // появилось то, что искали
 )
 
 // ReasonKind — почему карточка здесь. Закрытый список; у каждого вида — свой
@@ -33,6 +34,8 @@ const (
 	ReasonAcquired ReasonKind = "acquired"
 	// ReasonFinished — дочитано (или почти) — At, если известно.
 	ReasonFinished ReasonKind = "finished"
+	// ReasonSearchedAppeared — искали Query (At — когда), не нашлось, появилось при импорте.
+	ReasonSearchedAppeared ReasonKind = "searched_appeared"
 )
 
 // Reason — причина рекомендации: вид и параметры. Поля — плоские и
@@ -45,6 +48,8 @@ type Reason struct {
 	Author   string     `json:"author,omitempty"`
 	SeriesID int64      `json:"series_id,omitempty"`
 	Series   string     `json:"series,omitempty"`
+	// Query — текст поиска (searched_appeared).
+	Query string `json:"query,omitempty"`
 	// Minutes — «ещё ≈ N минут» по личной скорости чтения (in_progress; 0 — неизвестно).
 	Minutes int `json:"minutes,omitempty"`
 	// WorkID/Title — «потому что X»: работа-основание (фаза 2).

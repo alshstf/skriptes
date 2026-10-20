@@ -36,6 +36,8 @@ export function reasonParts(r: RecReason, now = new Date()): ReasonPart[] {
       return [{ text: r.at ? `Скачали ${formatRelativeDays(r.at, now)}` : 'Скачали' }];
     case 'finished':
       return [{ text: r.at ? `Дочитали ${formatRelativeDays(r.at, now)}` : 'Дочитали' }];
+    case 'searched_appeared':
+      return [{ text: `Вы искали «${r.query}»${when(r.at)}` }];
     default:
       return [];
   }

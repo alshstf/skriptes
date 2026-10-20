@@ -110,6 +110,8 @@ type ListResponse struct {
 	Offset      int        `json:"offset"`
 	Query       string     `json:"query,omitempty"`
 	ProcessTime int64      `json:"processing_ms"` // время обработки в Meili
+	// SearchLogID — строка лога поиска этого запроса (api-слой; для клика из выдачи).
+	SearchLogID int64 `json:"search_log_id,omitempty"`
 	// Facets — распределения по запрошенным facetable атрибутам.
 	// Ключ внешней мапы — имя атрибута (genres, lang, year),
 	// внутренней — значение и сколько книг ему соответствует.

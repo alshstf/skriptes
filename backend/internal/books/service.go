@@ -1755,3 +1755,46 @@ func clampInt(v, lo, hi, def int) int {
 	}
 	return v
 }
+
+// matchScoreThreshold — порог уверенности Meili для «появилось то, что вы
+// искали»: ниже — совпадение случайное (одно общее слово), выше — почти точное
+// название/автор. _rankingScore в [0,1].
+const matchScoreThreshold = 0.8
+
+// SearchWorkIDs — id работ из within, которые Meili считает уверенным
+// совпадением с q (recsys.Searcher). Фильтр по id (атрибут filterable в
+// индексе works) и скрытое на инстансе — searchVisible.
+func (s *Service) SearchWorkIDs(ctx context.Context, q string, within []int64) ([]int64, error) {
+	if s.meili == nil || len(within) == 0 || strings.TrimSpace(q) == "" {
+		return nil, nil
+	}
+	ids := make([]string, len(within))
+	for i, id := range within {
+		ids[i] = strconv.FormatInt(id, 10)
+	}
+	req := &meilisearch.SearchRequest{
+		Limit:                 20,
+		Filter:                "id IN [" + strings.Join(ids, ",") + "]",
+		AttributesToRetrieve:  []string{"id"},
+		ShowRankingScore:      true,
+		RankingScoreThreshold: matchScoreThreshold,
+	}
+	res, err := searchVisible(ctx, s.meili.Index(worksIndexName), q, req)
+	if err != nil {
+		return nil, fmt.Errorf("meili match search: %w", err)
+	}
+	out := make([]int64, 0, len(res.Hits))
+	for _, h := range res.Hits {
+		var doc struct {
+			ID int64 `json:"id"`
+		}
+		raw, err := json.Marshal(h)
+		if err != nil {
+			continue
+		}
+		if err := json.Unmarshal(raw, &doc); err == nil && doc.ID > 0 {
+			out = append(out, doc.ID)
+		}
+	}
+	return out, nil
+}
