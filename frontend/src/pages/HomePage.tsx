@@ -1,17 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import {
-  Bell,
-  BookIcon,
-  ChevronLeft,
-  ChevronRight,
-  LayersIcon,
-  Search,
-  Sparkles,
-  Star,
-  UserIcon,
-  X,
-} from 'lucide-react';
+import { Bell, BookIcon, LayersIcon, Search, Sparkles, Star, UserIcon } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Callout } from '@/components/ui/callout';
 import { BookCover } from '@/components/BookCover';
@@ -19,16 +8,14 @@ import { useDebouncedValue } from '@/lib/useDebouncedValue';
 import { useSuggest } from '@/lib/suggest';
 import { useHeroSearch } from '@/lib/heroSearch';
 import { useInstanceName } from '@/lib/version';
-import {
-  useContinueReading,
-  useSubscriptionFeed,
-  useDismissFeedItem,
-  useRateablePrompts,
-} from '@/lib/home';
-import type { ContinueItem, FeedItem, RateableItem } from '@/lib/home';
+import { useRecSection, workIdOf } from '@/lib/recs';
+import type { RecItem, RecSectionKind } from '@/lib/recs';
 import { useRatePrompt } from '@/lib/ratings';
 import { RatingControl } from '@/components/RatingControl';
 import { RatingPromptMenu } from '@/components/RatingPromptMenu';
+import { RecDismissMenu } from '@/components/RecDismissMenu';
+import { RecReasons } from '@/components/RecReason';
+import { CoverCard, SHELF_CARD_WIDTH, Shelf, ShelfSkeleton } from '@/components/Shelf';
 import { cn } from '@/lib/utils';
 import { pluralBooks } from '@/lib/format';
 
@@ -39,9 +26,10 @@ import { pluralBooks } from '@/lib/format';
  * (тот же толерантный typeahead, что и в Cmd+K, через useSuggest). Enter или
  * «Показать все результаты» уводят на /books?q=… (там полноценный список).
  *
- * Ниже — динамические блоки: «Продолжить чтение» (книги в процессе) и
- * «Новинки по подпискам». Плюс две заглушки «Скоро» (оценки и
- * рекомендации) — без бэкенда.
+ * Ниже — лента рекомендаций (lib/recs.ts, один контракт на все секции, у
+ * каждой карточки — причина «почему это здесь»): «Продолжить чтение»,
+ * «Новинки по подпискам», «Оцените прочитанное». Порядок секций — здесь.
+ * Плюс заглушка «Скоро» (персональные подборки — фаза 2 плана recsys).
  *
  * Стиль монохромный (грабля №9): акценты — иконкой и насыщенностью, не цветом.
  */
@@ -300,29 +288,53 @@ function SuggestRow({
   );
 }
 
-// ── «Продолжить чтение» ──────────────────────────────────────────
+// ── Секции ленты рекомендаций ────────────────────────────────────
 
-function ContinueReadingRow() {
-  const { data, isLoading } = useContinueReading(12);
-
-  // Пустой блок (нечего продолжать) — скрываем целиком, как в задаче.
-  if (isLoading) return <ShelfSkeleton title="Продолжить чтение" />;
-  if (!data || data.length === 0) return null;
-
+// RecShelf — секция ленты: запрос по виду, скелетон, пустое состояние (по
+// умолчанию секция без карточек не рендерится), карточки через renderCard.
+function RecShelf({
+  kind,
+  title,
+  empty,
+  renderCard,
+}: {
+  kind: RecSectionKind;
+  title: string;
+  empty?: React.ReactNode;
+  renderCard: (item: RecItem) => React.ReactNode;
+}) {
+  const { data, isLoading } = useRecSection(kind, 12);
+  if (isLoading) return <ShelfSkeleton title={title} />;
+  if (!data || data.length === 0) return empty ?? null;
   return (
-    <Shelf title="Продолжить чтение">
+    <Shelf title={title}>
       {data.map((it) => (
-        <ContinueCard key={`cr-${it.id}`} item={it} />
+        <div key={`${kind}-${it.id}`} className="contents">
+          {renderCard(it)}
+        </div>
       ))}
     </Shelf>
   );
 }
 
-function ContinueCard({ item }: { item: ContinueItem }) {
-  const pct = Math.round(Math.min(1, Math.max(0, item.fraction)) * 100);
+// ── «Продолжить чтение» ──────────────────────────────────────────
+
+function ContinueReadingRow() {
+  return (
+    <RecShelf
+      kind="continue_reading"
+      title="Продолжить чтение"
+      renderCard={(it) => <ContinueCard item={it} />}
+    />
+  );
+}
+
+function ContinueCard({ item }: { item: RecItem }) {
+  const progress = item.reasons.find((r) => r.kind === 'in_progress');
+  const pct = Math.round(Math.min(1, Math.max(0, progress?.fraction ?? 0)) * 100);
   return (
     <CoverCard
-      to={`/works/${item.work_id ?? item.id}`}
+      to={`/works/${workIdOf(item)}`}
       title={item.title}
       authors={item.authors}
       coverPath={item.cover_path}
@@ -332,7 +344,7 @@ function ContinueCard({ item }: { item: ContinueItem }) {
         <div className="h-1 w-full overflow-hidden rounded-full bg-muted" aria-hidden>
           <div className="h-full bg-foreground/70" style={{ width: `${pct}%` }} />
         </div>
-        <p className="text-xs tabular-nums text-muted-foreground">{pct}%</p>
+        <RecReasons reasons={item.reasons} />
       </div>
     </CoverCard>
   );
@@ -341,60 +353,34 @@ function ContinueCard({ item }: { item: ContinueItem }) {
 // ── «Новинки по подпискам» ─────────────────────────────
 
 function SubscriptionFeedRow() {
-  const { data, isLoading } = useSubscriptionFeed(12);
-
-  if (isLoading) return <ShelfSkeleton title="Новинки по подпискам" />;
-
-  // Нет подписок ИЛИ у подписанных авторов пока нет книг → аккуратный пустой стейт.
-  if (!data || data.length === 0) {
-    return (
-      <section className="space-y-3">
-        <h2 className="text-lg font-semibold tracking-tight">Новинки по подпискам</h2>
-        <Callout icon={<Star className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
-          Добавляйте авторов и серии в избранное, чтобы видеть их новинки. Звезда есть на карточке
-          любого автора и любой серии.
-        </Callout>
-      </section>
-    );
-  }
-
   return (
-    <Shelf title="Новинки по подпискам">
-      {data.map((it) => (
-        <FeedCard key={`feed-${it.id}`} item={it} />
-      ))}
-    </Shelf>
+    <RecShelf
+      kind="subscriptions"
+      title="Новинки по подпискам"
+      // Нет подписок ИЛИ у подписанных авторов пока нет книг → аккуратный пустой стейт.
+      empty={
+        <section className="space-y-3">
+          <h2 className="text-lg font-semibold tracking-tight">Новинки по подпискам</h2>
+          <Callout icon={<Star className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
+            Добавляйте авторов и серии в избранное, чтобы видеть их новинки. Звезда есть на карточке
+            любого автора и любой серии.
+          </Callout>
+        </section>
+      }
+      renderCard={(it) => <FeedCard item={it} />}
+    />
   );
 }
 
-function FeedCard({ item }: { item: FeedItem }) {
-  const dismiss = useDismissFeedItem();
-  const workId = item.work_id ?? item.id;
+function FeedCard({ item }: { item: RecItem }) {
   return (
-    <div className="group/feed relative shrink-0">
-      {/* Скрыть из новинок: маленький × в углу обложки. На мобиле виден всегда,
-          на десктопе — по наведению. preventDefault/stopPropagation, чтобы клик
-          не открывал карточку (родитель — Link). */}
-      <button
-        type="button"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          dismiss.mutate(workId);
-        }}
-        aria-label="Скрыть из новинок"
-        title="Скрыть из новинок"
-        className={cn(
-          'absolute right-1 top-1 z-10 flex size-6 items-center justify-center rounded-full',
-          'border border-border bg-background/90 text-muted-foreground shadow-sm backdrop-blur',
-          'transition hover:bg-accent hover:text-foreground focus-visible:opacity-100',
-          'max-sm:opacity-100 sm:opacity-0 sm:group-hover/feed:opacity-100',
-        )}
-      >
-        <X className="size-3.5" aria-hidden />
-      </button>
+    <div className="relative shrink-0">
+      {/* Скрыть с причиной: kebab в углу обложки (как у запросов оценки). */}
+      <div className="absolute right-1 top-1 z-10">
+        <RecDismissMenu workId={workIdOf(item)} />
+      </div>
       <CoverCard
-        to={`/works/${workId}`}
+        to={`/works/${workIdOf(item)}`}
         title={item.title}
         authors={item.authors}
         coverPath={item.cover_path}
@@ -403,6 +389,7 @@ function FeedCard({ item }: { item: FeedItem }) {
         {item.series ? (
           <p className="mt-0.5 truncate text-xs text-muted-foreground">{item.series}</p>
         ) : null}
+        <RecReasons reasons={item.reasons} className="mt-0.5" />
       </CoverCard>
     </div>
   );
@@ -413,25 +400,20 @@ function FeedCard({ item }: { item: FeedItem }) {
 // RateablePromptsRow — книги, которые юзер вероятно прочитал и ещё не оценил.
 // Бэкенд отдаёт пусто, если запросы оценки выключены в профиле → блок скрыт.
 function RateablePromptsRow() {
-  const { data, isLoading } = useRateablePrompts(12);
-
-  if (isLoading) return <ShelfSkeleton title="Оцените прочитанное" />;
-  if (!data || data.length === 0) return null;
-
   return (
-    <Shelf title="Оцените прочитанное">
-      {data.map((it) => (
-        <RateableCard key={`rate-${it.id}`} item={it} />
-      ))}
-    </Shelf>
+    <RecShelf
+      kind="rate_prompts"
+      title="Оцените прочитанное"
+      renderCard={(it) => <RateableCard item={it} />}
+    />
   );
 }
 
-function RateableCard({ item }: { item: RateableItem }) {
-  const workId = item.work_id ?? item.id;
+function RateableCard({ item }: { item: RecItem }) {
+  const workId = workIdOf(item);
   const rate = useRatePrompt();
   return (
-    <div className="group/rate relative flex w-32 shrink-0 flex-col gap-1.5 sm:w-36">
+    <div className={cn('group/rate relative flex shrink-0 flex-col gap-1.5', SHELF_CARD_WIDTH)}>
       {/* Kebab поверх обложки: «ещё не прочитал» / «не буду оценивать». */}
       <div className="absolute right-1 top-1 z-10">
         <RatingPromptMenu workId={workId} />
@@ -452,6 +434,7 @@ function RateableCard({ item }: { item: RateableItem }) {
         {item.authors.length > 0 ? (
           <p className="line-clamp-1 text-xs text-muted-foreground">{item.authors.join(', ')}</p>
         ) : null}
+        <RecReasons reasons={item.reasons} />
       </Link>
       {/* Инлайн-оценка: выбрал → книга уходит из ленты (+ авто-«Прочитана»). */}
       <div className="px-1">
@@ -501,144 +484,3 @@ function ComingSoonCard({
     </div>
   );
 }
-
-// ── Общие примитивы полки ────────────────────────────────────────
-
-// Shelf — горизонтальная КАРУСЕЛЬ карточек с заголовком. Чтобы было очевидно,
-// что контент скроллится (и на десктопе, и на мобиле): градиент-затухание у
-// краёв + круглые кнопки-стрелки. И то и другое появляется только когда есть
-// куда прокручивать (canLeft/canRight по факту overflow).
-function Shelf({ title, children }: { title: string; children: React.ReactNode }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [canLeft, setCanLeft] = useState(false);
-  const [canRight, setCanRight] = useState(false);
-
-  const update = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    setCanLeft(el.scrollLeft > 1);
-    setCanRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
-  }, []);
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    update();
-    el.addEventListener('scroll', update, { passive: true });
-    // ResizeObserver — пересчитать при смене ширины контейнера/догрузке карточек.
-    const ro = new ResizeObserver(update);
-    ro.observe(el);
-    return () => {
-      el.removeEventListener('scroll', update);
-      ro.disconnect();
-    };
-  }, [update]);
-
-  function scrollByDir(dir: 1 | -1) {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.scrollBy({ left: dir * el.clientWidth * 0.8, behavior: 'smooth' });
-  }
-
-  return (
-    <section className="space-y-3">
-      <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
-      <div className="relative">
-        {canLeft ? <ShelfArrow side="left" onClick={() => scrollByDir(-1)} /> : null}
-        {canRight ? <ShelfArrow side="right" onClick={() => scrollByDir(1)} /> : null}
-        <div ref={scrollRef} className="flex gap-4 overflow-x-auto scroll-smooth pb-2">
-          {children}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-// ShelfArrow — затухание у края полки + круглая кнопка-стрелка. Затухание
-// (pointer-events-none) — пассивная подсказка «контент продолжается»; кнопка —
-// активный контрол прокрутки (тапается и на мобиле, и на десктопе).
-function ShelfArrow({ side, onClick }: { side: 'left' | 'right'; onClick: () => void }) {
-  const Icon = side === 'left' ? ChevronLeft : ChevronRight;
-  return (
-    <>
-      <div
-        aria-hidden
-        className={cn(
-          'pointer-events-none absolute inset-y-0 z-10 w-10 from-background to-transparent',
-          side === 'left' ? 'left-0 bg-gradient-to-r' : 'right-0 bg-gradient-to-l',
-        )}
-      />
-      <button
-        type="button"
-        onClick={onClick}
-        aria-label={side === 'left' ? 'Прокрутить назад' : 'Прокрутить вперёд'}
-        className={cn(
-          'absolute top-1/2 z-20 flex size-8 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background/90 text-muted-foreground shadow-sm backdrop-blur transition-colors hover:bg-accent hover:text-foreground',
-          side === 'left' ? 'left-1' : 'right-1',
-        )}
-      >
-        <Icon className="size-4" aria-hidden />
-      </button>
-    </>
-  );
-}
-
-// CoverCard — карточка-обложка фиксированной ширины для горизонтальной полки.
-// Обложка через общий BookCover (cover_path → /api/covers/{path}; иначе
-// on-demand /api/covers/book/{editionId}). Вся карточка — ссылка на карточку книги.
-function CoverCard({
-  to,
-  title,
-  authors,
-  coverPath,
-  coverEditionId,
-  children,
-}: {
-  to: string;
-  title: string;
-  authors: string[];
-  coverPath?: string;
-  coverEditionId: number;
-  children?: React.ReactNode;
-}) {
-  return (
-    <Link
-      to={to}
-      className={cn(
-        'group flex w-28 shrink-0 flex-col gap-1.5 rounded-md p-1 transition-colors hover:bg-accent/40 sm:w-32',
-        'focus-visible:outline-2 focus-visible:outline-ring',
-      )}
-    >
-      <BookCover
-        coverPath={coverPath}
-        src={`/api/covers/book/${coverEditionId}`}
-        title={title}
-        placeholder="monogram"
-        className="w-full"
-      />
-      <p className="line-clamp-2 text-sm font-medium leading-snug">{title}</p>
-      {authors.length > 0 ? (
-        <p className="line-clamp-1 text-xs text-muted-foreground">{authors.join(', ')}</p>
-      ) : null}
-      {children}
-    </Link>
-  );
-}
-
-function ShelfSkeleton({ title }: { title: string }) {
-  return (
-    <section className="space-y-3">
-      <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
-      <div className="flex gap-4 overflow-hidden pb-2">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="flex w-28 shrink-0 flex-col gap-1.5 p-1 sm:w-32">
-            <div className="aspect-[2/3] w-full animate-pulse rounded-md bg-accent" />
-            <div className="h-4 w-full animate-pulse rounded bg-accent" />
-            <div className="h-3 w-2/3 animate-pulse rounded bg-accent" />
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-

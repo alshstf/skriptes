@@ -48,6 +48,7 @@ func TestScore_Table(t *testing.T) {
 		{"семь просмотров — предел 1.5", recsys.WorkSignals{Views: 7, ViewedAt: recent}, recsys.KindViews, 1.5, 1.5},
 		{"сто просмотров — предел 1.5", recsys.WorkSignals{Views: 100, ViewedAt: recent}, recsys.KindViews, 1.5, 1.5},
 		{"скрыто из ленты", recsys.WorkSignals{Dismissed: true, DismissedAt: recent}, recsys.KindDismissed, -3, -3},
+		{"скрыто: не интересно", recsys.WorkSignals{Dismissed: true, DismissReason: recsys.DismissNotInterested, DismissedAt: recent}, recsys.KindDismissed, -3, -3},
 		{"никогда не спрашивать", recsys.WorkSignals{PromptNever: true, PromptAt: recent}, recsys.KindPromptNever, -1, -1},
 	}
 	for _, c := range cases {
@@ -126,6 +127,21 @@ func TestScore_Combined(t *testing.T) {
 	}, now, recsys.DefaultWeights)
 	require.InDelta(t, 5+3+1.5+1.0, a.Score, 1e-9)
 	require.Equal(t, "work 0: 10.50 = rating 5 + 1.00×(annotations 1.5 + completed 3 + views 1)", a.String())
+}
+
+// TestScore_DismissReasons — «уже читал» и «потом» — не негатив.
+func TestScore_DismissReasons(t *testing.T) {
+	for _, r := range []recsys.DismissReason{recsys.DismissAlreadyRead, recsys.DismissLater} {
+		a := recsys.Score(recsys.WorkSignals{Dismissed: true, DismissReason: r, DismissedAt: now}, now, recsys.DefaultWeights)
+		require.Empty(t, a.Parts, string(r))
+	}
+	for in, want := range map[string]recsys.DismissReason{"": recsys.DismissNotInterested, "later": recsys.DismissLater} {
+		got, ok := recsys.ParseDismissReason(in)
+		require.True(t, ok)
+		require.Equal(t, want, got)
+	}
+	_, ok := recsys.ParseDismissReason("nope")
+	require.False(t, ok)
 }
 
 func TestAffinity_String(t *testing.T) {

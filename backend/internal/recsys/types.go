@@ -1,0 +1,104 @@
+package recsys
+
+import "time"
+
+// Контракт ленты рекомендаций (план recsys/01, задача 1.3): каждая карточка —
+// Item с хотя бы одной причиной Reason; текст причины собирает фронт по Kind
+// (components/RecReason.tsx), бэк отдаёт только параметры. Секция — набор
+// карточек одного происхождения (SectionKind); главная собирает секции в
+// порядке фронта.
+
+// SectionKind — секция ленты. Закрытый список: неизвестную секцию API
+// отвергает (400).
+type SectionKind string
+
+const (
+	SectionContinueReading SectionKind = "continue_reading" // книги в процессе
+	SectionSubscriptions   SectionKind = "subscriptions"    // новинки по подпискам
+	SectionRatePrompts     SectionKind = "rate_prompts"     // «оцените прочитанное»
+)
+
+// ReasonKind — почему карточка здесь. Закрытый список; у каждого вида — свой
+// набор заполненных полей Reason (см. комментарии у констант).
+type ReasonKind string
+
+const (
+	// ReasonInProgress — остановились на Fraction, последнее движение At.
+	ReasonInProgress ReasonKind = "in_progress"
+	// ReasonNewByAuthor — новинка автора AuthorID/Author из подписок, добавлена At.
+	ReasonNewByAuthor ReasonKind = "new_by_author"
+	// ReasonNewInSeries — новинка цикла SeriesID/Series из подписок, добавлена At.
+	ReasonNewInSeries ReasonKind = "new_in_series"
+	// ReasonAcquired — приобретено (OPDS/Kindle) At, оценки ещё нет.
+	ReasonAcquired ReasonKind = "acquired"
+	// ReasonFinished — дочитано (или почти) — At, если известно.
+	ReasonFinished ReasonKind = "finished"
+)
+
+// Reason — причина рекомендации: вид и параметры. Поля — плоские и
+// необязательные, чтобы контракт был типизирован и в Go, и в TS (без map[any]).
+type Reason struct {
+	Kind     ReasonKind `json:"kind"`
+	At       *time.Time `json:"at,omitempty"`
+	Fraction *float64   `json:"fraction,omitempty"`
+	AuthorID int64      `json:"author_id,omitempty"`
+	Author   string     `json:"author,omitempty"`
+	SeriesID int64      `json:"series_id,omitempty"`
+	Series   string     `json:"series,omitempty"`
+	// WorkID/Title — «потому что X»: работа-основание (фаза 2).
+	WorkID int64  `json:"work_id,omitempty"`
+	Title  string `json:"title,omitempty"`
+}
+
+// Item — карточка ленты. ID — представительное ИЗДАНИЕ (on-demand обложка,
+// фолбэк ссылки; у «продолжить чтение» — то, где лежит позиция), WorkID —
+// работа для ссылки /works/{id}. CoverPath — обложка издания или соседнего
+// живого издания работы.
+type Item struct {
+	ID        int64    `json:"id"`
+	WorkID    int64    `json:"work_id,omitempty"`
+	Title     string   `json:"title"`
+	Authors   []string `json:"authors"`
+	Series    string   `json:"series,omitempty"`
+	LibID     string   `json:"lib_id"`
+	CoverPath string   `json:"cover_path,omitempty"`
+	Reasons   []Reason `json:"reasons"`
+}
+
+// Reason — первая причина вида kind (для тестов и трассы).
+func (it Item) Reason(kind ReasonKind) (Reason, bool) {
+	for _, r := range it.Reasons {
+		if r.Kind == kind {
+			return r, true
+		}
+	}
+	return Reason{}, false
+}
+
+// Section — ответ GET /api/me/recommendations?section=.
+type Section struct {
+	Kind  SectionKind `json:"section"`
+	Items []Item      `json:"items"`
+}
+
+// DismissReason — причина скрытия карточки (feed_dismissals.reason).
+// Негатив для модели близости — только DismissNotInterested (и пустая причина
+// у скрытий до 1.57): «уже читал» и «потом» вкус не отрицают.
+type DismissReason string
+
+const (
+	DismissNotInterested DismissReason = "not_interested"
+	DismissAlreadyRead   DismissReason = "already_read"
+	DismissLater         DismissReason = "later"
+)
+
+// ParseDismissReason — "" → DismissNotInterested; неизвестное → ok=false.
+func ParseDismissReason(s string) (DismissReason, bool) {
+	switch DismissReason(s) {
+	case "":
+		return DismissNotInterested, true
+	case DismissNotInterested, DismissAlreadyRead, DismissLater:
+		return DismissReason(s), true
+	}
+	return "", false
+}

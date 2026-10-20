@@ -8,6 +8,7 @@ import (
 
 	"github.com/skriptes/skriptes/backend/internal/history"
 	"github.com/skriptes/skriptes/backend/internal/importer"
+	"github.com/skriptes/skriptes/backend/internal/recsys"
 	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 )
@@ -62,7 +63,7 @@ func TestContinueReading_DedupesByWork(t *testing.T) {
 	require.NoError(t, err)
 	require.Len(t, items, 2, "одна строка на работу + книга-контроль (без дублей изданий)")
 
-	var forWork *history.ContinueItem
+	var forWork *recsys.Item
 	for i := range items {
 		if items[i].WorkID == workID {
 			require.Nil(t, forWork, "работа встретилась дважды — дедуп не сработал")
@@ -71,5 +72,7 @@ func TestContinueReading_DedupesByWork(t *testing.T) {
 	}
 	require.NotNil(t, forWork)
 	require.Equal(t, e2, forWork.ID, "представитель — самое свежее издание")
-	require.InDelta(t, 0.42, forWork.Fraction, 1e-6) // fraction в PG — real (float4)
+	r, ok := forWork.Reason(recsys.ReasonInProgress)
+	require.True(t, ok)
+	require.InDelta(t, 0.42, *r.Fraction, 1e-6) // fraction в PG — real (float4)
 }

@@ -50,11 +50,13 @@ type WorkSignals struct {
 	Views    int
 	ViewedAt time.Time
 
-	// Скрыто из ленты подписок; «никогда не спрашивать оценку».
-	Dismissed   bool
-	DismissedAt time.Time
-	PromptNever bool
-	PromptAt    time.Time
+	// Скрыто из ленты (с причиной — DismissReason; пустая = «не интересно»);
+	// «никогда не спрашивать оценку».
+	Dismissed     bool
+	DismissReason DismissReason
+	DismissedAt   time.Time
+	PromptNever   bool
+	PromptAt      time.Time
 }
 
 // LastAt — последнее событие любого вида (нулевое время, если событий нет).
@@ -210,18 +212,19 @@ func LoadSignals(ctx context.Context, q Querier, userID int64) (map[int64]*WorkS
 		return nil, fmt.Errorf("shelves: %w", err)
 	}
 
-	// 6. Скрыто из ленты (по работе).
-	if err := each(ctx, q, `SELECT work_id, dismissed_at FROM feed_dismissals WHERE user_id = $1`,
+	// 6. Скрыто из ленты (по работе) с причиной.
+	if err := each(ctx, q, `SELECT work_id, dismissed_at, COALESCE(reason, '') FROM feed_dismissals WHERE user_id = $1`,
 		[]any{userID}, func(rows pgx.Rows) error {
 			var (
-				id int64
-				at time.Time
+				id     int64
+				at     time.Time
+				reason string
 			)
-			if err := rows.Scan(&id, &at); err != nil {
+			if err := rows.Scan(&id, &at, &reason); err != nil {
 				return err
 			}
 			s := get(id)
-			s.Dismissed, s.DismissedAt = true, at
+			s.Dismissed, s.DismissedAt, s.DismissReason = true, at, DismissReason(reason)
 			return nil
 		}); err != nil {
 		return nil, fmt.Errorf("dismissals: %w", err)

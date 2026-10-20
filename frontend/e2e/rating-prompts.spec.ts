@@ -9,22 +9,21 @@ const ITEM = {
   title: 'Тестовая книга для оценки',
   authors: ['Автор Тестовый'],
   lib_id: 'L21',
+  reasons: [{ kind: 'acquired', at: '2026-09-01T00:00:00Z' }],
 };
 
+// Лента Главной — один эндпоинт на все секции (?section=…): запросы оценки —
+// из feed.ref, остальные секции пустые.
 function mockHomeFeeds(page: import('@playwright/test').Page, feed: { ref: typeof ITEM[] }) {
-  page.route(/\/api\/me\/rating-prompts\/feed/, (route) =>
-    route.fulfill({
+  page.route(/\/api\/me\/recommendations\?/, (route) => {
+    const section = new URL(route.request().url()).searchParams.get('section');
+    const items = section === 'rate_prompts' ? feed.ref : [];
+    return route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ items: feed.ref }),
-    }),
-  );
-  page.route(/\/api\/me\/continue-reading/, (route) =>
-    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ items: [] }) }),
-  );
-  page.route(/\/api\/me\/feed\/subscriptions/, (route) =>
-    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ items: [] }) }),
-  );
+      body: JSON.stringify({ section, items }),
+    });
+  });
 }
 
 test('home: оценил книгу в «Оцените прочитанное» → ушла из блока', async ({ mockedPage: page }) => {

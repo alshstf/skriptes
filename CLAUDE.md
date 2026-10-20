@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.56.1**.
+конвертируются на лету через fb2cng. Текущая версия — **1.57.0**.
 
 ## Рабочее окружение
 
@@ -62,7 +62,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 - **Релиз:** бамп `SKRIPTES_VERSION` в `infra/.env.example` + README + «Текущая версия» здесь + запись в
   `docs/assistant/release-history.md` → PR → merge → аннотированный тег `vX.Y.Z` → `release.yml` (multi-arch в ghcr).
   Moving-теги `latest`/`X.Y`/`X` — только на stable. `infra/.env.public.example` держит `SKRIPTES_VERSION=1`.
-- **Миграции:** верхняя — `0064_instance_hidden`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
+- **Миграции:** верхняя — `0065_feed_dismissal_reason`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
   мержится вторым — перенумеровывается: golang-migrate молча пропустит меньший номер). Применённые не правим.
   Разовое преобразование данных без смены схемы — идемпотентный шаг на старте (гейт в `app_settings`), не миграция.
 
@@ -151,7 +151,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 | Маршруты фронта, layout | `frontend/src/router.tsx`, `components/Layout.tsx`, `MainNav.tsx` |
 | Поиск-подсказки (Cmd+K, hero) | `components/CommandPalette.tsx`, `lib/suggest.ts`; авторы/серии — `catalog/suggest.go` |
 | Главная | `pages/HomePage.tsx`, `lib/home.ts`, `history/service.go` |
-| Рекомендации: близость пользователь × работа, профиль вкуса | `backend/internal/recsys/` (`BuildProfile`, веса — `DefaultWeights`; план — `~/projects/plans/skriptes/recsys-roadmap.md`) |
+| Рекомендации: лента Главной с причинами, близость пользователь × работа | `backend/internal/recsys/` (контракт `Item`/`Reason`, `BuildProfile`, веса — `DefaultWeights`), `api/recs.go` (`GET /me/recommendations?section=`), фронт — `lib/recs.ts`, `lib/recReasons.ts`, `components/Rec*.tsx`; план — `~/projects/plans/skriptes/recsys-roadmap.md` |
 | Авторы (список, фильтры, известность) | `pages/AuthorsPage.tsx`, `catalog/authors_list.go`, `catalog/author_stats.go`, `importer/author_renown.go` |
 | Премии | `internal/awards/`, `api/awards.go`, `pages/AwardsPage.tsx`, `components/AwardBadges.tsx` |
 | Жанры, полки, подборки, умные полки | `pages/ShelvesPage.tsx`, `internal/collections/` (`smart.go`), `books/presets.go`, `components/SmartShelves.tsx` |

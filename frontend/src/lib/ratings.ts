@@ -7,7 +7,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { apiFetch } from './api';
 import type { Book } from './books';
-import { RATEABLE_FEED_KEY } from './home';
+import { RATEABLE_FEED_KEY } from './recs';
 
 /**
  * useRateBook — поставить/снять оценку работе (1–5; null = снять).

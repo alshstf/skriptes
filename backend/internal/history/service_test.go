@@ -10,6 +10,7 @@ import (
 	meili "github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/history"
 	"github.com/skriptes/skriptes/backend/internal/importer"
+	"github.com/skriptes/skriptes/backend/internal/recsys"
 	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
 	tcmeili "github.com/testcontainers/testcontainers-go/modules/meilisearch"
@@ -650,7 +651,10 @@ func TestService_ContinueReading(t *testing.T) {
 	require.Len(t, items, 1, "только in-progress книга")
 	require.Equal(t, inProgress, items[0].ID)
 	require.Equal(t, ipWork, items[0].WorkID)
-	require.InDelta(t, 0.42, items[0].Fraction, 0.001)
+	r, ok := items[0].Reason(recsys.ReasonInProgress)
+	require.True(t, ok, "причина «остановились на…»")
+	require.InDelta(t, 0.42, *r.Fraction, 0.001)
+	require.NotNil(t, r.At)
 	require.Equal(t, "В процессе", items[0].Title)
 }
 
@@ -723,7 +727,12 @@ func TestService_SubscriptionFeed(t *testing.T) {
 	require.Equal(t, wNew, items[0].WorkID)
 	require.Equal(t, "Новая", items[0].Title)
 	require.Contains(t, items[0].Authors[0], "Подписан")
-	require.NotNil(t, items[0].AddedAt)
+	ra, ok := items[0].Reason(recsys.ReasonNewByAuthor)
+	require.True(t, ok, "причина — новинка подписанного автора")
+	require.Equal(t, subAuthor, ra.AuthorID)
+	require.Contains(t, ra.Author, "Подписан")
+	require.NotNil(t, ra.At)
+	require.Len(t, items[0].Reasons, 1)
 
 	// Схлопывание по работе: второе издание новейшей работы (тоже после
 	// подписки) не должно задваивать ленту.
@@ -775,11 +784,25 @@ func TestService_SubscriptionFeed(t *testing.T) {
 		ids[it.ID] = true
 	}
 	require.True(t, ids[bSerNew], "новинка подписанной серии попадает в ленту")
+	for _, it := range items {
+		if it.ID == bSerNew {
+			rs, ok := it.Reason(recsys.ReasonNewInSeries)
+			require.True(t, ok, "причина — новинка подписанного цикла")
+			require.Equal(t, serID, rs.SeriesID)
+			require.Equal(t, "Моя Серия", rs.Series)
+			_, byAuthor := it.Reason(recsys.ReasonNewByAuthor)
+			require.False(t, byAuthor, "на автора тома не подписаны — такой причины нет")
+		}
+	}
 
 	// Скрытие работы из ленты («не интересно») — она исчезает из выдачи и
 	// (персистентно) не возвращается.
-	require.NoError(t, svc.DismissFeedItem(ctx, userID, wNew))
-	require.NoError(t, svc.DismissFeedItem(ctx, userID, wNew)) // идемпотентно
+	require.NoError(t, svc.DismissFeedItem(ctx, userID, wNew, recsys.DismissNotInterested))
+	require.NoError(t, svc.DismissFeedItem(ctx, userID, wNew, recsys.DismissLater)) // идемпотентно, причина обновилась
+	var reason string
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT reason FROM feed_dismissals WHERE user_id=$1 AND work_id=$2`, userID, wNew).Scan(&reason))
+	require.Equal(t, "later", reason)
 	items, err = svc.SubscriptionFeed(ctx, userID, 20)
 	require.NoError(t, err)
 	require.Len(t, items, 1, "скрытая работа автора ушла из ленты, осталась только серия")

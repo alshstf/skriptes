@@ -226,15 +226,13 @@ func NewRouter(d Deps) http.Handler {
 					r.With(workGate).Put("/works/{id}/rating", handleSetRating(d.History))
 					r.Delete("/works/{id}/rating", handleRemoveRating(d.History))
 					// Отложенные запросы оценки («Оцените прочитанное»).
-					r.Get("/me/rating-prompts/feed", handleRateablePrompts(d.History, d.Settings))
 					r.Post("/works/{id}/rating-prompt/dismiss", handleDismissRatingPrompt(d.History))
 					r.Post("/works/{id}/rating-prompt/snooze", handleSnoozeRatingPrompt(d.History, d.Settings))
 					r.Get("/me/favorites", handleListFavorites(d.History))
 					r.Get("/me/recent", handleRecentViews(d.History))
-					// Главная: «Продолжить чтение» + «Новинки по подпискам».
-					r.Get("/me/continue-reading", handleContinueReading(d.History))
-					r.Get("/me/feed/subscriptions", handleSubscriptionFeed(d.History))
-					// Скрыть работу из ленты новинок («не интересно»).
+					// Лента Главной: секции continue_reading / subscriptions / rate_prompts
+					// одним контрактом с причинами (recs.go); скрытие — с причиной.
+					r.Get("/me/recommendations", handleRecommendations(d.History, d.Settings))
 					r.Post("/me/feed/dismiss", handleDismissFeedItem(d.History))
 					// Явная отметка «прочитано» (кнопка на карточке книги +
 					// auto-mark из ридера при дочитывании). Основной сигнал
