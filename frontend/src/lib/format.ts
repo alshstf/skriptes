@@ -111,3 +111,20 @@ export function formatRelativeDays(iso: string, now = new Date()): string {
   const y = Math.floor(days / 365);
   return `${y} ${pluralRu(y, ['год', 'года', 'лет'])} назад`;
 }
+
+/**
+ * formatReadingTime — «≈ 5 мин» / «≈ 1 ч 20 мин» / «≈ 4 ч»: до часа — с шагом
+ * 5 минут, больше — часы и минуты с шагом 10 (точность оценки скорости чтения
+ * не выше). 0 и меньше — пустая строка.
+ */
+export function formatReadingTime(minutes: number): string {
+  if (!Number.isFinite(minutes) || minutes <= 0) return '';
+  if (minutes < 60) {
+    const m = Math.max(5, Math.round(minutes / 5) * 5);
+    return `≈ ${m} мин`;
+  }
+  const total = Math.round(minutes / 10) * 10;
+  const h = Math.floor(total / 60);
+  const m = total % 60;
+  return m === 0 ? `≈ ${h} ч` : `≈ ${h} ч ${m} мин`;
+}

@@ -1,5 +1,5 @@
 import type { RecReason } from './recs';
-import { formatRelativeDays } from './format';
+import { formatReadingTime, formatRelativeDays } from './format';
 
 /**
  * recReasons.ts — текст причины рекомендации по её виду (контракт recsys.Reason).
@@ -17,7 +17,8 @@ export function reasonParts(r: RecReason, now = new Date()): ReasonPart[] {
     case 'in_progress': {
       const pct = Math.round(Math.min(1, Math.max(0, r.fraction)) * 100);
       // Неразрывный пробел: «42 %» не переносится по «%».
-      return [{ text: `Остановились на ${pct}\u00a0%${when(r.at)}` }];
+      const left = r.minutes ? ` · ещё ${formatReadingTime(r.minutes)}` : '';
+      return [{ text: `Остановились на ${pct}\u00a0%${when(r.at)}${left}` }];
     }
     case 'new_by_author':
       return [

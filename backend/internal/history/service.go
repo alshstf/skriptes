@@ -359,6 +359,12 @@ func (s *Service) SavePosition(ctx context.Context, userID, bookID int64, pos st
 	// popularity). Ридер шлёт позицию с дебаунсом, mark — вставка в map под
 	// mutex, flush дедуплицирует — дёшево.
 	s.mark(bookID)
+	// Журнал позиций — для скорости чтения (read_positions.go).
+	if fraction != nil {
+		if err := s.appendPosition(ctx, userID, bookID, *fraction); err != nil {
+			return err
+		}
+	}
 	return nil
 }
 
@@ -776,10 +782,10 @@ func (s *Service) ContinueReading(ctx context.Context, userID int64, limit int) 
 	// не дубли (прод-аудит P2 #6). COALESCE(work_id, -id) — синглтон без работы
 	// не коллизирует с реальными work_id (тот же приём, что в счётчиках каталога).
 	rows, err := s.pool.Query(ctx, `
-		SELECT id, work_id, title, lib_id, ser_title, fraction, updated_at, cover, authors
+		SELECT id, work_id, title, lib_id, ser_title, fraction, updated_at, cover, authors, size_bytes
 		FROM (
 			SELECT DISTINCT ON (COALESCE(b.work_id, -b.id))
-			       b.id, b.work_id, b.title, b.lib_id, ser.title AS ser_title,
+			       b.id, b.work_id, b.title, b.lib_id, ser.title AS ser_title, b.size_bytes,
 			       COALESCE(r.fraction, 0) AS fraction, r.updated_at,
 			       COALESCE(b.cover_path, (
 			           SELECT bb.cover_path FROM books bb
@@ -799,7 +805,7 @@ func (s *Service) ContinueReading(ctx context.Context, userID int64, limit int) 
 			WHERE r.user_id = $1
 			  AND r.completed_at IS NULL
 			  AND COALESCE(r.fraction, 0) > 0
-			GROUP BY b.id, b.work_id, b.title, b.lib_id, ser.title, r.fraction, r.updated_at, b.cover_path
+			GROUP BY b.id, b.work_id, b.title, b.lib_id, ser.title, b.size_bytes, r.fraction, r.updated_at, b.cover_path
 			ORDER BY COALESCE(b.work_id, -b.id), r.updated_at DESC, COALESCE(r.fraction, 0) DESC, b.id
 		) t
 		ORDER BY t.updated_at DESC
@@ -810,6 +816,7 @@ func (s *Service) ContinueReading(ctx context.Context, userID int64, limit int) 
 	}
 	defer rows.Close()
 	out := make([]recsys.Item, 0)
+	var sizes []int64
 	for rows.Next() {
 		var (
 			it        recsys.Item
@@ -817,9 +824,10 @@ func (s *Service) ContinueReading(ctx context.Context, userID int64, limit int) 
 			series    *string
 			fraction  float64
 			updatedAt time.Time
+			size      int64
 		)
 		if err := rows.Scan(&it.ID, &workID, &it.Title, &it.LibID, &series,
-			&fraction, &updatedAt, &it.CoverPath, &it.Authors); err != nil {
+			&fraction, &updatedAt, &it.CoverPath, &it.Authors, &size); err != nil {
 			return nil, err
 		}
 		if workID != nil {
@@ -831,8 +839,24 @@ func (s *Service) ContinueReading(ctx context.Context, userID int64, limit int) 
 		at := updatedAt
 		it.Reasons = []recsys.Reason{{Kind: recsys.ReasonInProgress, Fraction: &fraction, At: &at}}
 		out = append(out, it)
+		sizes = append(sizes, size)
 	}
-	return out, rows.Err()
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	rows.Close()
+	// «Ещё ≈ N минут» — по личной скорости чтения (read_positions.go); без
+	// скорости (новый пользователь, Kindle) минут нет.
+	if len(out) > 0 {
+		speed, err := s.ReadingSpeed(ctx, userID)
+		if err != nil {
+			return nil, err
+		}
+		for i := range out {
+			out[i].Reasons[0].Minutes = MinutesLeft(speed, sizes[i], *out[i].Reasons[0].Fraction)
+		}
+	}
+	return out, nil
 }
 
 // SubscriptionFeed — НОВИНКИ по подпискам пользователя: авторы

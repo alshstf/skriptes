@@ -30,7 +30,7 @@ import { FavoriteButton } from '@/components/FavoriteButton';
 import { RatingControl } from '@/components/RatingControl';
 import { useRateBook } from '@/lib/ratings';
 import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
-import { formatBytes, pluralRu, translationLine } from '@/lib/format';
+import { formatBytes, pluralRu, translationLine, formatReadingTime } from '@/lib/format';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
 import { useBookCard, useToggleRead, type Book } from '@/lib/books';
 import { useBookCollections } from '@/lib/collections';
@@ -388,6 +388,7 @@ function ActionButtons({ book, multi }: { book: Book; multi: boolean }) {
               to="/books/$id/read"
               params={{ id: String(book.id) }}
               aria-label="Открыть книгу в браузерном ридере"
+              title={readButtonTitle(book)}
             >
               <BookOpen className="size-4" aria-hidden />
               <span className="hidden sm:inline">{readButtonLabel(book.reading_fraction)}</span>
@@ -440,6 +441,7 @@ function MobileActions({ book, multi }: { book: Book; multi: boolean }) {
             to="/books/$id/read"
             params={{ id: String(book.id) }}
             aria-label="Открыть книгу в браузерном ридере"
+            title={readButtonTitle(book)}
           >
             <BookOpen className="size-4" aria-hidden />
             {readButtonLabel(book.reading_fraction)}
@@ -704,6 +706,13 @@ function useUserShelves(bookId: number) {
  * 100% мы не показываем как «Продолжить 100%» — это сигнал «уже
  * дочитано», но если хочется перечитать — кнопка такая же «Читать».
  */
+/** readButtonTitle — подсказка на кнопке: «ещё ≈ 2 ч» по личной скорости чтения (если известна). */
+function readButtonTitle(book: Book): string | undefined {
+  if (!book.reading_minutes) return undefined;
+  const t = formatReadingTime(book.reading_minutes);
+  return book.reading_fraction && book.reading_fraction > 0 ? `Ещё ${t}` : `Чтение ${t}`;
+}
+
 function readButtonLabel(fraction?: number): string {
   if (fraction === undefined || fraction <= 0 || fraction >= 1) return 'Читать';
   const pct = Math.max(1, Math.round(fraction * 100));
@@ -739,6 +748,12 @@ function FileDetails({ book }: { book: Book }) {
         <Field label="Файл" value={`${book.file_name}.${book.ext}`} mono />
         <Field label="Архив" value={book.archive} mono />
         <Field label="Размер" value={formatBytes(book.size_bytes)} />
+        {book.reading_minutes ? (
+          <Field
+            label={book.reading_fraction && book.reading_fraction > 0 ? 'Дочитать' : 'Время чтения'}
+            value={formatReadingTime(book.reading_minutes)}
+          />
+        ) : null}
         <InlineEditableField
           targetKind="book"
           targetID={book.id}

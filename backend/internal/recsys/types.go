@@ -23,7 +23,7 @@ const (
 type ReasonKind string
 
 const (
-	// ReasonInProgress — остановились на Fraction, последнее движение At.
+	// ReasonInProgress — остановились на Fraction, последнее движение At, ещё Minutes.
 	ReasonInProgress ReasonKind = "in_progress"
 	// ReasonNewByAuthor — новинка автора AuthorID/Author из подписок, добавлена At.
 	ReasonNewByAuthor ReasonKind = "new_by_author"
@@ -45,6 +45,8 @@ type Reason struct {
 	Author   string     `json:"author,omitempty"`
 	SeriesID int64      `json:"series_id,omitempty"`
 	Series   string     `json:"series,omitempty"`
+	// Minutes — «ещё ≈ N минут» по личной скорости чтения (in_progress; 0 — неизвестно).
+	Minutes int `json:"minutes,omitempty"`
 	// WorkID/Title — «потому что X»: работа-основание (фаза 2).
 	WorkID int64  `json:"work_id,omitempty"`
 	Title  string `json:"title,omitempty"`

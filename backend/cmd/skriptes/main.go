@@ -230,6 +230,8 @@ func run() error {
 	metadata.Go(func(c context.Context) { popTracker.Run(c, 30*time.Second) })
 	// Хранимые число работ и рейтинг авторов — ключи сортировок /authors (#302).
 	metadata.Go(func(c context.Context) { runAuthorStatsLoop(c, pool, logger) })
+	// Журнал позиций чтения: старше 90 дней — строка в день на книгу (recsys/01, 1.2).
+	metadata.Go(func(c context.Context) { runReadPositionsCompactLoop(c, historySvc, logger) })
 	// Состав сборников из оглавления fb2 (#388): новые сборники — раз в 30 минут.
 	metadata.Go(func(c context.Context) {
 		metadata.NewContentsScanner(pool, cfg.BooksRoot, logger).Run(c, 5*time.Minute, 30*time.Minute)
@@ -2227,4 +2229,29 @@ func newBioTimeline(pool *pgxpool.Pool, path string, logger *slog.Logger) *timel
 	}
 	logger.Info("bio: пакет датасета", "path", path, "version", pack.Version)
 	return svc
+}
+
+// runReadPositionsCompactLoop — прореживание журнала позиций чтения
+// (history.CompactReadPositions): на старте и раз в сутки.
+func runReadPositionsCompactLoop(ctx context.Context, hist *history.Service, logger *slog.Logger) {
+	compact := func() {
+		n, err := hist.CompactReadPositions(ctx)
+		switch {
+		case err != nil && ctx.Err() == nil:
+			logger.Warn("read positions compact failed", "err", err)
+		case err == nil && n > 0:
+			logger.Info("read positions compacted", "rows_deleted", n)
+		}
+	}
+	compact()
+	t := time.NewTicker(24 * time.Hour)
+	defer t.Stop()
+	for {
+		select {
+		case <-ctx.Done():
+			return
+		case <-t.C:
+			compact()
+		}
+	}
 }
