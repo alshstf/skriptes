@@ -17,7 +17,7 @@ export type RecSectionKind = 'continue_reading' | 'subscriptions' | 'rate_prompt
 // RecReason — зеркало recsys.Reason (backend): дискриминант kind, у каждого
 // вида — свои заполненные поля.
 export type RecReason =
-  | { kind: 'in_progress'; fraction: number; at?: string }
+  | { kind: 'in_progress'; fraction: number; at?: string; minutes?: number }
   | { kind: 'new_by_author'; author_id: number; author: string; at?: string }
   | { kind: 'new_in_series'; series_id: number; series: string; at?: string }
   | { kind: 'acquired'; at?: string }

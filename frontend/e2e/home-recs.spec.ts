@@ -20,7 +20,9 @@ const CONTINUE: Item = {
   title: 'Недочитанная книга',
   authors: ['Автор Первый'],
   lib_id: 'L11',
-  reasons: [{ kind: 'in_progress', fraction: 0.42, at: new Date(Date.now() - 3 * 86_400_000).toISOString() }],
+  reasons: [
+    { kind: 'in_progress', fraction: 0.42, at: new Date(Date.now() - 3 * 86_400_000).toISOString(), minutes: 84 },
+  ],
 };
 
 const FEED: Item = {
@@ -52,7 +54,7 @@ test('home: причины под карточками и ссылка на ав
   await page.goto('/');
 
   await expect(page.getByRole('heading', { name: 'Продолжить чтение' })).toBeVisible({ timeout: 10_000 });
-  await expect(page.getByText(/Остановились на 42\s% · 3 дня назад/)).toBeVisible();
+  await expect(page.getByText(/Остановились на 42\s% · 3 дня назад · ещё ≈ 1 ч 20 мин/)).toBeVisible();
 
   const feedReason = page.getByTestId('rec-reason').filter({ hasText: 'По подписке на автора' });
   await expect(feedReason).toBeVisible();

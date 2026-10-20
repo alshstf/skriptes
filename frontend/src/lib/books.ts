@@ -273,6 +273,8 @@ export type Book = {
   read_in_compilation?: { work_id: number; title: string };
   /** Прогресс чтения [0, 1] из in-browser ридера. Undefined если ридер
    *  ни разу не открывали — UI тогда показывает «Читать» без процента. */
+  /** «≈ N минут» на открытое издание по личной скорости чтения (с учётом прогресса); нет — скорости нет. */
+  reading_minutes?: number;
   reading_fraction?: number;
 };
 

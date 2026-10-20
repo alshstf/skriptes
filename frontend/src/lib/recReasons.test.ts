@@ -58,3 +58,20 @@ describe('reasonParts', () => {
     expect(reasonParts({ kind: 'nope' } as unknown as Parameters<typeof reasonParts>[0], now)).toEqual([]);
   });
 });
+
+describe('formatReadingTime', () => {
+  it('минуты с шагом 5, часы с шагом 10 минут', async () => {
+    const { formatReadingTime } = await import('./format');
+    expect(formatReadingTime(0)).toBe('');
+    expect(formatReadingTime(3)).toBe('≈ 5 мин');
+    expect(formatReadingTime(42)).toBe('≈ 40 мин');
+    expect(formatReadingTime(60)).toBe('≈ 1 ч');
+    expect(formatReadingTime(84)).toBe('≈ 1 ч 20 мин');
+    expect(formatReadingTime(244)).toBe('≈ 4 ч');
+  });
+  it('минуты в причине «остановились»', () => {
+    expect(reasonText({ kind: 'in_progress', fraction: 0.4, minutes: 84 }, now)).toBe(
+      'Остановились на 40 % · ещё ≈ 1 ч 20 мин',
+    );
+  });
+});

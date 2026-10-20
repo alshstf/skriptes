@@ -127,6 +127,9 @@ type bookResponse struct {
 	IsRead          bool       `json:"is_read"`
 	ReadAt          *time.Time `json:"read_at,omitempty"`
 	ReadingFraction *float64   `json:"reading_fraction,omitempty"`
+	// ReadingMinutes — «≈ N минут» на открытое издание по личной скорости чтения
+	// (с учётом прогресса — сколько осталось); 0 — скорости нет.
+	ReadingMinutes int `json:"reading_minutes,omitempty"`
 	// Пользовательские оценки (work-level), ОТДЕЛЬНО от Book.Rating (LIBRATE):
 	//   - user_rating — оценка текущего юзера (nil если не оценивал/гость);
 	//   - rating_avg / rating_count — средняя по инстансу и число голосов
@@ -221,6 +224,7 @@ func writeBookCard(w http.ResponseWriter, r *http.Request, ctx context.Context, 
 	var isFav, isRead bool
 	var readAt *time.Time
 	var fraction *float64
+	var readingMinutes int
 	if u, ok := UserFromContext(r.Context()); ok && hist.Service != nil {
 		// fraction («продолжить N%») — прогресс ОТКРЫТОГО издания: привязан к
 		// конкретному файлу (CFI), агрегировать по работе нельзя. Дефолты
@@ -252,6 +256,16 @@ func writeBookCard(w http.ResponseWriter, r *http.Request, ctx context.Context, 
 						b.Editions[i].IsRead = er.Completed
 					}
 				}
+			}
+		}
+		// «≈ N минут» по личной скорости чтения; дочитанное — не показываем.
+		if !isRead {
+			if speed, err := hist.Service.ReadingSpeed(ctx, u.ID); err == nil && speed.Known() {
+				f := 0.0
+				if fraction != nil {
+					f = *fraction
+				}
+				readingMinutes = history.MinutesLeft(speed, b.SizeBytes, f)
 			}
 		}
 		recordViewAsync(hist.Service, u.ID, b.ID)
@@ -305,6 +319,7 @@ func writeBookCard(w http.ResponseWriter, r *http.Request, ctx context.Context, 
 		IsRead:          isRead,
 		ReadAt:          readAt,
 		ReadingFraction: fraction,
+		ReadingMinutes:  readingMinutes,
 		UserRating:      userRating,
 		RatingAvg:       ratingAvg,
 		RatingCount:     ratingCount,
