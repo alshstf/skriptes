@@ -19,8 +19,9 @@ import (
 func handleRecommendations(hist HistoryDeps, set SettingsDeps) http.HandlerFunc {
 	type provider func(ctx context.Context, userID int64, limit int) ([]recsys.Item, error)
 	providers := map[recsys.SectionKind]provider{
-		recsys.SectionContinueReading: hist.Service.ContinueReading,
-		recsys.SectionSubscriptions:   hist.Service.SubscriptionFeed,
+		recsys.SectionContinueReading:  hist.Service.ContinueReading,
+		recsys.SectionSubscriptions:    hist.Service.SubscriptionFeed,
+		recsys.SectionSearchedAppeared: hist.Service.SearchedAppeared,
 		// «Оцените прочитанное»: если запросы оценки выключены в профиле —
 		// секция пуста (фронт её не рендерит).
 		recsys.SectionRatePrompts: func(ctx context.Context, userID int64, limit int) ([]recsys.Item, error) {

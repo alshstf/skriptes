@@ -2,7 +2,7 @@ import { Link } from '@tanstack/react-router';
 
 /**
  * ProfileTabs — подвкладки раздела «Профиль» (segmented-control, как в
- * админке). «Профиль» (/me) и «Контент» (/me/content).
+ * админке). «Профиль» (/me), «Контент» (/me/content), «Внешний вид», «Поиск» (/me/searches).
  *
  * activeOptions exact: /me — префикс /me/content, без exact обе вкладки
  * подсвечивались бы на /me/content.
@@ -11,6 +11,7 @@ const tabs = [
   { to: '/me', label: 'Профиль' },
   { to: '/me/content', label: 'Контент' },
   { to: '/me/appearance', label: 'Внешний вид' },
+  { to: '/me/searches', label: 'Поиск' },
 ] as const;
 
 const baseTab = 'rounded-md px-3 py-1.5 text-sm font-medium transition';

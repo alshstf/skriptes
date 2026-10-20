@@ -1159,3 +1159,18 @@ export function useMergeAuthors() {
     onError: (e) => toast.error(`Не удалось объединить: ${e instanceof Error ? e.message : 'ошибка'}`),
   });
 }
+
+// ── Поиск: что ищут и не находят (агрегат без пользователей) ─────────
+
+export type SearchMiss = { q: string; count: number; users: number };
+export type SearchMissesResponse = { items: SearchMiss[]; days: number; enabled: boolean };
+
+/** useSearchMisses — ненайденные запросы за days дней, по частоте (пополнение библиотеки). */
+export function useSearchMisses(days = 90) {
+  return useQuery<SearchMissesResponse>({
+    queryKey: ['admin', 'search-misses', days],
+    queryFn: ({ signal }) =>
+      apiFetch<SearchMissesResponse>(`/api/admin/search-log/misses?days=${days}&limit=50`, { signal }),
+    staleTime: 60_000,
+  });
+}

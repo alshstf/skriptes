@@ -37,10 +37,26 @@ const FEED: Item = {
   ],
 };
 
+const APPEARED: Item = {
+  id: 14,
+  work_id: 1014,
+  title: 'Найденная книга',
+  authors: ['Автор Искомый'],
+  lib_id: 'L14',
+  reasons: [{ kind: 'searched_appeared', query: 'найденная книга', at: '2026-10-10T00:00:00Z' }],
+};
+
 function mockHome(page: import('@playwright/test').Page, feed: { ref: Item[] }) {
   page.route(/\/api\/me\/recommendations\?/, (route) => {
     const section = new URL(route.request().url()).searchParams.get('section');
-    const items = section === 'continue_reading' ? [CONTINUE] : section === 'subscriptions' ? feed.ref : [];
+    const items =
+      section === 'continue_reading'
+        ? [CONTINUE]
+        : section === 'subscriptions'
+          ? feed.ref
+          : section === 'searched_appeared'
+            ? [APPEARED]
+            : [];
     return route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -55,6 +71,8 @@ test('home: причины под карточками и ссылка на ав
 
   await expect(page.getByRole('heading', { name: 'Продолжить чтение' })).toBeVisible({ timeout: 10_000 });
   await expect(page.getByText(/Остановились на 42\s% · 3 дня назад · ещё ≈ 1 ч 20 мин/)).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Появилось то, что вы искали' })).toBeVisible();
+  await expect(page.getByText('Вы искали «найденная книга»', { exact: false })).toBeVisible();
 
   const feedReason = page.getByTestId('rec-reason').filter({ hasText: 'По подписке на автора' });
   await expect(feedReason).toBeVisible();
@@ -87,7 +105,9 @@ test('home: «Уже читал» скрывает новинку с причи�
   await page.goto('/');
   await expect(page.getByText(/Очень длинное название новинки/)).toBeVisible({ timeout: 10_000 });
 
-  await page.getByRole('button', { name: 'Скрыть из ленты' }).click();
+  // Kebab есть и у «Появилось то, что вы искали» — берём из секции новинок.
+  const feedSection = page.locator('section', { has: page.getByRole('heading', { name: 'Новинки по подпискам' }) });
+  await feedSection.getByRole('button', { name: 'Скрыть из ленты' }).click();
   await page.getByRole('menuitem', { name: 'Уже читал' }).click();
 
   await expect(page.getByText(/Очень длинное название новинки/)).toHaveCount(0);

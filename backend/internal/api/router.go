@@ -28,6 +28,7 @@ type Deps struct {
 	Collections CollectionsDeps
 	Download    DownloadDeps
 	History     HistoryDeps
+	Recs        RecsDeps
 	Metadata    MetadataDeps
 	Kindle      KindleDeps
 	Adaptations AdaptationsDeps
@@ -147,7 +148,7 @@ func NewRouter(d Deps) http.Handler {
 				r.Post("/me/devices", handleCreateDevice(d.Auth))
 				r.Delete("/me/devices/{id}", handleDeleteDevice(d.Auth))
 				if d.Books.Service != nil {
-					r.Get("/books", handleListBooks(d.Books, d.History, d.Content))
+					r.Get("/books", handleListBooks(d.Books, d.History, d.Content, d.Recs))
 					r.With(bookGate).Get("/books/{id}", handleGetBook(d.Books, d.History, d.Metadata))
 					// Карточка логической книги по works.id. Видимость скрытого
 					// контента обрабатывает GetWork (404, если все издания скрыты) —
@@ -234,6 +235,11 @@ func NewRouter(d Deps) http.Handler {
 					// одним контрактом с причинами (recs.go); скрытие — с причиной.
 					r.Get("/me/recommendations", handleRecommendations(d.History, d.Settings))
 					r.Post("/me/feed/dismiss", handleDismissFeedItem(d.History))
+					// Лог поиска (recsys/01, 1.4): клик из выдачи, история, удаление.
+					r.Post("/me/search-log/{id}/click", handleSearchClick(d.Recs))
+					r.Get("/me/search-log", handleListSearchLog(d.Recs))
+					r.Delete("/me/search-log", handleDeleteSearchLog(d.Recs, false))
+					r.Delete("/me/search-log/{id}", handleDeleteSearchLog(d.Recs, true))
 					// Явная отметка «прочитано» (кнопка на карточке книги +
 					// auto-mark из ридера при дочитывании). Основной сигнал
 					// для read_count в статистике автора/серии.
@@ -298,6 +304,8 @@ func NewRouter(d Deps) http.Handler {
 				}
 				if d.Hiding.Store != nil && d.Hiding.Sync != nil {
 					r.Get("/admin/hidden", handleListHidden(d.Hiding))
+					// Что ищут и не находят (агрегат без пользователей) — для пополнения библиотеки.
+					r.Get("/admin/search-log/misses", handleSearchMisses(d.Recs))
 					r.Post("/admin/authors/{id}/hide", handleSetHidden(d.Hiding, hiding.KindAuthor, true))
 					r.Delete("/admin/authors/{id}/hide", handleSetHidden(d.Hiding, hiding.KindAuthor, false))
 					r.Get("/admin/authors/{id}/hide-preview", handleHidePreview(d.Hiding, hiding.KindAuthor))

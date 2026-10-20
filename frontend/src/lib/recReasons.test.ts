@@ -75,3 +75,11 @@ describe('formatReadingTime', () => {
     );
   });
 });
+
+describe('searched_appeared', () => {
+  it('«вы искали …» с датой', () => {
+    expect(reasonText({ kind: 'searched_appeared', query: 'пикник на обочине', at: daysAgo(10) }, now)).toBe(
+      'Вы искали «пикник на обочине» · 1 неделю назад',
+    );
+  });
+});

@@ -12,7 +12,7 @@ import { apiFetch } from './api';
  * провайдер на бэке (api/recs.go).
  */
 
-export type RecSectionKind = 'continue_reading' | 'subscriptions' | 'rate_prompts';
+export type RecSectionKind = 'continue_reading' | 'subscriptions' | 'rate_prompts' | 'searched_appeared';
 
 // RecReason — зеркало recsys.Reason (backend): дискриминант kind, у каждого
 // вида — свои заполненные поля.
@@ -21,7 +21,8 @@ export type RecReason =
   | { kind: 'new_by_author'; author_id: number; author: string; at?: string }
   | { kind: 'new_in_series'; series_id: number; series: string; at?: string }
   | { kind: 'acquired'; at?: string }
-  | { kind: 'finished'; at?: string };
+  | { kind: 'finished'; at?: string }
+  | { kind: 'searched_appeared'; query: string; at?: string };
 
 // RecItem — зеркало recsys.Item: id — представительное издание (обложка,
 // фолбэк ссылки), work_id — карточка книги.
@@ -58,6 +59,7 @@ const STALE_MS: Record<RecSectionKind, number> = {
   continue_reading: 10_000,
   subscriptions: 60_000,
   rate_prompts: 30_000,
+  searched_appeared: 60_000,
 };
 
 /** useRecSection — карточки одной секции ленты. */

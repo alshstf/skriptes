@@ -57,7 +57,7 @@ func hydrateUserListMeta(ctx context.Context, items []books.ListItem, userID int
 	}
 }
 
-func handleListBooks(d BooksDeps, hist HistoryDeps, content ContentDeps) http.HandlerFunc {
+func handleListBooks(d BooksDeps, hist HistoryDeps, content ContentDeps, recs RecsDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		q := r.URL.Query()
 		params := books.ListParams{
@@ -108,6 +108,14 @@ func handleListBooks(d BooksDeps, hist HistoryDeps, content ContentDeps) http.Ha
 			return
 		}
 		hydrateUserListMeta(ctx, res.Items, userID, hist.Service)
+		// Лог поиска (recsys/01, 1.4): первая страница текстового запроса. Синхронно —
+		// один INSERT/UPDATE, а id нужен фронту для клика из выдачи. Ошибка лога
+		// выдачу не ломает.
+		if params.Query != "" && params.Offset == 0 && userID > 0 && recs.SearchLog.Enabled() {
+			if id, err := recs.SearchLog.Record(ctx, userID, params.Query, searchFilters(q), int(res.Total)); err == nil && id > 0 {
+				res.SearchLogID = id
+			}
+		}
 		writeJSON(w, http.StatusOK, res)
 	}
 }

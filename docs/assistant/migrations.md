@@ -101,3 +101,12 @@ NULL у скрытий до 1.57 = «не интересно»). Модель б
 по 20 последним; байт fb2 в минуту, файлы > 3 МБ не в счёт) → «ещё ≈ N минут» в «Продолжить чтение» и на
 карточке (`reading_minutes`). Старше 90 дней — строка в день на книгу (`CompactReadPositions`, на старте и раз в
 сутки). План recsys/01, задача 1.2.
+
+## 0067_search_log
+
+Лог поиска `search_log(id, user_id, q, norm, filters, hits, clicked_work_id, at)` — пишет `handleListBooks`
+(первая страница текстового запроса; продолжение/откат набора в окне 60 с обновляет ту же строку, короче 3
+символов не пишется), клик из выдачи — `clicked_work_id`. `search_matches(user_id, work_id, q, searched_at,
+matched_at)` — ненайденный запрос совпал с работой, появившейся при импорте (`recsys.Matcher` после импорта,
+поиск Meili по `id IN [...]` с порогом `_rankingScore ≥ 0.8`). Срок — `SKRIPTES_SEARCH_LOG_DAYS` (дефолт 365,
+0 — лог выключен), чистка в housekeeping-цикле. План recsys/01, задача 1.4.

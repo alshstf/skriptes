@@ -35,6 +35,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { pluralAuthors, summarizeAuthors, useInfiniteBooks, type BookListItem } from '@/lib/books';
+import { logSearchClick } from '@/lib/searchLog';
 import { hasSmartFilters, toSmartFilters } from '@/lib/smartShelves';
 import { SaveSmartShelfButton } from '@/components/SmartShelves';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
@@ -140,6 +141,9 @@ export function BooksPage() {
     hasAward: filters.hasAward,
     facets: FACETS,
   });
+  // Лог поиска: id строки — в первой странице выдачи; клик по книге из списка
+  // помечает, что открыли по этому запросу (lib/searchLog.ts).
+  const searchLogId = data?.pages[0]?.search_log_id;
 
   // Бесконечная прокрутка: items со всех загруженных страниц; total и
   // facets — из первой (они про весь запрос). meta — первая страница.
@@ -388,7 +392,11 @@ export function BooksPage() {
                     transform: `translateY(${vi.start - scrollMargin}px)`,
                   }}
                 >
-                  <BookCard book={items[vi.index]} highlightGenres={filters.genres} />
+                  <BookCard
+                    book={items[vi.index]}
+                    highlightGenres={filters.genres}
+                    onOpen={() => logSearchClick(searchLogId, workIdOfItem(items[vi.index]))}
+                  />
                 </div>
               ))}
             </div>
@@ -417,9 +425,12 @@ export function BooksPage() {
 function BookCard({
   book,
   highlightGenres,
+  onOpen,
 }: {
   book: BookListItem;
   highlightGenres?: string[];
+  /** Переход к книге из выдачи (лог поиска: что открыли по запросу). */
+  onOpen?: () => void;
 }) {
   // Вся карточка кликабельна и ведёт на деталку — паттерн «stretched
   // link»: ссылка висит на заголовке, а её ::after растягивается на всю
@@ -440,6 +451,7 @@ function BookCard({
           <Link
             to="/works/$id"
             params={{ id: String(book.work_id ?? book.id) }}
+            onClick={onOpen}
             className="rounded-md after:absolute after:inset-0 focus-visible:outline-2 focus-visible:outline-ring"
           >
             {book.title}
@@ -491,4 +503,8 @@ function BookListSkeleton() {
 function authorsLine(authors: string[]): string {
   const { shown, more } = summarizeAuthors(authors);
   return more > 0 ? `${shown.join(', ')} и ещё ${more} ${pluralAuthors(more)}` : shown.join(', ');
+}
+
+function workIdOfItem(b: BookListItem): number {
+  return b.work_id ?? b.id;
 }
