@@ -146,7 +146,9 @@ func Score(s WorkSignals, now time.Time, w Weights) Affinity {
 	if s.Views > 0 {
 		a.Parts[KindViews] = math.Min(w.ViewsScale*math.Log2(1+float64(s.Views)), w.ViewsCap)
 	}
-	if s.Dismissed {
+	// Негатив — только «не интересно» (и скрытия без причины, до 1.57);
+	// «уже читал» и «потом» вкус не отрицают.
+	if s.Dismissed && (s.DismissReason == "" || s.DismissReason == DismissNotInterested) {
 		a.Parts[KindDismissed] = w.Dismissed
 	}
 	if s.PromptNever {

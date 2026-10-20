@@ -20,6 +20,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/skriptes/skriptes/backend/internal/recsys"
 )
 
 // ErrNotFound — для get-операций.
@@ -766,7 +767,7 @@ func (s *Service) RecentViews(ctx context.Context, userID int64, limit int) ([]V
 // fb2-файлу. work_id отдаём для ссылки карточки (/works/{work_id}). cover_path
 // COALESCE'ится с обложкой любого живого издания работы — как в books.hydrateCovers,
 // чтобы у издания без своей обложки она бралась из соседнего.
-func (s *Service) ContinueReading(ctx context.Context, userID int64, limit int) ([]ContinueItem, error) {
+func (s *Service) ContinueReading(ctx context.Context, userID int64, limit int) ([]recsys.Item, error) {
 	if limit <= 0 || limit > 100 {
 		limit = 20
 	}
@@ -808,15 +809,17 @@ func (s *Service) ContinueReading(ctx context.Context, userID int64, limit int) 
 		return nil, fmt.Errorf("query continue reading: %w", err)
 	}
 	defer rows.Close()
-	out := make([]ContinueItem, 0)
+	out := make([]recsys.Item, 0)
 	for rows.Next() {
 		var (
-			it     ContinueItem
-			workID *int64
-			series *string
+			it        recsys.Item
+			workID    *int64
+			series    *string
+			fraction  float64
+			updatedAt time.Time
 		)
 		if err := rows.Scan(&it.ID, &workID, &it.Title, &it.LibID, &series,
-			&it.Fraction, &it.UpdatedAt, &it.CoverPath, &it.Authors); err != nil {
+			&fraction, &updatedAt, &it.CoverPath, &it.Authors); err != nil {
 			return nil, err
 		}
 		if workID != nil {
@@ -825,6 +828,8 @@ func (s *Service) ContinueReading(ctx context.Context, userID int64, limit int) 
 		if series != nil {
 			it.Series = *series
 		}
+		at := updatedAt
+		it.Reasons = []recsys.Reason{{Kind: recsys.ReasonInProgress, Fraction: &fraction, At: &at}}
 		out = append(out, it)
 	}
 	return out, rows.Err()
@@ -842,7 +847,7 @@ func (s *Service) ContinueReading(ctx context.Context, userID int64, limit int) 
 // (каждая со своим порогом added_at). Схлопывание по работе: одна логическая
 // книга в ленте один раз. Берём представительное издание (DISTINCT ON по
 // COALESCE(work_id, -id), внутри группы — самое свежее date_added). Скрываем deleted.
-func (s *Service) SubscriptionFeed(ctx context.Context, userID int64, limit int) ([]FeedItem, error) {
+func (s *Service) SubscriptionFeed(ctx context.Context, userID int64, limit int) ([]recsys.Item, error) {
 	if limit <= 0 || limit > 100 {
 		limit = 20
 	}
@@ -900,10 +905,10 @@ func (s *Service) SubscriptionFeed(ctx context.Context, userID int64, limit int)
 		return nil, fmt.Errorf("query subscription feed: %w", err)
 	}
 	defer rows.Close()
-	out := make([]FeedItem, 0)
+	out := make([]recsys.Item, 0)
 	for rows.Next() {
 		var (
-			it     FeedItem
+			it     recsys.Item
 			workID *int64
 			added  pgtype.Date
 			series *string
@@ -915,27 +920,96 @@ func (s *Service) SubscriptionFeed(ctx context.Context, userID int64, limit int)
 		if workID != nil {
 			it.WorkID = *workID
 		}
-		if added.Valid {
-			t := added.Time
-			it.AddedAt = &t
-		}
 		if series != nil {
 			it.Series = *series
 		}
+		it.Reasons = []recsys.Reason{}
 		out = append(out, it)
 	}
-	return out, rows.Err()
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	rows.Close()
+	if err := s.feedReasons(ctx, userID, out); err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
-// DismissFeedItem — скрыть работу из ленты «Новинки по подпискам» для юзера
-// («не интересно»). Идемпотентно (повторный вызов — no-op). Скрываем по
-// work_id: лента схлопнута по работе, иначе книга вернулась бы через другое
-// издание. Запись фильтруется в SubscriptionFeed (NOT EXISTS feed_dismissals).
-func (s *Service) DismissFeedItem(ctx context.Context, userID, workID int64) error {
+// feedReasons — почему издание в «Новинках»: подписка на автора (new_by_author,
+// по каждому подписанному автору издания) и/или на цикл (new_in_series), с датой
+// добавления книги. Тот же критерий новинки, что в SubscriptionFeed
+// (date_added после подписки) — иначе причина могла бы назвать автора, по
+// которому книга новинкой не является.
+func (s *Service) feedReasons(ctx context.Context, userID int64, items []recsys.Item) error {
+	if len(items) == 0 {
+		return nil
+	}
+	ids := make([]int64, len(items))
+	byID := make(map[int64]int, len(items))
+	for i, it := range items {
+		ids[i] = it.ID
+		byID[it.ID] = i
+	}
+	rows, err := s.pool.Query(ctx, `
+		SELECT b.id, 'author', a.id,
+		       TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)), b.date_added
+		FROM books b
+		JOIN book_authors ba ON ba.book_id = b.id
+		JOIN favorite_authors fa ON fa.author_id = ba.author_id AND fa.user_id = $1
+		JOIN authors a ON a.id = ba.author_id
+		WHERE b.id = ANY($2) AND b.date_added > fa.added_at::date
+		UNION ALL
+		SELECT b.id, 'series', ser.id, ser.title, b.date_added
+		FROM books b
+		JOIN favorite_series fs ON fs.series_id = b.series_id AND fs.user_id = $1
+		JOIN series ser ON ser.id = b.series_id
+		WHERE b.id = ANY($2) AND b.date_added > fs.added_at::date
+		ORDER BY 1, 2, 3
+	`, userID, ids)
+	if err != nil {
+		return fmt.Errorf("feed reasons: %w", err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var (
+			bookID, refID int64
+			via, name     string
+			added         pgtype.Date
+		)
+		if err := rows.Scan(&bookID, &via, &refID, &name, &added); err != nil {
+			return err
+		}
+		i, ok := byID[bookID]
+		if !ok {
+			continue
+		}
+		r := recsys.Reason{}
+		if added.Valid {
+			at := added.Time
+			r.At = &at
+		}
+		if via == "author" {
+			r.Kind, r.AuthorID, r.Author = recsys.ReasonNewByAuthor, refID, name
+		} else {
+			r.Kind, r.SeriesID, r.Series = recsys.ReasonNewInSeries, refID, name
+		}
+		items[i].Reasons = append(items[i].Reasons, r)
+	}
+	return rows.Err()
+}
+
+// DismissFeedItem — скрыть работу из ленты рекомендаций для юзера с причиной
+// («не интересно» / «уже читал» / «потом»; модель близости считает негативом
+// только первую — internal/recsys). Идемпотентно; повтор с другой причиной
+// обновляет её, дата первого скрытия остаётся. Скрываем по work_id: лента
+// схлопнута по работе, иначе книга вернулась бы через другое издание. Запись
+// фильтруется в SubscriptionFeed (NOT EXISTS feed_dismissals).
+func (s *Service) DismissFeedItem(ctx context.Context, userID, workID int64, reason recsys.DismissReason) error {
 	if _, err := s.pool.Exec(ctx, `
-		INSERT INTO feed_dismissals (user_id, work_id) VALUES ($1, $2)
-		ON CONFLICT (user_id, work_id) DO NOTHING
-	`, userID, workID); err != nil {
+		INSERT INTO feed_dismissals (user_id, work_id, reason) VALUES ($1, $2, $3)
+		ON CONFLICT (user_id, work_id) DO UPDATE SET reason = EXCLUDED.reason
+	`, userID, workID, string(reason)); err != nil {
 		return fmt.Errorf("dismiss feed item: %w", err)
 	}
 	return nil

@@ -3,24 +3,14 @@ package history
 import (
 	"context"
 	"fmt"
+	"time"
+
+	"github.com/skriptes/skriptes/backend/internal/recsys"
 )
 
 // Отложенные запросы оценки. 99.9% чтения — на Kindle, точной синхронизации
 // статуса нет, поэтому «вероятно прочитано» аппроксимируем по моменту
 // приобретения (acquired_at) + явным сигналам чтения. См. PR «rating prompts».
-
-// RateableItem — книга (work-level) в блоке «Оцените прочитанное».
-// ID — представительное издание (для on-demand обложки), WorkID — id работы
-// для ссылки на карточку.
-type RateableItem struct {
-	ID        int64    `json:"id"`
-	WorkID    int64    `json:"work_id,omitempty"`
-	Title     string   `json:"title"`
-	Authors   []string `json:"authors"`
-	Series    string   `json:"series,omitempty"`
-	LibID     string   `json:"lib_id"`
-	CoverPath string   `json:"cover_path,omitempty"`
-}
 
 // RecordAcquisition — фиксирует ПЕРВОЕ приобретение издания (Send-to-Kindle /
 // скачивание). acquired_at ставится один раз (COALESCE — самое раннее не
@@ -49,7 +39,7 @@ func (s *Service) RecordAcquisition(ctx context.Context, userID, bookID int64) e
 //
 // Исключаем: уже оценённые; скрытые 'never' (бесповоротно — «не буду оценивать»);
 // 'snooze' (пока snoozed_until в будущем). read_signal сортируется выше отложенных.
-func (s *Service) RateableWorks(ctx context.Context, userID int64, delayDays, limit int) ([]RateableItem, error) {
+func (s *Service) RateableWorks(ctx context.Context, userID int64, delayDays, limit int) ([]recsys.Item, error) {
 	if limit <= 0 || limit > 100 {
 		limit = 20
 	}
@@ -63,6 +53,7 @@ func (s *Service) RateableWorks(ctx context.Context, userID int64, delayDays, li
 		wr AS (
 			SELECT b.work_id AS work_id,
 			       min(r.acquired_at) AS acquired_at,
+			       max(r.completed_at) AS completed_at,
 			       bool_or(r.completed_at IS NOT NULL) AS completed,
 			       max(COALESCE(r.fraction, 0)) AS max_fraction
 			FROM reads r
@@ -71,7 +62,7 @@ func (s *Service) RateableWorks(ctx context.Context, userID int64, delayDays, li
 			GROUP BY b.work_id
 		),
 		elig AS (
-			SELECT wr.work_id, wr.acquired_at,
+			SELECT wr.work_id, wr.acquired_at, wr.completed_at,
 			       (wr.completed OR wr.max_fraction >= 0.95) AS read_signal
 			FROM wr
 			WHERE NOT EXISTS (
@@ -94,13 +85,13 @@ func (s *Service) RateableWorks(ctx context.Context, userID int64, delayDays, li
 			LIMIT $3
 		),
 		rep AS (
-			SELECT e.work_id, e.read_signal, e.acquired_at,
+			SELECT e.work_id, e.read_signal, e.acquired_at, e.completed_at,
 			       (SELECT bb.id FROM books bb
 			        WHERE bb.work_id = e.work_id AND bb.deleted = false
 			        ORDER BY bb.id LIMIT 1) AS rep_id
 			FROM elig e
 		)
-		SELECT rep.work_id, b.id, b.title, b.lib_id, ser.title,
+		SELECT rep.work_id, rep.read_signal, rep.acquired_at, rep.completed_at, b.id, b.title, b.lib_id, ser.title,
 		       COALESCE(b.cover_path, (
 		           SELECT bb.cover_path FROM books bb
 		           WHERE bb.work_id = rep.work_id AND bb.deleted = false
@@ -116,21 +107,24 @@ func (s *Service) RateableWorks(ctx context.Context, userID int64, delayDays, li
 		LEFT JOIN series ser ON ser.id = b.series_id AND ser.kind IS NULL -- подпись — только цикл (#468)
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a ON a.id = ba.author_id
-		GROUP BY rep.work_id, rep.read_signal, rep.acquired_at, b.id, b.title, b.lib_id, ser.title, b.cover_path
+		GROUP BY rep.work_id, rep.read_signal, rep.acquired_at, rep.completed_at, b.id, b.title, b.lib_id, ser.title, b.cover_path
 		ORDER BY rep.read_signal DESC, rep.acquired_at DESC NULLS LAST
 	`, userID, delayDays, limit)
 	if err != nil {
 		return nil, fmt.Errorf("query rateable works: %w", err)
 	}
 	defer rows.Close()
-	out := make([]RateableItem, 0)
+	out := make([]recsys.Item, 0)
 	for rows.Next() {
 		var (
-			it     RateableItem
-			workID *int64
-			series *string
+			it          recsys.Item
+			workID      *int64
+			readSignal  bool
+			acquiredAt  *time.Time
+			completedAt *time.Time
+			series      *string
 		)
-		if err := rows.Scan(&workID, &it.ID, &it.Title, &it.LibID, &series, &it.CoverPath, &it.Authors); err != nil {
+		if err := rows.Scan(&workID, &readSignal, &acquiredAt, &completedAt, &it.ID, &it.Title, &it.LibID, &series, &it.CoverPath, &it.Authors); err != nil {
 			return nil, err
 		}
 		if workID != nil {
@@ -138,6 +132,13 @@ func (s *Service) RateableWorks(ctx context.Context, userID int64, delayDays, li
 		}
 		if series != nil {
 			it.Series = *series
+		}
+		// Причина: дочитано (или почти) — сильнее, чем «приобретено давно».
+		switch {
+		case readSignal:
+			it.Reasons = []recsys.Reason{{Kind: recsys.ReasonFinished, At: completedAt}}
+		default:
+			it.Reasons = []recsys.Reason{{Kind: recsys.ReasonAcquired, At: acquiredAt}}
 		}
 		out = append(out, it)
 	}

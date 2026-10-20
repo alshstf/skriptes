@@ -87,37 +87,7 @@ func isForeignKeyViolation(err error) bool {
 }
 
 // ── Отложенные запросы оценки («Оцените прочитанное») ──────────────
-
-// handleRateablePrompts — GET /api/me/rating-prompts/feed?limit=
-// Книги, которые юзер вероятно прочитал и ещё не оценил (для блока Главной).
-// Если запросы оценки выключены в профиле — отдаём пустой список.
-func handleRateablePrompts(hist HistoryDeps, set SettingsDeps) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		u, ok := UserFromContext(r.Context())
-		if !ok {
-			writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "not authenticated"})
-			return
-		}
-		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
-		defer cancel()
-		cfg, err := set.Store.UserRatingPromptConfig(ctx, u.ID)
-		if err != nil {
-			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "read settings failed"})
-			return
-		}
-		if !cfg.Enabled {
-			writeJSON(w, http.StatusOK, map[string]any{"items": []history.RateableItem{}})
-			return
-		}
-		limit := parseIntOr(r.URL.Query().Get("limit"), 12)
-		items, err := hist.Service.RateableWorks(ctx, u.ID, cfg.DelayDays, limit)
-		if err != nil {
-			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
-			return
-		}
-		writeJSON(w, http.StatusOK, map[string]any{"items": items})
-	}
-}
+// Сама лента — секция rate_prompts в recs.go (GET /api/me/recommendations).
 
 // handleDismissRatingPrompt — POST /api/works/{id}/rating-prompt/dismiss.
 // «Не буду оценивать»: скрыть, пока не появится явный сигнал прочтения.

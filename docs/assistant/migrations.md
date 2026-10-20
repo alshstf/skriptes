@@ -86,3 +86,9 @@ TTL not_found/error из настроек, found — 180 дней); год — �
 пакета датасета (`alshstf/skriptes-bio`, до 1.55.0 — `internal/bio/data`; bio.Author без evidence; сев на старте при смене версии датасета, ключ `app_settings.bio_dataset_version`)
 и `author_event_hides(qid, key, hidden_at, hidden_by)` — админское «скрыть веху», переживает пересев. Связь с `authors` —
 только через `authors.ext_ids->>'wd_qid'` на чтении.
+
+## 0065_feed_dismissal_reason
+
+Причина скрытия из ленты рекомендаций: `feed_dismissals.reason` (`not_interested` / `already_read` / `later`,
+NULL у скрытий до 1.57 = «не интересно»). Модель близости (`internal/recsys`) считает негативом только
+«не интересно». План recsys/01, задача 1.3.

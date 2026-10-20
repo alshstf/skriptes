@@ -86,3 +86,28 @@ export function pluralRu(n: number, forms: readonly [string, string, string]): s
 export function pluralBooks(n: number): string {
   return pluralRu(n, ['книга', 'книги', 'книг']);
 }
+
+/**
+ * formatRelativeDays — «сегодня» / «вчера» / «3 дня назад» / «2 недели назад» /
+ * «4 месяца назад» / «2 года назад» по календарным дням (локальная полночь).
+ * Будущее (рассинхрон часов) — «сегодня».
+ */
+export function formatRelativeDays(iso: string, now = new Date()): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return '';
+  const startOf = (x: Date) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
+  const days = Math.floor((startOf(now) - startOf(d)) / 86_400_000);
+  if (days <= 0) return 'сегодня';
+  if (days === 1) return 'вчера';
+  if (days < 7) return `${days} ${pluralRu(days, ['день', 'дня', 'дней'])} назад`;
+  if (days < 30) {
+    const w = Math.floor(days / 7);
+    return `${w} ${pluralRu(w, ['неделю', 'недели', 'недель'])} назад`;
+  }
+  if (days < 365) {
+    const m = Math.floor(days / 30);
+    return `${m} ${pluralRu(m, ['месяц', 'месяца', 'месяцев'])} назад`;
+  }
+  const y = Math.floor(days / 365);
+  return `${y} ${pluralRu(y, ['год', 'года', 'лет'])} назад`;
+}
