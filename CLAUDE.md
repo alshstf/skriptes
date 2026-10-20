@@ -151,6 +151,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 | Маршруты фронта, layout | `frontend/src/router.tsx`, `components/Layout.tsx`, `MainNav.tsx` |
 | Поиск-подсказки (Cmd+K, hero) | `components/CommandPalette.tsx`, `lib/suggest.ts`; авторы/серии — `catalog/suggest.go` |
 | Главная | `pages/HomePage.tsx`, `lib/home.ts`, `history/service.go` |
+| Рекомендации: близость пользователь × работа, профиль вкуса | `backend/internal/recsys/` (`BuildProfile`, веса — `DefaultWeights`; план — `~/projects/plans/skriptes/recsys-roadmap.md`) |
 | Авторы (список, фильтры, известность) | `pages/AuthorsPage.tsx`, `catalog/authors_list.go`, `catalog/author_stats.go`, `importer/author_renown.go` |
 | Премии | `internal/awards/`, `api/awards.go`, `pages/AwardsPage.tsx`, `components/AwardBadges.tsx` |
 | Жанры, полки, подборки, умные полки | `pages/ShelvesPage.tsx`, `internal/collections/` (`smart.go`), `books/presets.go`, `components/SmartShelves.tsx` |
