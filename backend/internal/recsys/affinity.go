@@ -243,6 +243,12 @@ func BuildProfile(ctx context.Context, q Querier, userID int64, now time.Time, w
 	if err != nil {
 		return nil, fmt.Errorf("recsys: load signals: %w", err)
 	}
+	return ProfileFromSignals(ctx, q, userID, signals, now, w)
+}
+
+// ProfileFromSignals — то же от готовых сигналов (харнесс оценки прячет часть
+// сигналов до подсчёта — leave-last-out, cmd/recseval).
+func ProfileFromSignals(ctx context.Context, q Querier, userID int64, signals map[int64]*WorkSignals, now time.Time, w Weights) (*Profile, error) {
 	p := &Profile{
 		UserID:  userID,
 		Works:   make(map[int64]Affinity, len(signals)),

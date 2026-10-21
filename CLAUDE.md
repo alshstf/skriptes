@@ -130,6 +130,9 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     `verify` правит механические огрехи модели с флагом, факты — только отбраковка. Модель массовых прогонов — Sonnet 5.5
     medium (`-model sonnet -effort medium`); статьи ru + en + язык оригинала. Покрытие — 1218 авторов (золотые 8 + ~1200
     самых известных; пачки по 250 — план). План — `~/projects/plans/skriptes/bio-timeline-v3-plan.md`.
+26. **Рекомендации — по работам (#399) и с причиной:** секция ленты = `recsys.Item` + `Reason`; кандидаты — через те же
+    исключения, что каталог; сигналы вкуса — только `recsys.LoadSignals`/`Score`; новый рекомендатель — `recsys.Recommender`,
+    приёмка — `cmd/recseval`. Персона поиска пока отдельно (перевод — фаза 3.5).
 
 ## Где что искать (коротко; подробно — `docs/assistant/code-map.md`)
 
@@ -151,7 +154,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 | Маршруты фронта, layout | `frontend/src/router.tsx`, `components/Layout.tsx`, `MainNav.tsx` |
 | Поиск-подсказки (Cmd+K, hero) | `components/CommandPalette.tsx`, `lib/suggest.ts`; авторы/серии — `catalog/suggest.go` |
 | Главная | `pages/HomePage.tsx`, `lib/home.ts`, `history/service.go` |
-| Рекомендации: лента Главной с причинами, близость пользователь × работа | `backend/internal/recsys/` (контракт `Item`/`Reason`, `BuildProfile`, веса — `DefaultWeights`), `api/recs.go` (`GET /me/recommendations?section=`), фронт — `lib/recs.ts`, `lib/recReasons.ts`, `components/Rec*.tsx`; план — `~/projects/plans/skriptes/recsys-roadmap.md` |
+| Рекомендации: лента Главной с причинами, близость пользователь × работа | `backend/internal/recsys/` (контракт `Item`/`Reason`, `BuildProfile`, веса — `DefaultWeights`), `api/recs.go` (`GET /me/recommendations?section=`), фронт — `lib/recs.ts`, `lib/recReasons.ts`, `components/Rec*.tsx`; харнесс оценки — `cmd/recseval` (только чтение, можно на проде); план — `~/projects/plans/skriptes/recsys-roadmap.md` |
 | Авторы (список, фильтры, известность) | `pages/AuthorsPage.tsx`, `catalog/authors_list.go`, `catalog/author_stats.go`, `importer/author_renown.go` |
 | Премии | `internal/awards/`, `api/awards.go`, `pages/AwardsPage.tsx`, `components/AwardBadges.tsx` |
 | Жанры, полки, подборки, умные полки | `pages/ShelvesPage.tsx`, `internal/collections/` (`smart.go`), `books/presets.go`, `components/SmartShelves.tsx` |
