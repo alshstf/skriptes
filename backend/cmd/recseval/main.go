@@ -6,7 +6,7 @@
 // рекомендаций вне топ-5 % известности). Только чтение: ни БД, ни индекс не
 // меняются — можно гонять на проде (docker compose exec -T backend recseval).
 //
-//	recseval [-k 3] [-n 50] [-users 1,2] [-min-positives 4] [-seed 1] [-out results.jsonl] [-sanity sanity.csv]
+//	recseval [-k 3] [-n 50] [-users 1,2] [-min-positives 4] [-seed 1] [-classics] [-out results.jsonl] [-sanity sanity.csv]
 //
 // DSN и Meili — из окружения бекенда (SKRIPTES_DATABASE_URL, SKRIPTES_MEILI_*).
 // -out — строка JSON на пару (пользователь, рекомендатель): спрятанное, ранги,
@@ -64,6 +64,7 @@ func run() error {
 	seed := flag.Int64("seed", 1, "seed бейзлайна «случайное»")
 	out := flag.String("out", "", "JSONL с результатами по пользователям")
 	sanity := flag.String("sanity", "", "CSV user_id,expected_work_id,label — sanity-прогон без прятанья")
+	classics := flag.Bool("classics", false, "пересчитать пул «забытой классики» перед прогоном (на проде ~1–2 мин); без него правило forgotten_classic молчит")
 	flag.Parse()
 	if *minPos <= 0 {
 		*minPos = *k + 1
@@ -82,6 +83,17 @@ func run() error {
 	defer pool.Close()
 	meili := meilisearch.New(cfg.MeiliURL, meilisearch.WithAPIKey(cfg.MeiliAPIKey))
 	bs := books.New(pool, meili, nil)
+
+	// Пул «забытой классики» живёт в процессе backend (фоновый RefreshLoop);
+	// у харнесса — свой процесс и пустой пул, пока не пересчитать здесь.
+	if *classics {
+		started := time.Now()
+		n, err := recsys.DefaultClassics.Refresh(ctx, pool, time.Now())
+		if err != nil {
+			return err
+		}
+		fmt.Fprintf(os.Stderr, "пул «забытой классики»: %d работ за %s\n", n, time.Since(started).Round(time.Second))
+	}
 
 	recs := []recsys.Recommender{
 		recsys.PopularityRecommender{Top: bs.TopPopularWorkIDs},
