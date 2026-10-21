@@ -7,16 +7,17 @@ import (
 	"time"
 
 	"github.com/skriptes/skriptes/backend/internal/recsys"
+	"github.com/skriptes/skriptes/backend/internal/settings"
 )
 
 // Лента рекомендаций (план recsys/01, задача 1.3): один контракт для всех
 // секций Главной — GET /api/me/recommendations?section=<kind>&limit=N →
 // recsys.Section {section, items: [recsys.Item{…, reasons}]}. Секции —
-// закрытый список recsys.SectionKind; новые секции (фаза 2) добавляются
-// в sectionProviders, фронт собирает порядок сам (pages/HomePage.tsx).
+// закрытый список recsys.SectionKind; секции правил фазы 2 (recsys.Rules)
+// монтируются из RecsDeps.Feed, фронт собирает порядок сам (pages/HomePage.tsx).
 
 // handleRecommendations — GET /api/me/recommendations?section=&limit=
-func handleRecommendations(hist HistoryDeps, set SettingsDeps) http.HandlerFunc {
+func handleRecommendations(hist HistoryDeps, set SettingsDeps, content ContentDeps, recs RecsDeps) http.HandlerFunc {
 	type provider func(ctx context.Context, userID int64, limit int) ([]recsys.Item, error)
 	providers := map[recsys.SectionKind]provider{
 		recsys.SectionContinueReading:  hist.Service.ContinueReading,
@@ -34,6 +35,21 @@ func handleRecommendations(hist HistoryDeps, set SettingsDeps) http.HandlerFunc 
 			}
 			return hist.Service.RateableWorks(ctx, userID, cfg.DelayDays, limit)
 		},
+	}
+	// Секции правил (recsys/02): кандидаты правила → карточки с учётом
+	// скрытого у пользователя (жанры/языки/сборники — те же исключения, что
+	// в каталоге, грабля 14).
+	if recs.Feed != nil {
+		for _, rule := range recsys.Rules {
+			kind := rule.Section()
+			providers[kind] = func(ctx context.Context, userID int64, limit int) ([]recsys.Item, error) {
+				var ex recsys.Exclusions
+				if content.Resolver != nil {
+					ex.Genres, ex.Langs, ex.HideCompilations = content.Resolver.Exclusions(ctx, userID)
+				}
+				return recs.Feed.Section(ctx, kind, userID, ex, limit)
+			}
+		}
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		u, ok := UserFromContext(r.Context())
@@ -89,5 +105,60 @@ func handleDismissFeedItem(d HistoryDeps) http.HandlerFunc {
 			return
 		}
 		writeJSON(w, http.StatusOK, map[string]bool{"dismissed": true})
+	}
+}
+
+// handleGetMeHomeFeed — GET /api/me/home-feed: настройки ленты Главной
+// (свёрнутые секции, recsys/02 2.9).
+func handleGetMeHomeFeed(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		u, ok := UserFromContext(r.Context())
+		if !ok {
+			writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "not authenticated"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+		cfg, err := d.Store.UserHomeFeed(ctx, u.ID)
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "read settings failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, cfg)
+	}
+}
+
+// handleUpdateMeHomeFeed — PUT /api/me/home-feed {collapsed: [kind…]}.
+// Неизвестная секция — 400 (список секций — recsys.AllSections).
+func handleUpdateMeHomeFeed(d SettingsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		u, ok := UserFromContext(r.Context())
+		if !ok {
+			writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "not authenticated"})
+			return
+		}
+		var cfg settings.HomeFeedConfig
+		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 4096)).Decode(&cfg); err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid body"})
+			return
+		}
+		for _, s := range cfg.Collapsed {
+			if !recsys.IsSectionKind(s) {
+				writeJSON(w, http.StatusBadRequest, map[string]string{"error": "unknown section"})
+				return
+			}
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+		if err := d.Store.SetUserHomeFeed(ctx, u.ID, cfg); err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "save failed"})
+			return
+		}
+		saved, err := d.Store.UserHomeFeed(ctx, u.ID)
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "read settings failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, saved)
 	}
 }

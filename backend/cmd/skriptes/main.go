@@ -729,7 +729,7 @@ func run() error {
 		Collections: api.CollectionsDeps{Service: collectionsSvc},
 		Download:    api.DownloadDeps{Books: booksSvc, Converter: conv, Limiter: downloadLimiter},
 		History:     api.HistoryDeps{Service: historySvc},
-		Recs:        api.RecsDeps{SearchLog: searchLog},
+		Recs:        api.RecsDeps{SearchLog: searchLog, Feed: recsys.NewFeed(pool)},
 		Kindle: api.KindleDeps{
 			Service:   kindleSvc,
 			Email:     emailSender,

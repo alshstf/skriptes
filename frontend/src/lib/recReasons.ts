@@ -38,6 +38,17 @@ export function reasonParts(r: RecReason, now = new Date()): ReasonPart[] {
       return [{ text: r.at ? `Дочитали ${formatRelativeDays(r.at, now)}` : 'Дочитали' }];
     case 'searched_appeared':
       return [{ text: `Вы искали «${r.query}»${when(r.at)}` }];
+    case 'next_in_series':
+      // «Дочитали «Том 2» · № 3 в цикле Ведьмак» — основание и место в цикле.
+      return [
+        { text: `Дочитали «${r.title}» · ${r.ser_no ? `№ ${r.ser_no} в цикле ` : 'дальше в цикле '}` },
+        { text: r.series, link: { to: '/series/$id', id: r.series_id } },
+      ];
+    case 'author_you_finished':
+      return [
+        { text: `Дочитали «${r.title}» · автор: ` },
+        { text: r.author, link: { to: '/authors/$id', id: r.author_id } },
+      ];
     default:
       return [];
   }

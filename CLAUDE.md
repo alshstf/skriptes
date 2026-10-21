@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.57.0**.
+конвертируются на лету через fb2cng. Текущая версия — **1.58.0**.
 
 ## Рабочее окружение
 
@@ -154,7 +154,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 | Маршруты фронта, layout | `frontend/src/router.tsx`, `components/Layout.tsx`, `MainNav.tsx` |
 | Поиск-подсказки (Cmd+K, hero) | `components/CommandPalette.tsx`, `lib/suggest.ts`; авторы/серии — `catalog/suggest.go` |
 | Главная | `pages/HomePage.tsx`, `lib/home.ts`, `history/service.go` |
-| Рекомендации: лента Главной с причинами, близость пользователь × работа | `backend/internal/recsys/` (контракт `Item`/`Reason`, `BuildProfile`, веса — `DefaultWeights`), `api/recs.go` (`GET /me/recommendations?section=`), фронт — `lib/recs.ts`, `lib/recReasons.ts`, `components/Rec*.tsx`; харнесс оценки — `cmd/recseval` (только чтение, можно на проде); план — `~/projects/plans/skriptes/recsys-roadmap.md` |
+| Рекомендации: лента Главной с причинами, близость пользователь × работа, правила | `backend/internal/recsys/` (контракт `Item`/`Reason`, `BuildProfile`, веса — `DefaultWeights`; правила фазы 2 — `rules.go` (`Rule`, `Rules`, `Profile.Engaged`), `rule_*.go`, карточки с исключениями — `hydrate.go`, `feed.go`), `api/recs.go` (`GET /me/recommendations?section=`, `GET/PUT /me/home-feed`), фронт — `lib/recs.ts` (`HOME_SECTIONS`), `lib/recReasons.ts`, `lib/homeFeed.ts`, `components/Rec*.tsx`, `Shelf.tsx`; харнесс оценки — `cmd/recseval` (только чтение, можно на проде); план — `~/projects/plans/skriptes/recsys-roadmap.md` |
 | Авторы (список, фильтры, известность) | `pages/AuthorsPage.tsx`, `catalog/authors_list.go`, `catalog/author_stats.go`, `importer/author_renown.go` |
 | Премии | `internal/awards/`, `api/awards.go`, `pages/AwardsPage.tsx`, `components/AwardBadges.tsx` |
 | Жанры, полки, подборки, умные полки | `pages/ShelvesPage.tsx`, `internal/collections/` (`smart.go`), `books/presets.go`, `components/SmartShelves.tsx` |
