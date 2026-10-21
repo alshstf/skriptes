@@ -505,7 +505,7 @@ Backend дёргает следующие открытые API — лениво 
 docker compose exec -T backend recseval -k 3 -n 50
 ```
 
-`-out results.jsonl` — подробности по пользователям (содержит их id — не публикуйте), `-sanity sanity.csv` (`user_id,expected_work_id,label`) — проверка «после X ожидаю Y» без прятанья.
+`-out results.jsonl` — подробности по пользователям (содержит их id — не публикуйте), `-sanity sanity.csv` (`user_id,expected_work_id,label`) — проверка «после X ожидаю Y» без прятанья, `-classics` — пересчитать пул «забытой классики» перед прогоном (иначе это правило в харнессе молчит; на большой библиотеке ~1–2 мин).
 
 ### Датасет био-таймлайна и `biogen`
 
