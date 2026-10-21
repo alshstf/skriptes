@@ -243,3 +243,63 @@ test('home: пустая лента — подсказка новому поль
   await expect(page.getByRole('heading', { name: 'Новинки по подпискам' })).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'Открыть каталог' })).toHaveAttribute('href', '/books');
 });
+
+// Второй минор фазы 2 (2.3–2.5): секции «Отложенное, к которому доросли»,
+// «Забытая классика», «Перечитать» — после подписок, перед «Оцените прочитанное».
+test('home: секции брошенного, классики и перечитывания', async ({ mockedPage: page }) => {
+  const DROPPED: Item = {
+    id: 31,
+    work_id: 1031,
+    title: 'Брошенная книга',
+    authors: ['Автор Полюбленный'],
+    lib_id: 'L31',
+    reasons: [
+      {
+        kind: 'dropped_then_loved_author',
+        author_id: 8,
+        author: 'Автор Полюбленный',
+        count: 2,
+        at: new Date(Date.now() - 200 * 86_400_000).toISOString(),
+      },
+    ],
+  };
+  const CLASSIC: Item = {
+    id: 32,
+    work_id: 1032,
+    title: 'Двенадцать стульев',
+    authors: ['Ильф Илья'],
+    lib_id: 'L32',
+    reasons: [{ kind: 'forgotten_classic', year: 1927, rating: 9.29, source: 'fantlab' }],
+  };
+  const REREAD: Item = {
+    id: 33,
+    work_id: 1033,
+    title: 'Любимая книга',
+    authors: ['Автор Любимый'],
+    lib_id: 'L33',
+    reasons: [{ kind: 'reread', at: new Date(Date.now() - 4 * 365 * 86_400_000).toISOString() }],
+  };
+  mockHome(
+    page,
+    { ref: [FEED] },
+    { sections: { dropped_then_loved_author: [DROPPED], forgotten_classic: [CLASSIC], reread: [REREAD] } },
+  );
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Забытая классика' })).toBeVisible({ timeout: 10_000 });
+  const titles = [
+    'Новинки по подпискам',
+    'Отложенное, к которому доросли',
+    'Забытая классика',
+    'Перечитать',
+    'Оцените прочитанное',
+  ];
+  const headings = (await page.getByRole('heading', { level: 2 }).allTextContents()).filter((h) =>
+    titles.includes(h),
+  );
+  expect(headings).toEqual(titles.slice(0, 4));
+  const dropped = page.getByTestId('rec-reason').filter({ hasText: 'с тех пор 2 книги автора:' });
+  await expect(dropped).toBeVisible();
+  await expect(dropped.getByRole('link', { name: 'Автор Полюбленный' })).toHaveAttribute('href', '/authors/8');
+  await expect(page.getByText('1927 год · Фантлаб 9.3 · здесь ещё никто не читал')).toBeVisible();
+  await expect(page.getByText(/Поставили 5 · читали 4 года назад · перечитать\?/)).toBeVisible();
+});

@@ -31,7 +31,8 @@ import { pluralBooks } from '@/lib/format';
  * каждой карточки — причина «почему это здесь»), порядок секций —
  * HOME_SECTIONS (план recsys/02, 2.9): «Продолжить чтение», «Появилось то, что
  * вы искали», «Дальше в цикле», «Автор, которого вы дочитали», «Новинки по
- * подпискам», «Оцените прочитанное». Пустые секции не рендерятся, любую можно
+ * подпискам», «Отложенное, к которому доросли», «Забытая классика»,
+ * «Перечитать», «Оцените прочитанное». Пустые секции не рендерятся, любую можно
  * свернуть (хранится в user_settings); пустая лента целиком — подсказка новому
  * пользователю.
  *
@@ -298,6 +299,9 @@ const SECTION_META: Record<RecSectionKind, { title: string; card: (item: RecItem
   next_in_series: { title: 'Дальше в цикле', card: (it) => <FeedCard item={it} /> },
   author_you_finished: { title: 'Автор, которого вы дочитали', card: (it) => <FeedCard item={it} /> },
   subscriptions: { title: 'Новинки по подпискам', card: (it) => <FeedCard item={it} /> },
+  dropped_then_loved_author: { title: 'Отложенное, к которому доросли', card: (it) => <FeedCard item={it} /> },
+  forgotten_classic: { title: 'Забытая классика', card: (it) => <FeedCard item={it} /> },
+  reread: { title: 'Перечитать', card: (it) => <FeedCard item={it} /> },
   rate_prompts: { title: 'Оцените прочитанное', card: (it) => <RateableCard item={it} /> },
 };
 
@@ -345,7 +349,8 @@ function EmptyFeed() {
       <h2 className="text-lg font-semibold tracking-tight">Рекомендации</h2>
       <Callout icon={<Sparkles className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
         Пока нечего рекомендовать. Отметьте прочитанные книги и поставьте им оценки — лента соберётся
-        сама: что дальше в цикле, что ещё у понравившихся авторов, новинки по подпискам.{' '}
+        сама: что дальше в цикле, что ещё у понравившихся авторов, забытая классика, новинки по
+        подпискам.{' '}
         <Link to="/books" className="underline underline-offset-2">
           Открыть каталог
         </Link>

@@ -18,14 +18,18 @@ const (
 	SectionRatePrompts      SectionKind = "rate_prompts"      // «оцените прочитанное»
 	SectionSearchedAppeared SectionKind = "searched_appeared" // появилось то, что искали
 	// Правила фазы 2 (rules.go): секция = правило.
-	SectionNextInSeries   SectionKind = "next_in_series"      // дальше в цикле
-	SectionAuthorFinished SectionKind = "author_you_finished" // автор, которого дочитали
+	SectionNextInSeries     SectionKind = "next_in_series"            // дальше в цикле
+	SectionAuthorFinished   SectionKind = "author_you_finished"       // автор, которого дочитали
+	SectionDropped          SectionKind = "dropped_then_loved_author" // брошенное, к чему дорос
+	SectionForgottenClassic SectionKind = "forgotten_classic"         // забытая классика
+	SectionReread           SectionKind = "reread"                    // перечитать
 )
 
-// AllSections — все секции ленты (для проверки настроек сворачивания).
+// AllSections — все секции ленты в порядке Главной (для проверки настроек
+// сворачивания; фронт держит тот же порядок в HOME_SECTIONS).
 var AllSections = []SectionKind{
 	SectionContinueReading, SectionSearchedAppeared, SectionNextInSeries, SectionAuthorFinished,
-	SectionSubscriptions, SectionRatePrompts,
+	SectionSubscriptions, SectionDropped, SectionForgottenClassic, SectionReread, SectionRatePrompts,
 }
 
 // IsSectionKind — s — известная секция ленты.
@@ -59,6 +63,12 @@ const (
 	ReasonNextInSeries ReasonKind = "next_in_series"
 	// ReasonAuthorFinished — прочитали WorkID/Title (At) автора AuthorID/Author; это ещё его работа.
 	ReasonAuthorFinished ReasonKind = "author_you_finished"
+	// ReasonDropped — бросили At, с тех пор полюбили Count работ автора AuthorID/Author.
+	ReasonDropped ReasonKind = "dropped_then_loved_author"
+	// ReasonReread — оценили на 5, прочитали At, с тех пор не открывали.
+	ReasonReread ReasonKind = "reread"
+	// ReasonForgottenClassic — Year написания, внешний Rating из Source (fantlab | librate), на инстансе никто не открывал.
+	ReasonForgottenClassic ReasonKind = "forgotten_classic"
 )
 
 // Reason — причина рекомендации: вид и параметры. Поля — плоские и
@@ -80,6 +90,13 @@ type Reason struct {
 	Title  string `json:"title,omitempty"`
 	// SerNo — номер рекомендуемой книги в цикле (next_in_series; 0 — нет).
 	SerNo int `json:"ser_no,omitempty"`
+	// Count — сколько (dropped_then_loved_author: полюбленных работ автора).
+	Count int `json:"count,omitempty"`
+	// Year — год написания (forgotten_classic).
+	Year int `json:"year,omitempty"`
+	// Rating/Source — внешний рейтинг и его источник (forgotten_classic: "fantlab" — средняя 1–10, "librate" — 1–5).
+	Rating float64 `json:"rating,omitempty"`
+	Source string  `json:"source,omitempty"`
 }
 
 // Item — карточка ленты. ID — представительное ИЗДАНИЕ (on-demand обложка,

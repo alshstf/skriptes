@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"sort"
 	"time"
+
+	"github.com/jackc/pgx/v5"
 )
 
 // Правила фазы 2 (план recsys/02): детерминированные рекомендации на
@@ -31,7 +33,9 @@ type Rule interface {
 }
 
 // Rules — правила в порядке секций ленты (pages/HomePage.tsx держит тот же).
-var Rules = []Rule{NextInSeries{}, AuthorFinished{}}
+// «Забытая классика» читает пул DefaultClassics — его наполняет фоновый
+// RefreshLoop (cmd/skriptes/main.go).
+var Rules = []Rule{NextInSeries{}, AuthorFinished{}, DroppedThenLoved{}, ForgottenClassic{Pool: DefaultClassics}, Reread{}}
 
 // RuleFor — правило секции kind.
 func RuleFor(kind SectionKind) (Rule, bool) {
@@ -86,6 +90,28 @@ func (p *Profile) readWorks() []int64 {
 	}
 	sort.Slice(out, func(i, j int) bool { return out[i] < out[j] })
 	return out
+}
+
+// loadAuthorNames — имена авторов ids в names; служебные («Коллектив
+// авторов») и скрытые на инстансе — не попадают (их не предлагаем).
+func loadAuthorNames(ctx context.Context, q Querier, ids []int64, names map[int64]string) error {
+	if len(ids) == 0 {
+		return nil
+	}
+	return each(ctx, q, `
+		SELECT id, TRIM(CONCAT_WS(' ', last_name, first_name, middle_name))
+		FROM authors WHERE id = ANY($1) AND NOT is_service AND NOT instance_hidden`,
+		[]any{ids}, func(rows pgx.Rows) error {
+			var (
+				id   int64
+				name string
+			)
+			if err := rows.Scan(&id, &name); err != nil {
+				return err
+			}
+			names[id] = name
+			return nil
+		})
 }
 
 // sortCandidates — по убыванию Score, при равенстве — по id работы.

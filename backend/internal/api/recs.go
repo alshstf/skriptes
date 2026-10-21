@@ -75,6 +75,40 @@ func handleRecommendations(hist HistoryDeps, set SettingsDeps, content ContentDe
 	}
 }
 
+// handleRelatedRecommendations — GET /api/me/recommendations/related?work_id=&limit=:
+// «раз понравилось — вот следующая» (recsys/02, 2.8): до limit (по умолчанию 3)
+// карточек правил, основание которых — работа work_id. Без Feed — пусто.
+func handleRelatedRecommendations(content ContentDeps, recs RecsDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		u, ok := UserFromContext(r.Context())
+		if !ok {
+			writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "not authenticated"})
+			return
+		}
+		workID := int64(parseIntOr(r.URL.Query().Get("work_id"), 0))
+		if workID <= 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid work_id"})
+			return
+		}
+		limit := parseIntOr(r.URL.Query().Get("limit"), 3)
+		items := []recsys.Item{}
+		if recs.Feed != nil {
+			ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+			defer cancel()
+			var ex recsys.Exclusions
+			if content.Resolver != nil {
+				ex.Genres, ex.Langs, ex.HideCompilations = content.Resolver.Exclusions(ctx, u.ID)
+			}
+			var err error
+			if items, err = recs.Feed.Related(ctx, u.ID, workID, ex, limit); err != nil {
+				writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
+				return
+			}
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"work_id": workID, "items": items})
+	}
+}
+
 // handleDismissFeedItem — POST /api/me/feed/dismiss {work_id, reason?}: скрыть
 // работу из ленты рекомендаций. reason — not_interested (по умолчанию) |
 // already_read | later; неизвестная — 400.

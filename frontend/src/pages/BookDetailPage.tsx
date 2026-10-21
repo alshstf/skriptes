@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link, useParams } from '@tanstack/react-router';
 import { BookText, BookOpen, BookHeart, Check, ChevronRight, X, Library, Globe } from 'lucide-react';
 import { AuthorsEditor } from '@/components/AuthorsEditor';
@@ -29,6 +30,7 @@ import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
 import { RatingControl } from '@/components/RatingControl';
 import { useRateBook } from '@/lib/ratings';
+import { AfterRatingRecs } from '@/components/AfterRatingRecs';
 import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
 import { formatBytes, pluralRu, translationLine, formatReadingTime } from '@/lib/format';
 import { SendToKindleButton } from '@/components/SendToKindleButton';
@@ -581,16 +583,28 @@ function CardSignalRow({ book }: { book: Book }) {
  * блок). cardKey — ключ кэша открытой карточки для оптимистичного обновления.
  */
 function MyBlock({ book, cardKey }: { book: Book; cardKey: (string | number)[] }) {
-  const rate = useRateBook(book.work_id ?? book.id, cardKey);
+  const workId = book.work_id ?? book.id;
+  const rate = useRateBook(workId, cardKey);
   const toggle = useToggleRead();
   const value = book.user_rating ?? 0;
   const isRead = book.is_read ?? false;
+  // «Раз понравилось — вот следующая» (recsys/02, 2.8): после оценки ≥ 4 на ЭТОЙ
+  // карточке показываем до трёх карточек правил; негатив — ничего (фаза 3).
+  const [justLiked, setJustLiked] = useState(false);
   return (
-    <div className="flex flex-wrap items-center gap-x-6 gap-y-3 rounded-md border border-border bg-muted/30 px-3 py-2.5">
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">Ваша оценка:</span>
-        <RatingControl value={value} disabled={rate.isPending} onChange={(n) => rate.mutate(n)} />
-      </div>
+    <div className="space-y-3 rounded-md border border-border bg-muted/30 px-3 py-2.5">
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">Ваша оценка:</span>
+          <RatingControl
+            value={value}
+            disabled={rate.isPending}
+            onChange={(n) => {
+              setJustLiked((n ?? 0) >= 4);
+              rate.mutate(n);
+            }}
+          />
+        </div>
       {isRead ? (
         // flex-wrap + whitespace-nowrap на юнитах: длинная дата «23 июня 2026 г.»
         // иначе ломалась посреди (на узкой мобильной колонке «г.» уезжала на строку).
@@ -640,6 +654,8 @@ function MyBlock({ book, cardKey }: { book: Book; cardKey: (string | number)[] }
           ) : null}
         </div>
       )}
+    </div>
+      {justLiked ? <AfterRatingRecs workId={workId} /> : null}
     </div>
   );
 }

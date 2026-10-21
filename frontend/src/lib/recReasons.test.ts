@@ -118,3 +118,33 @@ describe('reasonParts: правила фазы 2', () => {
     expect(parts[1].link).toEqual({ to: '/authors/$id', id: 5 });
   });
 });
+
+// Второй минор фазы 2: брошенное, перечитать, забытая классика.
+describe('reasonParts: брошенное, перечитать, классика', () => {
+  it('dropped_then_loved_author — давность и число полюбленных книг, ссылка на автора', () => {
+    const parts = reasonParts(
+      { kind: 'dropped_then_loved_author', author_id: 3, author: 'Лем Станислав', count: 2, at: daysAgo(400) },
+      now,
+    );
+    expect(parts.map((p) => p.text).join('')).toBe('Отложили 1 год назад · с тех пор 2 книги автора: Лем Станислав');
+    expect(parts[1].link).toEqual({ to: '/authors/$id', id: 3 });
+    expect(
+      reasonText({ kind: 'dropped_then_loved_author', author_id: 3, author: 'X', count: 5 }, now),
+    ).toBe('Отложили · с тех пор 5 книг автора: X');
+  });
+
+  it('reread — оценка 5 и давность', () => {
+    expect(reasonText({ kind: 'reread', at: daysAgo(1500) }, now)).toBe('Поставили 5 · читали 4 года назад · перечитать?');
+    expect(reasonText({ kind: 'reread' }, now)).toBe('Поставили 5 · перечитать?');
+  });
+
+  it('forgotten_classic — год, рейтинг по источнику, «никто не читал»', () => {
+    expect(reasonText({ kind: 'forgotten_classic', year: 1965, rating: 9.42, source: 'fantlab' }, now)).toBe(
+      '1965 год · Фантлаб 9.4 · здесь ещё никто не читал',
+    );
+    expect(reasonText({ kind: 'forgotten_classic', year: 1930, rating: 5, source: 'librate' }, now)).toBe(
+      '1930 год · рейтинг 5/5 · здесь ещё никто не читал',
+    );
+    expect(reasonText({ kind: 'forgotten_classic' }, now)).toBe('Классика · здесь ещё никто не читал');
+  });
+});

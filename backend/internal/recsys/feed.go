@@ -49,3 +49,37 @@ func (f *Feed) Section(ctx context.Context, kind SectionKind, userID int64, ex E
 	}
 	return Hydrate(ctx, f.Q, cands, ex, limit)
 }
+
+// Related — «раз понравилось — вот следующая» (план recsys/02, задача 2.8):
+// до limit карточек правил «дальше в цикле» и «автор, которого дочитали»,
+// основание которых — работа workID (её только что оценили ≥ 4). Пусто, если
+// по этой работе правилам нечего предложить.
+func (f *Feed) Related(ctx context.Context, userID, workID int64, ex Exclusions, limit int) ([]Item, error) {
+	if limit <= 0 || limit > 20 {
+		limit = 3
+	}
+	p, err := BuildProfile(ctx, f.Q, userID, f.Now(), f.Weights)
+	if err != nil {
+		return nil, err
+	}
+	if p.IsEmpty() {
+		return []Item{}, nil
+	}
+	var cands []Candidate
+	for _, kind := range []SectionKind{SectionNextInSeries, SectionAuthorFinished} {
+		rule, ok := RuleFor(kind)
+		if !ok {
+			continue
+		}
+		cs, err := rule.Candidates(ctx, f.Q, p, 50)
+		if err != nil {
+			return nil, fmt.Errorf("recsys: %s: %w", rule.Name(), err)
+		}
+		for _, c := range cs {
+			if c.Reason.WorkID == workID {
+				cands = append(cands, c)
+			}
+		}
+	}
+	return Hydrate(ctx, f.Q, cands, ex, limit)
+}

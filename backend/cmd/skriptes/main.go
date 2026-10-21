@@ -240,6 +240,9 @@ func run() error {
 	// Уборка журналов: позиции чтения старше 90 дней — строка в день (recsys/01, 1.2),
 	// лог поиска — по сроку хранения (1.4).
 	metadata.Go(func(c context.Context) { runHousekeepingLoop(c, historySvc, searchLog, logger) })
+	// Пул «забытой классики» (recsys/02, 2.5): выборка по всему каталогу идёт
+	// десятки секунд на проде — считается фоном через 2 мин после старта и раз в 6 ч.
+	metadata.Go(func(c context.Context) { recsys.DefaultClassics.RefreshLoop(c, pool, 2*time.Minute, logger) })
 	// Состав сборников из оглавления fb2 (#388): новые сборники — раз в 30 минут.
 	metadata.Go(func(c context.Context) {
 		metadata.NewContentsScanner(pool, cfg.BooksRoot, logger).Run(c, 5*time.Minute, 30*time.Minute)
