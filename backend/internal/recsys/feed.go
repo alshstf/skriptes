@@ -83,3 +83,32 @@ func (f *Feed) Related(ctx context.Context, userID, workID int64, ex Exclusions,
 	}
 	return Hydrate(ctx, f.Q, cands, ex, limit)
 }
+
+// Tonight — секция «На вечер» (recsys/02, 2.6): до limit работ, которые
+// укладываются в minutes при скорости speed (неизвестна — DefaultBytesPerMin),
+// в любимых жанрах пользователя. minutes вне 1…TonightMaxMinutes →
+// TonightDefaultMinutes.
+func (f *Feed) Tonight(ctx context.Context, userID int64, minutes int, speed Speed, ex Exclusions, limit int) ([]Item, error) {
+	if minutes <= 0 || minutes > TonightMaxMinutes {
+		minutes = TonightDefaultMinutes
+	}
+	if limit <= 0 || limit > 100 {
+		limit = 20
+	}
+	p, err := BuildProfile(ctx, f.Q, userID, f.Now(), f.Weights)
+	if err != nil {
+		return nil, err
+	}
+	if p.IsEmpty() {
+		return []Item{}, nil
+	}
+	rule := FitsTonight{Minutes: minutes}
+	if speed.Known() {
+		rule.BytesPerMin = speed.BytesPerMin
+	}
+	cands, err := rule.Candidates(ctx, f.Q, p, 3*limit)
+	if err != nil {
+		return nil, fmt.Errorf("recsys: %s: %w", rule.Name(), err)
+	}
+	return Hydrate(ctx, f.Q, cands, ex, limit)
+}

@@ -21,13 +21,14 @@ export type RecSectionKind =
   | 'author_you_finished'
   | 'dropped_then_loved_author'
   | 'forgotten_classic'
-  | 'reread';
+  | 'reread'
+  | 'fits_tonight';
 
 /**
  * HOME_SECTIONS — порядок секций на Главной (план recsys/02, 2.9): продолжить →
  * появилось искомое → дальше в цикле → автор, которого дочитали → новинки по
- * подпискам → брошенное → забытая классика → перечитать → оцените прочитанное.
- * Пустые не рендерятся. Зеркало recsys.AllSections.
+ * подпискам → брошенное → забытая классика → перечитать → на вечер → оцените
+ * прочитанное. Пустые не рендерятся. Зеркало recsys.AllSections.
  */
 export const HOME_SECTIONS: readonly RecSectionKind[] = [
   'continue_reading',
@@ -38,8 +39,32 @@ export const HOME_SECTIONS: readonly RecSectionKind[] = [
   'dropped_then_loved_author',
   'forgotten_classic',
   'reread',
+  'fits_tonight',
   'rate_prompts',
 ];
+
+/** Чипы «у меня есть N минут» секции «На вечер» (план recsys/02, 2.6) и выбор по умолчанию. */
+export const TONIGHT_MINUTES = [20, 40, 60] as const;
+export const TONIGHT_DEFAULT_MINUTES = 40;
+const TONIGHT_LS_KEY = 'skriptes.tonightMinutes';
+
+/** readTonightMinutes / writeTonightMinutes — выбранный чип (localStorage: удобство браузера, не настройка). */
+export function readTonightMinutes(): number {
+  if (typeof window === 'undefined') return TONIGHT_DEFAULT_MINUTES;
+  try {
+    const n = Number(window.localStorage.getItem(TONIGHT_LS_KEY));
+    return (TONIGHT_MINUTES as readonly number[]).includes(n) ? n : TONIGHT_DEFAULT_MINUTES;
+  } catch {
+    return TONIGHT_DEFAULT_MINUTES;
+  }
+}
+export function writeTonightMinutes(n: number) {
+  try {
+    window.localStorage.setItem(TONIGHT_LS_KEY, String(n));
+  } catch {
+    /* приватный режим — выбор живёт до перезагрузки */
+  }
+}
 
 // RecReason — зеркало recsys.Reason (backend): дискриминант kind, у каждого
 // вида — свои заполненные поля.
@@ -58,7 +83,9 @@ export type RecReason =
   // Оценили на 5, прочитали at, с тех пор не открывали.
   | { kind: 'reread'; at?: string }
   // Классика year года, внешний rating из source; на инстансе никто не открывал.
-  | { kind: 'forgotten_classic'; year?: number; rating?: number; source?: 'fantlab' | 'librate' };
+  | { kind: 'forgotten_classic'; year?: number; rating?: number; source?: 'fantlab' | 'librate' }
+  // Укладывается в minutes при вашей скорости; genre — fb2-код любимого жанра.
+  | { kind: 'fits_tonight'; minutes?: number; genre?: string };
 
 // RecItem — зеркало recsys.Item: id — представительное издание (обложка,
 // фолбэк ссылки), work_id — карточка книги.
@@ -101,15 +128,20 @@ const STALE_MS: Record<RecSectionKind, number> = {
   dropped_then_loved_author: 60_000,
   forgotten_classic: 5 * 60_000,
   reread: 5 * 60_000,
+  fits_tonight: 60_000,
 };
 
+/** SectionParams — параметры секции (minutes — «у меня есть N минут», fits_tonight). */
+export type SectionParams = { minutes?: number };
+
 /** recSectionQueryOptions — запрос одной секции (для useRecSection и useQueries). */
-export function recSectionQueryOptions(kind: RecSectionKind, limit = 12) {
+export function recSectionQueryOptions(kind: RecSectionKind, limit = 12, params: SectionParams = {}) {
+  const extra = params.minutes ? `&minutes=${params.minutes}` : '';
   return queryOptions<RecItem[]>({
-    queryKey: [...recSectionKey(kind), limit],
+    queryKey: [...recSectionKey(kind), limit, params.minutes ?? 0],
     queryFn: async ({ signal }) => {
       const r = await apiFetch<RecSection>(
-        `/api/me/recommendations?section=${kind}&limit=${limit}`,
+        `/api/me/recommendations?section=${kind}&limit=${limit}${extra}`,
         { signal },
       );
       return r.items;
@@ -128,9 +160,11 @@ export function useRecSection(kind: RecSectionKind, limit = 12) {
  * страница знала, когда лента пуста целиком (пустое состояние нового
  * пользователя), а не только по секции.
  */
-export function useHomeSections(limit = 12) {
+export function useHomeSections(limit = 12, tonightMinutes = TONIGHT_DEFAULT_MINUTES) {
   return useQueries({
-    queries: HOME_SECTIONS.map((kind) => recSectionQueryOptions(kind, limit)),
+    queries: HOME_SECTIONS.map((kind) =>
+      recSectionQueryOptions(kind, limit, kind === 'fits_tonight' ? { minutes: tonightMinutes } : {}),
+    ),
     combine: (results) => ({
       sections: HOME_SECTIONS.map((kind, i) => ({
         kind,

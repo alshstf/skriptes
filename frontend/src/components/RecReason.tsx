@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import type { RecReason } from '@/lib/recs';
 import { reasonParts, reasonText } from '@/lib/recReasons';
+import { useGenreMap } from '@/lib/genres';
 import { cn } from '@/lib/utils';
 
 /**
@@ -12,14 +13,17 @@ import { cn } from '@/lib/utils';
  * цикле Y») в две строки не влезает — третья лучше, чем обрезанная ссылка.
  */
 export function RecReasons({ reasons, className }: { reasons: RecReason[]; className?: string }) {
-  const reason = reasons.find((r) => reasonParts(r).length > 0);
+  // Имя жанра по fb2-коду (fits_tonight): карта жанров и так в кэше (грабля 2).
+  const genres = useGenreMap();
+  const ctx = { genreName: (code: string) => genres.get(code)?.display };
+  const reason = reasons.find((r) => reasonParts(r, new Date(), ctx).length > 0);
   if (!reason) return null;
-  const parts = reasonParts(reason);
+  const parts = reasonParts(reason, new Date(), ctx);
   return (
     <p
       className={cn('line-clamp-3 text-xs leading-snug text-muted-foreground text-pretty', className)}
       data-testid="rec-reason"
-      aria-label={reasonText(reason)}
+      aria-label={reasonText(reason, new Date(), ctx)}
     >
       {parts.map((p, i) =>
         p.link ? (

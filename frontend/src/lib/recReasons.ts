@@ -15,8 +15,11 @@ function pluralBooksOf(n: number): string {
 // ReasonPart — кусок текста причины; link — ссылка на автора/цикл.
 export type ReasonPart = { text: string; link?: { to: '/authors/$id' | '/series/$id'; id: number } };
 
+/** ReasonContext — что нужно тексту помимо причины: имя жанра по fb2-коду (useGenreMap). */
+export type ReasonContext = { genreName?: (code: string) => string | undefined };
+
 /** reasonParts — части текста причины; пустой массив — причину не показываем. */
-export function reasonParts(r: RecReason, now = new Date()): ReasonPart[] {
+export function reasonParts(r: RecReason, now = new Date(), ctx: ReasonContext = {}): ReasonPart[] {
   const when = (at?: string) => (at ? ` · ${formatRelativeDays(at, now)}` : '');
   switch (r.kind) {
     case 'in_progress': {
@@ -77,14 +80,25 @@ export function reasonParts(r: RecReason, now = new Date()): ReasonPart[] {
         },
       ];
     }
+    case 'fits_tonight': {
+      // «≈ 40 мин · ваш жанр: Фантастика» — имя жанра по коду даёт компонент.
+      const genre = r.genre ? (ctx.genreName?.(r.genre) ?? r.genre) : '';
+      return [
+        {
+          text: [r.minutes ? formatReadingTime(r.minutes) : '', genre ? `ваш жанр: ${genre}` : '']
+            .filter(Boolean)
+            .join(' · '),
+        },
+      ];
+    }
     default:
       return [];
   }
 }
 
 /** reasonText — та же причина одной строкой (aria-label, тесты). */
-export function reasonText(r: RecReason, now = new Date()): string {
-  return reasonParts(r, now)
+export function reasonText(r: RecReason, now = new Date(), ctx: ReasonContext = {}): string {
+  return reasonParts(r, now, ctx)
     .map((p) => p.text)
     .join('');
 }

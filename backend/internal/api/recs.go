@@ -16,16 +16,34 @@ import (
 // закрытый список recsys.SectionKind; секции правил фазы 2 (recsys.Rules)
 // монтируются из RecsDeps.Feed, фронт собирает порядок сам (pages/HomePage.tsx).
 
-// handleRecommendations — GET /api/me/recommendations?section=&limit=
+// sectionOpts — параметры секции из query: minutes — «у меня есть N минут»
+// (fits_tonight; 0 — по умолчанию).
+type sectionOpts struct {
+	Minutes int
+}
+
+// handleRecommendations — GET /api/me/recommendations?section=&limit=[&minutes=]
 func handleRecommendations(hist HistoryDeps, set SettingsDeps, content ContentDeps, recs RecsDeps) http.HandlerFunc {
-	type provider func(ctx context.Context, userID int64, limit int) ([]recsys.Item, error)
+	type provider func(ctx context.Context, userID int64, limit int, opts sectionOpts) ([]recsys.Item, error)
+	plain := func(f func(ctx context.Context, userID int64, limit int) ([]recsys.Item, error)) provider {
+		return func(ctx context.Context, userID int64, limit int, _ sectionOpts) ([]recsys.Item, error) {
+			return f(ctx, userID, limit)
+		}
+	}
+	exclusions := func(ctx context.Context, userID int64) recsys.Exclusions {
+		var ex recsys.Exclusions
+		if content.Resolver != nil {
+			ex.Genres, ex.Langs, ex.HideCompilations = content.Resolver.Exclusions(ctx, userID)
+		}
+		return ex
+	}
 	providers := map[recsys.SectionKind]provider{
-		recsys.SectionContinueReading:  hist.Service.ContinueReading,
-		recsys.SectionSubscriptions:    hist.Service.SubscriptionFeed,
-		recsys.SectionSearchedAppeared: hist.Service.SearchedAppeared,
+		recsys.SectionContinueReading:  plain(hist.Service.ContinueReading),
+		recsys.SectionSubscriptions:    plain(hist.Service.SubscriptionFeed),
+		recsys.SectionSearchedAppeared: plain(hist.Service.SearchedAppeared),
 		// «Оцените прочитанное»: если запросы оценки выключены в профиле —
 		// секция пуста (фронт её не рендерит).
-		recsys.SectionRatePrompts: func(ctx context.Context, userID int64, limit int) ([]recsys.Item, error) {
+		recsys.SectionRatePrompts: func(ctx context.Context, userID int64, limit int, _ sectionOpts) ([]recsys.Item, error) {
 			cfg, err := set.Store.UserRatingPromptConfig(ctx, userID)
 			if err != nil {
 				return nil, err
@@ -42,13 +60,17 @@ func handleRecommendations(hist HistoryDeps, set SettingsDeps, content ContentDe
 	if recs.Feed != nil {
 		for _, rule := range recsys.Rules {
 			kind := rule.Section()
-			providers[kind] = func(ctx context.Context, userID int64, limit int) ([]recsys.Item, error) {
-				var ex recsys.Exclusions
-				if content.Resolver != nil {
-					ex.Genres, ex.Langs, ex.HideCompilations = content.Resolver.Exclusions(ctx, userID)
-				}
-				return recs.Feed.Section(ctx, kind, userID, ex, limit)
+			providers[kind] = func(ctx context.Context, userID int64, limit int, _ sectionOpts) ([]recsys.Item, error) {
+				return recs.Feed.Section(ctx, kind, userID, exclusions(ctx, userID), limit)
 			}
+		}
+		// «На вечер» (2.6): минуты из query, скорость — личная из журнала позиций.
+		providers[recsys.SectionFitsTonight] = func(ctx context.Context, userID int64, limit int, opts sectionOpts) ([]recsys.Item, error) {
+			speed, err := hist.Service.ReadingSpeed(ctx, userID)
+			if err != nil {
+				return nil, err
+			}
+			return recs.Feed.Tonight(ctx, userID, opts.Minutes, speed, exclusions(ctx, userID), limit)
 		}
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -64,9 +86,10 @@ func handleRecommendations(hist HistoryDeps, set SettingsDeps, content ContentDe
 			return
 		}
 		limit := parseIntOr(r.URL.Query().Get("limit"), 12)
+		opts := sectionOpts{Minutes: parseIntOr(r.URL.Query().Get("minutes"), 0)}
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
-		items, err := p(ctx, u.ID, limit)
+		items, err := p(ctx, u.ID, limit, opts)
 		if err != nil {
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return

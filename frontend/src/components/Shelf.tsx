@@ -22,12 +22,15 @@ export function Shelf({
   collapsed = false,
   onToggle,
   count,
+  controls,
 }: {
   title: string;
   children: React.ReactNode;
   collapsed?: boolean;
   onToggle?: () => void;
   count?: number;
+  // controls — контролы секции рядом с заголовком (чипы «N минут» у «На вечер»).
+  controls?: React.ReactNode;
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canLeft, setCanLeft] = useState(false);
@@ -70,6 +73,7 @@ export function Shelf({
             {count} {pluralBooks(count)}
           </span>
         ) : null}
+        {!collapsed && controls ? <div className="flex items-center gap-1">{controls}</div> : null}
         {onToggle ? (
           <button
             type="button"
