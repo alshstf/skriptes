@@ -234,6 +234,7 @@ func NewRouter(d Deps) http.Handler {
 					// Лента Главной: секции continue_reading / subscriptions / rate_prompts
 					// одним контрактом с причинами (recs.go); скрытие — с причиной.
 					r.Get("/me/recommendations", handleRecommendations(d.History, d.Settings, d.Content, d.Recs))
+					r.Get("/me/recommendations/related", handleRelatedRecommendations(d.Content, d.Recs))
 					r.Get("/me/home-feed", handleGetMeHomeFeed(d.Settings))
 					r.Put("/me/home-feed", handleUpdateMeHomeFeed(d.Settings))
 					r.Post("/me/feed/dismiss", handleDismissFeedItem(d.History))

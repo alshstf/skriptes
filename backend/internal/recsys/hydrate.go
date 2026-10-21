@@ -92,12 +92,18 @@ func Hydrate(ctx context.Context, q Querier, cands []Candidate, ex Exclusions, l
 		}); err != nil {
 		return nil, fmt.Errorf("recsys: hydrate: %w", err)
 	}
+	// Повтор работы (два правила с одним кандидатом — Feed.Related) — первая причина.
 	out := make([]Item, 0, limit)
+	seen := make(map[int64]struct{}, len(cands))
 	for _, c := range cands {
 		it, ok := items[c.WorkID]
 		if !ok {
 			continue
 		}
+		if _, dup := seen[c.WorkID]; dup {
+			continue
+		}
+		seen[c.WorkID] = struct{}{}
 		it.Reasons = []Reason{c.Reason}
 		out = append(out, it)
 		if len(out) == limit {

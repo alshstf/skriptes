@@ -96,20 +96,7 @@ func (AuthorFinished) Candidates(ctx context.Context, q Querier, p *Profile, n i
 
 	// Имена; служебные авторы («Коллектив авторов») и скрытые на инстансе — мимо.
 	names := map[int64]string{}
-	if err := each(ctx, q, `
-		SELECT id, TRIM(CONCAT_WS(' ', last_name, first_name, middle_name))
-		FROM authors WHERE id = ANY($1) AND NOT is_service AND NOT instance_hidden`,
-		[]any{liked}, func(rows pgx.Rows) error {
-			var (
-				id   int64
-				name string
-			)
-			if err := rows.Scan(&id, &name); err != nil {
-				return err
-			}
-			names[id] = name
-			return nil
-		}); err != nil {
+	if err := loadAuthorNames(ctx, q, liked, names); err != nil {
 		return nil, fmt.Errorf("author finished: names: %w", err)
 	}
 	authorIDs := make([]int64, 0, len(names))

@@ -18,12 +18,16 @@ export type RecSectionKind =
   | 'rate_prompts'
   | 'searched_appeared'
   | 'next_in_series'
-  | 'author_you_finished';
+  | 'author_you_finished'
+  | 'dropped_then_loved_author'
+  | 'forgotten_classic'
+  | 'reread';
 
 /**
  * HOME_SECTIONS — порядок секций на Главной (план recsys/02, 2.9): продолжить →
  * появилось искомое → дальше в цикле → автор, которого дочитали → новинки по
- * подпискам → оцените прочитанное. Пустые не рендерятся.
+ * подпискам → брошенное → забытая классика → перечитать → оцените прочитанное.
+ * Пустые не рендерятся. Зеркало recsys.AllSections.
  */
 export const HOME_SECTIONS: readonly RecSectionKind[] = [
   'continue_reading',
@@ -31,6 +35,9 @@ export const HOME_SECTIONS: readonly RecSectionKind[] = [
   'next_in_series',
   'author_you_finished',
   'subscriptions',
+  'dropped_then_loved_author',
+  'forgotten_classic',
+  'reread',
   'rate_prompts',
 ];
 
@@ -45,7 +52,13 @@ export type RecReason =
   | { kind: 'searched_appeared'; query: string; at?: string }
   // Правила фазы 2: work_id/title — прочитанная работа-основание.
   | { kind: 'next_in_series'; series_id: number; series: string; work_id: number; title: string; ser_no?: number; at?: string }
-  | { kind: 'author_you_finished'; author_id: number; author: string; work_id: number; title: string; at?: string };
+  | { kind: 'author_you_finished'; author_id: number; author: string; work_id: number; title: string; at?: string }
+  // Бросили at, с тех пор полюбили count работ автора.
+  | { kind: 'dropped_then_loved_author'; author_id: number; author: string; count: number; at?: string }
+  // Оценили на 5, прочитали at, с тех пор не открывали.
+  | { kind: 'reread'; at?: string }
+  // Классика year года, внешний rating из source; на инстансе никто не открывал.
+  | { kind: 'forgotten_classic'; year?: number; rating?: number; source?: 'fantlab' | 'librate' };
 
 // RecItem — зеркало recsys.Item: id — представительное издание (обложка,
 // фолбэк ссылки), work_id — карточка книги.
@@ -85,6 +98,9 @@ const STALE_MS: Record<RecSectionKind, number> = {
   searched_appeared: 60_000,
   next_in_series: 60_000,
   author_you_finished: 60_000,
+  dropped_then_loved_author: 60_000,
+  forgotten_classic: 5 * 60_000,
+  reread: 5 * 60_000,
 };
 
 /** recSectionQueryOptions — запрос одной секции (для useRecSection и useQueries). */
@@ -167,5 +183,25 @@ export function useDismissRec() {
     onSettled: () => {
       void qc.invalidateQueries({ queryKey: RECS_KEY });
     },
+  });
+}
+
+/**
+ * useRelatedRecs — «раз понравилось — вот следующая» (план recsys/02, 2.8):
+ * до трёх карточек правил, основание которых — работа workId. Запрашивается
+ * только когда enabled (после оценки ≥ 4 на карточке).
+ */
+export function useRelatedRecs(workId: number | undefined, enabled: boolean, limit = 3) {
+  return useQuery<RecItem[]>({
+    queryKey: [...RECS_KEY, 'related', workId, limit],
+    queryFn: async ({ signal }) => {
+      const r = await apiFetch<{ work_id: number; items: RecItem[] }>(
+        `/api/me/recommendations/related?work_id=${workId}&limit=${limit}`,
+        { signal },
+      );
+      return r.items;
+    },
+    enabled: enabled && workId != null,
+    staleTime: 30_000,
   });
 }
