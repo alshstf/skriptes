@@ -16,9 +16,11 @@ import (
 // удаление и агрегат ненайденного для админа. Лог выключен
 // (SKRIPTES_SEARCH_LOG_DAYS=0) — ручки отвечают пусто/204.
 
-// RecsDeps — зависимости ленты рекомендаций и лога поиска.
+// RecsDeps — зависимости ленты рекомендаций и лога поиска. Feed == nil →
+// секции правил (recsys.Rules) не монтируются (unit-тесты роутера без БД).
 type RecsDeps struct {
 	SearchLog *recsys.SearchLog
+	Feed      *recsys.Feed
 }
 
 // handleSearchClick — POST /api/me/search-log/{id}/click {work_id}.

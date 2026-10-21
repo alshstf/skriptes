@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronUp } from 'lucide-react';
 import { BookCover } from '@/components/BookCover';
 import { cn } from '@/lib/utils';
+import { pluralBooks } from '@/lib/format';
 
 /**
  * Shelf — горизонтальная КАРУСЕЛЬ карточек с заголовком (полки Главной).
@@ -10,8 +11,24 @@ import { cn } from '@/lib/utils';
  * градиент-затухание у краёв + круглые кнопки-стрелки. И то и другое
  * появляется только когда есть куда прокручивать (canLeft/canRight по факту
  * overflow).
+ *
+ * Сворачивание (план recsys/02, 2.9): с onToggle в заголовке появляется
+ * шеврон; свёрнутая полка — одна строка «заголовок · N книг», карусель не
+ * рендерится. Состояние хранит вызывающий (на Главной — user_settings).
  */
-export function Shelf({ title, children }: { title: string; children: React.ReactNode }) {
+export function Shelf({
+  title,
+  children,
+  collapsed = false,
+  onToggle,
+  count,
+}: {
+  title: string;
+  children: React.ReactNode;
+  collapsed?: boolean;
+  onToggle?: () => void;
+  count?: number;
+}) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canLeft, setCanLeft] = useState(false);
   const [canRight, setCanRight] = useState(false);
@@ -35,7 +52,7 @@ export function Shelf({ title, children }: { title: string; children: React.Reac
       el.removeEventListener('scroll', update);
       ro.disconnect();
     };
-  }, [update]);
+  }, [update, collapsed]);
 
   function scrollByDir(dir: 1 | -1) {
     const el = scrollRef.current;
@@ -43,16 +60,37 @@ export function Shelf({ title, children }: { title: string; children: React.Reac
     el.scrollBy({ left: dir * el.clientWidth * 0.8, behavior: 'smooth' });
   }
 
+  const Chevron = collapsed ? ChevronDown : ChevronUp;
   return (
-    <section className="space-y-3">
-      <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
-      <div className="relative">
-        {canLeft ? <ShelfArrow side="left" onClick={() => scrollByDir(-1)} /> : null}
-        {canRight ? <ShelfArrow side="right" onClick={() => scrollByDir(1)} /> : null}
-        <div ref={scrollRef} className="flex gap-4 overflow-x-auto scroll-smooth pb-2">
-          {children}
-        </div>
+    <section className="space-y-3" data-collapsed={collapsed || undefined}>
+      <div className="flex items-center gap-2">
+        <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
+        {collapsed && count != null ? (
+          <span className="text-xs text-muted-foreground">
+            {count} {pluralBooks(count)}
+          </span>
+        ) : null}
+        {onToggle ? (
+          <button
+            type="button"
+            onClick={onToggle}
+            aria-expanded={!collapsed}
+            aria-label={collapsed ? `Развернуть «${title}»` : `Свернуть «${title}»`}
+            className="ml-auto flex size-7 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus-visible:outline-2 focus-visible:outline-ring"
+          >
+            <Chevron className="size-4" aria-hidden />
+          </button>
+        ) : null}
       </div>
+      {collapsed ? null : (
+        <div className="relative">
+          {canLeft ? <ShelfArrow side="left" onClick={() => scrollByDir(-1)} /> : null}
+          {canRight ? <ShelfArrow side="right" onClick={() => scrollByDir(1)} /> : null}
+          <div ref={scrollRef} className="flex gap-4 overflow-x-auto scroll-smooth pb-2">
+            {children}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

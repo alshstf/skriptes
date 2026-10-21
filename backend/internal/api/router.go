@@ -233,7 +233,9 @@ func NewRouter(d Deps) http.Handler {
 					r.Get("/me/recent", handleRecentViews(d.History))
 					// Лента Главной: секции continue_reading / subscriptions / rate_prompts
 					// одним контрактом с причинами (recs.go); скрытие — с причиной.
-					r.Get("/me/recommendations", handleRecommendations(d.History, d.Settings))
+					r.Get("/me/recommendations", handleRecommendations(d.History, d.Settings, d.Content, d.Recs))
+					r.Get("/me/home-feed", handleGetMeHomeFeed(d.Settings))
+					r.Put("/me/home-feed", handleUpdateMeHomeFeed(d.Settings))
 					r.Post("/me/feed/dismiss", handleDismissFeedItem(d.History))
 					// Лог поиска (recsys/01, 1.4): клик из выдачи, история, удаление.
 					r.Post("/me/search-log/{id}/click", handleSearchClick(d.Recs))

@@ -83,3 +83,38 @@ describe('searched_appeared', () => {
     );
   });
 });
+
+// Правила фазы 2 (план recsys/02): причина называет основание («дочитали X»)
+// и ведёт ссылкой на цикл/автора.
+describe('reasonParts: правила фазы 2', () => {
+  it('next_in_series — номер в цикле и ссылка на цикл', () => {
+    const parts = reasonParts(
+      {
+        kind: 'next_in_series',
+        series_id: 7,
+        series: 'Ведьмак',
+        work_id: 101,
+        title: 'Последнее желание',
+        ser_no: 2,
+      },
+      now,
+    );
+    expect(parts.map((p) => p.text).join('')).toBe('Дочитали «Последнее желание» · № 2 в цикле Ведьмак');
+    expect(parts[1].link).toEqual({ to: '/series/$id', id: 7 });
+  });
+
+  it('next_in_series без номера — «дальше в цикле»', () => {
+    expect(
+      reasonText({ kind: 'next_in_series', series_id: 7, series: 'Ведьмак', work_id: 1, title: 'X' }, now),
+    ).toBe('Дочитали «X» · дальше в цикле Ведьмак');
+  });
+
+  it('author_you_finished — основание и ссылка на автора', () => {
+    const parts = reasonParts(
+      { kind: 'author_you_finished', author_id: 5, author: 'Лем Станислав', work_id: 42, title: 'Солярис' },
+      now,
+    );
+    expect(parts.map((p) => p.text).join('')).toBe('Дочитали «Солярис» · автор: Лем Станислав');
+    expect(parts[1].link).toEqual({ to: '/authors/$id', id: 5 });
+  });
+});

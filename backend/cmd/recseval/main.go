@@ -87,6 +87,11 @@ func run() error {
 		recsys.PopularityRecommender{Top: bs.TopPopularWorkIDs},
 		recsys.SameAuthorRecommender{Q: pool},
 		recsys.RandomRecommender{Q: pool, Seed: *seed},
+		// Правила фазы 2: вместе (как в ленте) и по одному.
+		recsys.RulesRecommender{Rules: recsys.Rules, Q: pool},
+	}
+	for _, r := range recsys.Rules {
+		recs = append(recs, recsys.RuleRecommender{Rule: r, Q: pool})
 	}
 
 	catalog, err := bs.VisibleWorksCount(ctx)

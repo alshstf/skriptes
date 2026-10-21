@@ -17,7 +17,26 @@ const (
 	SectionSubscriptions    SectionKind = "subscriptions"     // новинки по подпискам
 	SectionRatePrompts      SectionKind = "rate_prompts"      // «оцените прочитанное»
 	SectionSearchedAppeared SectionKind = "searched_appeared" // появилось то, что искали
+	// Правила фазы 2 (rules.go): секция = правило.
+	SectionNextInSeries   SectionKind = "next_in_series"      // дальше в цикле
+	SectionAuthorFinished SectionKind = "author_you_finished" // автор, которого дочитали
 )
+
+// AllSections — все секции ленты (для проверки настроек сворачивания).
+var AllSections = []SectionKind{
+	SectionContinueReading, SectionSearchedAppeared, SectionNextInSeries, SectionAuthorFinished,
+	SectionSubscriptions, SectionRatePrompts,
+}
+
+// IsSectionKind — s — известная секция ленты.
+func IsSectionKind(s string) bool {
+	for _, k := range AllSections {
+		if string(k) == s {
+			return true
+		}
+	}
+	return false
+}
 
 // ReasonKind — почему карточка здесь. Закрытый список; у каждого вида — свой
 // набор заполненных полей Reason (см. комментарии у констант).
@@ -36,6 +55,10 @@ const (
 	ReasonFinished ReasonKind = "finished"
 	// ReasonSearchedAppeared — искали Query (At — когда), не нашлось, появилось при импорте.
 	ReasonSearchedAppeared ReasonKind = "searched_appeared"
+	// ReasonNextInSeries — прочитали WorkID/Title (At) из цикла SeriesID/Series; это № SerNo.
+	ReasonNextInSeries ReasonKind = "next_in_series"
+	// ReasonAuthorFinished — прочитали WorkID/Title (At) автора AuthorID/Author; это ещё его работа.
+	ReasonAuthorFinished ReasonKind = "author_you_finished"
 )
 
 // Reason — причина рекомендации: вид и параметры. Поля — плоские и
@@ -52,9 +75,11 @@ type Reason struct {
 	Query string `json:"query,omitempty"`
 	// Minutes — «ещё ≈ N минут» по личной скорости чтения (in_progress; 0 — неизвестно).
 	Minutes int `json:"minutes,omitempty"`
-	// WorkID/Title — «потому что X»: работа-основание (фаза 2).
+	// WorkID/Title — «потому что X»: работа-основание (правила фазы 2).
 	WorkID int64  `json:"work_id,omitempty"`
 	Title  string `json:"title,omitempty"`
+	// SerNo — номер рекомендуемой книги в цикле (next_in_series; 0 — нет).
+	SerNo int `json:"ser_no,omitempty"`
 }
 
 // Item — карточка ленты. ID — представительное ИЗДАНИЕ (on-demand обложка,

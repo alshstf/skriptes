@@ -46,22 +46,67 @@ const APPEARED: Item = {
   reasons: [{ kind: 'searched_appeared', query: 'найденная книга', at: '2026-10-10T00:00:00Z' }],
 };
 
-function mockHome(page: import('@playwright/test').Page, feed: { ref: Item[] }) {
+const NEXT: Item = {
+  id: 21,
+  work_id: 1021,
+  title: 'Том третий',
+  authors: ['Автор Цикла'],
+  lib_id: 'L21',
+  series: 'Мой цикл',
+  reasons: [
+    {
+      kind: 'next_in_series',
+      series_id: 9,
+      series: 'Мой цикл',
+      work_id: 1020,
+      title: 'Том второй',
+      ser_no: 3,
+      at: '2026-10-15T00:00:00Z',
+    },
+  ],
+};
+
+const BY_AUTHOR: Item = {
+  id: 22,
+  work_id: 1022,
+  title: 'Ещё роман',
+  authors: ['Любимый Автор'],
+  lib_id: 'L22',
+  reasons: [{ kind: 'author_you_finished', author_id: 5, author: 'Любимый Автор', work_id: 1023, title: 'Первый роман' }],
+};
+
+type HomeMock = {
+  // Секции поверх дефолтов (continue_reading → CONTINUE, searched_appeared → APPEARED,
+  // subscriptions → feed.ref, остальные пустые).
+  sections?: Partial<Record<string, Item[]>>;
+  // Серверные настройки ленты: GET отдаёт state, PUT обновляет его и пишет тело в puts.
+  feed?: { collapsed: string[] };
+  puts?: unknown[];
+};
+
+function mockHome(page: import('@playwright/test').Page, feed: { ref: Item[] }, opts: HomeMock = {}) {
   page.route(/\/api\/me\/recommendations\?/, (route) => {
-    const section = new URL(route.request().url()).searchParams.get('section');
-    const items =
-      section === 'continue_reading'
-        ? [CONTINUE]
-        : section === 'subscriptions'
-          ? feed.ref
-          : section === 'searched_appeared'
-            ? [APPEARED]
-            : [];
+    const section = new URL(route.request().url()).searchParams.get('section') ?? '';
+    const defaults: Record<string, Item[]> = {
+      continue_reading: [CONTINUE],
+      searched_appeared: [APPEARED],
+      subscriptions: feed.ref,
+    };
+    const items = opts.sections?.[section] ?? defaults[section] ?? [];
     return route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify({ section, items }),
     });
+  });
+  const state = opts.feed ?? { collapsed: [] };
+  page.route(/\/api\/me\/home-feed$/, (route) => {
+    if (route.request().method() === 'PUT') {
+      const body = route.request().postDataJSON() as { collapsed: string[] };
+      opts.puts?.push(body);
+      state.collapsed = body.collapsed;
+    }
+    return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(state) });
   });
 }
 
@@ -129,4 +174,72 @@ test('home: на телефоне лента без горизонтальног
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.screenshot({ path: `${process.env.HOME_RECS_SHOTS}/home-desktop.png`, fullPage: true });
   }
+});
+
+// Правила фазы 2 (план recsys/02, 2.1/2.2/2.9): порядок секций, причины с
+// основанием и ссылками на цикл/автора.
+test('home: секции правил — порядок, причины, ссылки', async ({ mockedPage: page }) => {
+  mockHome(page, { ref: [FEED] }, { sections: { next_in_series: [NEXT], author_you_finished: [BY_AUTHOR] } });
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Дальше в цикле' })).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByRole('heading', { name: 'Автор, которого вы дочитали' })).toBeVisible();
+
+  const titles = [
+    'Продолжить чтение',
+    'Появилось то, что вы искали',
+    'Дальше в цикле',
+    'Автор, которого вы дочитали',
+    'Новинки по подпискам',
+    'Оцените прочитанное',
+  ];
+  const headings = (await page.getByRole('heading', { level: 2 }).allTextContents()).filter((h) =>
+    titles.includes(h),
+  );
+  expect(headings).toEqual(titles.slice(0, 5)); // «Оцените прочитанное» пуста — не рендерится
+
+  const next = page.getByTestId('rec-reason').filter({ hasText: 'Дочитали «Том второй» · № 3 в цикле' });
+  await expect(next).toBeVisible();
+  await expect(next.getByRole('link', { name: 'Мой цикл' })).toHaveAttribute('href', '/series/9');
+  const author = page.getByTestId('rec-reason').filter({ hasText: 'Дочитали «Первый роман» · автор:' });
+  await expect(author).toBeVisible();
+  await expect(author.getByRole('link', { name: 'Любимый Автор' })).toHaveAttribute('href', '/authors/5');
+  if (process.env.HOME_RECS_SHOTS) {
+    await page.setViewportSize({ width: 1280, height: 1100 });
+    await page.screenshot({ path: `${process.env.HOME_RECS_SHOTS}/home-rules-desktop.png`, fullPage: true });
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.screenshot({ path: `${process.env.HOME_RECS_SHOTS}/home-rules-mobile.png`, fullPage: true });
+  }
+});
+
+test('home: сворачивание секции сохраняется на сервере', async ({ mockedPage: page }) => {
+  const puts: unknown[] = [];
+  mockHome(page, { ref: [FEED] }, { sections: { next_in_series: [NEXT] }, feed: { collapsed: [] }, puts });
+  await page.goto('/');
+  await expect(page.getByText('Том третий')).toBeVisible({ timeout: 10_000 });
+
+  await page.getByRole('button', { name: 'Свернуть «Дальше в цикле»' }).click();
+  await expect(page.getByText('Том третий')).toHaveCount(0);
+  const section = page.locator('section', { has: page.getByRole('heading', { name: 'Дальше в цикле' }) });
+  await expect(section.getByText(/^1 книга$/)).toBeVisible();
+  await expect.poll(() => puts).toEqual([{ collapsed: ['next_in_series'] }]);
+  // Остальные секции не тронуты.
+  await expect(page.getByText(/Очень длинное название новинки/)).toBeVisible();
+
+  // После перезагрузки — свёрнута по данным с сервера; развернуть — PUT с пустым списком.
+  await page.reload();
+  const expand = page.getByRole('button', { name: 'Развернуть «Дальше в цикле»' });
+  await expect(expand).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText('Том третий')).toHaveCount(0);
+  await expand.click();
+  await expect(page.getByText('Том третий')).toBeVisible();
+  await expect.poll(() => puts.at(-1)).toEqual({ collapsed: [] });
+});
+
+test('home: пустая лента — подсказка новому пользователю', async ({ mockedPage: page }) => {
+  mockHome(page, { ref: [] }, { sections: { continue_reading: [], searched_appeared: [] } });
+  await page.goto('/');
+  await expect(page.getByTestId('empty-feed')).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByText('Пока нечего рекомендовать', { exact: false })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Новинки по подпискам' })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'Открыть каталог' })).toHaveAttribute('href', '/books');
 });

@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { queryOptions, useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import { apiFetch } from './api';
 
 /**
@@ -8,11 +8,31 @@ import { apiFetch } from './api';
  * → { section, items: RecItem[] }, у каждой карточки — причины (RecReason),
  * текст которых собирает фронт (lib/recReasons.ts). Секции на главной
  * запрашиваются по отдельности (свой queryKey, свой staleTime), порядок —
- * в pages/HomePage.tsx. Новая секция (фаза 2) = новый RecSectionKind здесь +
- * провайдер на бэке (api/recs.go).
+ * в pages/HomePage.tsx. Новая секция = новый RecSectionKind здесь +
+ * провайдер на бэке (api/recs.go; секции правил фазы 2 — recsys.Rules).
  */
 
-export type RecSectionKind = 'continue_reading' | 'subscriptions' | 'rate_prompts' | 'searched_appeared';
+export type RecSectionKind =
+  | 'continue_reading'
+  | 'subscriptions'
+  | 'rate_prompts'
+  | 'searched_appeared'
+  | 'next_in_series'
+  | 'author_you_finished';
+
+/**
+ * HOME_SECTIONS — порядок секций на Главной (план recsys/02, 2.9): продолжить →
+ * появилось искомое → дальше в цикле → автор, которого дочитали → новинки по
+ * подпискам → оцените прочитанное. Пустые не рендерятся.
+ */
+export const HOME_SECTIONS: readonly RecSectionKind[] = [
+  'continue_reading',
+  'searched_appeared',
+  'next_in_series',
+  'author_you_finished',
+  'subscriptions',
+  'rate_prompts',
+];
 
 // RecReason — зеркало recsys.Reason (backend): дискриминант kind, у каждого
 // вида — свои заполненные поля.
@@ -22,7 +42,10 @@ export type RecReason =
   | { kind: 'new_in_series'; series_id: number; series: string; at?: string }
   | { kind: 'acquired'; at?: string }
   | { kind: 'finished'; at?: string }
-  | { kind: 'searched_appeared'; query: string; at?: string };
+  | { kind: 'searched_appeared'; query: string; at?: string }
+  // Правила фазы 2: work_id/title — прочитанная работа-основание.
+  | { kind: 'next_in_series'; series_id: number; series: string; work_id: number; title: string; ser_no?: number; at?: string }
+  | { kind: 'author_you_finished'; author_id: number; author: string; work_id: number; title: string; at?: string };
 
 // RecItem — зеркало recsys.Item: id — представительное издание (обложка,
 // фолбэк ссылки), work_id — карточка книги.
@@ -60,11 +83,13 @@ const STALE_MS: Record<RecSectionKind, number> = {
   subscriptions: 60_000,
   rate_prompts: 30_000,
   searched_appeared: 60_000,
+  next_in_series: 60_000,
+  author_you_finished: 60_000,
 };
 
-/** useRecSection — карточки одной секции ленты. */
-export function useRecSection(kind: RecSectionKind, limit = 12) {
-  return useQuery<RecItem[]>({
+/** recSectionQueryOptions — запрос одной секции (для useRecSection и useQueries). */
+export function recSectionQueryOptions(kind: RecSectionKind, limit = 12) {
+  return queryOptions<RecItem[]>({
     queryKey: [...recSectionKey(kind), limit],
     queryFn: async ({ signal }) => {
       const r = await apiFetch<RecSection>(
@@ -74,6 +99,31 @@ export function useRecSection(kind: RecSectionKind, limit = 12) {
       return r.items;
     },
     staleTime: STALE_MS[kind],
+  });
+}
+
+/** useRecSection — карточки одной секции ленты. */
+export function useRecSection(kind: RecSectionKind, limit = 12) {
+  return useQuery(recSectionQueryOptions(kind, limit));
+}
+
+/**
+ * useHomeSections — все секции Главной разом (порядок HOME_SECTIONS), чтобы
+ * страница знала, когда лента пуста целиком (пустое состояние нового
+ * пользователя), а не только по секции.
+ */
+export function useHomeSections(limit = 12) {
+  return useQueries({
+    queries: HOME_SECTIONS.map((kind) => recSectionQueryOptions(kind, limit)),
+    combine: (results) => ({
+      sections: HOME_SECTIONS.map((kind, i) => ({
+        kind,
+        items: results[i].data ?? [],
+        isLoading: results[i].isLoading,
+      })),
+      allLoaded: results.every((r) => !r.isLoading),
+      allEmpty: results.every((r) => !r.isLoading && (r.data?.length ?? 0) === 0),
+    }),
   });
 }
 

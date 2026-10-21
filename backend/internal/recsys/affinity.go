@@ -219,6 +219,10 @@ type Profile struct {
 	Langs   map[string]float64
 	Decades map[int]float64
 
+	// Signals — сырые сигналы, из которых сложены Works (правила фазы 2
+	// читают пользователя только отсюда — см. rules.go).
+	Signals map[int64]*WorkSignals
+
 	BuiltAt time.Time
 }
 
@@ -257,6 +261,7 @@ func ProfileFromSignals(ctx context.Context, q Querier, userID int64, signals ma
 		Genres:  map[string]float64{},
 		Langs:   map[string]float64{},
 		Decades: map[int]float64{},
+		Signals: signals,
 		BuiltAt: now,
 	}
 	if len(signals) == 0 {
@@ -294,13 +299,15 @@ func ProfileFromSignals(ctx context.Context, q Querier, userID int64, signals ma
 	return p, nil
 }
 
-// workMeta — что нужно от работы для производных профилей.
+// workMeta — что нужно от работы для производных профилей и правил.
 type workMeta struct {
 	Authors []int64
 	Series  []int64
 	Genres  []string
 	Lang    string
 	Year    int
+	Title   string
+	Kind    string // works.kind: '' — произведение, иначе сборник/антология/том
 }
 
 // loadWorkMeta — авторы, циклы, жанры, язык оригинала и год написания работ.
@@ -394,19 +401,21 @@ func loadWorkMeta(ctx context.Context, q Querier, ids []int64) (map[int64]*workM
 		SELECT w.id, COALESCE(w.written_year, 0),
 		       COALESCE((SELECT b.src_lang FROM books b
 		                 WHERE b.work_id = w.id AND b.deleted = false AND b.src_lang IS NOT NULL
-		                 ORDER BY b.id LIMIT 1), '')
+		                 ORDER BY b.id LIMIT 1), ''),
+		       w.title, COALESCE(w.kind, '')
 		FROM works w WHERE w.id = ANY($1)`,
 		[]any{ids}, func(rows pgx.Rows) error {
 			var (
-				wid  int64
-				year int
-				lang string
+				wid         int64
+				year        int
+				lang, title string
+				kind        string
 			)
-			if err := rows.Scan(&wid, &year, &lang); err != nil {
+			if err := rows.Scan(&wid, &year, &lang, &title, &kind); err != nil {
 				return err
 			}
 			m := get(wid)
-			m.Year, m.Lang = year, lang
+			m.Year, m.Lang, m.Title, m.Kind = year, lang, title, kind
 			return nil
 		}); err != nil {
 		return nil, fmt.Errorf("year/lang: %w", err)

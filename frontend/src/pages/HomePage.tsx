@@ -8,8 +8,9 @@ import { useDebouncedValue } from '@/lib/useDebouncedValue';
 import { useSuggest } from '@/lib/suggest';
 import { useHeroSearch } from '@/lib/heroSearch';
 import { useInstanceName } from '@/lib/version';
-import { useRecSection, workIdOf } from '@/lib/recs';
+import { useHomeSections, workIdOf } from '@/lib/recs';
 import type { RecItem, RecSectionKind } from '@/lib/recs';
+import { useHomeFeedSettings, useSetSectionCollapsed } from '@/lib/homeFeed';
 import { useRatePrompt } from '@/lib/ratings';
 import { RatingControl } from '@/components/RatingControl';
 import { RatingPromptMenu } from '@/components/RatingPromptMenu';
@@ -27,9 +28,12 @@ import { pluralBooks } from '@/lib/format';
  * «Показать все результаты» уводят на /books?q=… (там полноценный список).
  *
  * Ниже — лента рекомендаций (lib/recs.ts, один контракт на все секции, у
- * каждой карточки — причина «почему это здесь»): «Продолжить чтение»,
- * «Новинки по подпискам», «Оцените прочитанное». Порядок секций — здесь.
- * Плюс заглушка «Скоро» (персональные подборки — фаза 2 плана recsys).
+ * каждой карточки — причина «почему это здесь»), порядок секций —
+ * HOME_SECTIONS (план recsys/02, 2.9): «Продолжить чтение», «Появилось то, что
+ * вы искали», «Дальше в цикле», «Автор, которого вы дочитали», «Новинки по
+ * подпискам», «Оцените прочитанное». Пустые секции не рендерятся, любую можно
+ * свернуть (хранится в user_settings); пустая лента целиком — подсказка новому
+ * пользователю.
  *
  * Стиль монохромный (грабля №9): акценты — иконкой и насыщенностью, не цветом.
  */
@@ -37,11 +41,7 @@ export function HomePage() {
   return (
     <div className="mx-auto w-full max-w-5xl space-y-10 px-1 py-6 sm:py-10">
       <HeroSearch />
-      <ContinueReadingRow />
-      <SearchedAppearedRow />
-      <SubscriptionFeedRow />
-      <RateablePromptsRow />
-      <ComingSoonRow />
+      <RecFeed />
     </div>
   );
 }
@@ -289,47 +289,87 @@ function SuggestRow({
   );
 }
 
-// ── Секции ленты рекомендаций ────────────────────────────────────
+// ── Лента рекомендаций ───────────────────────────────────────────
 
-// RecShelf — секция ленты: запрос по виду, скелетон, пустое состояние (по
-// умолчанию секция без карточек не рендерится), карточки через renderCard.
-function RecShelf({
-  kind,
-  title,
-  empty,
-  renderCard,
-}: {
-  kind: RecSectionKind;
-  title: string;
-  empty?: React.ReactNode;
-  renderCard: (item: RecItem) => React.ReactNode;
-}) {
-  const { data, isLoading } = useRecSection(kind, 12);
-  if (isLoading) return <ShelfSkeleton title={title} />;
-  if (!data || data.length === 0) return empty ?? null;
+// sectionMeta — заголовок и карточка секции по её виду.
+const SECTION_META: Record<RecSectionKind, { title: string; card: (item: RecItem) => React.ReactNode }> = {
+  continue_reading: { title: 'Продолжить чтение', card: (it) => <ContinueCard item={it} /> },
+  searched_appeared: { title: 'Появилось то, что вы искали', card: (it) => <FeedCard item={it} /> },
+  next_in_series: { title: 'Дальше в цикле', card: (it) => <FeedCard item={it} /> },
+  author_you_finished: { title: 'Автор, которого вы дочитали', card: (it) => <FeedCard item={it} /> },
+  subscriptions: { title: 'Новинки по подпискам', card: (it) => <FeedCard item={it} /> },
+  rate_prompts: { title: 'Оцените прочитанное', card: (it) => <RateableCard item={it} /> },
+};
+
+// RecFeed — секции ленты в порядке HOME_SECTIONS: скелетон, пока грузится;
+// пустая секция не рендерится (кроме подсказки про подписки); свёрнутая —
+// одна строка с числом книг. Пусто всё — EmptyFeed.
+function RecFeed() {
+  const { sections, allLoaded, allEmpty } = useHomeSections(12);
+  const { data: feedSettings } = useHomeFeedSettings();
+  const setCollapsed = useSetSectionCollapsed();
+  const collapsed = new Set<RecSectionKind>(feedSettings?.collapsed ?? []);
+  if (allLoaded && allEmpty) return <EmptyFeed />;
   return (
-    <Shelf title={title}>
-      {data.map((it) => (
-        <div key={`${kind}-${it.id}`} className="contents">
-          {renderCard(it)}
-        </div>
-      ))}
-    </Shelf>
+    <>
+      {sections.map(({ kind, items, isLoading }) => {
+        const meta = SECTION_META[kind];
+        if (isLoading) return <ShelfSkeleton key={kind} title={meta.title} />;
+        if (items.length === 0) return kind === 'subscriptions' ? <SubscriptionsHint key={kind} /> : null;
+        const isCollapsed = collapsed.has(kind);
+        return (
+          <Shelf
+            key={kind}
+            title={meta.title}
+            count={items.length}
+            collapsed={isCollapsed}
+            onToggle={() => setCollapsed.mutate({ kind, collapsed: !isCollapsed })}
+          >
+            {items.map((it) => (
+              <div key={`${kind}-${it.id}`} className="contents">
+                {meta.card(it)}
+              </div>
+            ))}
+          </Shelf>
+        );
+      })}
+    </>
   );
 }
 
-// ── «Продолжить чтение» ──────────────────────────────────────────
-
-function ContinueReadingRow() {
+// EmptyFeed — новому пользователю нечего рекомендовать: что сделать, чтобы
+// лента собралась (импорт чужой истории — фаза 4 плана recsys).
+function EmptyFeed() {
   return (
-    <RecShelf
-      kind="continue_reading"
-      title="Продолжить чтение"
-      renderCard={(it) => <ContinueCard item={it} />}
-    />
+    <section className="space-y-3" data-testid="empty-feed">
+      <h2 className="text-lg font-semibold tracking-tight">Рекомендации</h2>
+      <Callout icon={<Sparkles className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
+        Пока нечего рекомендовать. Отметьте прочитанные книги и поставьте им оценки — лента соберётся
+        сама: что дальше в цикле, что ещё у понравившихся авторов, новинки по подпискам.{' '}
+        <Link to="/books" className="underline underline-offset-2">
+          Открыть каталог
+        </Link>
+      </Callout>
+    </section>
   );
 }
 
+// SubscriptionsHint — нет подписок ИЛИ у подписанных авторов пока нет новинок.
+function SubscriptionsHint() {
+  return (
+    <section className="space-y-3">
+      <h2 className="text-lg font-semibold tracking-tight">Новинки по подпискам</h2>
+      <Callout icon={<Star className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
+        Добавляйте авторов и серии в избранное, чтобы видеть их новинки. Звезда есть на карточке
+        любого автора и любой серии.
+      </Callout>
+    </section>
+  );
+}
+
+// ── Карточки ─────────────────────────────────────────────────────
+
+// ContinueCard — «Продолжить чтение»: прогресс-бар + причина «остановились на …».
 function ContinueCard({ item }: { item: RecItem }) {
   const progress = item.reasons.find((r) => r.kind === 'in_progress');
   const pct = Math.round(Math.min(1, Math.max(0, progress?.fraction ?? 0)) * 100);
@@ -351,42 +391,8 @@ function ContinueCard({ item }: { item: RecItem }) {
   );
 }
 
-// ── «Появилось то, что вы искали» ───────────────────────
-
-// SearchedAppearedRow — ненайденный запрос совпал с книгой, появившейся при
-// импорте (лог поиска, recsys/01 1.4). Скрывается с причиной, как новинки.
-function SearchedAppearedRow() {
-  return (
-    <RecShelf
-      kind="searched_appeared"
-      title="Появилось то, что вы искали"
-      renderCard={(it) => <FeedCard item={it} />}
-    />
-  );
-}
-
-// ── «Новинки по подпискам» ─────────────────────────────
-
-function SubscriptionFeedRow() {
-  return (
-    <RecShelf
-      kind="subscriptions"
-      title="Новинки по подпискам"
-      // Нет подписок ИЛИ у подписанных авторов пока нет книг → аккуратный пустой стейт.
-      empty={
-        <section className="space-y-3">
-          <h2 className="text-lg font-semibold tracking-tight">Новинки по подпискам</h2>
-          <Callout icon={<Star className="mt-0.5 size-3.5 shrink-0" aria-hidden />}>
-            Добавляйте авторов и серии в избранное, чтобы видеть их новинки. Звезда есть на карточке
-            любого автора и любой серии.
-          </Callout>
-        </section>
-      }
-      renderCard={(it) => <FeedCard item={it} />}
-    />
-  );
-}
-
+// FeedCard — карточка с причиной и kebab «скрыть с причиной» (новинки,
+// «появилось то, что вы искали», правила фазы 2).
 function FeedCard({ item }: { item: RecItem }) {
   return (
     <div className="relative shrink-0">
@@ -410,20 +416,9 @@ function FeedCard({ item }: { item: RecItem }) {
   );
 }
 
-// ── «Оцените прочитанное» ────────────────────────────────────────
-
-// RateablePromptsRow — книги, которые юзер вероятно прочитал и ещё не оценил.
-// Бэкенд отдаёт пусто, если запросы оценки выключены в профиле → блок скрыт.
-function RateablePromptsRow() {
-  return (
-    <RecShelf
-      kind="rate_prompts"
-      title="Оцените прочитанное"
-      renderCard={(it) => <RateableCard item={it} />}
-    />
-  );
-}
-
+// RateableCard — «Оцените прочитанное»: книга, которую юзер вероятно прочитал и
+// ещё не оценил; инлайн-оценка. Бэкенд отдаёт пусто, если запросы оценки
+// выключены в профиле → секция не рендерится.
 function RateableCard({ item }: { item: RecItem }) {
   const workId = workIdOf(item);
   const rate = useRatePrompt();
@@ -461,41 +456,6 @@ function RateableCard({ item }: { item: RecItem }) {
           }}
         />
       </div>
-    </div>
-  );
-}
-
-// ── Заглушка «Скоро» ─────────────────────────────────────────────
-
-function ComingSoonRow() {
-  return (
-    <ComingSoonCard
-      icon={<Sparkles className="size-4 shrink-0" aria-hidden />}
-      title="Рекомендации"
-      text="Скоро здесь появятся персональные подборки на основе ваших оценок и истории."
-    />
-  );
-}
-
-function ComingSoonCard({
-  icon,
-  title,
-  text,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  text: string;
-}) {
-  return (
-    <div className="rounded-xl border border-border bg-card p-4">
-      <div className="flex items-center gap-2 text-sm font-medium">
-        {icon}
-        <span>{title}</span>
-        <span className="ml-auto rounded-full border border-border bg-muted px-2 py-0.5 text-xs text-muted-foreground">
-          Скоро
-        </span>
-      </div>
-      <p className="mt-2 text-sm text-pretty text-muted-foreground">{text}</p>
     </div>
   );
 }
