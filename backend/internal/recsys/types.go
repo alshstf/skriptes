@@ -23,13 +23,15 @@ const (
 	SectionDropped          SectionKind = "dropped_then_loved_author" // брошенное, к чему дорос
 	SectionForgottenClassic SectionKind = "forgotten_classic"         // забытая классика
 	SectionReread           SectionKind = "reread"                    // перечитать
+	SectionFitsTonight      SectionKind = "fits_tonight"              // на вечер: «у меня есть N минут»
 )
 
 // AllSections — все секции ленты в порядке Главной (для проверки настроек
 // сворачивания; фронт держит тот же порядок в HOME_SECTIONS).
 var AllSections = []SectionKind{
 	SectionContinueReading, SectionSearchedAppeared, SectionNextInSeries, SectionAuthorFinished,
-	SectionSubscriptions, SectionDropped, SectionForgottenClassic, SectionReread, SectionRatePrompts,
+	SectionSubscriptions, SectionDropped, SectionForgottenClassic, SectionReread, SectionFitsTonight,
+	SectionRatePrompts,
 }
 
 // IsSectionKind — s — известная секция ленты.
@@ -69,6 +71,8 @@ const (
 	ReasonReread ReasonKind = "reread"
 	// ReasonForgottenClassic — Year написания, внешний Rating из Source (fantlab | librate), на инстансе никто не открывал.
 	ReasonForgottenClassic ReasonKind = "forgotten_classic"
+	// ReasonFitsTonight — укладывается в Minutes при личной скорости; Genre — любимый жанр (fb2-код).
+	ReasonFitsTonight ReasonKind = "fits_tonight"
 )
 
 // Reason — причина рекомендации: вид и параметры. Поля — плоские и
@@ -97,6 +101,8 @@ type Reason struct {
 	// Rating/Source — внешний рейтинг и его источник (forgotten_classic: "fantlab" — средняя 1–10, "librate" — 1–5).
 	Rating float64 `json:"rating,omitempty"`
 	Source string  `json:"source,omitempty"`
+	// Genre — fb2-код жанра (fits_tonight; имя — фронт по useGenreMap).
+	Genre string `json:"genre,omitempty"`
 }
 
 // Item — карточка ленты. ID — представительное ИЗДАНИЕ (on-demand обложка,

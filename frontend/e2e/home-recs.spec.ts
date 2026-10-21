@@ -303,3 +303,57 @@ test('home: секции брошенного, классики и перечи�
   await expect(page.getByText('1927 год · Фантлаб 9.3 · здесь ещё никто не читал')).toBeVisible();
   await expect(page.getByText(/Поставили 5 · читали 4 года назад · перечитать\?/)).toBeVisible();
 });
+
+// «На вечер» (2.6): чипы 20/40/60 в заголовке, выбор уходит в запрос (&minutes=)
+// и запоминается в localStorage; пустая секция остаётся с подсказкой.
+test('home: «На вечер» — чипы минут и пустое состояние', async ({ mockedPage: page }) => {
+  const TONIGHT: Item = {
+    id: 41,
+    work_id: 1041,
+    title: 'Короткая повесть',
+    authors: ['Автор Короткий'],
+    lib_id: 'L41',
+    reasons: [{ kind: 'fits_tonight', minutes: 32, genre: 'sf_action' }],
+  };
+  mockHome(page, { ref: [FEED] });
+  // Роуты Playwright матчатся с последнего зарегистрированного — свой после mockHome.
+  const requested: string[] = [];
+  page.route(/\/api\/me\/recommendations\?section=fits_tonight/, (route) => {
+    const u = new URL(route.request().url());
+    const minutes = u.searchParams.get('minutes') ?? '';
+    requested.push(minutes);
+    return route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ section: 'fits_tonight', items: minutes === '60' ? [TONIGHT] : [] }),
+    });
+  });
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'На вечер' })).toBeVisible({ timeout: 10_000 });
+  // По умолчанию 40 минут, пусто — подсказка вместо карточек, чипы на месте.
+  await expect.poll(() => requested).toContain('40');
+  await expect(page.getByTestId('tonight-empty')).toContainText('За 40 минут');
+  const chip60 = page.getByRole('button', { name: '60 мин' });
+  await expect(page.getByRole('button', { name: '40 мин' })).toHaveAttribute('aria-pressed', 'true');
+
+  await chip60.click();
+  await expect(chip60).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByText('Короткая повесть')).toBeVisible();
+  // Имя жанра из /api/genres (fixture: sf_action → «Боевая фантастика»).
+  await expect(page.getByText('≈ 30 мин · ваш жанр: Боевая фантастика')).toBeVisible();
+  expect(requested.at(-1)).toBe('60');
+
+  // Выбор пережил перезагрузку.
+  await page.reload();
+  await expect(page.getByRole('button', { name: '60 мин' })).toHaveAttribute('aria-pressed', 'true', {
+    timeout: 10_000,
+  });
+  await expect(page.getByText('Короткая повесть')).toBeVisible();
+  if (process.env.HOME_RECS_SHOTS) {
+    await page.getByRole('heading', { name: 'На вечер' }).scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `${process.env.HOME_RECS_SHOTS}/home-tonight.png` });
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.getByRole('heading', { name: 'На вечер' }).scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `${process.env.HOME_RECS_SHOTS}/home-tonight-mobile.png` });
+  }
+});

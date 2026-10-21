@@ -8,7 +8,13 @@ import { useDebouncedValue } from '@/lib/useDebouncedValue';
 import { useSuggest } from '@/lib/suggest';
 import { useHeroSearch } from '@/lib/heroSearch';
 import { useInstanceName } from '@/lib/version';
-import { useHomeSections, workIdOf } from '@/lib/recs';
+import {
+  TONIGHT_MINUTES,
+  readTonightMinutes,
+  useHomeSections,
+  workIdOf,
+  writeTonightMinutes,
+} from '@/lib/recs';
 import type { RecItem, RecSectionKind } from '@/lib/recs';
 import { useHomeFeedSettings, useSetSectionCollapsed } from '@/lib/homeFeed';
 import { useRatePrompt } from '@/lib/ratings';
@@ -302,6 +308,7 @@ const SECTION_META: Record<RecSectionKind, { title: string; card: (item: RecItem
   dropped_then_loved_author: { title: 'Отложенное, к которому доросли', card: (it) => <FeedCard item={it} /> },
   forgotten_classic: { title: 'Забытая классика', card: (it) => <FeedCard item={it} /> },
   reread: { title: 'Перечитать', card: (it) => <FeedCard item={it} /> },
+  fits_tonight: { title: 'На вечер', card: (it) => <FeedCard item={it} /> },
   rate_prompts: { title: 'Оцените прочитанное', card: (it) => <RateableCard item={it} /> },
 };
 
@@ -309,17 +316,55 @@ const SECTION_META: Record<RecSectionKind, { title: string; card: (item: RecItem
 // пустая секция не рендерится (кроме подсказки про подписки); свёрнутая —
 // одна строка с числом книг. Пусто всё — EmptyFeed.
 function RecFeed() {
-  const { sections, allLoaded, allEmpty } = useHomeSections(12);
+  // «На вечер» (2.6): «у меня есть N минут» — чип живёт в localStorage.
+  const [tonightMinutes, setTonightMinutes] = useState(readTonightMinutes);
+  const { sections, allLoaded, allEmpty } = useHomeSections(12, tonightMinutes);
   const { data: feedSettings } = useHomeFeedSettings();
   const setCollapsed = useSetSectionCollapsed();
   const collapsed = new Set<RecSectionKind>(feedSettings?.collapsed ?? []);
   if (allLoaded && allEmpty) return <EmptyFeed />;
+  const tonightChips = (
+    <div className="flex items-center gap-1" role="group" aria-label="Сколько у вас есть минут">
+      {TONIGHT_MINUTES.map((m) => (
+        <button
+          key={m}
+          type="button"
+          aria-pressed={m === tonightMinutes}
+          onClick={() => {
+            setTonightMinutes(m);
+            writeTonightMinutes(m);
+          }}
+          className={cn(
+            'rounded-full border px-2.5 py-0.5 text-xs transition-colors',
+            m === tonightMinutes
+              ? 'border-foreground bg-foreground text-background'
+              : 'border-border text-muted-foreground hover:bg-accent hover:text-foreground',
+          )}
+        >
+          {m} мин
+        </button>
+      ))}
+    </div>
+  );
   return (
     <>
       {sections.map(({ kind, items, isLoading }) => {
         const meta = SECTION_META[kind];
         if (isLoading) return <ShelfSkeleton key={kind} title={meta.title} />;
-        if (items.length === 0) return kind === 'subscriptions' ? <SubscriptionsHint key={kind} /> : null;
+        if (items.length === 0) {
+          if (kind === 'subscriptions') return <SubscriptionsHint key={kind} />;
+          // «На вечер» пустая — секция остаётся: чипами можно дать больше времени.
+          if (kind === 'fits_tonight' && !collapsed.has(kind)) {
+            return (
+              <Shelf key={kind} title={meta.title} controls={tonightChips}>
+                <p className="text-sm text-pretty text-muted-foreground" data-testid="tonight-empty">
+                  За {tonightMinutes} минут ничего не подобрать — попробуйте больше времени.
+                </p>
+              </Shelf>
+            );
+          }
+          return null;
+        }
         const isCollapsed = collapsed.has(kind);
         return (
           <Shelf
@@ -328,6 +373,7 @@ function RecFeed() {
             count={items.length}
             collapsed={isCollapsed}
             onToggle={() => setCollapsed.mutate({ kind, collapsed: !isCollapsed })}
+            controls={kind === 'fits_tonight' ? tonightChips : undefined}
           >
             {items.map((it) => (
               <div key={`${kind}-${it.id}`} className="contents">

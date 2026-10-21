@@ -148,3 +148,15 @@ describe('reasonParts: брошенное, перечитать, классик�
     expect(reasonText({ kind: 'forgotten_classic' }, now)).toBe('Классика · здесь ещё никто не читал');
   });
 });
+
+// «На вечер» (2.6): минуты и любимый жанр; имя жанра — из контекста, без него — код.
+describe('reasonParts: fits_tonight', () => {
+  it('минуты и жанр по имени', () => {
+    expect(
+      reasonText({ kind: 'fits_tonight', minutes: 32, genre: 'sf' }, now, { genreName: (c) => (c === 'sf' ? 'Фантастика' : undefined) }),
+    ).toBe('≈ 30 мин · ваш жанр: Фантастика');
+    expect(reasonText({ kind: 'fits_tonight', minutes: 32, genre: 'sf' }, now)).toBe('≈ 30 мин · ваш жанр: sf');
+    expect(reasonText({ kind: 'fits_tonight', genre: 'sf' }, now)).toBe('ваш жанр: sf');
+    expect(reasonText({ kind: 'fits_tonight', minutes: 5 }, now)).toBe('≈ 5 мин');
+  });
+});
