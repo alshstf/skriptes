@@ -255,25 +255,13 @@ SELECT ?book ?author ?authorLabel WHERE {
 LIMIT 2000
 `, strings.Join(books, " wd:"))
 
-	body, err := p.doSPARQL(ctx, query)
+	bindings, err := p.sparqlBindings(ctx, query)
 	if err != nil {
 		return nil, err
 	}
-	defer func() { _ = body.Close() }()
-
-	var resp struct {
-		Results struct {
-			Bindings []map[string]struct {
-				Value string `json:"value"`
-			} `json:"bindings"`
-		} `json:"results"`
-	}
-	if err := json.NewDecoder(body).Decode(&resp); err != nil {
-		return nil, fmt.Errorf("decode sparql: %w", err)
-	}
 	out := map[string]map[string][]string{}
-	for _, b := range resp.Results.Bindings {
-		book, author := extractQID(b["book"].Value), extractQID(b["author"].Value)
+	for _, b := range bindings {
+		book, author := extractQID(b["book"]), extractQID(b["author"])
 		if book == "" || author == "" {
 			continue // «неизвестное значение» P50 — не сущность
 		}
@@ -281,7 +269,7 @@ LIMIT 2000
 			out[book] = map[string][]string{}
 		}
 		labels := out[book][author]
-		if l := b["authorLabel"].Value; l != "" {
+		if l := b["authorLabel"]; l != "" {
 			labels = append(labels, l)
 		}
 		out[book][author] = labels

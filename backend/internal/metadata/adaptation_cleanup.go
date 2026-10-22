@@ -62,30 +62,3 @@ func CleanupNonScreenAdaptations(ctx context.Context, pool *pgxpool.Pool) (works
 	}
 	return works, refetch, nil
 }
-
-// RecheckAdaptationsByAuthorQID — разовый перепроход промахов после проверки
-// автора по QID (#570): до неё кандидата-книгу в Wikidata подтверждали буквами
-// имени, и автор с другой передачей имени («Херберт Фрэнк» против «Фрэнк
-// Герберт») оставался без экранизаций навсегда — маркер single-shot. Сбрасывает
-// adaptations_fetched_at у живых книг без экранизаций, у которых хотя бы один
-// автор с QID, — только у известных работ (QID или sitelinks Wikidata, ≥ 50
-// оценок Фантлаба или ≥ 2 изданий): у них 99 % найденных экранизаций, а у
-// остальных их почти нет (прод 2026-10-23: 57 тыс. книг из 227 тыс. под первые
-// два условия). Перепросят воркер «Экранизации» и открытие карточки. Возвращает
-// число книг к перепросу.
-func RecheckAdaptationsByAuthorQID(ctx context.Context, pool *pgxpool.Pool) (int64, error) {
-	tag, err := pool.Exec(ctx, `
-		UPDATE books b SET adaptations_fetched_at = NULL
-		FROM works w
-		WHERE w.id = b.work_id AND b.deleted = false
-		  AND b.adaptations_fetched_at IS NOT NULL
-		  AND NOT EXISTS (SELECT 1 FROM book_adaptations x WHERE x.book_id = b.id)
-		  AND EXISTS (SELECT 1 FROM book_authors ba JOIN authors a ON a.id = ba.author_id
-		              WHERE ba.book_id = b.id AND a.ext_ids ? 'wd_qid')
-		  AND (w.ext_ids ? 'wd_qid' OR w.wd_sitelinks IS NOT NULL
-		       OR w.fantlab_marks >= 50 OR w.edition_count >= 2)`)
-	if err != nil {
-		return 0, fmt.Errorf("reset adaptations marker: %w", err)
-	}
-	return tag.RowsAffected(), nil
-}
