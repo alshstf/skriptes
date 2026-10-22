@@ -218,6 +218,13 @@ const (
 	DismissLater         DismissReason = "later"
 )
 
+// Negative — скрытие с этой причиной отрицает вкус: «не интересно» и скрытия
+// без причины (до 1.57). «Уже читал» и «потом» — нет. Одно определение на
+// модель близости (Score) и персону поиска (history.PersonaProfile, recsys/03 3.5).
+func (r DismissReason) Negative() bool {
+	return r == "" || r == DismissNotInterested
+}
+
 // ParseDismissReason — "" → DismissNotInterested; неизвестное → ok=false.
 func ParseDismissReason(s string) (DismissReason, bool) {
 	switch DismissReason(s) {

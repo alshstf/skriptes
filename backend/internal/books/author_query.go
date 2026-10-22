@@ -316,7 +316,7 @@ func (s *Service) listWorksByAuthor(ctx context.Context, params ListParams, offs
 	}
 	if rerank {
 		// Пересортировка — только «остального»: работы автора уже по известности.
-		s.rerankScored(ctx, params.UserID, segB)
+		s.rerankScored(ctx, params.UserID, params.Query, segB)
 	}
 	items := make([]ListItem, 0, len(segA)+len(segB))
 	for _, sc := range append(segA, segB...) {

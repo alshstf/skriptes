@@ -231,7 +231,7 @@ func (s *Service) listWorksWithPinned(ctx context.Context, params ListParams, of
 	}
 	segB := scoreWorkHits(resB.Hits, rerank)
 	if rerank {
-		s.rerankScored(ctx, params.UserID, segB)
+		s.rerankScored(ctx, params.UserID, params.Query, segB)
 	}
 	items := make([]ListItem, 0, len(segA)+len(segB))
 	for _, sc := range append(segA, segB...) {
