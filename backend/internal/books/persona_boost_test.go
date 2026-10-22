@@ -18,6 +18,11 @@ func emptyPersona() history.PersonaProfile {
 		AuthorActivity:  map[int64]float64{},
 		SeriesActivity:  map[int64]float64{},
 		GenreActivity:   map[string]float64{},
+
+		BlockedAuthors:     map[int64]struct{}{},
+		BlockedSeries:      map[int64]struct{}{},
+		NotInterestedWorks: map[int64]struct{}{},
+		DroppedWorks:       map[int64]struct{}{},
 	}
 }
 
@@ -36,7 +41,7 @@ func TestApplyPersonaBoost_GenresCountOnce(t *testing.T) {
 		{item: ListItem{ID: 511485, Genres: []string{"child_adv", "child_det", "child_sf", "children", "sf", "sf_detective", "sf_humor"}}, base: 0.984},
 		{item: ListItem{ID: 126725, Genres: []string{"love", "love_history", "prose_classic", "story"}}, base: 1.0, pop: popularityBoost(974)},
 	}
-	applyPersonaBoost(scored, p, true)
+	applyPersonaBoost(scored, p, true, "")
 	require.InDelta(t, genreActivityCap, scored[0].personal, 1e-9, "семь жанров — один жанровый бонус")
 	require.LessOrEqual(t, scored[1].personal, genreActivityCap)
 
@@ -57,7 +62,7 @@ func TestApplyPersonaBoost_GenreIsTieBreaker(t *testing.T) {
 		{item: ListItem{ID: 1, Genres: []string{"det_classic"}}, base: 0.9975, pop: popularityBoost(300)},
 		{item: ListItem{ID: 2, Genres: []string{"detective"}}, base: 0.9975, pop: popularityBoost(272)},
 	}
-	applyPersonaBoost(close, p, true)
+	applyPersonaBoost(close, p, true, "")
 	sortByFinalScore(close)
 	require.EqualValues(t, 2, close[0].item.ID, "известность близка — решает любимый жанр")
 
@@ -65,7 +70,7 @@ func TestApplyPersonaBoost_GenreIsTieBreaker(t *testing.T) {
 		{item: ListItem{ID: 3, Genres: []string{"detective"}}, base: 0.9975, pop: popularityBoost(272)},
 		{item: ListItem{ID: 4, Genres: []string{"det_classic"}}, base: 0.9975, pop: popularityBoost(650)},
 	}
-	applyPersonaBoost(doyle, p, true)
+	applyPersonaBoost(doyle, p, true, "")
 	sortByFinalScore(doyle)
 	require.EqualValues(t, 4, doyle[0].item.ID, "известность выше вдвое — жанр её не перебивает")
 }
@@ -79,7 +84,7 @@ func TestApplyPersonaBoost_AuthorsCountOnce(t *testing.T) {
 	p.AuthorActivity[10] = 100
 	p.AuthorActivity[11] = 4
 	scored := []scoredItem{{item: ListItem{ID: 1, AuthorIDs: []int64{10, 11, 12}}}}
-	applyPersonaBoost(scored, p, true)
+	applyPersonaBoost(scored, p, true, "")
 	require.InDelta(t, bonusFavoriteAuthor+authorActivityCap, scored[0].personal, 1e-9)
 }
 
@@ -94,12 +99,12 @@ func TestApplyPersonaBoost_WorkVsEditionIDs(t *testing.T) {
 	p.FavoriteWorks[9] = struct{}{}
 
 	works := []scoredItem{{item: ListItem{ID: 5}}, {item: ListItem{ID: 9}}}
-	applyPersonaBoost(works, p, true)
+	applyPersonaBoost(works, p, true, "")
 	require.Zero(t, works[0].personal, "работа 5 — чужая: её номер просто совпал с изданием")
 	require.InDelta(t, bonusFavoriteBook+3*bookActivityScale, works[1].personal, 1e-9)
 
 	editions := []scoredItem{{item: ListItem{ID: 5}}, {item: ListItem{ID: 9}}}
-	applyPersonaBoost(editions, p, false)
+	applyPersonaBoost(editions, p, false, "")
 	require.InDelta(t, bonusFavoriteBook+3*bookActivityScale, editions[0].personal, 1e-9)
 	require.Zero(t, editions[1].personal)
 }
@@ -119,13 +124,13 @@ func TestApplyPersonaBoost_AnthologyAuthorsIgnored(t *testing.T) {
 		{item: ListItem{ID: 395406, AuthorIDs: authors}, base: 0.5158, pop: popularityBoost(112)},
 		{item: ListItem{ID: 29643, AuthorIDs: []int64{3}}, base: 1.0, pop: popularityBoost(1189)},
 	}
-	applyPersonaBoost(scored, p, true)
+	applyPersonaBoost(scored, p, true, "")
 	require.Zero(t, scored[0].personal)
 	sortByFinalScore(scored)
 	require.EqualValues(t, 29643, scored[0].item.ID)
 
 	// Книга трёх соавторов — обычная книга: подписка работает.
 	co := []scoredItem{{item: ListItem{ID: 1, AuthorIDs: []int64{1, 2, 7}}}}
-	applyPersonaBoost(co, p, true)
+	applyPersonaBoost(co, p, true, "")
 	require.InDelta(t, bonusFavoriteAuthor+authorActivityCap, co[0].personal, 1e-9)
 }

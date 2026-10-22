@@ -115,6 +115,21 @@ var DefaultWeights = Weights{
 	HalfLife:           2 * 365 * 24 * time.Hour,
 }
 
+// IsReading — «читает сейчас»: не дочитано, доля ≥ ReadingMinFraction и
+// последнее движение не старше ReadingMaxAge.
+func (w Weights) IsReading(s WorkSignals, now time.Time) bool {
+	return !s.Completed && s.Fraction != nil &&
+		*s.Fraction >= w.ReadingMinFraction && now.Sub(s.ReadAt) <= w.ReadingMaxAge
+}
+
+// IsDropped — «бросил»: не дочитано, доля < DroppedMaxFraction и последнее
+// движение старше DroppedMinAge. Одно определение на модель близости (Score) и
+// персону поиска (history.PersonaProfile.DroppedWorks, recsys/03 3.5).
+func (w Weights) IsDropped(s WorkSignals, now time.Time) bool {
+	return !s.Completed && s.Fraction != nil &&
+		*s.Fraction < w.DroppedMaxFraction && now.Sub(s.ReadAt) >= w.DroppedMinAge
+}
+
 // Affinity — близость пользователя к работе и трасса её слагаемых.
 // Score = Parts[KindRating] + Decay × Σ остальных Parts (Parts — до затухания).
 type Affinity struct {
@@ -136,14 +151,11 @@ func Score(s WorkSignals, now time.Time, w Weights) Affinity {
 	if s.Completed {
 		a.Parts[KindCompleted] = w.Completed
 	}
-	if !s.Completed && s.Fraction != nil {
-		age := now.Sub(s.ReadAt)
-		switch f := *s.Fraction; {
-		case f >= w.ReadingMinFraction && age <= w.ReadingMaxAge:
-			a.Parts[KindReading] = w.Reading
-		case f < w.DroppedMaxFraction && age >= w.DroppedMinAge:
-			a.Parts[KindDropped] = w.Dropped
-		}
+	switch {
+	case w.IsReading(s, now):
+		a.Parts[KindReading] = w.Reading
+	case w.IsDropped(s, now):
+		a.Parts[KindDropped] = w.Dropped
 	}
 	if s.Favorite {
 		a.Parts[KindFavorite] = w.Favorite
@@ -161,8 +173,8 @@ func Score(s WorkSignals, now time.Time, w Weights) Affinity {
 		a.Parts[KindViews] = math.Min(w.ViewsScale*math.Log2(1+float64(s.Views)), w.ViewsCap)
 	}
 	// Негатив — только «не интересно» (и скрытия без причины, до 1.57);
-	// «уже читал» и «потом» вкус не отрицают.
-	if s.Dismissed && (s.DismissReason == "" || s.DismissReason == DismissNotInterested) {
+	// «уже читал» и «потом» вкус не отрицают (DismissReason.Negative).
+	if s.Dismissed && s.DismissReason.Negative() {
 		a.Parts[KindDismissed] = w.Dismissed
 	}
 	if s.PromptNever {

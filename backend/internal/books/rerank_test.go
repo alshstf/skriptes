@@ -297,3 +297,111 @@ func TestService_RerankKeepsPageComposition(t *testing.T) {
 	require.ElementsMatch(t, ids(plain.Items[:2]), ids(p1.Items), "состав первой страницы = Meili")
 	require.ElementsMatch(t, ids(plain.Items[2:4]), ids(p2.Items), "вторая страница продолжает первую")
 }
+
+// TestService_RerankNegatives — негативы персоны (план recsys/03, задача 3.5):
+// блок-лист автора опускает его книгу в поиске, но мягко — не ниже чем на
+// maxMalusDrop (3) позиций от места без малуса, и состав страницы прежний;
+// «не интересно» из ленты — так же для работы в выдаче по индексу works.
+func TestService_RerankNegatives(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+
+	pool := testpg.Pool(t, ctx)
+	mgr := startMeilisearch(t, ctx)
+	imp := importer.New(importer.Deps{Pool: pool, Meili: mgr})
+	abs, _ := filepath.Abs(fixtureINPX)
+	_, err := imp.Run(ctx, abs)
+	require.NoError(t, err)
+	historySvc := history.New(pool)
+	svc := books.New(pool, mgr, historySvc)
+
+	var userID int64
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO users (email, display_name, password_hash, role)
+		VALUES ('negatives@example.com', 'Negatives User', 'x', 'user') RETURNING id`).Scan(&userID))
+
+	const maxDrop = 3 // books.maxMalusDrop
+
+	// ── Блок-лист автора, индекс изданий (List / OPDS) ──
+	const query = "Алек"
+	baseline, err := svc.List(ctx, books.ListParams{Query: query, Limit: 10})
+	require.NoError(t, err)
+	require.GreaterOrEqual(t, len(baseline.Items), 2)
+	top := baseline.Items[0]
+	require.NotEmpty(t, top.AuthorIDs)
+	require.NoError(t, historySvc.BlockAuthor(ctx, userID, top.AuthorIDs[0]))
+
+	personal, err := svc.List(ctx, books.ListParams{Query: query, Limit: 10, UserID: userID})
+	require.NoError(t, err)
+	require.ElementsMatch(t, idsOf(baseline.Items), idsOf(personal.Items), "состав страницы не меняется")
+	pos := indexOf(personal.Items, top.ID)
+	require.Greater(t, pos, 0, "книга заблокированного автора опустилась")
+	require.LessOrEqual(t, pos, maxDrop, "но не ниже предела")
+	for _, it := range personal.Items[:pos] {
+		require.NotContains(t, it.AuthorIDs, top.AuthorIDs[0], "выше неё — книги других авторов")
+	}
+
+	// ── «Не интересно» из ленты, индекс works (ListWorks) ──
+	var wq string
+	var plain books.ListResponse
+	for _, q := range []string{"а", "о", "с", "и", "м"} {
+		res, err := svc.ListWorks(ctx, books.ListParams{Query: q, Limit: 20})
+		require.NoError(t, err)
+		if len(res.Items) >= 4 {
+			wq, plain = q, res
+			break
+		}
+	}
+	require.NotEmpty(t, wq, "нужен запрос с ≥ 4 работами")
+	target := plain.Items[0]
+	_, err = pool.Exec(ctx, `INSERT INTO feed_dismissals (user_id, work_id, reason) VALUES ($1, $2, 'not_interested')`, userID, target.ID)
+	require.NoError(t, err)
+	// Блок автора из первой части не должен мешать: снимем его.
+	require.NoError(t, historySvc.UnblockAuthor(ctx, userID, top.AuthorIDs[0]))
+
+	withUser, err := svc.ListWorks(ctx, books.ListParams{Query: wq, Limit: 20, UserID: userID})
+	require.NoError(t, err)
+	require.ElementsMatch(t, idsOf(plain.Items), idsOf(withUser.Items))
+	// Место без малуса — по известности (ListWorks с UserID сортирует по ней);
+	// считаем его отдельно: тот же пользователь без негативов.
+	_, err = pool.Exec(ctx, `DELETE FROM feed_dismissals WHERE user_id = $1`, userID)
+	require.NoError(t, err)
+	require.NoError(t, historySvc.RecordView(ctx, userID, plain.Items[1].ID)) // непустой профиль без негативов
+	ref, err := svc.ListWorks(ctx, books.ListParams{Query: wq, Limit: 20, UserID: userID})
+	require.NoError(t, err)
+	refPos := indexOf(ref.Items, target.ID)
+	_, err = pool.Exec(ctx, `INSERT INTO feed_dismissals (user_id, work_id, reason) VALUES ($1, $2, 'not_interested')`, userID, target.ID)
+	require.NoError(t, err)
+	withUser, err = svc.ListWorks(ctx, books.ListParams{Query: wq, Limit: 20, UserID: userID})
+	require.NoError(t, err)
+	wpos := indexOf(withUser.Items, target.ID)
+	require.GreaterOrEqual(t, wpos, refPos, "малус не поднимает")
+	require.LessOrEqual(t, wpos, refPos+maxDrop, "и опускает не ниже предела")
+
+	// «Уже читал» — не негатив: порядок как без скрытия.
+	_, err = pool.Exec(ctx, `UPDATE feed_dismissals SET reason = 'already_read' WHERE user_id = $1`, userID)
+	require.NoError(t, err)
+	again, err := svc.ListWorks(ctx, books.ListParams{Query: wq, Limit: 20, UserID: userID})
+	require.NoError(t, err)
+	require.Equal(t, idsOf(ref.Items), idsOf(again.Items))
+}
+
+func idsOf(items []books.ListItem) []int64 {
+	out := make([]int64, 0, len(items))
+	for _, it := range items {
+		out = append(out, it.ID)
+	}
+	return out
+}
+
+func indexOf(items []books.ListItem, id int64) int {
+	for i, it := range items {
+		if it.ID == id {
+			return i
+		}
+	}
+	return -1
+}

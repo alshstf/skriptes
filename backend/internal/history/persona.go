@@ -3,6 +3,9 @@ package history
 import (
 	"context"
 	"fmt"
+	"time"
+
+	"github.com/skriptes/skriptes/backend/internal/recsys"
 )
 
 // PersonaProfile — агрегированный сигнал-портрет пользователя для
@@ -19,7 +22,7 @@ import (
 //
 // "Подписки" (FavoriteAuthors/Series) — отдельный мап, а не запись с
 // большим весом в Activity: эти бонусы суммируются и могут хотеться
-// разные коэффициенты (см. RankingWeights в internal/books).
+// разные коэффициенты (см. bonus*/malus* в internal/books/service.go).
 type PersonaProfile struct {
 	FavoriteAuthors map[int64]struct{}
 	FavoriteSeries  map[int64]struct{}
@@ -44,6 +47,20 @@ type PersonaProfile struct {
 	SeriesActivity map[int64]float64
 	// GenreActivity[fb2_code] = аналогично для жанров.
 	GenreActivity map[string]float64
+
+	// Негативы (план recsys/03, задача 3.5) — мягкий малус в пересортировке
+	// поиска (books.applyPersonaBoost); позитивную часть профиля не меняют.
+	// Определения — общие с моделью близости (internal/recsys): «не
+	// предлагать» автора/цикл — blocked_authors/blocked_series
+	// (recsys.LoadBlocklist); «не интересно» — feed_dismissals с причиной
+	// not_interested или без неё (recsys.DismissReason.Negative); «бросил» —
+	// recsys.DefaultWeights.IsDropped (не дочитано, доля < DroppedMaxFraction,
+	// движение старше DroppedMinAge). Работы — по work_id (#399): для индекса
+	// изданий хит несёт work_id документа.
+	BlockedAuthors     map[int64]struct{}
+	BlockedSeries      map[int64]struct{}
+	NotInterestedWorks map[int64]struct{}
+	DroppedWorks       map[int64]struct{}
 }
 
 // MaxPersonaAuthors — у книги с бо́льшим числом авторов (антологии, сборники
@@ -65,7 +82,11 @@ func (p PersonaProfile) IsEmpty() bool {
 		len(p.WorkActivity) == 0 &&
 		len(p.AuthorActivity) == 0 &&
 		len(p.SeriesActivity) == 0 &&
-		len(p.GenreActivity) == 0
+		len(p.GenreActivity) == 0 &&
+		len(p.BlockedAuthors) == 0 &&
+		len(p.BlockedSeries) == 0 &&
+		len(p.NotInterestedWorks) == 0 &&
+		len(p.DroppedWorks) == 0
 }
 
 // PersonaProfile собирает все нужные сигналы из БД несколькими короткими запросами.
@@ -83,6 +104,11 @@ func (s *Service) PersonaProfile(ctx context.Context, userID int64) (PersonaProf
 		AuthorActivity:  map[int64]float64{},
 		SeriesActivity:  map[int64]float64{},
 		GenreActivity:   map[string]float64{},
+
+		BlockedAuthors:     map[int64]struct{}{},
+		BlockedSeries:      map[int64]struct{}{},
+		NotInterestedWorks: map[int64]struct{}{},
+		DroppedWorks:       map[int64]struct{}{},
 	}
 
 	// 1. Подписки. Три простых SELECT id WHERE user_id — каждый кладёт
@@ -271,6 +297,70 @@ func (s *Service) PersonaProfile(ctx context.Context, userID int64) (PersonaProf
 			return PersonaProfile{}, err
 		}
 		p.GenreActivity[code] = w
+	}
+	rows.Close()
+	if err := rows.Err(); err != nil {
+		return PersonaProfile{}, err
+	}
+
+	// 6. Негативы (recsys/03, 3.5) — три коротких запроса с предикатами
+	// recsys, а не recsys.BuildProfile целиком: он делает 14 запросов (и
+	// метаданные работ), а персона грузится на каждый поиск и подсказку.
+	blockedAuthors, blockedSeries, err := recsys.LoadBlocklist(ctx, s.pool, userID)
+	if err != nil {
+		return PersonaProfile{}, err
+	}
+	for _, id := range blockedAuthors {
+		p.BlockedAuthors[id] = struct{}{}
+	}
+	for _, id := range blockedSeries {
+		p.BlockedSeries[id] = struct{}{}
+	}
+
+	rows, err = s.pool.Query(ctx, `SELECT work_id, COALESCE(reason, '') FROM feed_dismissals WHERE user_id = $1`, userID)
+	if err != nil {
+		return PersonaProfile{}, fmt.Errorf("dismissals: %w", err)
+	}
+	for rows.Next() {
+		var (
+			id     int64
+			reason string
+		)
+		if err := rows.Scan(&id, &reason); err != nil {
+			rows.Close()
+			return PersonaProfile{}, err
+		}
+		if recsys.DismissReason(reason).Negative() {
+			p.NotInterestedWorks[id] = struct{}{}
+		}
+	}
+	rows.Close()
+	if err := rows.Err(); err != nil {
+		return PersonaProfile{}, err
+	}
+
+	// «Бросил» — агрегат чтения по работе, как recsys.LoadSignals: дочитанное
+	// хотя бы в одном издании не брошено.
+	now := time.Now()
+	rows, err = s.pool.Query(ctx, `
+		SELECT b.work_id, bool_or(r.completed_at IS NOT NULL), max(r.fraction)::float8, max(r.updated_at)
+		FROM reads r
+		JOIN books b ON b.id = r.book_id
+		WHERE r.user_id = $1 AND b.work_id IS NOT NULL
+		GROUP BY b.work_id
+	`, userID)
+	if err != nil {
+		return PersonaProfile{}, fmt.Errorf("dropped: %w", err)
+	}
+	for rows.Next() {
+		var sig recsys.WorkSignals
+		if err := rows.Scan(&sig.WorkID, &sig.Completed, &sig.Fraction, &sig.ReadAt); err != nil {
+			rows.Close()
+			return PersonaProfile{}, err
+		}
+		if recsys.DefaultWeights.IsDropped(sig, now) {
+			p.DroppedWorks[sig.WorkID] = struct{}{}
+		}
 	}
 	rows.Close()
 	return p, rows.Err()

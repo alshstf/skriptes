@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.62.0**.
+конвертируются на лету через fb2cng. Текущая версия — **1.63.0**.
 
 ## Рабочее окружение
 
@@ -132,12 +132,16 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     самых известных; пачки по 250 — план). План — `~/projects/plans/skriptes/bio-timeline-v3-plan.md`.
 26. **Рекомендации — по работам (#399) и с причиной:** секция ленты = `recsys.Item` + `Reason`; кандидаты — через те же
     исключения, что каталог; сигналы вкуса — только `recsys.LoadSignals`/`Score`; новый рекомендатель — `recsys.Recommender`,
-    приёмка — `cmd/recseval`. Персона поиска пока отдельно (перевод — фаза 3.5). Обратная связь (фаза 3): причины
+    приёмка — `cmd/recseval`. Обратная связь (фаза 3): причины
     низкой оценки `recsys.RatingReason`, полка «Хочу прочитать» (`kind='to_read'`), «не предлагать» автора/цикл
     (`blocked_*` → `Exclusions.WithBlocklist`; не скрытие контента — каталог и поиск не трогать). Настроение сессии
     `recsys.Mood` (`mood=` → `Feed.Section/Tonight`: правила пересортировывает `ApplyMood`, классика фильтрует сама —
     `MoodAware`; жанры по настроению — `recsys/mood-genres.json`, правит владелец); «ваша средняя» по автору —
     считается (`catalog.Author.UserRating`, `recsys.AuthorRating`), не хранится.
+    **Персона поиска переведена на негативы модели** (3.5): `PersonaProfile.Blocked*/NotInterestedWorks/DroppedWorks`
+    (предикаты `recsys`) → малус в `books.applyPersonaBoost` (самый сильный, не сумма; точное название без малуса),
+    `sortByFinalScore` опускает хит не глубже `maxMalusDrop` = 3 от места без малуса. Правка пересортировки —
+    golden-тесты `books/persona_*_test.go` + сухой прогон `cmd/searchdry` на проде (`tools/search-dryrun.sh` в plans).
 
 ## Где что искать (коротко; подробно — `docs/assistant/code-map.md`)
 
@@ -159,7 +163,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 | Маршруты фронта, layout | `frontend/src/router.tsx`, `components/Layout.tsx`, `MainNav.tsx` |
 | Поиск-подсказки (Cmd+K, hero) | `components/CommandPalette.tsx`, `lib/suggest.ts`; авторы/серии — `catalog/suggest.go` |
 | Главная | `pages/HomePage.tsx`, `lib/home.ts`, `history/service.go` |
-| Рекомендации: лента Главной с причинами, близость пользователь × работа, правила | `backend/internal/recsys/` (контракт `Item`/`Reason`, `BuildProfile`, веса — `DefaultWeights`; правила фазы 2 — `rules.go` (`Rule`, `Rules`, `Profile.Engaged`), `rule_*.go`, пул «забытой классики» — `classics.go` (фоновый `RefreshLoop`), «на вечер» — `rule_tonight.go` (не в `Rules`: нужен параметр минут), карточки с исключениями — `hydrate.go`, `feed.go` (`Section`, `Related`, `Tonight`)), `api/recs.go` (`GET /me/recommendations?section=`, `…/related?work_id=`, `GET/PUT /me/home-feed`), фронт — `lib/recs.ts` (`HOME_SECTIONS`), `lib/recReasons.ts`, `lib/homeFeed.ts`, `components/Rec*.tsx`, `Shelf.tsx`; харнесс оценки — `cmd/recseval` (только чтение, можно на проде); план — `~/projects/plans/skriptes/recsys-roadmap.md` |
+| Рекомендации: лента Главной с причинами, близость пользователь × работа, правила | `backend/internal/recsys/` (контракт `Item`/`Reason`, `BuildProfile`, веса — `DefaultWeights`; правила фазы 2 — `rules.go` (`Rule`, `Rules`, `Profile.Engaged`), `rule_*.go`, пул «забытой классики» — `classics.go` (фоновый `RefreshLoop`), «на вечер» — `rule_tonight.go` (не в `Rules`: нужен параметр минут), карточки с исключениями — `hydrate.go`, `feed.go` (`Section`, `Related`, `Tonight`)), `api/recs.go` (`GET /me/recommendations?section=`, `…/related?work_id=`, `GET/PUT /me/home-feed`), фронт — `lib/recs.ts` (`HOME_SECTIONS`), `lib/recReasons.ts`, `lib/homeFeed.ts`, `components/Rec*.tsx`, `Shelf.tsx`; харнесс оценки — `cmd/recseval`, сухой прогон персоны поиска — `cmd/searchdry` (оба только чтение, можно на проде); план — `~/projects/plans/skriptes/recsys-roadmap.md` |
 | Авторы (список, фильтры, известность) | `pages/AuthorsPage.tsx`, `catalog/authors_list.go`, `catalog/author_stats.go`, `importer/author_renown.go` |
 | Премии | `internal/awards/`, `api/awards.go`, `pages/AwardsPage.tsx`, `components/AwardBadges.tsx` |
 | Жанры, полки, подборки, умные полки | `pages/ShelvesPage.tsx`, `internal/collections/` (`smart.go`), `books/presets.go`, `components/SmartShelves.tsx` |

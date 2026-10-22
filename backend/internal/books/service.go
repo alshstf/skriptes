@@ -17,6 +17,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/meilisearch/meilisearch-go"
 	"github.com/skriptes/skriptes/backend/internal/history"
+	"github.com/skriptes/skriptes/backend/internal/recsys"
 	"github.com/skriptes/skriptes/backend/internal/textnorm"
 	"github.com/skriptes/skriptes/backend/internal/workauthors"
 )
@@ -140,7 +141,7 @@ func (s *Service) List(ctx context.Context, params ListParams) (ListResponse, er
 	if rerank {
 		profile, err := s.persona.PersonaProfile(ctx, params.UserID)
 		if err == nil && !profile.IsEmpty() {
-			applyPersonaBoost(scored, profile, false)
+			applyPersonaBoost(scored, profile, false, params.Query)
 			sortByFinalScore(scored)
 		}
 	}
@@ -364,7 +365,7 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 
 	scored := scoreWorkHits(res.Hits, rerank)
 	if rerank {
-		s.rerankScored(ctx, params.UserID, scored)
+		s.rerankScored(ctx, params.UserID, params.Query, scored)
 	}
 
 	items := make([]ListItem, 0, len(scored))
@@ -403,9 +404,9 @@ func (s *Service) ListWorks(ctx context.Context, params ListParams) (ListRespons
 // запросом: browse и следующие страницы — чистый Meili-порядок. Пересортировка не
 // меняет СОСТАВ страницы (окно = limit), только порядок внутри — страницы
 // стыкуются без потерь и повторов.
-func (s *Service) rerankScored(ctx context.Context, userID int64, scored []scoredItem) {
+func (s *Service) rerankScored(ctx context.Context, userID int64, query string, scored []scoredItem) {
 	if profile, err := s.persona.PersonaProfile(ctx, userID); err == nil && !profile.IsEmpty() {
-		applyPersonaBoost(scored, profile, true)
+		applyPersonaBoost(scored, profile, true, query)
 	}
 	sortByFinalScore(scored)
 }
@@ -471,7 +472,7 @@ func (s *Service) SuggestWorks(ctx context.Context, query string, limit int, use
 		}
 		if s.persona != nil && userID > 0 {
 			if profile, err := s.persona.PersonaProfile(ctx, userID); err == nil && !profile.IsEmpty() {
-				applyPersonaBoost(scored, profile, true)
+				applyPersonaBoost(scored, profile, true, query)
 			}
 		}
 		sortByFinalScore(scored)
@@ -1031,12 +1032,16 @@ func subtractLangs(universe, remove []string) []string {
 // ── Re-ranking ──────────────────────────────────────────────────
 
 // scoredItem — Item + базовый score из Meili (если включали ShowRankingScore)
-// + persona-бонус + буст известности. final = base + personal + pop.
+// + persona-бонус + буст известности − малус. final = base + personal + pop − malus.
 type scoredItem struct {
 	item     ListItem
 	base     float64
 	personal float64
 	pop      float64
+	// malus — мягкий минус за негативы персоны (recsys/03, 3.5): блок-лист
+	// автора/цикла, «не интересно», «бросил». Отдельно от personal: порядок
+	// без малуса — точка отсчёта предела maxMalusDrop в sortByFinalScore.
+	malus float64
 }
 
 // Коэффициенты бонусов. Подобраны под Meili-_rankingScore в [0,1]:
@@ -1084,18 +1089,60 @@ const (
 	genreActivityCap   = 0.01
 )
 
-// applyPersonaBoost — персональный бонус каждого хита. works — хиты из индекса
-// works (id = works.id): книжные сигналы берутся по работе (FavoriteWorks /
-// WorkActivity), иначе — по изданию (индекс books, OPDS).
-func applyPersonaBoost(scored []scoredItem, p history.PersonaProfile, works bool) {
+// Негативы (план recsys/03, задача 3.5) — мягкий малус. Два правила:
+//
+//  1. Точное название без малуса. Пользователь, набравший название целиком,
+//     ищет ЭТУ книгу — и в баллах Meili её не отличить от соседей: на проде
+//     «На дне» = 1.0, «На дне могилы» = 0.99994, одноимённая безвестная работа
+//     = 1.0; разницу делает только буст известности (≈ 0.01–0.03). Любой малус
+//     заметнее этого ронял точное название ровно на предел: сухой прогон
+//     2026-10-22 по 1000 известным авторам (eval-log) — при 0.5 первое место
+//     сохраняли 49 % точных названий на странице и 26 % в Cmd+K, при 0.15 —
+//     58 % и 54 %. Поэтому exactTitle (recsys.NormalizeQuery запроса =
+//     названия хита) — малус 0.
+//  2. Остальным хитам — малус в баллах с пределом maxMalusDrop позиций
+//     (sortByFinalScore). Шкала: ниже бонуса подписки (0.5 — явное «люблю»
+//     перевешивает «не предлагать»), выше буста известности классики (0.10 —
+//     среди равных по релевантности заблокированный уходит ниже и безвестных);
+//     «бросил» (неявный сигнал, по recsys.DefaultWeights) — слабее известности:
+//     известная брошенная книга остаётся выше безвестной. У хита берётся самый
+//     сильный малус, не сумма (как у бонусов: каждый сигнал — один раз).
+const (
+	malusBlocked       = 0.15
+	malusNotInterested = 0.12
+	malusDropped       = 0.08
+
+	// maxMalusDrop — предел, на сколько позиций малус опускает хит относительно
+	// порядка без малуса (Meili + бонусы + известность). Почему 3: Cmd+K и
+	// hero-подсказки показывают 5 строк — книга с первого-второго места по
+	// неточному запросу («всадник», «комедия») остаётся видимой даже у
+	// заблокированного автора; на странице в 20 — в верхней пятёрке. Негатив
+	// здесь — «не предлагай сам», не «спрячь»: каталог и поиск блок-лист не
+	// фильтруют (recsys/03, 3.2).
+	maxMalusDrop = 3
+)
+
+// applyPersonaBoost — персональный бонус и малус каждого хита. works — хиты из
+// индекса works (id = works.id): книжные сигналы берутся по работе
+// (FavoriteWorks / WorkActivity), иначе — по изданию (индекс books, OPDS).
+// Негативы по работе (NotInterestedWorks / DroppedWorks) в индексе изданий
+// берутся по work_id документа (#399). query — текст поиска: хит, название
+// которого совпадает с ним целиком, малуса не получает (см. malus*).
+func applyPersonaBoost(scored []scoredItem, p history.PersonaProfile, works bool, query string) {
 	favBooks, bookActivity := p.FavoriteBooks, p.BookActivity
 	if works {
 		favBooks, bookActivity = p.FavoriteWorks, p.WorkActivity
 	}
+	nq := recsys.NormalizeQuery(query)
 	for i := range scored {
 		sc := &scored[i]
 		it := sc.item
 		bonus := 0.0
+		malus := 0.0
+		workID := it.ID
+		if !works {
+			workID = it.WorkID
+		}
 
 		// Прямой book-level сигнал — самый сильный.
 		if _, ok := favBooks[it.ID]; ok {
@@ -1117,6 +1164,9 @@ func applyPersonaBoost(scored []scoredItem, p history.PersonaProfile, works bool
 			if w, ok := p.AuthorActivity[aid]; ok {
 				authorAct = math.Max(authorAct, capFloat(w*authorActivityScale, authorActivityCap))
 			}
+			if _, ok := p.BlockedAuthors[aid]; ok {
+				malus = math.Max(malus, malusBlocked)
+			}
 		}
 		if favAuthor {
 			bonus += bonusFavoriteAuthor
@@ -1131,6 +1181,17 @@ func applyPersonaBoost(scored []scoredItem, p history.PersonaProfile, works bool
 			if w, ok := p.SeriesActivity[sid]; ok {
 				bonus += capFloat(w*seriesActivityScale, seriesActivityCap)
 			}
+			if _, ok := p.BlockedSeries[sid]; ok {
+				malus = math.Max(malus, malusBlocked)
+			}
+		}
+		if workID != 0 {
+			if _, ok := p.NotInterestedWorks[workID]; ok {
+				malus = math.Max(malus, malusNotInterested)
+			}
+			if _, ok := p.DroppedWorks[workID]; ok {
+				malus = math.Max(malus, malusDropped)
+			}
 		}
 
 		genreAct := 0.0
@@ -1141,6 +1202,10 @@ func applyPersonaBoost(scored []scoredItem, p history.PersonaProfile, works bool
 		}
 		bonus += genreAct
 		sc.personal = bonus
+		if malus > 0 && nq != "" && recsys.NormalizeQuery(it.Title) == nq {
+			malus = 0 // точное название — ищут именно эту книгу
+		}
+		sc.malus = malus
 	}
 }
 
@@ -1160,14 +1225,72 @@ func popularityBoost(popularity int64) float64 {
 	return popBoostScale * math.Log2(1+float64(popularity))
 }
 
-// sortByFinalScore — стабильная сортировка по убыванию (base+personal+pop),
-// сохраняет порядок Meili при равных score. Стабильность важна: если
-// у двух хитов нет бонусов, они должны остаться в meili-порядке.
+// finalScore — итоговый балл хита: Meili + персона + известность − малус.
+func finalScore(sc scoredItem) float64 { return sc.base + sc.personal + sc.pop - sc.malus }
+
+// sortByFinalScore — стабильная сортировка по убыванию finalScore, сохраняет
+// порядок Meili при равных score. Стабильность важна: если у двух хитов нет
+// бонусов, они должны остаться в meili-порядке.
+//
+// Малус — мягкий: хит с малусом опускается не ниже чем на maxMalusDrop позиций
+// от места, которое занял бы без малуса (порядок по base+personal+pop — у
+// пользователя без негативов это и есть итоговый порядок, позитивная часть не
+// меняется). Выдача собирается сверху вниз: на каждую позицию — лучший по
+// баллу, если только у какого-то хита с малусом не настал крайний срок (его
+// место без малуса + maxMalusDrop) — тогда он. Сроки различны (места без
+// малуса различны), поэтому на каждой позиции «срочный» хит не больше одного и
+// каждый выводится не глубже своего срока.
 func sortByFinalScore(scored []scoredItem) {
-	sort.SliceStable(scored, func(i, j int) bool {
-		return (scored[i].base + scored[i].personal + scored[i].pop) >
-			(scored[j].base + scored[j].personal + scored[j].pop)
-	})
+	withMalus := false
+	for i := range scored {
+		if scored[i].malus > 0 {
+			withMalus = true
+			break
+		}
+	}
+	if !withMalus {
+		sort.SliceStable(scored, func(i, j int) bool { return finalScore(scored[i]) > finalScore(scored[j]) })
+		return
+	}
+
+	n := len(scored)
+	byScore := func(malus bool) []int {
+		idx := make([]int, n)
+		for i := range idx {
+			idx[i] = i
+		}
+		score := func(i int) float64 {
+			sc := scored[i]
+			if malus {
+				return finalScore(sc)
+			}
+			return sc.base + sc.personal + sc.pop
+		}
+		sort.SliceStable(idx, func(a, b int) bool { return score(idx[a]) > score(idx[b]) })
+		return idx
+	}
+	deadline := make([]int, n) // по исходному индексу; -1 — без малуса
+	for i := range deadline {
+		deadline[i] = -1
+	}
+	for pos, i := range byScore(false) {
+		if scored[i].malus > 0 {
+			deadline[i] = pos + maxMalusDrop
+		}
+	}
+	rest := byScore(true)
+	out := make([]scoredItem, 0, n)
+	for k := 0; k < n; k++ {
+		pick := 0
+		for j, i := range rest {
+			if deadline[i] >= 0 && deadline[i] <= k && (deadline[rest[pick]] < 0 || deadline[i] < deadline[rest[pick]]) {
+				pick = j
+			}
+		}
+		out = append(out, scored[rest[pick]])
+		rest = append(rest[:pick], rest[pick+1:]...)
+	}
+	copy(scored, out)
 }
 
 func capFloat(v, max float64) float64 {
@@ -1349,7 +1472,7 @@ func (s *Service) Suggest(ctx context.Context, query string, limit int, userID i
 	if rerank {
 		profile, err := s.persona.PersonaProfile(ctx, userID)
 		if err == nil && !profile.IsEmpty() {
-			applyPersonaBoost(scored, profile, false)
+			applyPersonaBoost(scored, profile, false, query)
 			sortByFinalScore(scored)
 			if len(scored) > limit {
 				scored = scored[:limit]
