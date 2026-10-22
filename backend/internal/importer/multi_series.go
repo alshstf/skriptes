@@ -255,5 +255,20 @@ func moveSeriesSubscriptions(ctx context.Context, pool *pgxpool.Pool) (int64, er
 		WHERE f.series_id IN (SELECT frag.id `+fragments+`)`); err != nil {
 		return 0, fmt.Errorf("drop fragment subscriptions: %w", err)
 	}
+	// «Не предлагать цикл» (recsys/03, 3.2) переезжает так же, как подписка.
+	if _, err := pool.Exec(ctx, `
+		INSERT INTO blocked_series (user_id, series_id)
+		SELECT f.user_id, m.id
+		FROM blocked_series f
+		JOIN (SELECT frag.id AS frag_id, m.id `+fragments+`) x ON x.frag_id = f.series_id
+		JOIN series m ON m.id = x.id
+		ON CONFLICT DO NOTHING`); err != nil {
+		return 0, fmt.Errorf("copy series blocks: %w", err)
+	}
+	if _, err := pool.Exec(ctx, `
+		DELETE FROM blocked_series f
+		WHERE f.series_id IN (SELECT frag.id `+fragments+`)`); err != nil {
+		return 0, fmt.Errorf("drop fragment blocks: %w", err)
+	}
 	return tag.RowsAffected(), nil
 }

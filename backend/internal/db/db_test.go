@@ -36,10 +36,10 @@ func TestMigrateAndPool(t *testing.T) {
 	// Проверка: все ключевые таблицы на месте.
 	expected := []string{
 		"annotations", "app_settings",
-		"archives", "author_bio", "author_duplicate_rejections", "author_event_hides", "author_facets", "author_fantlab_lookups", "author_merges", "author_meta_recheck", "author_splits", "authors", "award_wins", "book_adaptations", "book_authors", "book_cover_lookups", "book_external_rating_lookups", "book_genres", "book_rating_prompts", "book_ratings", "book_src_lang_lookups", "book_work_lookups", "book_year_lookups", "books",
+		"archives", "author_bio", "author_duplicate_rejections", "author_event_hides", "author_facets", "author_fantlab_lookups", "author_merges", "author_meta_recheck", "author_splits", "authors", "award_wins", "blocked_authors", "blocked_series", "book_adaptations", "book_authors", "book_cover_lookups", "book_external_rating_lookups", "book_genres", "book_rating_prompts", "book_ratings", "book_src_lang_lookups", "book_work_lookups", "book_year_lookups", "books",
 		"collections", "device_passwords", "favorite_authors", "favorite_series",
 		"feed_dismissals", "genres", "hidden_authors", "hidden_works", "import_jobs", "kindle_targets", "metadata_cache",
-		"metadata_overrides",
+		"metadata_overrides", "rating_reasons",
 		"read_positions", "reads", "search_log", "search_matches", "series", "sessions", "smart_shelves",
 		"user_collection_books", "user_collections", "user_favorite_genres",
 		"user_settings", "users", "views", "work_contents", "work_merge_rejections", "work_renown_lookups", "works",

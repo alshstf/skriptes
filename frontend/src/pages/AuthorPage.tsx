@@ -14,6 +14,7 @@ import { MergeSuggestions } from '@/components/MergeSuggestions';
 import { MergeWorksDialog } from '@/components/MergeWorksDialog';
 import { ExpandableText } from '@/components/ExpandableText';
 import { FavoriteButton } from '@/components/FavoriteButton';
+import { NotInterestedButton } from '@/components/NotInterestedButton';
 import { YearHistogram } from '@/components/YearHistogram';
 import { BioTimelineTeaser } from '@/components/BioTimelineTeaser';
 import { ReadingProgress } from '@/components/ReadingProgress';
@@ -84,7 +85,10 @@ export function AuthorPage() {
                     <Film className="size-4 shrink-0 text-muted-foreground" aria-label="Есть экранизации" />
                   ) : null}
                 </div>
-                <FavoriteButton target="author" id={a.id} isFavorite={a.is_favorite ?? false} />
+                <div className="flex items-center gap-1">
+                  <FavoriteButton target="author" id={a.id} isFavorite={a.is_favorite ?? false} />
+                  <NotInterestedButton target="author" id={a.id} isBlocked={a.is_blocked ?? false} />
+                </div>
               </div>
               {a.note ? <p className="-mt-1 text-sm text-muted-foreground">{a.note}</p> : null}
               {/* Сводка-зеркало строки списка: книги · годы · внешний рейтинг

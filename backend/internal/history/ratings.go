@@ -17,6 +17,9 @@ import (
 // ErrInvalidRating — оценка вне допустимого диапазона 1–5.
 var ErrInvalidRating = errors.New("rating must be between 1 and 5")
 
+// ErrInvalidRatingReason — причина низкой оценки вне списка recsys.AllRatingReasons.
+var ErrInvalidRatingReason = errors.New("unknown rating reason")
+
 // SetRating — поставить/изменить оценку пользователя работе. Повторный вызов
 // обновляет оценку и rated_at. Снятие оценки — RemoveRating.
 //
@@ -43,6 +46,14 @@ func (s *Service) SetRating(ctx context.Context, userID, workID int64, rating in
 		return fmt.Errorf("set rating: %w", err)
 	}
 
+	// Причины низкой оценки (recsys/03, 3.1) живут вместе с низкой оценкой:
+	// новая ≥ 4 их снимает (при 1–3 остаются — пользователь лишь уточнил балл).
+	if rating >= 4 {
+		if _, err := tx.Exec(ctx, `DELETE FROM rating_reasons WHERE user_id = $1 AND work_id = $2`, userID, workID); err != nil {
+			return fmt.Errorf("set rating: clear reasons: %w", err)
+		}
+	}
+
 	if _, err := tx.Exec(ctx, `
 		INSERT INTO reads (user_id, book_id, completed_at, updated_at)
 		SELECT $1, b.id, now(), now()
@@ -62,10 +73,11 @@ func (s *Service) SetRating(ctx context.Context, userID, workID int64, rating in
 	return nil
 }
 
-// RemoveRating — снять оценку. Идемпотентна.
+// RemoveRating — снять оценку (и её причины). Идемпотентна.
 func (s *Service) RemoveRating(ctx context.Context, userID, workID int64) error {
 	_, err := s.pool.Exec(ctx, `
-		DELETE FROM book_ratings WHERE user_id = $1 AND work_id = $2
+		WITH r AS (DELETE FROM book_ratings WHERE user_id = $1 AND work_id = $2)
+		DELETE FROM rating_reasons WHERE user_id = $1 AND work_id = $2
 	`, userID, workID)
 	if err != nil {
 		return fmt.Errorf("remove rating: %w", err)

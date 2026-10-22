@@ -17,6 +17,25 @@ type Exclusions struct {
 	Genres           []string
 	Langs            []string
 	HideCompilations bool
+	// Authors / Series — «не предлагать» (recsys/03, 3.2): работа с таким
+	// автором (у любого живого издания) или в таком цикле (работы или издания)
+	// выпадает. Feed берёт их из Profile.BlockedAuthors/BlockedSeries.
+	Authors []int64
+	Series  []int64
+}
+
+// WithBlocklist — копия ex с блок-листом профиля.
+func (ex Exclusions) WithBlocklist(p *Profile) Exclusions {
+	if p == nil {
+		return ex
+	}
+	for id := range p.BlockedAuthors {
+		ex.Authors = append(ex.Authors, id)
+	}
+	for id := range p.BlockedSeries {
+		ex.Series = append(ex.Series, id)
+	}
+	return ex
 }
 
 // Hydrate — карточки ленты для кандидатов: представительное издание (живое,
@@ -40,6 +59,13 @@ func Hydrate(ctx context.Context, q Querier, cands []Candidate, ex Exclusions, l
 	if len(ex.Genres) > 0 {
 		genres = ex.Genres
 	}
+	var blockedAuthors, blockedSeries []int64
+	if len(ex.Authors) > 0 {
+		blockedAuthors = ex.Authors
+	}
+	if len(ex.Series) > 0 {
+		blockedSeries = ex.Series
+	}
 	items := make(map[int64]Item, len(ids))
 	if err := each(ctx, q, `
 		WITH rep AS (
@@ -57,35 +83,48 @@ func Hydrate(ctx context.Context, q Querier, cands []Candidate, ex Exclusions, l
 			) r ON true
 			WHERE w.id = ANY($1) AND NOT w.instance_hidden
 			  AND (NOT $4::bool OR COALESCE(w.kind, '') = '')
+			  -- «Не предлагать» (recsys/03, 3.2): автор любого живого издания или цикл работы/издания.
+			  AND ($5::bigint[] IS NULL OR NOT EXISTS (
+			      SELECT 1 FROM books bx JOIN book_authors bax ON bax.book_id = bx.id
+			      WHERE bx.work_id = w.id AND NOT bx.deleted AND bax.author_id = ANY($5::bigint[])))
+			  AND ($6::bigint[] IS NULL OR (
+			      (w.series_id IS NULL OR NOT (w.series_id = ANY($6::bigint[])))
+			      AND NOT EXISTS (SELECT 1 FROM books bx WHERE bx.work_id = w.id AND NOT bx.deleted
+			                      AND bx.series_id IS NOT NULL AND bx.series_id = ANY($6::bigint[]))))
 		)
-		SELECT rep.work_id, b.id, rep.work_title, b.lib_id, ser.title,
+		SELECT rep.work_id, b.id, rep.work_title, b.lib_id, ser.id, ser.title,
 		       COALESCE(b.cover_path, (
 		           SELECT bb.cover_path FROM books bb
 		           WHERE bb.work_id = rep.work_id AND bb.deleted = false
 		             AND bb.cover_path IS NOT NULL AND bb.cover_path <> ''
 		           ORDER BY bb.id LIMIT 1
 		       ), ''),
-		       COALESCE(
-		           array_agg(DISTINCT TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name))) FILTER (WHERE a.id IS NOT NULL),
-		           ARRAY[]::text[]
-		       )
+		       COALESCE(au.names, ARRAY[]::text[]), COALESCE(au.ids, ARRAY[]::bigint[])
 		FROM rep
 		JOIN books b ON b.id = rep.book_id
 		-- Подпись — цикл работы (канонический), иначе цикл издания; только циклы (#468).
 		LEFT JOIN series ser ON ser.id = COALESCE(rep.work_series, b.series_id) AND ser.kind IS NULL
-		LEFT JOIN book_authors ba ON ba.book_id = b.id
-		LEFT JOIN authors a ON a.id = ba.author_id
-		GROUP BY rep.work_id, b.id, rep.work_title, b.lib_id, ser.title, b.cover_path`,
-		[]any{ids, langs, genres, ex.HideCompilations}, func(rows pgx.Rows) error {
+		-- Авторы издания — имена и id в одном порядке (по позиции в fb2).
+		LEFT JOIN LATERAL (
+			SELECT array_agg(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)) ORDER BY ba.position, a.id) AS names,
+			       array_agg(a.id ORDER BY ba.position, a.id) AS ids
+			FROM book_authors ba JOIN authors a ON a.id = ba.author_id
+			WHERE ba.book_id = b.id
+		) au ON true`,
+		[]any{ids, langs, genres, ex.HideCompilations, blockedAuthors, blockedSeries}, func(rows pgx.Rows) error {
 			var (
-				it     Item
-				series *string
+				it       Item
+				seriesID *int64
+				series   *string
 			)
-			if err := rows.Scan(&it.WorkID, &it.ID, &it.Title, &it.LibID, &series, &it.CoverPath, &it.Authors); err != nil {
+			if err := rows.Scan(&it.WorkID, &it.ID, &it.Title, &it.LibID, &seriesID, &series, &it.CoverPath, &it.Authors, &it.AuthorIDs); err != nil {
 				return err
 			}
 			if series != nil {
 				it.Series = *series
+			}
+			if seriesID != nil {
+				it.SeriesID = *seriesID
 			}
 			items[it.WorkID] = it
 			return nil

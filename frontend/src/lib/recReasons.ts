@@ -80,6 +80,9 @@ export function reasonParts(r: RecReason, now = new Date(), ctx: ReasonContext =
         },
       ];
     }
+    case 'to_read':
+      // «Хотели прочитать · отложили 3 месяца назад» — напоминание о полке.
+      return [{ text: `Хотели прочитать${r.at ? ` · отложили ${formatRelativeDays(r.at, now)}` : ''}` }];
     case 'fits_tonight': {
       // «≈ 40 мин · ваш жанр: Фантастика» — имя жанра по коду даёт компонент.
       const genre = r.genre ? (ctx.genreName?.(r.genre) ?? r.genre) : '';

@@ -39,6 +39,8 @@ func TestMergeAuthors_Integration(t *testing.T) {
 		`INSERT INTO users (email, display_name, password_hash, role) VALUES ('u@x','U','x','user') RETURNING id`).Scan(&user))
 	_, err = pool.Exec(ctx, `INSERT INTO favorite_authors (user_id, author_id) VALUES ($1, $2)`, user, short)
 	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `INSERT INTO blocked_authors (user_id, author_id) VALUES ($1, $2)`, user, short)
+	require.NoError(t, err)
 
 	ctl := NewOverrideController(pool, nil, slog.New(slog.NewTextHandler(io.Discard, nil)))
 	_, err = ctl.MergeAuthors(ctx, short, short, 0)
@@ -56,6 +58,11 @@ func TestMergeAuthors_Integration(t *testing.T) {
 	var subs int
 	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM favorite_authors WHERE author_id=$1 AND user_id=$2`, full, user).Scan(&subs))
 	require.Equal(t, 1, subs, "подписка переехала")
+	var blocks int
+	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM blocked_authors WHERE author_id=$1 AND user_id=$2`, full, user).Scan(&blocks))
+	require.Equal(t, 1, blocks, "«не предлагать» переехало")
+	require.NoError(t, pool.QueryRow(ctx, `SELECT count(*) FROM blocked_authors WHERE author_id=$1`, short).Scan(&blocks))
+	require.Zero(t, blocks)
 	var bio string
 	require.NoError(t, pool.QueryRow(ctx, `SELECT COALESCE(bio,'') FROM authors WHERE id=$1`, full).Scan(&bio))
 	require.Equal(t, "Сергей Лукьяненко — писатель", bio, "у цели не было био — взято у источника")

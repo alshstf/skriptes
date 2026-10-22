@@ -38,13 +38,22 @@ var ErrReservedName = errors.New("collection name is reserved")
 // домашняя библиотека, длинные имена ни к чему).
 const maxNameLen = 200
 
-// kind полки + имя служебной «Избранное» (миграция 0023). favorites-полка —
-// служебная: ★ книги = членство в ней; одна на юзера (partial unique).
+// kind полки + имена служебных полок: «Избранное» (миграция 0023; ★ книги =
+// членство в ней) и «Хочу прочитать» (0068; закладка на карточке, план
+// recsys/03 3.3). Служебные — по одной на юзера (partial unique), не
+// переименовать и не удалить; имена зарезервированы.
 const (
 	kindUser      = "user"
 	kindFavorites = "favorites"
+	kindToRead    = "to_read"
 	favoritesName = "Избранное"
+	toReadName    = "Хочу прочитать"
 )
+
+// reservedName — имя занято служебной полкой.
+func reservedName(n string) bool {
+	return strings.EqualFold(n, favoritesName) || strings.EqualFold(n, toReadName)
+}
 
 // Service — операции с полками. Потокобезопасен (pgxpool сам управляет
 // конкурентным доступом).
@@ -60,7 +69,8 @@ func New(pool *pgxpool.Pool) *Service {
 type Collection struct {
 	ID   int64  `json:"id"`
 	Name string `json:"name"`
-	// Kind — "user" (обычная полка) | "favorites" (служебная «Избранное»: ★ книги).
+	// Kind — "user" (обычная полка) | "favorites" (служебная «Избранное»: ★ книги)
+	// | "to_read" (служебная «Хочу прочитать»: закладка на карточке).
 	Kind      string    `json:"kind"`
 	BookCount int       `json:"book_count"`
 	CreatedAt time.Time `json:"created_at"`
@@ -109,8 +119,9 @@ func (s *Service) CreateCollection(ctx context.Context, userID int64, name strin
 	if err != nil {
 		return Collection{}, err
 	}
-	// «Избранное» зарезервировано за служебной полкой — дубль руками нельзя.
-	if strings.EqualFold(n, favoritesName) {
+	// «Избранное» и «Хочу прочитать» зарезервированы за служебными полками —
+	// дубль руками нельзя.
+	if reservedName(n) {
 		return Collection{}, ErrReservedName
 	}
 	c := Collection{Name: n, Kind: kindUser}
@@ -131,10 +142,10 @@ func (s *Service) RenameCollection(ctx context.Context, userID, id int64, name s
 	if err != nil {
 		return err
 	}
-	if strings.EqualFold(n, favoritesName) {
+	if reservedName(n) {
 		return ErrReservedName
 	}
-	// Служебную «Избранное» переименовывать нельзя.
+	// Служебные полки («Избранное», «Хочу прочитать») переименовывать нельзя.
 	var kind string
 	err = s.pool.QueryRow(ctx, `SELECT kind FROM user_collections WHERE id = $1 AND user_id = $2`, id, userID).Scan(&kind)
 	if errors.Is(err, pgx.ErrNoRows) {
@@ -189,7 +200,7 @@ func (s *Service) ListCollections(ctx context.Context, userID int64) ([]Collecti
 		        WHERE cb.collection_id = c.id)::int AS book_count
 		FROM user_collections c
 		WHERE c.user_id = $1
-		ORDER BY (c.kind = 'favorites') DESC, c.updated_at DESC, c.id DESC
+		ORDER BY (c.kind = 'favorites') DESC, (c.kind = 'to_read') DESC, c.updated_at DESC, c.id DESC
 	`, userID)
 	if err != nil {
 		return nil, fmt.Errorf("list collections: %w", err)

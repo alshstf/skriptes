@@ -17,9 +17,10 @@ import {
 } from '@/lib/recs';
 import type { RecItem, RecSectionKind } from '@/lib/recs';
 import { useHomeFeedSettings, useSetSectionCollapsed } from '@/lib/homeFeed';
-import { useRatePrompt } from '@/lib/ratings';
+import { LOW_RATING_MAX, useFinishRatePrompt, useRatePrompt } from '@/lib/ratings';
 import { RatingControl } from '@/components/RatingControl';
 import { RatingPromptMenu } from '@/components/RatingPromptMenu';
+import { RatingReasonsPrompt } from '@/components/RatingReasonsPrompt';
 import { RecDismissMenu } from '@/components/RecDismissMenu';
 import { RecReasons } from '@/components/RecReason';
 import { CoverCard, SHELF_CARD_WIDTH, Shelf, ShelfSkeleton } from '@/components/Shelf';
@@ -305,6 +306,7 @@ const SECTION_META: Record<RecSectionKind, { title: string; card: (item: RecItem
   next_in_series: { title: 'Дальше в цикле', card: (it) => <FeedCard item={it} /> },
   author_you_finished: { title: 'Автор, которого вы дочитали', card: (it) => <FeedCard item={it} /> },
   subscriptions: { title: 'Новинки по подпискам', card: (it) => <FeedCard item={it} /> },
+  to_read_reminder: { title: 'Вы хотели прочитать', card: (it) => <FeedCard item={it} /> },
   dropped_then_loved_author: { title: 'Отложенное, к которому доросли', card: (it) => <FeedCard item={it} /> },
   forgotten_classic: { title: 'Забытая классика', card: (it) => <FeedCard item={it} /> },
   reread: { title: 'Перечитать', card: (it) => <FeedCard item={it} /> },
@@ -443,13 +445,18 @@ function ContinueCard({ item }: { item: RecItem }) {
 }
 
 // FeedCard — карточка с причиной и kebab «скрыть с причиной» (новинки,
-// «появилось то, что вы искали», правила фазы 2).
+// «появилось то, что вы искали», правила фазы 2); у секций правил в kebab ещё
+// «не предлагать автора / цикл» (recsys/03, 3.2) — по author_ids/series_id.
 function FeedCard({ item }: { item: RecItem }) {
+  const authors = (item.author_ids ?? [])
+    .map((id, i) => ({ id, name: item.authors[i] ?? '' }))
+    .filter((a) => a.name !== '');
+  const series = item.series_id && item.series ? { id: item.series_id, title: item.series } : undefined;
   return (
     <div className="relative shrink-0">
       {/* Скрыть с причиной: kebab в углу обложки (как у запросов оценки). */}
       <div className="absolute right-1 top-1 z-10">
-        <RecDismissMenu workId={workIdOf(item)} />
+        <RecDismissMenu workId={workIdOf(item)} authors={authors} series={series} />
       </div>
       <CoverCard
         to={`/works/${workIdOf(item)}`}
@@ -469,10 +476,28 @@ function FeedCard({ item }: { item: RecItem }) {
 
 // RateableCard — «Оцените прочитанное»: книга, которую юзер вероятно прочитал и
 // ещё не оценил; инлайн-оценка. Бэкенд отдаёт пусто, если запросы оценки
-// выключены в профиле → секция не рендерится.
+// выключены в профиле → секция не рендерится. Низкая оценка (≤ 2) — второй
+// шаг «почему?» прямо в карточке (recsys/03, 3.1); после него карточка уходит.
 function RateableCard({ item }: { item: RecItem }) {
   const workId = workIdOf(item);
   const rate = useRatePrompt();
+  const finish = useFinishRatePrompt();
+  const [askReasons, setAskReasons] = useState(false);
+  if (askReasons) {
+    return (
+      <div className="w-64 shrink-0 space-y-2 rounded-md border border-border p-2" data-testid="rateable-reasons">
+        <p className="line-clamp-2 text-sm font-medium leading-snug">{item.title}</p>
+        <RatingReasonsPrompt
+          workId={workId}
+          compact
+          onDone={() => {
+            setAskReasons(false);
+            finish();
+          }}
+        />
+      </div>
+    );
+  }
   return (
     <div className={cn('group/rate relative flex shrink-0 flex-col gap-1.5', SHELF_CARD_WIDTH)}>
       {/* Kebab поверх обложки: «ещё не прочитал» / «не буду оценивать». */}
@@ -497,13 +522,18 @@ function RateableCard({ item }: { item: RecItem }) {
         ) : null}
         <RecReasons reasons={item.reasons} />
       </Link>
-      {/* Инлайн-оценка: выбрал → книга уходит из ленты (+ авто-«Прочитана»). */}
+      {/* Инлайн-оценка: выбрал → книга уходит из ленты (+ авто-«Прочитана»);
+          низкая — сначала «почему?». */}
       <div className="px-1">
         <RatingControl
           value={0}
           disabled={rate.isPending}
           onChange={(n) => {
-            if (n) rate.mutate({ workId, rating: n });
+            if (!n) return;
+            rate.mutate(
+              { workId, rating: n },
+              { onSuccess: () => n <= LOW_RATING_MAX && setAskReasons(true) },
+            );
           }}
         />
       </div>

@@ -91,4 +91,26 @@ func TestFitsTonight(t *testing.T) {
 	none, err := recsys.FitsTonight{Minutes: 40}.Candidates(ctx, pool, &recsys.Profile{}, 10)
 	require.NoError(t, err)
 	require.Empty(t, none)
+
+	// «Слишком длинно» среди причин низких оценок (recsys/03, 3.1): балл режется
+	// пропорционально длине (вдвое у занимающей всё время) — короткое выше.
+	wids := func(c []recsys.Candidate) []int64 {
+		out := make([]int64, 0, len(c))
+		for _, x := range c {
+			out = append(out, x.WorkID)
+		}
+		return out
+	}
+	mid, _ := mk("Средняя sf", 100_000, 3, gSF) // ровно 40 мин, известнее короткой
+	cands, err = recsys.FitsTonight{Minutes: 40}.Candidates(ctx, pool, p, 10)
+	require.NoError(t, err)
+	require.Equal(t, []int64{shortBoth, mid, short}, wids(cands), "без причины — по известности и жанрам")
+	f.exec(`INSERT INTO book_ratings (user_id, work_id, rating) VALUES ($1,$2,2)`, me, poem)
+	f.exec(`INSERT INTO rating_reasons (user_id, work_id, reason) VALUES ($1,$2,'too_long')`, me, poem)
+	pShort, err := recsys.BuildProfile(ctx, pool, me, time.Now(), recsys.DefaultWeights)
+	require.NoError(t, err)
+	require.Equal(t, 1, pShort.Reasons[recsys.ReasonTooLong])
+	cands, err = recsys.FitsTonight{Minutes: 40}.Candidates(ctx, pool, pShort, 10)
+	require.NoError(t, err)
+	require.Equal(t, []int64{shortBoth, short, mid}, wids(cands), "с «слишком длинно» — короче выше")
 }

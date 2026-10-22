@@ -22,13 +22,15 @@ export type RecSectionKind =
   | 'dropped_then_loved_author'
   | 'forgotten_classic'
   | 'reread'
-  | 'fits_tonight';
+  | 'fits_tonight'
+  | 'to_read_reminder';
 
 /**
  * HOME_SECTIONS — порядок секций на Главной (план recsys/02, 2.9): продолжить →
  * появилось искомое → дальше в цикле → автор, которого дочитали → новинки по
- * подпискам → брошенное → забытая классика → перечитать → на вечер → оцените
- * прочитанное. Пустые не рендерятся. Зеркало recsys.AllSections.
+ * подпискам → вы хотели прочитать (recsys/03, 3.3) → брошенное → забытая
+ * классика → перечитать → на вечер → оцените прочитанное. Пустые не
+ * рендерятся. Зеркало recsys.AllSections.
  */
 export const HOME_SECTIONS: readonly RecSectionKind[] = [
   'continue_reading',
@@ -36,6 +38,7 @@ export const HOME_SECTIONS: readonly RecSectionKind[] = [
   'next_in_series',
   'author_you_finished',
   'subscriptions',
+  'to_read_reminder',
   'dropped_then_loved_author',
   'forgotten_classic',
   'reread',
@@ -85,16 +88,22 @@ export type RecReason =
   // Классика year года, внешний rating из source; на инстансе никто не открывал.
   | { kind: 'forgotten_classic'; year?: number; rating?: number; source?: 'fantlab' | 'librate' }
   // Укладывается в minutes при вашей скорости; genre — fb2-код любимого жанра.
-  | { kind: 'fits_tonight'; minutes?: number; genre?: string };
+  | { kind: 'fits_tonight'; minutes?: number; genre?: string }
+  // Положили на «Хочу прочитать» at и с тех пор не открывали (recsys/03, 3.3).
+  | { kind: 'to_read'; at?: string };
 
 // RecItem — зеркало recsys.Item: id — представительное издание (обложка,
-// фолбэк ссылки), work_id — карточка книги.
+// фолбэк ссылки), work_id — карточка книги. author_ids — те же авторы, что
+// authors, в том же порядке; series_id — цикл подписи series (есть только у
+// секций правил — kebab «не предлагать», recsys/03 3.2).
 export type RecItem = {
   id: number;
   work_id?: number;
   title: string;
   authors: string[];
+  author_ids?: number[];
   series?: string;
+  series_id?: number;
   lib_id: string;
   cover_path?: string;
   reasons: RecReason[];
@@ -129,6 +138,7 @@ const STALE_MS: Record<RecSectionKind, number> = {
   forgotten_classic: 5 * 60_000,
   reread: 5 * 60_000,
   fits_tonight: 60_000,
+  to_read_reminder: 5 * 60_000,
 };
 
 /** SectionParams — параметры секции (minutes — «у меня есть N минут», fits_tonight). */

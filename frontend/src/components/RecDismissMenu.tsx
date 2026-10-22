@@ -3,19 +3,35 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useToggleBlock } from '@/lib/blocklist';
 import { useDismissRec } from '@/lib/recs';
 import { cn } from '@/lib/utils';
 
 /**
  * RecDismissMenu — kebab (⋮) у карточки ленты: скрыть с причиной. Причина
- * нужна модели близости (только «не интересно» — негатив). Триггер — компактный
- * bordered-чип поверх обложки, как у RatingPromptMenu; stopPropagation — чтобы
- * клик не проваливался в родительскую ссылку-карточку.
+ * нужна модели близости (только «не интересно» — негатив). Ниже — «не
+ * предлагать автора / цикл» (план recsys/03, 3.2), если карточка знает их id
+ * (секции правил). Триггер — компактный bordered-чип поверх обложки, как у
+ * RatingPromptMenu; stopPropagation — чтобы клик не проваливался в
+ * родительскую ссылку-карточку.
  */
-export function RecDismissMenu({ workId, className }: { workId: number; className?: string }) {
+export function RecDismissMenu({
+  workId,
+  authors = [],
+  series,
+  className,
+}: {
+  workId: number;
+  authors?: { id: number; name: string }[];
+  series?: { id: number; title: string };
+  className?: string;
+}) {
   const dismiss = useDismissRec();
+  const block = useToggleBlock();
+  const blockable = authors.slice(0, 3);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -41,6 +57,17 @@ export function RecDismissMenu({ workId, className }: { workId: number; classNam
         <DropdownMenuItem onClick={() => dismiss.mutate({ workId, reason: 'later' })}>
           Потом
         </DropdownMenuItem>
+        {blockable.length > 0 || series ? <DropdownMenuSeparator /> : null}
+        {blockable.map((a) => (
+          <DropdownMenuItem key={a.id} onClick={() => block.mutate({ target: 'author', id: a.id, next: true })}>
+            Не предлагать автора: {a.name}
+          </DropdownMenuItem>
+        ))}
+        {series ? (
+          <DropdownMenuItem onClick={() => block.mutate({ target: 'series', id: series.id, next: true })}>
+            Не предлагать цикл: {series.title}
+          </DropdownMenuItem>
+        ) : null}
       </DropdownMenuContent>
     </DropdownMenu>
   );

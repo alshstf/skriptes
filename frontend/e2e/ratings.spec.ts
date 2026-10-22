@@ -114,3 +114,43 @@ test('rating: после оценки 5 — карточки «вот следу
   await page.getByRole('button', { name: 'Оценить на 2' }).click();
   await expect(page.getByTestId('after-rating-recs')).toHaveCount(0);
 });
+
+// Причины низкой оценки (план recsys/03, 3.1): оценка 2 → чипы «почему?», выбор и
+// «Сохранить» → PUT /api/works/19/rating-reasons; после — строка «Почему: …».
+test('rating: оценка 2 → чипы причин → PUT rating-reasons', async ({ mockedPage: page }) => {
+  let userRating: number | undefined;
+  let reasons: string[] = [];
+  await page.route(/\/api\/books\/19$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        ...bookDetailFixture,
+        user_rating: userRating,
+        user_rating_reasons: reasons.length > 0 ? reasons : undefined,
+      }),
+    }),
+  );
+  await page.route(/\/api\/works\/19\/rating$/, (route) => {
+    userRating = (route.request().postDataJSON() as { rating: number }).rating;
+    void route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ rating: userRating }) });
+  });
+  let putBody: unknown = null;
+  await page.route(/\/api\/works\/19\/rating-reasons$/, (route) => {
+    putBody = route.request().postDataJSON();
+    reasons = (putBody as { reasons: string[] }).reasons;
+    void route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ reasons }) });
+  });
+
+  await page.goto('/books/19');
+  await expect(page.getByText('Ваша оценка:')).toBeVisible({ timeout: 10_000 });
+  await page.getByRole('button', { name: 'Оценить на 2' }).click();
+  const prompt = page.getByTestId('rating-reasons');
+  await expect(prompt).toBeVisible();
+  await prompt.getByRole('button', { name: 'скучно' }).click();
+  await prompt.getByRole('button', { name: 'слишком длинно' }).click();
+  await prompt.getByRole('button', { name: 'Сохранить' }).click();
+  await expect.poll(() => putBody).toEqual({ reasons: ['boring', 'too_long'] });
+  await expect(prompt).toHaveCount(0);
+  await expect(page.getByTestId('rating-reasons-line')).toContainText('Почему: скучно · слишком длинно');
+});

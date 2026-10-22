@@ -982,9 +982,12 @@ func reassignWorkUserData(ctx context.Context, ex pgxExec, canonical int64, lose
 		`INSERT INTO book_rating_prompts (user_id, work_id, state, snoozed_until, updated_at)
 		 SELECT user_id, $1, state, snoozed_until, updated_at FROM book_rating_prompts WHERE work_id = ANY($2)
 		 ON CONFLICT (user_id, work_id) DO NOTHING`,
-		`INSERT INTO feed_dismissals (user_id, work_id, dismissed_at)
-		 SELECT user_id, $1, dismissed_at FROM feed_dismissals WHERE work_id = ANY($2)
+		`INSERT INTO feed_dismissals (user_id, work_id, dismissed_at, reason)
+		 SELECT user_id, $1, dismissed_at, reason FROM feed_dismissals WHERE work_id = ANY($2)
 		 ON CONFLICT (user_id, work_id) DO NOTHING`,
+		`INSERT INTO rating_reasons (user_id, work_id, reason, at)
+		 SELECT user_id, $1, reason, at FROM rating_reasons WHERE work_id = ANY($2)
+		 ON CONFLICT (user_id, work_id, reason) DO NOTHING`,
 	} {
 		if _, err := ex.Exec(ctx, q, canonical, losers); err != nil {
 			return fmt.Errorf("reassign work user data: %w", err)

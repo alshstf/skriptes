@@ -28,8 +28,10 @@ import { InstanceHideControl } from '@/components/InstanceHideControl';
 import { SplitEditionsDialog } from '@/components/SplitEditionsDialog';
 import { MergeIntoWorkDialog } from '@/components/MergeIntoWorkDialog';
 import { FavoriteButton } from '@/components/FavoriteButton';
+import { ToReadButton } from '@/components/ToReadButton';
 import { RatingControl } from '@/components/RatingControl';
-import { useRateBook } from '@/lib/ratings';
+import { RatingReasonsLine, RatingReasonsPrompt } from '@/components/RatingReasonsPrompt';
+import { LOW_RATING_MAX, REASONS_OPTIONAL_MAX, useRateBook } from '@/lib/ratings';
 import { AfterRatingRecs } from '@/components/AfterRatingRecs';
 import { fmtRating, externalRatingSourceLabel } from '@/lib/ratingDisplay';
 import { formatBytes, pluralRu, translationLine, formatReadingTime } from '@/lib/format';
@@ -383,6 +385,7 @@ function ActionButtons({ book, multi }: { book: Book; multi: boolean }) {
   return (
     <>
       <FavoriteButton target="book" id={book.id} isFavorite={book.is_favorite ?? false} />
+      <ToReadButton bookId={book.id} isToRead={book.is_to_read ?? false} />
       {!multi && !book.deleted ? (
         <>
           <Button asChild variant="secondary" size="sm" className="gap-1">
@@ -422,16 +425,17 @@ function MobileActions({ book, multi }: { book: Book; multi: boolean }) {
   const row3 = cn(cell, 'max-[400px]:[&_svg:first-child]:hidden');
   if (multi) {
     return (
-      <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         <FavoriteButton
           target="book"
           id={book.id}
           isFavorite={book.is_favorite ?? false}
           variant="outline"
           showLabel
-          className={cell}
+          className={row3}
         />
-        <AddToShelfDialog bookId={book.id} toolbar shelves={shelves} className={cell} />
+        <ToReadButton bookId={book.id} isToRead={book.is_to_read ?? false} variant="outline" showLabel className={row3} />
+        <AddToShelfDialog bookId={book.id} toolbar shelves={shelves} className={row3} />
       </div>
     );
   }
@@ -449,6 +453,15 @@ function MobileActions({ book, multi }: { book: Book; multi: boolean }) {
             {readButtonLabel(book.reading_fraction)}
           </Link>
         </Button>
+        {/* Закладка «Хочу прочитать» перед ★: ★ остаётся крайней справа, ряды
+            действий выровнены по правому краю (#470). */}
+        <ToReadButton
+          bookId={book.id}
+          isToRead={book.is_to_read ?? false}
+          variant="outline"
+          labelHidden
+          className="h-9 w-9 shrink-0 px-0"
+        />
         <FavoriteButton
           target="book"
           id={book.id}
@@ -589,21 +602,29 @@ function MyBlock({ book, cardKey }: { book: Book; cardKey: (string | number)[] }
   const value = book.user_rating ?? 0;
   const isRead = book.is_read ?? false;
   // «Раз понравилось — вот следующая» (recsys/02, 2.8): после оценки ≥ 4 на ЭТОЙ
-  // карточке показываем до трёх карточек правил; негатив — ничего (фаза 3).
+  // карточке показываем до трёх карточек правил; низкая (≤ 2) — второй шаг
+  // «почему?» (recsys/03, 3.1), при 1–3 без причин остаётся ссылка «почему?».
   const [justLiked, setJustLiked] = useState(false);
+  const [askReasons, setAskReasons] = useState(false);
+  const reasons = book.user_rating_reasons ?? [];
+  const lowRated = value > 0 && value <= REASONS_OPTIONAL_MAX;
   return (
     <div className="space-y-3 rounded-md border border-border bg-muted/30 px-3 py-2.5">
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm text-muted-foreground">Ваша оценка:</span>
           <RatingControl
             value={value}
             disabled={rate.isPending}
             onChange={(n) => {
               setJustLiked((n ?? 0) >= 4);
+              setAskReasons(n != null && n <= LOW_RATING_MAX);
               rate.mutate(n);
             }}
           />
+          {lowRated && !askReasons ? (
+            <RatingReasonsLine reasons={reasons} onEdit={() => setAskReasons(true)} />
+          ) : null}
         </div>
       {isRead ? (
         // flex-wrap + whitespace-nowrap на юнитах: длинная дата «23 июня 2026 г.»
@@ -655,6 +676,14 @@ function MyBlock({ book, cardKey }: { book: Book; cardKey: (string | number)[] }
         </div>
       )}
     </div>
+      {askReasons ? (
+        <RatingReasonsPrompt
+          workId={workId}
+          cardKey={cardKey}
+          initial={reasons}
+          onDone={() => setAskReasons(false)}
+        />
+      ) : null}
       {justLiked ? <AfterRatingRecs workId={workId} /> : null}
     </div>
   );
@@ -706,11 +735,11 @@ function ShelfSection({
 }
 
 /**
- * useUserShelves — пользовательские полки книги. Служебную «Избранное»
- * исключаем — её передаёт ★ в шапке (без дубля).
+ * useUserShelves — пользовательские полки книги. Служебные «Избранное» и «Хочу
+ * прочитать» исключаем — их передают ★ и закладка в шапке (без дубля).
  */
 function useUserShelves(bookId: number) {
-  return (useBookCollections(bookId).data ?? []).filter((s) => s.kind !== 'favorites');
+  return (useBookCollections(bookId).data ?? []).filter((s) => s.kind !== 'favorites' && s.kind !== 'to_read');
 }
 
 /**

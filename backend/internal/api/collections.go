@@ -65,7 +65,7 @@ func handleCreateCollection(d CollectionsDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "name required"})
 			return
 		case errors.Is(err, collections.ErrReservedName):
-			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "«Избранное» — служебная полка, имя занято"})
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "«Избранное» и «Хочу прочитать» — служебные полки, имя занято"})
 			return
 		case err != nil:
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "save failed"})
@@ -101,7 +101,7 @@ func handleRenameCollection(d CollectionsDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "name required"})
 			return
 		case errors.Is(err, collections.ErrReservedName):
-			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "«Избранное» — служебная полка, имя занято"})
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "«Избранное» и «Хочу прочитать» — служебные полки, имя занято"})
 			return
 		case errors.Is(err, collections.ErrSystemCollection):
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "служебную полку нельзя переименовать"})

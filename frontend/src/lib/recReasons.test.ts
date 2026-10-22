@@ -160,3 +160,10 @@ describe('reasonParts: fits_tonight', () => {
     expect(reasonText({ kind: 'fits_tonight', minutes: 5 }, now)).toBe('≈ 5 мин');
   });
 });
+
+describe('reasonParts: фаза 3 (обратная связь)', () => {
+  it('хотели прочитать — напоминание о полке', () => {
+    expect(reasonText({ kind: 'to_read', at: daysAgo(70) }, now)).toBe('Хотели прочитать · отложили 2 месяца назад');
+    expect(reasonText({ kind: 'to_read' }, now)).toBe('Хотели прочитать');
+  });
+});
