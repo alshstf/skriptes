@@ -243,8 +243,11 @@ func (b *CoverBackfiller) processOne(ctx context.Context, bk coverCandidate) {
 		return
 	}
 	now := time.Now()
-	// coverCandidate по полям идентичен externalQueryFields → прямая конверсия.
-	q := buildExternalQuery(externalQueryFields(bk))
+	// Обложки ищут OpenLibrary и Google Books — QID авторов им не нужны.
+	q := buildExternalQuery(externalQueryFields{
+		id: bk.id, title: bk.title, lang: bk.lang, authors: bk.authors,
+		srcTitle: bk.srcTitle, srcAuthorNorm: bk.srcAuthorNorm, srcLang: bk.srcLang,
+	})
 
 	for _, src := range b.sources() {
 		name := src.provider.Name()

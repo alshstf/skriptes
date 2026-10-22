@@ -174,6 +174,7 @@ func (b *AdaptationBackfiller) processOne(ctx context.Context, bk adaptationCand
 	taskCtx, cancel := context.WithTimeout(ctx, adaptationBackfillTaskTimeout)
 	defer cancel()
 	// Wikidata-провайдеру нужны Title + Authors (+ Lang); fb2-путь не задействован.
+	// Авторов по позиции вместе с их QID EnsureAdaptations берёт из базы сам (#570).
 	q := BookQuery{ID: bk.id, Title: bk.title, Authors: bk.authors, Lang: bk.lang}
 	b.enricher.EnsureAdaptations(taskCtx, q) // сам ставит adaptations_fetched_at
 	b.done.Add(1)

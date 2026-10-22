@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.63.0**.
+конвертируются на лету через fb2cng. Текущая версия — **1.64.0**.
 
 ## Рабочее окружение
 
@@ -86,9 +86,11 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 10. **Контролы:** мгновенное вкл/выкл — `ui/switch`; checkbox = «отметь и Сохрани»; бар несохранённого — `SaveBar`;
     висячее слово — `text-pretty`.
 11. **Четыре кэша картинок** — `/cache/covers` (регенерируются из fb2), `/cache/posters`, `/cache/author-photos` и
-    `/cache/award-logos` (внешние, не регенерируются). Экранизации — белый список P31; постеры — TMDB → Commons P18.
+    `/cache/award-logos` (внешние, не регенерируются). Экранизации — белый список P31; книгу в Wikidata подтверждает
+    QID автора в P50, без QID — метки с транслитом (`authorsConfirm`, #570); постеры — TMDB → Commons P18.
 12. **Lazy-обогащение автора** — single-shot по `metadata_fetched_at` (и `adaptations_fetched_at`); ретрай — только
-    отдельным TTL-механизмом.
+    отдельным TTL-механизмом или разовым сбросом маркера на старте (`adaptations_author_qid_recheck_v1`, 1.64.0:
+    доберёт воркер «Экранизации», выключен — только открытые карточки).
 13. **Матчинг автора во внешних — precision > recall** (`authormatch.go`, `candidate_policy.go`, `namesake.go`,
     `name_equivalents.go`; трасса — `skriptes-explain`). Любая правка поиска — приёмка сухим прогоном по 1000 самым
     известным авторам (урок 1.19.0: очистили био Достоевского).

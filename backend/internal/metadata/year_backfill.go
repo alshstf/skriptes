@@ -117,6 +117,7 @@ type yearCandidate struct {
 	title         string
 	lang          string
 	authors       []string
+	authorQIDs    []string // QID авторов по позиции authors (authorsAggColumns)
 	srcTitle      string
 	srcAuthorNorm string
 	srcLang       string
@@ -129,10 +130,18 @@ type yearCandidate struct {
 // queryFields — поля внешнего поискового запроса (buildExternalQuery).
 func (c yearCandidate) queryFields() externalQueryFields {
 	return externalQueryFields{
-		id: c.id, title: c.title, lang: c.lang, authors: c.authors,
+		id: c.id, title: c.title, lang: c.lang, authors: c.authors, authorQIDs: c.authorQIDs,
 		srcTitle: c.srcTitle, srcAuthorNorm: c.srcAuthorNorm, srcLang: c.srcLang,
 	}
 }
+
+// authorsAggColumns — имена авторов «Фамилия Имя Отчество» и их QID в Wikidata
+// ("" — неизвестен) в одном порядке, по позиции в книге: агрегат по LEFT JOIN
+// book_authors ba / authors a в выборке с GROUP BY b.id (#570).
+const authorsAggColumns = `COALESCE(array_agg(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)) ORDER BY ba.position, ba.author_id)
+		           FILTER (WHERE a.id IS NOT NULL), '{}') AS authors,
+		       COALESCE(array_agg(COALESCE(a.ext_ids->>'wd_qid', '') ORDER BY ba.position, ba.author_id)
+		           FILTER (WHERE a.id IS NOT NULL), '{}') AS author_qids`
 
 // wdHintColumns — колонки к выборке кандидатов (алиас books = b): QID работы,
 // который уже нашли Tier-2 группировки или «Известность», и время «не найдено»
@@ -272,11 +281,7 @@ func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit in
 	q := fmt.Sprintf(`
 		SELECT b.id, b.title, COALESCE(b.lang, ''),
 		       COALESCE(b.src_title, ''), COALESCE(b.src_author_normalized::text, ''), COALESCE(b.src_lang, ''),
-		       COALESCE(
-		           array_agg(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)))
-		           FILTER (WHERE a.id IS NOT NULL),
-		           '{}'
-		       ) AS authors%s
+		       `+authorsAggColumns+`%s
 		FROM books b
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a       ON a.id = ba.author_id
@@ -298,7 +303,7 @@ func (b *YearBackfiller) fetchBatch(ctx context.Context, afterID int64, limit in
 	out := make([]yearCandidate, 0, limit)
 	for rows.Next() {
 		var c yearCandidate
-		if err := rows.Scan(&c.id, &c.title, &c.lang, &c.srcTitle, &c.srcAuthorNorm, &c.srcLang, &c.authors,
+		if err := rows.Scan(&c.id, &c.title, &c.lang, &c.srcTitle, &c.srcAuthorNorm, &c.srcLang, &c.authors, &c.authorQIDs,
 			&c.wdQID, &c.wdNotFoundAt); err != nil {
 			return nil, err
 		}

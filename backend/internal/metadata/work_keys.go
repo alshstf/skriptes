@@ -19,6 +19,22 @@ import (
 // как найденный ключ, а группировка (Tier-1, без сети) склеивает издания с
 // одинаковым ключом — с теми же гейтами против мега-склеек, что у Tier-2.
 
+// bookAuthorNamesCol / bookAuthorQIDsCol — колонки выборки по книге alias: имена
+// авторов «Фамилия Имя Отчество» и их QID в Wikidata ("" — неизвестен) в одном
+// порядке, по позиции в книге, — пара BookQuery.Authors/AuthorQIDs (#570).
+func bookAuthorNamesCol(alias string) string {
+	return bookAuthorsAgg(alias, `TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name))`)
+}
+
+func bookAuthorQIDsCol(alias string) string {
+	return bookAuthorsAgg(alias, `COALESCE(a.ext_ids->>'wd_qid', '')`)
+}
+
+func bookAuthorsAgg(alias, expr string) string {
+	return `COALESCE((SELECT array_agg(` + expr + ` ORDER BY ba.position, ba.author_id)
+	          FROM book_authors ba JOIN authors a ON a.id = ba.author_id WHERE ba.book_id = ` + alias + `.id), '{}')`
+}
+
 // adaptationQIDProvider — провайдер экранизаций, который отдаёт и QID книги.
 type adaptationQIDProvider interface {
 	FetchAdaptationsWithQID(ctx context.Context, q BookQuery) ([]Adaptation, string, error)
@@ -61,8 +77,7 @@ func BackfillAdaptationWorkKeys(ctx context.Context, pool *pgxpool.Pool, p *Wiki
 	for {
 		rows, err := pool.Query(ctx, `
 			SELECT DISTINCT ON (b.work_id) b.work_id, b.id, b.title, COALESCE(b.lang, ''),
-			       COALESCE((SELECT array_agg(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)) ORDER BY ba.position)
-			                 FROM book_authors ba JOIN authors a ON a.id = ba.author_id WHERE ba.book_id = b.id), '{}')
+			       `+bookAuthorNamesCol("b")+`, `+bookAuthorQIDsCol("b")+`
 			FROM book_adaptations x
 			JOIN books b ON b.id = x.book_id AND b.deleted = false
 			WHERE x.provider = $3 AND b.work_id > $1
@@ -79,11 +94,12 @@ func BackfillAdaptationWorkKeys(ctx context.Context, pool *pgxpool.Pool, p *Wiki
 			title      string
 			lang       string
 			authors    []string
+			authorQIDs []string
 		}
 		var batch []cand
 		for rows.Next() {
 			var c cand
-			if err := rows.Scan(&c.work, &c.book, &c.title, &c.lang, &c.authors); err != nil {
+			if err := rows.Scan(&c.work, &c.book, &c.title, &c.lang, &c.authors, &c.authorQIDs); err != nil {
 				rows.Close()
 				return found, false, fmt.Errorf("adaptation work keys: scan: %w", err)
 			}
@@ -102,7 +118,7 @@ func BackfillAdaptationWorkKeys(ctx context.Context, pool *pgxpool.Pool, p *Wiki
 				return found, false, err
 			}
 			taskCtx, cancel := context.WithTimeout(ctx, 30*time.Second)
-			qid, rerr := p.resolveBookQID(taskCtx, BookQuery{ID: c.book, Title: c.title, Authors: c.authors, Lang: c.lang})
+			qid, rerr := p.resolveBookQID(taskCtx, BookQuery{ID: c.book, Title: c.title, Authors: c.authors, AuthorQIDs: c.authorQIDs, Lang: c.lang})
 			cancel()
 			switch {
 			case rerr == nil && qid != "":

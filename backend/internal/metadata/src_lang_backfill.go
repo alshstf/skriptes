@@ -180,11 +180,7 @@ func (b *SrcLangBackfiller) fetchBatch(ctx context.Context, afterID int64, limit
 	q := fmt.Sprintf(`
 		SELECT b.id, b.title, COALESCE(b.lang, ''),
 		       COALESCE(b.src_title, ''), COALESCE(b.src_author_normalized::text, ''), COALESCE(b.src_lang, ''),
-		       COALESCE(
-		           array_agg(TRIM(CONCAT_WS(' ', a.last_name, a.first_name, a.middle_name)))
-		           FILTER (WHERE a.id IS NOT NULL),
-		           '{}'
-		       ) AS authors%s
+		       `+authorsAggColumns+`%s
 		FROM books b
 		LEFT JOIN book_authors ba ON ba.book_id = b.id
 		LEFT JOIN authors a       ON a.id = ba.author_id
@@ -206,7 +202,7 @@ func (b *SrcLangBackfiller) fetchBatch(ctx context.Context, afterID int64, limit
 	out := make([]yearCandidate, 0, limit)
 	for rows.Next() {
 		var c yearCandidate
-		if err := rows.Scan(&c.id, &c.title, &c.lang, &c.srcTitle, &c.srcAuthorNorm, &c.srcLang, &c.authors,
+		if err := rows.Scan(&c.id, &c.title, &c.lang, &c.srcTitle, &c.srcAuthorNorm, &c.srcLang, &c.authors, &c.authorQIDs,
 			&c.wdQID, &c.wdNotFoundAt); err != nil {
 			return nil, err
 		}

@@ -634,6 +634,39 @@ func run() error {
 		}
 		logger.Info("adaptation work keys backfill done", "found", total)
 	})
+	// Перепроход промахов экранизаций после проверки автора книги по QID (#570):
+	// метки авторов с QID из Wikidata (~110 запросов, 30 в минуту) и сброс маркера у
+	// книг авторов, которых прежнее правило по буквам имени не находило; перепросят
+	// воркер «Экранизации» и открытие карточки. Сбой Wikidata — без сброса, повтор
+	// через час.
+	metadata.Go(func(c context.Context) {
+		const flag = "adaptations_author_qid_recheck_v1"
+		for attempt := 1; ; attempt++ {
+			var done bool
+			if err := pool.QueryRow(c, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil || done {
+				return
+			}
+			authors, books, err := metadata.RecheckAdaptationsByAuthorQID(c, pool, wdAdaptations, 30)
+			if err == nil {
+				if _, err := pool.Exec(c, `INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+					ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+					logger.Warn("adaptations recheck: set flag failed", "err", err)
+				}
+				logger.Info("one-time adaptations recheck by author QID done", "authors", authors, "books_to_refetch", books)
+				return
+			}
+			if c.Err() != nil || attempt >= 24 {
+				logger.Warn("adaptations recheck stopped — will retry next start", "err", err)
+				return
+			}
+			logger.Warn("adaptations recheck paused after source failure — retry in 1h", "attempt", attempt, "err", err)
+			select {
+			case <-c.Done():
+				return
+			case <-time.After(time.Hour):
+			}
+		}
+	})
 	workGroupCtl := metadata.NewWorkGroupController(pool, olProvider, wdAdaptations, metadata.WorkGroupConfig{
 		OpenLibrary:       wgCfg.OpenLibrary,
 		Wikidata:          wgCfg.Wikidata,
