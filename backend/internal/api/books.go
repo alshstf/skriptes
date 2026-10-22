@@ -11,6 +11,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/skriptes/skriptes/backend/internal/books"
 	"github.com/skriptes/skriptes/backend/internal/history"
+	"github.com/skriptes/skriptes/backend/internal/recsys"
 )
 
 // BooksDeps — зависимости для эндпоинтов /api/books*.
@@ -145,6 +146,10 @@ type bookResponse struct {
 	UserRating  *int     `json:"user_rating,omitempty"`
 	RatingAvg   *float64 `json:"rating_avg,omitempty"`
 	RatingCount int      `json:"rating_count"`
+	// Явная обратная связь (recsys/03): причины низкой оценки текущего
+	// пользователя (3.1) и «Хочу прочитать» — любое издание работы на полке (3.3).
+	UserRatingReasons []recsys.RatingReason `json:"user_rating_reasons,omitempty"`
+	IsToRead          bool                  `json:"is_to_read"`
 	// Состав сборников (#388): contents — «Состав» у сборника (оглавление fb2),
 	// in_compilations — «Входит в сборники» у произведения, read_in_compilation —
 	// «прочитано в сборнике» (прочитан сборник с этой работой; явное is_read
@@ -229,11 +234,21 @@ func handleGetWork(d BooksDeps, hist HistoryDeps, meta MetadataDeps, content Con
 // (для work-level is_favorite/is_read и прогресса по изданиям).
 func writeBookCard(w http.ResponseWriter, r *http.Request, ctx context.Context, b books.Book, d BooksDeps, hist HistoryDeps,
 	meta MetadataDeps, vis cardVisibility) {
-	var isFav, isRead bool
+	var isFav, isRead, isToRead bool
 	var readAt *time.Time
 	var fraction *float64
 	var readingMinutes int
+	var ratingReasons []recsys.RatingReason
 	if u, ok := UserFromContext(r.Context()); ok && hist.Service != nil {
+		// «Хочу прочитать» и причины низкой оценки — уровня работы (recsys/03).
+		if b.WorkID > 0 {
+			if v, err := hist.Service.IsWorkToRead(ctx, u.ID, b.WorkID); err == nil {
+				isToRead = v
+			}
+			if rs, err := hist.Service.RatingReasons(ctx, u.ID, b.WorkID); err == nil && len(rs) > 0 {
+				ratingReasons = rs
+			}
+		}
 		// fraction («продолжить N%») — прогресс ОТКРЫТОГО издания: привязан к
 		// конкретному файлу (CFI), агрегировать по работе нельзя. Дефолты
 		// is_read/read_at тоже отсюда (на случай, если work_id неизвестен).
@@ -331,6 +346,9 @@ func writeBookCard(w http.ResponseWriter, r *http.Request, ctx context.Context, 
 		UserRating:      userRating,
 		RatingAvg:       ratingAvg,
 		RatingCount:     ratingCount,
+
+		UserRatingReasons: ratingReasons,
+		IsToRead:          isToRead,
 
 		Contents:          contents,
 		InCompilations:    inComps,

@@ -889,6 +889,10 @@ func (s *Service) SubscriptionFeed(ctx context.Context, userID int64, limit int)
 			  AND b.date_added > fa.added_at::date
 			  AND NOT EXISTS (SELECT 1 FROM feed_dismissals fd
 			                  WHERE fd.user_id = $1 AND fd.work_id = b.work_id)
+			  -- «Не предлагать» (recsys/03, 3.2): автор издания или его цикл в блок-листе.
+			  AND NOT EXISTS (SELECT 1 FROM blocked_authors x JOIN book_authors bx ON bx.author_id = x.author_id
+			                  WHERE x.user_id = $1 AND bx.book_id = b.id)
+			  AND NOT EXISTS (SELECT 1 FROM blocked_series x WHERE x.user_id = $1 AND x.series_id = b.series_id)
 			UNION
 			SELECT b.id, b.work_id, b.date_added
 			FROM favorite_series fs
@@ -897,6 +901,9 @@ func (s *Service) SubscriptionFeed(ctx context.Context, userID int64, limit int)
 			  AND b.date_added > fs.added_at::date
 			  AND NOT EXISTS (SELECT 1 FROM feed_dismissals fd
 			                  WHERE fd.user_id = $1 AND fd.work_id = b.work_id)
+			  AND NOT EXISTS (SELECT 1 FROM blocked_authors x JOIN book_authors bx ON bx.author_id = x.author_id
+			                  WHERE x.user_id = $1 AND bx.book_id = b.id)
+			  AND NOT EXISTS (SELECT 1 FROM blocked_series x WHERE x.user_id = $1 AND x.series_id = b.series_id)
 		),
 		rep AS (
 			SELECT DISTINCT ON (COALESCE(work_id, -id))

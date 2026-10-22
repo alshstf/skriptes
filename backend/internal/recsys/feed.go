@@ -42,12 +42,12 @@ func (f *Feed) Section(ctx context.Context, kind SectionKind, userID int64, ex E
 	if p.IsEmpty() {
 		return []Item{}, nil
 	}
-	// Кандидатов — с запасом: часть отсеет скрытое у пользователя.
+	// Кандидатов — с запасом: часть отсеет скрытое у пользователя и «не предлагать».
 	cands, err := rule.Candidates(ctx, f.Q, p, 3*limit)
 	if err != nil {
 		return nil, fmt.Errorf("recsys: %s: %w", rule.Name(), err)
 	}
-	return Hydrate(ctx, f.Q, cands, ex, limit)
+	return Hydrate(ctx, f.Q, cands, ex.WithBlocklist(p), limit)
 }
 
 // Related — «раз понравилось — вот следующая» (план recsys/02, задача 2.8):
@@ -81,7 +81,7 @@ func (f *Feed) Related(ctx context.Context, userID, workID int64, ex Exclusions,
 			}
 		}
 	}
-	return Hydrate(ctx, f.Q, cands, ex, limit)
+	return Hydrate(ctx, f.Q, cands, ex.WithBlocklist(p), limit)
 }
 
 // Tonight — секция «На вечер» (recsys/02, 2.6): до limit работ, которые
@@ -110,5 +110,5 @@ func (f *Feed) Tonight(ctx context.Context, userID int64, minutes int, speed Spe
 	if err != nil {
 		return nil, fmt.Errorf("recsys: %s: %w", rule.Name(), err)
 	}
-	return Hydrate(ctx, f.Q, cands, ex, limit)
+	return Hydrate(ctx, f.Q, cands, ex.WithBlocklist(p), limit)
 }

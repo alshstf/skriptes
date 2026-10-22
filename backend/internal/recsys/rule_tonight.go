@@ -35,6 +35,10 @@ const (
 	// до 1 за жанр) и предел суммы (в «изданиях»): два любимых жанра — выше одного.
 	tonightGenrePerCap   = 3.0
 	tonightGenreBonusCap = 3.0
+	// tonightLongPenalty — если пользователь хоть раз назвал причиной низкой
+	// оценки «слишком длинно» (recsys/03, 3.1), балл режется пропорционально
+	// длине: на эту долю у работы, занимающей всё отведённое время.
+	tonightLongPenalty = 0.5
 )
 
 func (FitsTonight) Name() string         { return "fits_tonight" }
@@ -109,6 +113,8 @@ func (r FitsTonight) Candidates(ctx context.Context, q Querier, p *Profile, n in
 		return nil, fmt.Errorf("fits tonight: %w", err)
 	}
 	out := make([]Candidate, 0, len(rows))
+	maxBytes := float64(r.MaxBytes())
+	prefersShort := p.Reasons[ReasonTooLong] > 0
 	for _, x := range rows {
 		// Сильнейший из совпавших жанров — в причину; сумма — бонус к известности.
 		best, bestScore, bonus := "", 0.0, 0.0
@@ -119,9 +125,13 @@ func (r FitsTonight) Candidates(ctx context.Context, q Querier, p *Profile, n in
 				best, bestScore = g, s
 			}
 		}
+		score := float64(x.editions) + x.fl/10 + math.Min(bonus, tonightGenreBonusCap)
+		if prefersShort && maxBytes > 0 {
+			score *= 1 - tonightLongPenalty*float64(x.size)/maxBytes
+		}
 		out = append(out, Candidate{
 			WorkID: x.workID,
-			Score:  float64(x.editions) + x.fl/10 + math.Min(bonus, tonightGenreBonusCap),
+			Score:  score,
 			Reason: Reason{Kind: ReasonFitsTonight, Minutes: r.MinutesFor(x.size), Genre: best},
 		})
 	}

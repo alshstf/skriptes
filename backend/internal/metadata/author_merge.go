@@ -72,6 +72,16 @@ func (c *OverrideController) MergeAuthors(ctx context.Context, sourceID, targetI
 	if _, err := tx.Exec(ctx, `DELETE FROM favorite_authors WHERE author_id = $1`, sourceID); err != nil {
 		return works, fmt.Errorf("drop source subscriptions: %w", err)
 	}
+	// «Не предлагать» (recsys/03, 3.2) — как подписки: блок источника переходит цели.
+	if _, err := tx.Exec(ctx, `
+		INSERT INTO blocked_authors (user_id, author_id, added_at)
+		SELECT user_id, $2, added_at FROM blocked_authors WHERE author_id = $1
+		ON CONFLICT DO NOTHING`, sourceID, targetID); err != nil {
+		return works, fmt.Errorf("move blocks: %w", err)
+	}
+	if _, err := tx.Exec(ctx, `DELETE FROM blocked_authors WHERE author_id = $1`, sourceID); err != nil {
+		return works, fmt.Errorf("drop source blocks: %w", err)
+	}
 	if _, err := tx.Exec(ctx, `
 		UPDATE authors t SET bio = s.bio, photo_path = s.photo_path, metadata_fetched_at = s.metadata_fetched_at
 		FROM authors s

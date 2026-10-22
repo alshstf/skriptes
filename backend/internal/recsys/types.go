@@ -24,13 +24,15 @@ const (
 	SectionForgottenClassic SectionKind = "forgotten_classic"         // забытая классика
 	SectionReread           SectionKind = "reread"                    // перечитать
 	SectionFitsTonight      SectionKind = "fits_tonight"              // на вечер: «у меня есть N минут»
+	// Фаза 3 (recsys/03): напоминание о полке «Хочу прочитать».
+	SectionToRead SectionKind = "to_read_reminder" // вы хотели прочитать
 )
 
 // AllSections — все секции ленты в порядке Главной (для проверки настроек
 // сворачивания; фронт держит тот же порядок в HOME_SECTIONS).
 var AllSections = []SectionKind{
 	SectionContinueReading, SectionSearchedAppeared, SectionNextInSeries, SectionAuthorFinished,
-	SectionSubscriptions, SectionDropped, SectionForgottenClassic, SectionReread, SectionFitsTonight,
+	SectionSubscriptions, SectionToRead, SectionDropped, SectionForgottenClassic, SectionReread, SectionFitsTonight,
 	SectionRatePrompts,
 }
 
@@ -73,6 +75,8 @@ const (
 	ReasonForgottenClassic ReasonKind = "forgotten_classic"
 	// ReasonFitsTonight — укладывается в Minutes при личной скорости; Genre — любимый жанр (fb2-код).
 	ReasonFitsTonight ReasonKind = "fits_tonight"
+	// ReasonToRead — положили на полку «Хочу прочитать» At и с тех пор не открывали.
+	ReasonToRead ReasonKind = "to_read"
 )
 
 // Reason — причина рекомендации: вид и параметры. Поля — плоские и
@@ -108,16 +112,52 @@ type Reason struct {
 // Item — карточка ленты. ID — представительное ИЗДАНИЕ (on-demand обложка,
 // фолбэк ссылки; у «продолжить чтение» — то, где лежит позиция), WorkID —
 // работа для ссылки /works/{id}. CoverPath — обложка издания или соседнего
-// живого издания работы.
+// живого издания работы. AuthorIDs — те же авторы, что Authors, в том же
+// порядке (kebab «не предлагать автора», recsys/03 3.2); SeriesID — цикл
+// подписи Series. Заполняет Hydrate; у секций history их нет.
 type Item struct {
 	ID        int64    `json:"id"`
 	WorkID    int64    `json:"work_id,omitempty"`
 	Title     string   `json:"title"`
 	Authors   []string `json:"authors"`
+	AuthorIDs []int64  `json:"author_ids,omitempty"`
 	Series    string   `json:"series,omitempty"`
+	SeriesID  int64    `json:"series_id,omitempty"`
 	LibID     string   `json:"lib_id"`
 	CoverPath string   `json:"cover_path,omitempty"`
 	Reasons   []Reason `json:"reasons"`
+}
+
+// RatingReason — почему оценка низкая (план recsys/03, задача 3.1): закрытый
+// список чипов второго шага после оценки 1–2 (по желанию — 3); несколько на
+// работу, таблица rating_reasons. Что с ними делает модель близости — affinity.go
+// (ReasonNotMine усиливает минус к автору и жанру, ReasonLanguage — к языку
+// оригинала, ReasonTooLong — «На вечер» предпочитает короткое).
+type RatingReason string
+
+const (
+	ReasonTooLong    RatingReason = "too_long"   // слишком длинно
+	ReasonGloomy     RatingReason = "gloomy"     // мрачно
+	ReasonLanguage   RatingReason = "language"   // язык / перевод
+	ReasonNotMine    RatingReason = "not_mine"   // не моё
+	ReasonUnfinished RatingReason = "unfinished" // не дочитал
+	ReasonDated      RatingReason = "dated"      // устарело
+	ReasonBoring     RatingReason = "boring"     // скучно
+)
+
+// AllRatingReasons — порядок чипов в UI; тот же список — в CHECK миграции 0068.
+var AllRatingReasons = []RatingReason{
+	ReasonTooLong, ReasonGloomy, ReasonLanguage, ReasonNotMine, ReasonUnfinished, ReasonDated, ReasonBoring,
+}
+
+// IsRatingReason — s — известная причина.
+func IsRatingReason(s string) bool {
+	for _, r := range AllRatingReasons {
+		if string(r) == s {
+			return true
+		}
+	}
+	return false
 }
 
 // Reason — первая причина вида kind (для тестов и трассы).

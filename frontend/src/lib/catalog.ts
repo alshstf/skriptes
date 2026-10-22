@@ -36,6 +36,8 @@ export type Author = {
   /** Пары work_id, которые админ пометил «не объединять» (#517). */
   merge_rejections?: [number, number][];
   is_favorite?: boolean;
+  /** «Не предлагать» в рекомендациях (recsys/03, 3.2); каталог и поиск не меняются. */
+  is_blocked?: boolean;
   /** Агрегаты-зеркало строки списка авторов (чтобы карточка несла ту же сводку). */
   external_rating?: number;
   /** Источник топ-издания внешнего рейтинга: 'library' | 'googlebooks' | 'openlibrary'. */
@@ -99,6 +101,8 @@ export type Series = {
   /** См. Author.merge_rejections. */
   merge_rejections?: [number, number][];
   is_favorite?: boolean;
+  /** «Не предлагать» цикл в рекомендациях (recsys/03, 3.2). */
+  is_blocked?: boolean;
   year_stats?: YearCount[];
   /** Видимых работ без года написания — их нет в year_stats (подпись покрытия, #533). */
   year_unknown?: number;

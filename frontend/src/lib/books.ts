@@ -7,6 +7,7 @@ import {
   keepPreviousData,
 } from '@tanstack/react-query';
 import { apiFetch } from './api';
+import type { RatingReason } from './ratings';
 
 export type BookListItem = {
   id: number;
@@ -258,6 +259,10 @@ export type Book = {
   deleted?: boolean;
   is_favorite?: boolean;
   is_read?: boolean;
+  /** На полке «Хочу прочитать» (любое издание работы; recsys/03, 3.3). */
+  is_to_read?: boolean;
+  /** Причины низкой оценки текущего пользователя (recsys/03, 3.1); нет — не указывал или оценка ≥ 4. */
+  user_rating_reasons?: RatingReason[];
   /** Логическая книга (works.id). */
   work_id?: number;
   /** Все издания этой работы (открытое — первым). Title/written_year/series/

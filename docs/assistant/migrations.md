@@ -110,3 +110,14 @@ NULL у скрытий до 1.57 = «не интересно»). Модель б
 matched_at)` — ненайденный запрос совпал с работой, появившейся при импорте (`recsys.Matcher` после импорта,
 поиск Meili по `id IN [...]` с порогом `_rankingScore ≥ 0.8`). Срок — `SKRIPTES_SEARCH_LOG_DAYS` (дефолт 365,
 0 — лог выключен), чистка в housekeeping-цикле. План recsys/01, задача 1.4.
+
+## 0068_feedback_signals
+
+Явная обратная связь (план recsys/03, задачи 3.1–3.3). `rating_reasons(user_id, work_id, reason, at)` — причины
+низкой оценки, закрытый список `recsys.AllRatingReasons` (`too_long`, `gloomy`, `language`, `not_mine`, `unfinished`,
+`dated`, `boring`), несколько на работу; живут с оценкой: `RemoveRating` и новая оценка ≥ 4 удаляют
+(`history.SetRating`), слияние работ переносит (`reassignWorkUserData`). `blocked_authors(user_id, author_id,
+added_at)` и `blocked_series(user_id, series_id, added_at)` — «не предлагать» (только рекомендации и новинки по
+подпискам; каталог и поиск не трогает); слияние авторов и сборка межавторской серии переносят, как подписки.
+Частичный уникальный индекс `user_collections_one_to_read` — служебная полка «Хочу прочитать»
+(`user_collections.kind = 'to_read'`, одна на пользователя, как «Избранное» в 0023).

@@ -226,6 +226,16 @@ func NewRouter(d Deps) http.Handler {
 					// Пользовательские оценки книг (work-level, шкала 1–5).
 					r.With(workGate).Put("/works/{id}/rating", handleSetRating(d.History))
 					r.Delete("/works/{id}/rating", handleRemoveRating(d.History))
+					// Явная обратная связь (recsys/03): причины низкой оценки, «не
+					// предлагать» автора/цикл, полка «Хочу прочитать» (feedback.go).
+					r.With(workGate).Put("/works/{id}/rating-reasons", handleSetRatingReasons(d.History))
+					r.With(authorGate).Post("/authors/{id}/block", handleBlock(d.History, blockAuthorTarget, true))
+					r.Delete("/authors/{id}/block", handleBlock(d.History, blockAuthorTarget, false))
+					r.With(seriesGate).Post("/series/{id}/block", handleBlock(d.History, blockSeriesTarget, true))
+					r.Delete("/series/{id}/block", handleBlock(d.History, blockSeriesTarget, false))
+					r.Get("/me/blocklist", handleListBlocklist(d.History))
+					r.With(bookGate).Post("/books/{id}/to-read", handleToRead(d.History, true))
+					r.Delete("/books/{id}/to-read", handleToRead(d.History, false))
 					// Отложенные запросы оценки («Оцените прочитанное»).
 					r.Post("/works/{id}/rating-prompt/dismiss", handleDismissRatingPrompt(d.History))
 					r.Post("/works/{id}/rating-prompt/snooze", handleSnoozeRatingPrompt(d.History, d.Settings))

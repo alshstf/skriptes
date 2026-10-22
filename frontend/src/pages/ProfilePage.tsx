@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ProfileTabs } from '@/components/ProfileTabs';
+import { BlocklistCard } from '@/components/BlocklistCard';
 import { useRatingPromptSettings, useUpdateRatingPromptSettings } from '@/lib/ratings';
 import {
   useKindleTargets,
@@ -93,6 +94,8 @@ export function ProfilePage() {
       <DevicePasswordsCard />
 
       <RatingPromptsCard />
+
+      <BlocklistCard />
     </article>
   );
 }

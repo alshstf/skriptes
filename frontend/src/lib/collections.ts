@@ -13,8 +13,9 @@ import { apiFetch } from './api';
 export type Collection = {
   id: number;
   name: string;
-  // kind: 'user' — обычная полка; 'favorites' — служебная «Избранное» (★ книги).
-  kind: 'user' | 'favorites';
+  // kind: 'user' — обычная полка; 'favorites' — служебная «Избранное» (★ книги);
+  // 'to_read' — служебная «Хочу прочитать» (закладка на карточке, recsys/03 3.3).
+  kind: 'user' | 'favorites' | 'to_read';
   book_count: number;
   created_at: string;
   updated_at: string;
@@ -57,7 +58,7 @@ function bookShelvesKey(bookId: number) {
 }
 
 /** BookShelf — лёгкая полка (id+name+kind), содержащая книгу. Для индикации на карточке. */
-export type BookShelf = { id: number; name: string; kind: 'user' | 'favorites' };
+export type BookShelf = { id: number; name: string; kind: 'user' | 'favorites' | 'to_read' };
 
 type ListCollectionsResponse = { items: Collection[] };
 type ListBooksResponse = { items: CollectionBook[] };

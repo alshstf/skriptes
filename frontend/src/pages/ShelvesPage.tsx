@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ChevronRight, FolderPlus, GripVertical, Library, Pencil, Sparkles, Star, Trash2 } from 'lucide-react';
+import { Bookmark, ChevronRight, FolderPlus, GripVertical, Library, Pencil, Sparkles, Star, Trash2 } from 'lucide-react';
 import {
   DndContext,
   DragOverlay,
@@ -100,6 +100,13 @@ export function ShelvesPage() {
         <Library className="size-4" aria-hidden />
         Ваши полки
       </h2>
+      {/* Две служебные полки легко спутать — одна строка о разнице (recsys/03, 3.3). */}
+      {collections.some((c) => c.kind === 'to_read') ? (
+        <Callout icon={<Bookmark className="size-4 shrink-0" aria-hidden />}>
+          ★ Избранное — книги, которые любите; «Хочу прочитать» — те, что ещё не читали (закладка на
+          карточке книги). Залежавшееся на ней Главная напомнит через два месяца.
+        </Callout>
+      ) : null}
       {collectionsQ.isLoading ? (
         <p className="text-sm italic text-muted-foreground">Загрузка…</p>
       ) : collections.length === 0 ? (
@@ -216,8 +223,11 @@ function PresetBooksList({ presetKey }: { presetKey: string }) {
 function ShelfRow({ collection }: { collection: Collection }) {
   const [open, toggle] = useOpenToggle(`c:${collection.id}`);
   const del = useDeleteCollection();
-  // Служебная «Избранное» (★ книги): закреплена сверху, переименовать/удалить нельзя.
+  // Служебные «Избранное» (★ книги) и «Хочу прочитать» (закладка): закреплены
+  // сверху, переименовать/удалить нельзя.
   const isFav = collection.kind === 'favorites';
+  const isToRead = collection.kind === 'to_read';
+  const isSystem = isFav || isToRead;
 
   const { setNodeRef, isOver, active } = useDroppable({
     id: `shelf-${collection.id}`,
@@ -248,14 +258,16 @@ function ShelfRow({ collection }: { collection: Collection }) {
           />
           {isFav ? (
             <Star className="size-3.5 shrink-0 fill-yellow-500 stroke-yellow-500" aria-hidden />
+          ) : isToRead ? (
+            <Bookmark className="size-3.5 shrink-0 fill-foreground" aria-hidden />
           ) : null}
           <span className="min-w-0 flex-1 truncate text-sm font-medium">{collection.name}</span>
           <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
             {collection.book_count} кн.
           </span>
         </button>
-        {/* Служебную полку не переименовать/не удалить (★ управляет ей с карточек). */}
-        {!isFav ? (
+        {/* Служебные полки не переименовать/не удалить (★ и закладка управляют ими с карточек). */}
+        {!isSystem ? (
           <>
             <RenameShelfDialog collection={collection} />
             <Button

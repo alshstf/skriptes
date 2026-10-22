@@ -36,11 +36,17 @@ type WorkSignals struct {
 	Acquired    bool
 	Opened      bool
 
-	// Полки: ★ избранное (служебная полка kind='favorites') и хотя бы одна
-	// своя полка (kind='user').
+	// Полки: ★ избранное (служебная полка kind='favorites'), хотя бы одна
+	// своя полка (kind='user') и «Хочу прочитать» (kind='to_read', recsys/03
+	// 3.3; ToReadAt — когда положили).
 	Favorite bool
 	OnShelf  bool
 	ShelfAt  time.Time
+	ToRead   bool
+	ToReadAt time.Time
+
+	// Причины низкой оценки (recsys/03, 3.1; пусто — не указывал).
+	RatingReasons []RatingReason
 
 	// Подчёркивания и закладки: сколько и последнее.
 	Annotations int
@@ -59,11 +65,21 @@ type WorkSignals struct {
 	PromptAt      time.Time
 }
 
+// HasReason — среди причин низкой оценки есть r.
+func (s WorkSignals) HasReason(r RatingReason) bool {
+	for _, x := range s.RatingReasons {
+		if x == r {
+			return true
+		}
+	}
+	return false
+}
+
 // LastAt — последнее событие любого вида (нулевое время, если событий нет).
 func (s WorkSignals) LastAt() time.Time {
 	var last time.Time
 	for _, t := range []time.Time{
-		s.RatedAt, s.CompletedAt, s.ReadAt, s.ShelfAt, s.AnnotatedAt,
+		s.RatedAt, s.CompletedAt, s.ReadAt, s.ShelfAt, s.ToReadAt, s.AnnotatedAt,
 		s.ViewedAt, s.DismissedAt, s.PromptAt,
 	} {
 		if t.After(last) {
@@ -188,9 +204,11 @@ func LoadSignals(ctx context.Context, q Querier, userID int64) (map[int64]*WorkS
 	}
 
 	// 5. Полки: ★ избранное — служебная полка kind='favorites' (миграция 0023),
-	// свои полки — kind='user'.
+	// свои полки — kind='user', «Хочу прочитать» — kind='to_read' (0068).
 	if err := each(ctx, q, `
-		SELECT b.work_id, bool_or(c.kind = 'favorites'), bool_or(c.kind = 'user'), max(cb.added_at)
+		SELECT b.work_id, bool_or(c.kind = 'favorites'), bool_or(c.kind = 'user'),
+		       max(cb.added_at) FILTER (WHERE c.kind <> 'to_read'),
+		       bool_or(c.kind = 'to_read'), max(cb.added_at) FILTER (WHERE c.kind = 'to_read')
 		FROM user_collection_books cb
 		JOIN user_collections c ON c.id = cb.collection_id
 		JOIN books b ON b.id = cb.book_id
@@ -198,15 +216,21 @@ func LoadSignals(ctx context.Context, q Querier, userID int64) (map[int64]*WorkS
 		GROUP BY b.work_id`,
 		[]any{userID}, func(rows pgx.Rows) error {
 			var (
-				id       int64
-				fav, usr bool
-				at       time.Time
+				id                int64
+				fav, usr, toRead  bool
+				shelfAt, toReadAt *time.Time
 			)
-			if err := rows.Scan(&id, &fav, &usr, &at); err != nil {
+			if err := rows.Scan(&id, &fav, &usr, &shelfAt, &toRead, &toReadAt); err != nil {
 				return err
 			}
 			s := get(id)
-			s.Favorite, s.OnShelf, s.ShelfAt = fav, usr, at
+			s.Favorite, s.OnShelf, s.ToRead = fav, usr, toRead
+			if shelfAt != nil {
+				s.ShelfAt = *shelfAt
+			}
+			if toReadAt != nil {
+				s.ToReadAt = *toReadAt
+			}
 			return nil
 		}); err != nil {
 		return nil, fmt.Errorf("shelves: %w", err)
@@ -247,7 +271,54 @@ func LoadSignals(ctx context.Context, q Querier, userID int64) (map[int64]*WorkS
 		return nil, fmt.Errorf("rating prompts: %w", err)
 	}
 
+	// 8. Причины низкой оценки (recsys/03, 3.1) — в порядке чипов.
+	if err := each(ctx, q, `SELECT work_id, reason FROM rating_reasons WHERE user_id = $1 ORDER BY work_id, at, reason`,
+		[]any{userID}, func(rows pgx.Rows) error {
+			var (
+				id     int64
+				reason string
+			)
+			if err := rows.Scan(&id, &reason); err != nil {
+				return err
+			}
+			s := get(id)
+			s.RatingReasons = append(s.RatingReasons, RatingReason(reason))
+			return nil
+		}); err != nil {
+		return nil, fmt.Errorf("rating reasons: %w", err)
+	}
+
 	return out, nil
+}
+
+// LoadBlocklist — «не предлагать» (recsys/03, 3.2): авторы и циклы, которые
+// пользователь исключил из рекомендаций. Это не скрытие контента: каталог и
+// поиск их показывают; лента правил (Hydrate через Exclusions) и новинки по
+// подпискам (history.SubscriptionFeed) — нет.
+func LoadBlocklist(ctx context.Context, q Querier, userID int64) (authors, series []int64, err error) {
+	if err := each(ctx, q, `SELECT author_id FROM blocked_authors WHERE user_id = $1 ORDER BY author_id`,
+		[]any{userID}, func(rows pgx.Rows) error {
+			var id int64
+			if err := rows.Scan(&id); err != nil {
+				return err
+			}
+			authors = append(authors, id)
+			return nil
+		}); err != nil {
+		return nil, nil, fmt.Errorf("blocked authors: %w", err)
+	}
+	if err := each(ctx, q, `SELECT series_id FROM blocked_series WHERE user_id = $1 ORDER BY series_id`,
+		[]any{userID}, func(rows pgx.Rows) error {
+			var id int64
+			if err := rows.Scan(&id); err != nil {
+				return err
+			}
+			series = append(series, id)
+			return nil
+		}); err != nil {
+		return nil, nil, fmt.Errorf("blocked series: %w", err)
+	}
+	return authors, series, nil
 }
 
 // each — Query + перебор строк с закрытием; fn вызывается на каждой строке.

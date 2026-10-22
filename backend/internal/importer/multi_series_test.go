@@ -115,6 +115,8 @@ func TestImport_MultiAuthorSeries(t *testing.T) {
 	user := q(`INSERT INTO users (email, display_name, password_hash, role) VALUES ('u@x','U','h','user') RETURNING id`)
 	_, err = pool.Exec(ctx, `INSERT INTO favorite_series (user_id, series_id) VALUES ($1, $2)`, user, ivanovaFrag)
 	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `INSERT INTO blocked_series (user_id, series_id) VALUES ($1, $2)`, user, ivanovaFrag)
+	require.NoError(t, err)
 	anth := seriesOf("810081")
 	require.Equal(t, anth, seriesOf("810082"))
 	require.Equal(t, int64(1), q(`SELECT count(*) FROM series WHERE id = $1 AND author_id IS NULL AND kind = 'multi'`, anth),
@@ -141,6 +143,8 @@ func TestImport_MultiAuthorSeries(t *testing.T) {
 	require.Zero(t, q(`SELECT count(*) FROM series WHERE normalized_title = 'мини-шарм' AND id <> $1`, multi), "«циклы» удалены")
 	require.Equal(t, int64(1), q(`SELECT count(*) FROM favorite_series WHERE user_id = $1 AND series_id = $2`, user, multi),
 		"подписка перенесена на общую серию")
+	require.Equal(t, int64(1), q(`SELECT count(*) FROM blocked_series WHERE user_id = $1 AND series_id = $2`, user, multi),
+		"«не предлагать цикл» перенесено на общую серию")
 	require.Equal(t, multi, q(`SELECT w.series_id FROM works w JOIN books b ON b.work_id = w.id WHERE b.lib_id = '810011'`),
 		"работа переехала в общую серию")
 

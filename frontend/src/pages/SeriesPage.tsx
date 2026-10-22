@@ -8,6 +8,7 @@ import { BookListItem } from '@/components/BookListItem';
 import { BackButton } from '@/components/BackButton';
 import { CardToolbar } from '@/components/EditModeToggle';
 import { FavoriteButton } from '@/components/FavoriteButton';
+import { NotInterestedButton } from '@/components/NotInterestedButton';
 import { MergeSuggestions } from '@/components/MergeSuggestions';
 import { MergeWorksDialog } from '@/components/MergeWorksDialog';
 import { InlineEditableField } from '@/components/InlineEditableField';
@@ -103,7 +104,10 @@ export function SeriesPage() {
               {s.title}
             </h1>
           </InlineEditableField>
-          <FavoriteButton target="series" id={s.id} isFavorite={s.is_favorite ?? false} />
+          <div className="flex items-center gap-1">
+            <FavoriteButton target="series" id={s.id} isFavorite={s.is_favorite ?? false} />
+            <NotInterestedButton target="series" id={s.id} isBlocked={s.is_blocked ?? false} />
+          </div>
         </div>
         {s.kind === 'multi' ? (
           <p className="text-sm text-muted-foreground">Межавторская или издательская серия</p>

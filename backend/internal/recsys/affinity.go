@@ -26,6 +26,8 @@ const (
 	KindViews       Kind = "views"        // просмотры карточки
 	KindDismissed   Kind = "dismissed"    // скрыто из ленты
 	KindPromptNever Kind = "prompt_never" // «никогда не спрашивать оценку»
+	KindToRead      Kind = "to_read"      // на полке «Хочу прочитать» (намерение)
+	KindNotMine     Kind = "not_mine"     // причина низкой оценки «не моё»
 )
 
 // MaxAuthors — у работы с бо́льшим числом авторов (антологии, сборники журналов)
@@ -74,6 +76,15 @@ type Weights struct {
 	Dismissed   float64
 	PromptNever float64
 
+	// Полка «Хочу прочитать» — намерение (recsys/03, 3.3).
+	ToRead float64
+
+	// Причины низкой оценки (recsys/03, 3.1): «не моё» — слагаемое работы (через
+	// суммы уходит в минус автору и жанру); «язык/перевод» — прямо в
+	// Profile.Langs языка оригинала работы (автор не виноват в переводе).
+	ReasonNotMine  float64
+	ReasonLanguage float64
+
 	// Затухание: всё, кроме оценки, умножается на 0.5^(возраст / HalfLife),
 	// возраст — от последнего события по работе. 0 — без затухания.
 	HalfLife time.Duration
@@ -98,6 +109,9 @@ var DefaultWeights = Weights{
 	ViewsCap:           1.5,
 	Dismissed:          -3,
 	PromptNever:        -1,
+	ToRead:             2,
+	ReasonNotMine:      -2,
+	ReasonLanguage:     -2,
 	HalfLife:           2 * 365 * 24 * time.Hour,
 }
 
@@ -153,6 +167,12 @@ func Score(s WorkSignals, now time.Time, w Weights) Affinity {
 	}
 	if s.PromptNever {
 		a.Parts[KindPromptNever] = w.PromptNever
+	}
+	if s.ToRead {
+		a.Parts[KindToRead] = w.ToRead
+	}
+	if s.HasReason(ReasonNotMine) {
+		a.Parts[KindNotMine] = w.ReasonNotMine
 	}
 
 	if w.HalfLife > 0 && !a.LastAt.IsZero() {
@@ -223,7 +243,35 @@ type Profile struct {
 	// читают пользователя только отсюда — см. rules.go).
 	Signals map[int64]*WorkSignals
 
+	// Reasons — сколько раз пользователь назвал каждую причину низкой оценки
+	// (recsys/03, 3.1): «слишком длинно» читает «На вечер».
+	Reasons map[RatingReason]int
+
+	// BlockedAuthors / BlockedSeries — «не предлагать» (recsys/03, 3.2): лента
+	// отсеивает их в Hydrate (Feed передаёт через Exclusions). Не сигнал
+	// близости: в суммы по авторам/циклам не входит.
+	BlockedAuthors map[int64]struct{}
+	BlockedSeries  map[int64]struct{}
+
 	BuiltAt time.Time
+}
+
+// Blocked — у кандидата заблокированный автор или цикл.
+func (p *Profile) Blocked(authors []int64, series []int64) bool {
+	if p == nil {
+		return false
+	}
+	for _, a := range authors {
+		if _, ok := p.BlockedAuthors[a]; ok {
+			return true
+		}
+	}
+	for _, s := range series {
+		if _, ok := p.BlockedSeries[s]; ok {
+			return true
+		}
+	}
+	return false
 }
 
 // IsEmpty — ни одного сигнала.
@@ -254,15 +302,29 @@ func BuildProfile(ctx context.Context, q Querier, userID int64, now time.Time, w
 // сигналов до подсчёта — leave-last-out, cmd/recseval).
 func ProfileFromSignals(ctx context.Context, q Querier, userID int64, signals map[int64]*WorkSignals, now time.Time, w Weights) (*Profile, error) {
 	p := &Profile{
-		UserID:  userID,
-		Works:   make(map[int64]Affinity, len(signals)),
-		Authors: map[int64]float64{},
-		Series:  map[int64]float64{},
-		Genres:  map[string]float64{},
-		Langs:   map[string]float64{},
-		Decades: map[int]float64{},
-		Signals: signals,
-		BuiltAt: now,
+		UserID:         userID,
+		Works:          make(map[int64]Affinity, len(signals)),
+		Authors:        map[int64]float64{},
+		Series:         map[int64]float64{},
+		Genres:         map[string]float64{},
+		Langs:          map[string]float64{},
+		Decades:        map[int]float64{},
+		Signals:        signals,
+		Reasons:        map[RatingReason]int{},
+		BlockedAuthors: map[int64]struct{}{},
+		BlockedSeries:  map[int64]struct{}{},
+		BuiltAt:        now,
+	}
+	// Блок-лист — не сигнал по работе, харнесс его не прячет: грузим всегда.
+	blockedAuthors, blockedSeries, err := LoadBlocklist(ctx, q, userID)
+	if err != nil {
+		return nil, fmt.Errorf("recsys: %w", err)
+	}
+	for _, id := range blockedAuthors {
+		p.BlockedAuthors[id] = struct{}{}
+	}
+	for _, id := range blockedSeries {
+		p.BlockedSeries[id] = struct{}{}
 	}
 	if len(signals) == 0 {
 		return p, nil
@@ -271,6 +333,9 @@ func ProfileFromSignals(ctx context.Context, q Querier, userID int64, signals ma
 	for id, s := range signals {
 		p.Works[id] = Score(*s, now, w)
 		ids = append(ids, id)
+		for _, r := range s.RatingReasons {
+			p.Reasons[r]++
+		}
 	}
 	meta, err := loadWorkMeta(ctx, q, ids)
 	if err != nil {
@@ -291,6 +356,10 @@ func ProfileFromSignals(ctx context.Context, q Querier, userID int64, signals ma
 		}
 		if m.Lang != "" {
 			p.Langs[m.Lang] += a.Score
+			// «Язык/перевод» — минус языку оригинала, не автору (recsys/03, 3.1).
+			if signals[id].HasReason(ReasonLanguage) {
+				p.Langs[m.Lang] += w.ReasonLanguage
+			}
 		}
 		if m.Year > 0 {
 			p.Decades[m.Year/10*10] += a.Score

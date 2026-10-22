@@ -78,14 +78,18 @@ func handleListLanguages(d CatalogDeps) http.HandlerFunc {
 // authorResponse / seriesResponse — обёртки над catalog-DTO с
 // user-specific is_favorite. Как и bookResponse, держим в api-слое
 // чтобы не тащить user-концепт в catalog.
+// IsBlocked — «не предлагать» (recsys/03, 3.2): пользователь исключил автора
+// или цикл из рекомендаций (каталог и поиск не меняются).
 type authorResponse struct {
 	catalog.Author
 	IsFavorite bool `json:"is_favorite"`
+	IsBlocked  bool `json:"is_blocked"`
 }
 
 type seriesResponse struct {
 	catalog.Series
 	IsFavorite bool `json:"is_favorite"`
+	IsBlocked  bool `json:"is_blocked"`
 }
 
 // handleAuthorSeries — GET /api/authors/{id}/series: серии автора (для пикера переноса
@@ -144,10 +148,13 @@ func handleGetAuthor(d CatalogDeps, hist HistoryDeps, meta MetadataDeps, content
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return
 		}
-		var isFav bool
+		var isFav, isBlocked bool
 		if userID > 0 && hist.Service != nil {
 			if v, err := hist.Service.IsFavoriteAuthor(ctx, userID, id); err == nil {
 				isFav = v
+			}
+			if v, err := hist.Service.IsAuthorBlocked(ctx, userID, id); err == nil {
+				isBlocked = v
 			}
 		}
 
@@ -163,7 +170,7 @@ func handleGetAuthor(d CatalogDeps, hist HistoryDeps, meta MetadataDeps, content
 		// series_order). pending → фронт поллит и переставляет порядок.
 		a.YearEnrichmentPending = triggerSeriesYearEnrichmentAsync(meta, a.BookRefs, a.Books)
 
-		writeJSON(w, http.StatusOK, authorResponse{Author: a, IsFavorite: isFav})
+		writeJSON(w, http.StatusOK, authorResponse{Author: a, IsFavorite: isFav, IsBlocked: isBlocked})
 	}
 }
 
@@ -265,16 +272,19 @@ func handleGetSeries(d CatalogDeps, hist HistoryDeps, content ContentDeps, meta 
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
 			return
 		}
-		var isFav bool
+		var isFav, isBlocked bool
 		if userID > 0 && hist.Service != nil {
 			if v, err := hist.Service.IsFavoriteSeries(ctx, userID, id); err == nil {
 				isFav = v
+			}
+			if v, err := hist.Service.IsSeriesBlocked(ctx, userID, id); err == nil {
+				isBlocked = v
 			}
 		}
 		// User-сигналы обогащённой плашки на книгах серии (★ + статус чтения).
 		hydrateUserListMeta(ctx, s.Books, userID, hist.Service)
 		// Ленивое дозаполнение года для книг серии без порядка (каскад series_order).
 		s.YearEnrichmentPending = triggerSeriesYearEnrichmentAsync(meta, s.BookRefs, s.Books)
-		writeJSON(w, http.StatusOK, seriesResponse{Series: s, IsFavorite: isFav})
+		writeJSON(w, http.StatusOK, seriesResponse{Series: s, IsFavorite: isFav, IsBlocked: isBlocked})
 	}
 }

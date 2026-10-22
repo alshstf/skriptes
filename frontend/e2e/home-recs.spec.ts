@@ -357,3 +357,34 @@ test('home: «На вечер» — чипы минут и пустое сост
     await page.screenshot({ path: `${process.env.HOME_RECS_SHOTS}/home-tonight-mobile.png` });
   }
 });
+
+// Фаза 3 (recsys/03): секция «Вы хотели прочитать» с причиной; в kebab карточки
+// правила — «Не предлагать автора / цикл» (author_ids, series_id) → POST …/block.
+const TO_READ = {
+  id: 31,
+  work_id: 1031,
+  title: 'Отложенная книга',
+  authors: ['Автор Отложенный'],
+  author_ids: [7],
+  lib_id: 'L31',
+  series: 'Цикл отложенный',
+  series_id: 12,
+  reasons: [{ kind: 'to_read', at: new Date(Date.now() - 70 * 86_400_000).toISOString() }],
+} as Item;
+
+test('home: «Вы хотели прочитать» и «не предлагать автора» из kebab', async ({ mockedPage: page }) => {
+  mockHome(page, { ref: [] }, { sections: { to_read_reminder: [TO_READ] } });
+  const calls: string[] = [];
+  await page.route(/\/api\/(authors|series)\/\d+\/block$/, (route) => {
+    calls.push(`${route.request().method()} ${new URL(route.request().url()).pathname}`);
+    void route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ is_blocked: true }) });
+  });
+  await page.goto('/');
+  const section = page.locator('section').filter({ has: page.getByRole('heading', { name: 'Вы хотели прочитать' }) });
+  await expect(section).toBeVisible({ timeout: 10_000 });
+  await expect(section.getByTestId('rec-reason')).toContainText('Хотели прочитать · отложили 2 месяца назад');
+  await section.getByRole('button', { name: 'Скрыть из ленты' }).click();
+  await expect(page.getByRole('menuitem', { name: 'Не предлагать цикл: Цикл отложенный' })).toBeVisible();
+  await page.getByRole('menuitem', { name: 'Не предлагать автора: Автор Отложенный' }).click();
+  await expect.poll(() => calls).toEqual(['POST /api/authors/7/block']);
+});

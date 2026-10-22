@@ -34,8 +34,11 @@ type Rule interface {
 
 // Rules — правила в порядке секций ленты (pages/HomePage.tsx держит тот же).
 // «Забытая классика» читает пул DefaultClassics — его наполняет фоновый
-// RefreshLoop (cmd/skriptes/main.go).
-var Rules = []Rule{NextInSeries{}, AuthorFinished{}, DroppedThenLoved{}, ForgottenClassic{Pool: DefaultClassics}, Reread{}}
+// RefreshLoop (cmd/skriptes/main.go). «Вы хотели прочитать» — фаза 3 (3.3).
+var Rules = []Rule{
+	NextInSeries{}, AuthorFinished{}, ToReadReminder{}, DroppedThenLoved{},
+	ForgottenClassic{Pool: DefaultClassics}, Reread{},
+}
 
 // RuleFor — правило секции kind.
 func RuleFor(kind SectionKind) (Rule, bool) {
