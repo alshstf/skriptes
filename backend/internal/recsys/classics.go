@@ -47,6 +47,9 @@ type ClassicCandidate struct {
 	Editions int
 	Genres   []string
 	Lang     string
+	// Bytes — размер самого маленького живого издания (0 — неизвестен); для
+	// настроения «короткое» (mood.go).
+	Bytes int64
 }
 
 // Base — вес кандидата без пользователя, в шкале ≈ 4…5: Фантлаб — средняя / 2
@@ -122,7 +125,8 @@ func (c *ClassicsPool) Refresh(ctx context.Context, q Querier, now time.Time) (i
 		       COALESCE((SELECT array_agg(DISTINCT g.fb2_code) FROM books bb
 		                 JOIN book_genres bg ON bg.book_id = bb.id JOIN genres g ON g.id = bg.genre_id
 		                 WHERE bb.work_id = c.id AND NOT bb.deleted), ARRAY[]::text[]),
-		       COALESCE((SELECT bb.src_lang FROM books bb WHERE bb.work_id = c.id AND NOT bb.deleted AND bb.src_lang IS NOT NULL ORDER BY bb.id LIMIT 1), '')
+		       COALESCE((SELECT bb.src_lang FROM books bb WHERE bb.work_id = c.id AND NOT bb.deleted AND bb.src_lang IS NOT NULL ORDER BY bb.id LIMIT 1), ''),
+		       COALESCE((SELECT min(bb.size_bytes) FROM books bb WHERE bb.work_id = c.id AND NOT bb.deleted AND bb.size_bytes > 0), 0)
 		FROM cand c
 		WHERE c.rating IS NOT NULL AND (c.source = 'fantlab' OR c.rating >= $5)
 		ORDER BY CASE WHEN c.source = 'fantlab' THEN c.rating / 2
@@ -132,7 +136,7 @@ func (c *ClassicsPool) Refresh(ctx context.Context, q Querier, now time.Time) (i
 			ClassicLibrateMin, ClassicLibrateMinEditions, ClassicPoolMax},
 		func(rows pgx.Rows) error {
 			var it ClassicCandidate
-			if err := rows.Scan(&it.WorkID, &it.Year, &it.Rating, &it.Source, &it.Editions, &it.Genres, &it.Lang); err != nil {
+			if err := rows.Scan(&it.WorkID, &it.Year, &it.Rating, &it.Source, &it.Editions, &it.Genres, &it.Lang, &it.Bytes); err != nil {
 				return err
 			}
 			items = append(items, it)
@@ -175,12 +179,21 @@ func (c *ClassicsPool) RefreshLoop(ctx context.Context, q Querier, delay time.Du
 // в жанрах и на языке оригинала, которые пользователь любит (положительная
 // близость в Profile.Genres/Langs); уже тронутое им (в том числе скрытое из
 // ленты) — нет. Вес: ClassicCandidate.Base (≈ 4…5) + 1 за любимый жанр + 0.5 за язык.
+// Под настроение (Mood, recsys/03 3.4) пул фильтруется: остаются работы с
+// MoodMatch > 0 (жанры и размер уже в пуле — без запросов), порядок прежний.
 type ForgottenClassic struct {
 	Pool *ClassicsPool
+	Mood Mood
 }
 
 func (ForgottenClassic) Name() string         { return "forgotten_classic" }
 func (ForgottenClassic) Section() SectionKind { return SectionForgottenClassic }
+
+// WithMood — то же правило под настроение m (MoodAware).
+func (r ForgottenClassic) WithMood(m Mood) Rule {
+	r.Mood = m
+	return r
+}
 
 func (r ForgottenClassic) Candidates(_ context.Context, _ Querier, p *Profile, n int) ([]Candidate, error) {
 	if r.Pool == nil || n <= 0 {
@@ -190,6 +203,9 @@ func (r ForgottenClassic) Candidates(_ context.Context, _ Querier, p *Profile, n
 	out := make([]Candidate, 0, n)
 	for _, it := range items {
 		if p.Engaged(it.WorkID) {
+			continue
+		}
+		if r.Mood != "" && MoodMatch(r.Mood, it.Genres, it.Bytes) == 0 {
 			continue
 		}
 		score := it.Base()
@@ -207,7 +223,7 @@ func (r ForgottenClassic) Candidates(_ context.Context, _ Querier, p *Profile, n
 		out = append(out, Candidate{
 			WorkID: it.WorkID,
 			Score:  score,
-			Reason: Reason{Kind: ReasonForgottenClassic, Year: it.Year, Rating: it.Rating, Source: it.Source},
+			Reason: Reason{Kind: ReasonForgottenClassic, Year: it.Year, Rating: it.Rating, Source: it.Source, Mood: r.Mood},
 		})
 	}
 	sortCandidates(out)

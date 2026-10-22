@@ -28,7 +28,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip
 import { bySeriesOrder, ContextAuthorName, type BookListItem as BookListItemType } from '@/lib/books';
 import { ApiError } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import { pluralBooks } from '@/lib/format';
+import { pluralBooks, pluralRu } from '@/lib/format';
 
 export function AuthorPage() {
   const { id } = useParams({ strict: false }) as { id: string };
@@ -123,6 +123,17 @@ export function AuthorPage() {
                     {a.reader_rating_count ? (
                       <span className="text-muted-foreground/70"> ({a.reader_rating_count})</span>
                     ) : null}
+                  </span>
+                ) : null}
+                {/* Оценка автора целиком (recsys/03, 3.6): среднее ВАШИХ оценок
+                    по его работам — считается, не хранится; без оценок строки нет. */}
+                {a.user_rating != null ? (
+                  <span
+                    data-testid="author-user-rating"
+                    aria-label={`Ваша средняя ${a.user_rating.toFixed(1)} по ${a.user_rating_count ?? 0} ${pluralRu(a.user_rating_count ?? 0, ['книге', 'книгам', 'книгам'])}`}
+                  >
+                    · ваша средняя — {a.user_rating.toFixed(1)} по {a.user_rating_count ?? 0}{' '}
+                    {pluralRu(a.user_rating_count ?? 0, ['книге', 'книгам', 'книгам'])}
                   </span>
                 ) : null}
               </p>

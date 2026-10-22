@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.61.0**.
+конвертируются на лету через fb2cng. Текущая версия — **1.62.0**.
 
 ## Рабочее окружение
 
@@ -62,7 +62,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 - **Релиз:** бамп `SKRIPTES_VERSION` в `infra/.env.example` + README + «Текущая версия» здесь + запись в
   `docs/assistant/release-history.md` → PR → merge → аннотированный тег `vX.Y.Z` → `release.yml` (multi-arch в ghcr).
   Moving-теги `latest`/`X.Y`/`X` — только на stable. `infra/.env.public.example` держит `SKRIPTES_VERSION=1`.
-- **Миграции:** верхняя — `0068_feedback_signals`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
+- **Миграции:** верхняя — `0069_session_mood`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
   мержится вторым — перенумеровывается: golang-migrate молча пропустит меньший номер). Применённые не правим.
   Разовое преобразование данных без смены схемы — идемпотентный шаг на старте (гейт в `app_settings`), не миграция.
 
@@ -134,7 +134,10 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     исключения, что каталог; сигналы вкуса — только `recsys.LoadSignals`/`Score`; новый рекомендатель — `recsys.Recommender`,
     приёмка — `cmd/recseval`. Персона поиска пока отдельно (перевод — фаза 3.5). Обратная связь (фаза 3): причины
     низкой оценки `recsys.RatingReason`, полка «Хочу прочитать» (`kind='to_read'`), «не предлагать» автора/цикл
-    (`blocked_*` → `Exclusions.WithBlocklist`; не скрытие контента — каталог и поиск не трогать).
+    (`blocked_*` → `Exclusions.WithBlocklist`; не скрытие контента — каталог и поиск не трогать). Настроение сессии
+    `recsys.Mood` (`mood=` → `Feed.Section/Tonight`: правила пересортировывает `ApplyMood`, классика фильтрует сама —
+    `MoodAware`; жанры по настроению — `recsys/mood-genres.json`, правит владелец); «ваша средняя» по автору —
+    считается (`catalog.Author.UserRating`, `recsys.AuthorRating`), не хранится.
 
 ## Где что искать (коротко; подробно — `docs/assistant/code-map.md`)
 

@@ -24,6 +24,14 @@ describe('formatRelativeDays', () => {
 });
 
 describe('reasonParts', () => {
+  it('под настроение — суффикс к причине правила (recsys/03, 3.4)', () => {
+    expect(reasonText({ kind: 'reread', mood: 'funny' }, now)).toBe('Поставили 5 · перечитать? · под настроение «смешное»');
+    expect(reasonText({ kind: 'forgotten_classic', year: 1927, mood: 'short' }, now)).toBe(
+      '1927 год · здесь ещё никто не читал · под настроение «короткое»',
+    );
+    expect(reasonText({ kind: 'reread' }, now)).toBe('Поставили 5 · перечитать?');
+  });
+
   it('остановились на …', () => {
     expect(reasonText({ kind: 'in_progress', fraction: 0.424, at: daysAgo(3) }, now)).toBe(
       'Остановились на 42\u00a0% · 3 дня назад',

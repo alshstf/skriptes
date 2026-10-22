@@ -48,9 +48,23 @@ func TestAuthorLiked(t *testing.T) {
 	require.False(t, (&authorAnchor{}).liked())
 	require.False(t, (&authorAnchor{read: 1}).liked(), "одно прочитанное без оценок — мало")
 	require.True(t, (&authorAnchor{read: AuthorMinReadUnrated}).liked())
-	require.True(t, (&authorAnchor{read: 1, rated: 1, ratingSum: 4}).liked())
-	require.False(t, (&authorAnchor{read: 3, rated: 2, ratingSum: 7}).liked(), "средняя 3.5 < 4")
-	require.True(t, (&authorAnchor{read: 2, rated: 2, ratingSum: 9}).liked())
+	require.True(t, (&authorAnchor{read: 1, rating: AuthorRating{Count: 1, Sum: 4}}).liked())
+	require.False(t, (&authorAnchor{read: 3, rating: AuthorRating{Count: 2, Sum: 7}}).liked(), "средняя 3.5 < 4")
+	require.True(t, (&authorAnchor{read: 2, rating: AuthorRating{Count: 2, Sum: 9}}).liked())
+}
+
+// TestAuthorRating — «ваша средняя» (recsys/03, 3.6): без оценок — не известна, 0 не считается.
+func TestAuthorRating(t *testing.T) {
+	var r AuthorRating
+	require.False(t, r.Known())
+	require.Equal(t, 0.0, r.Avg())
+	r.Add(0)
+	require.False(t, r.Known(), "0 — нет оценки")
+	r.Add(5)
+	r.Add(4)
+	require.True(t, r.Known())
+	require.Equal(t, 2, r.Count)
+	require.InDelta(t, 4.5, r.Avg(), 1e-9)
 }
 
 // TestSortCandidates — порядок: по весу, при равенстве — по id.

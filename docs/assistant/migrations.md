@@ -121,3 +121,10 @@ added_at)` и `blocked_series(user_id, series_id, added_at)` — «не пред
 подпискам; каталог и поиск не трогает); слияние авторов и сборка межавторской серии переносят, как подписки.
 Частичный уникальный индекс `user_collections_one_to_read` — служебная полка «Хочу прочитать»
 (`user_collections.kind = 'to_read'`, одна на пользователя, как «Избранное» в 0023).
+
+## 0069_session_mood
+
+Настроение сессии (план recsys/03, задача 3.4). `session_mood(id, user_id, mood, at)` — append-only лог выбора чипа
+на Главной («лёгкое · умное · мрачное · смешное · короткое», CHECK по `recsys.AllMoods`), индекс `(user_id, at)`;
+пишет `history.LogMood` (`POST /api/me/mood`). Само настроение живёт в браузере и уходит параметром `mood=` в
+`GET /api/me/recommendations`; лог — чтобы на приёмке 3.7 видеть, что выбирают по вечерам.

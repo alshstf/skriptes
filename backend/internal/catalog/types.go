@@ -64,6 +64,13 @@ type Author struct {
 	// иначе 0 и фронт скрывает прогресс-блок.
 	ReadCount int `json:"read_count,omitempty"`
 
+	// UserRating / UserRatingCount — «ваша средняя — 4.5 по 6 книгам» (план
+	// recsys/03, задача 3.6): среднее оценок ТЕКУЩЕГО пользователя по работам
+	// автора (book_ratings); считается, не хранится; без оценок — nil/0. Как
+	// ReadCount — только с userID. То же для правил — recsys.AuthorRating.
+	UserRating      *float64 `json:"user_rating,omitempty"`
+	UserRatingCount int      `json:"user_rating_count,omitempty"`
+
 	// YearEnrichmentPending — этот запрос инициировал ленивое дозаполнение года
 	// хотя бы для одной книги (порядок в серии мог «упасть» на фолбэк). Фронт
 	// поллит карточку, пока true, и переставляет порядок по мере наполнения.

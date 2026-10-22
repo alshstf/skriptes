@@ -388,3 +388,78 @@ test('home: «Вы хотели прочитать» и «не предлага�
   await page.getByRole('menuitem', { name: 'Не предлагать автора: Автор Отложенный' }).click();
   await expect.poll(() => calls).toEqual(['POST /api/authors/7/block']);
 });
+
+// Настроение сессии (recsys/03, 3.4): чипы над лентой; выбор уходит в &mood=
+// только секциям правил и «На вечер», меняет первые карточки (поднятая несёт
+// «под настроение»), логируется POST /me/mood, живёт в localStorage;
+// повторный клик снимает.
+test('home: настроение — чип меняет первые карточки и логируется', async ({ mockedPage: page }) => {
+  const FUNNY: Item = {
+    id: 23,
+    work_id: 1023,
+    title: 'Смешной роман',
+    authors: ['Любимый Автор'],
+    lib_id: 'L23',
+    reasons: [
+      { kind: 'author_you_finished', author_id: 5, author: 'Любимый Автор', work_id: 1024, title: 'Первый роман', mood: 'funny' },
+    ],
+  };
+  mockHome(page, { ref: [FEED] });
+  const requested: Record<string, string[]> = {};
+  page.route(/\/api\/me\/recommendations\?/, (route) => {
+    const u = new URL(route.request().url());
+    const section = u.searchParams.get('section') ?? '';
+    const mood = u.searchParams.get('mood') ?? '';
+    (requested[section] ??= []).push(mood);
+    let items: Item[] = [];
+    if (section === 'author_you_finished') items = mood === 'funny' ? [FUNNY, BY_AUTHOR] : [BY_AUTHOR];
+    else if (section === 'continue_reading') items = [CONTINUE];
+    return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ section, items }) });
+  });
+  const logged: unknown[] = [];
+  await page.route(/\/api\/me\/mood$/, (route) => {
+    logged.push(route.request().postDataJSON());
+    void route.fulfill({ status: 200, contentType: 'application/json', body: '{"mood":"funny"}' });
+  });
+
+  await page.goto('/');
+  const section = page.locator('section', { has: page.getByRole('heading', { name: 'Автор, которого вы дочитали' }) });
+  await expect(section).toBeVisible({ timeout: 10_000 });
+  const cards = () => section.locator('a[href^="/works/"]').evaluateAll((els) => els.map((e) => e.getAttribute('href')));
+  await expect.poll(cards).toEqual(['/works/1022']);
+  const chips = page.getByRole('group', { name: 'Настроение' });
+  const funny = chips.getByRole('button', { name: 'смешное' });
+  await expect(funny).toHaveAttribute('aria-pressed', 'false');
+
+  await funny.click();
+  await expect(funny).toHaveAttribute('aria-pressed', 'true');
+  await expect.poll(cards).toEqual(['/works/1023', '/works/1022']);
+  await expect(section.getByTestId('rec-reason').first()).toContainText('под настроение «смешное»');
+  await expect.poll(() => logged).toEqual([{ mood: 'funny' }]);
+  expect(requested.author_you_finished).toContain('funny');
+  expect(requested.continue_reading).not.toContain('funny');
+
+  // Пережило перезагрузку (localStorage), второй лог не пишется.
+  await page.reload();
+  await expect(page.getByRole('group', { name: 'Настроение' }).getByRole('button', { name: 'смешное' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+    { timeout: 10_000 },
+  );
+  await expect.poll(cards).toEqual(['/works/1023', '/works/1022']);
+  expect(logged).toHaveLength(1);
+
+  // Повторный клик снимает настроение — порядок прежний.
+  await page.getByRole('group', { name: 'Настроение' }).getByRole('button', { name: 'смешное' }).click();
+  await expect(page.getByRole('group', { name: 'Настроение' }).getByRole('button', { name: 'смешное' })).toHaveAttribute(
+    'aria-pressed',
+    'false',
+  );
+  await expect.poll(cards).toEqual(['/works/1022']);
+  if (process.env.HOME_RECS_SHOTS) {
+    await page.getByRole('group', { name: 'Настроение' }).getByRole('button', { name: 'смешное' }).click();
+    await page.screenshot({ path: `${process.env.HOME_RECS_SHOTS}/home-mood.png` });
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.screenshot({ path: `${process.env.HOME_RECS_SHOTS}/home-mood-mobile.png` });
+  }
+});

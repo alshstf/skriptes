@@ -27,10 +27,15 @@ func NewFeed(q Querier) *Feed {
 
 // Section — карточки секции kind для пользователя; неизвестная секция —
 // ErrUnknownSection. ex — скрытое у пользователя (жанры/языки/сборники).
-func (f *Feed) Section(ctx context.Context, kind SectionKind, userID int64, ex Exclusions, limit int) ([]Item, error) {
+// mood — настроение сессии (recsys/03, 3.4; "" — нет): правило MoodAware
+// («Забытая классика») фильтрует само, остальные пересортировывает ApplyMood.
+func (f *Feed) Section(ctx context.Context, kind SectionKind, userID int64, ex Exclusions, limit int, mood Mood) ([]Item, error) {
 	rule, ok := RuleFor(kind)
 	if !ok {
 		return nil, ErrUnknownSection
+	}
+	if ma, ok := rule.(MoodAware); ok && mood != "" {
+		rule, mood = ma.WithMood(mood), ""
 	}
 	if limit <= 0 || limit > 100 {
 		limit = 20
@@ -45,6 +50,9 @@ func (f *Feed) Section(ctx context.Context, kind SectionKind, userID int64, ex E
 	// Кандидатов — с запасом: часть отсеет скрытое у пользователя и «не предлагать».
 	cands, err := rule.Candidates(ctx, f.Q, p, 3*limit)
 	if err != nil {
+		return nil, fmt.Errorf("recsys: %s: %w", rule.Name(), err)
+	}
+	if cands, err = ApplyMood(ctx, f.Q, cands, mood); err != nil {
 		return nil, fmt.Errorf("recsys: %s: %w", rule.Name(), err)
 	}
 	return Hydrate(ctx, f.Q, cands, ex.WithBlocklist(p), limit)
@@ -87,8 +95,8 @@ func (f *Feed) Related(ctx context.Context, userID, workID int64, ex Exclusions,
 // Tonight — секция «На вечер» (recsys/02, 2.6): до limit работ, которые
 // укладываются в minutes при скорости speed (неизвестна — DefaultBytesPerMin),
 // в любимых жанрах пользователя. minutes вне 1…TonightMaxMinutes →
-// TonightDefaultMinutes.
-func (f *Feed) Tonight(ctx context.Context, userID int64, minutes int, speed Speed, ex Exclusions, limit int) ([]Item, error) {
+// TonightDefaultMinutes. mood — как в Section (пересортировка).
+func (f *Feed) Tonight(ctx context.Context, userID int64, minutes int, speed Speed, ex Exclusions, limit int, mood Mood) ([]Item, error) {
 	if minutes <= 0 || minutes > TonightMaxMinutes {
 		minutes = TonightDefaultMinutes
 	}
@@ -108,6 +116,9 @@ func (f *Feed) Tonight(ctx context.Context, userID int64, minutes int, speed Spe
 	}
 	cands, err := rule.Candidates(ctx, f.Q, p, 3*limit)
 	if err != nil {
+		return nil, fmt.Errorf("recsys: %s: %w", rule.Name(), err)
+	}
+	if cands, err = ApplyMood(ctx, f.Q, cands, mood); err != nil {
 		return nil, fmt.Errorf("recsys: %s: %w", rule.Name(), err)
 	}
 	return Hydrate(ctx, f.Q, cands, ex.WithBlocklist(p), limit)

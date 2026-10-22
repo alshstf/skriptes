@@ -69,9 +69,73 @@ export function writeTonightMinutes(n: number) {
   }
 }
 
+/**
+ * Настроение сессии (план recsys/03, 3.4): чипы над лентой «лёгкое · умное ·
+ * мрачное · смешное · короткое». Выбор живёт в localStorage на вечер
+ * (MOOD_TTL_MS) и уходит параметром &mood= в секции MOOD_SECTIONS; каждый
+ * выбор логируется (POST /api/me/mood). Зеркало recsys.AllMoods.
+ */
+export type Mood = 'light' | 'smart' | 'dark' | 'funny' | 'short';
+export const MOODS: readonly { key: Mood; label: string }[] = [
+  { key: 'light', label: 'лёгкое' },
+  { key: 'smart', label: 'умное' },
+  { key: 'dark', label: 'мрачное' },
+  { key: 'funny', label: 'смешное' },
+  { key: 'short', label: 'короткое' },
+];
+export function isMood(s: unknown): s is Mood {
+  return MOODS.some((m) => m.key === s);
+}
+export function moodLabel(m: Mood): string {
+  return MOODS.find((x) => x.key === m)?.label ?? m;
+}
+/** MOOD_TTL_MS — настроение живёт вечер: через 12 часов чип сбрасывается сам. */
+export const MOOD_TTL_MS = 12 * 3_600_000;
+const MOOD_LS_KEY = 'skriptes.mood';
+
+/** readMood — выбранный чип, если он не старше MOOD_TTL_MS; иначе ничего. */
+export function readMood(now = Date.now()): Mood | undefined {
+  if (typeof window === 'undefined') return undefined;
+  try {
+    const raw = window.localStorage.getItem(MOOD_LS_KEY);
+    if (!raw) return undefined;
+    const v = JSON.parse(raw) as { mood?: unknown; at?: unknown };
+    if (!isMood(v.mood) || typeof v.at !== 'number' || now - v.at > MOOD_TTL_MS) return undefined;
+    return v.mood;
+  } catch {
+    return undefined;
+  }
+}
+/** writeMood — запомнить чип (undefined — снять). */
+export function writeMood(m: Mood | undefined, now = Date.now()) {
+  try {
+    if (m) window.localStorage.setItem(MOOD_LS_KEY, JSON.stringify({ mood: m, at: now }));
+    else window.localStorage.removeItem(MOOD_LS_KEY);
+  } catch {
+    /* приватный режим — выбор живёт до перезагрузки */
+  }
+}
+
+/**
+ * MOOD_SECTIONS — секции, которые учитывают настроение: правила фазы 2
+ * (пересортировка, «Забытая классика» — фильтр) и «На вечер». Остальные при
+ * смене чипа не перезапрашиваются.
+ */
+export const MOOD_SECTIONS: ReadonlySet<RecSectionKind> = new Set<RecSectionKind>([
+  'next_in_series',
+  'author_you_finished',
+  'to_read_reminder',
+  'dropped_then_loved_author',
+  'forgotten_classic',
+  'reread',
+  'fits_tonight',
+]);
+
 // RecReason — зеркало recsys.Reason (backend): дискриминант kind, у каждого
-// вида — свои заполненные поля.
-export type RecReason =
+// вида — свои заполненные поля. mood — карточка поднята под настроение
+// (recsys/03, 3.4), у любого вида.
+export type RecReason = RecReasonBase & { mood?: Mood };
+type RecReasonBase =
   | { kind: 'in_progress'; fraction: number; at?: string; minutes?: number }
   | { kind: 'new_by_author'; author_id: number; author: string; at?: string }
   | { kind: 'new_in_series'; series_id: number; series: string; at?: string }
@@ -141,14 +205,14 @@ const STALE_MS: Record<RecSectionKind, number> = {
   to_read_reminder: 5 * 60_000,
 };
 
-/** SectionParams — параметры секции (minutes — «у меня есть N минут», fits_tonight). */
-export type SectionParams = { minutes?: number };
+/** SectionParams — параметры секции: minutes — «у меня есть N минут» (fits_tonight), mood — настроение (MOOD_SECTIONS). */
+export type SectionParams = { minutes?: number; mood?: Mood };
 
 /** recSectionQueryOptions — запрос одной секции (для useRecSection и useQueries). */
 export function recSectionQueryOptions(kind: RecSectionKind, limit = 12, params: SectionParams = {}) {
-  const extra = params.minutes ? `&minutes=${params.minutes}` : '';
+  const extra = (params.minutes ? `&minutes=${params.minutes}` : '') + (params.mood ? `&mood=${params.mood}` : '');
   return queryOptions<RecItem[]>({
-    queryKey: [...recSectionKey(kind), limit, params.minutes ?? 0],
+    queryKey: [...recSectionKey(kind), limit, params.minutes ?? 0, params.mood ?? ''],
     queryFn: async ({ signal }) => {
       const r = await apiFetch<RecSection>(
         `/api/me/recommendations?section=${kind}&limit=${limit}${extra}`,
@@ -170,10 +234,13 @@ export function useRecSection(kind: RecSectionKind, limit = 12) {
  * страница знала, когда лента пуста целиком (пустое состояние нового
  * пользователя), а не только по секции.
  */
-export function useHomeSections(limit = 12, tonightMinutes = TONIGHT_DEFAULT_MINUTES) {
+export function useHomeSections(limit = 12, tonightMinutes = TONIGHT_DEFAULT_MINUTES, mood?: Mood) {
   return useQueries({
     queries: HOME_SECTIONS.map((kind) =>
-      recSectionQueryOptions(kind, limit, kind === 'fits_tonight' ? { minutes: tonightMinutes } : {}),
+      recSectionQueryOptions(kind, limit, {
+        ...(kind === 'fits_tonight' ? { minutes: tonightMinutes } : {}),
+        ...(mood && MOOD_SECTIONS.has(kind) ? { mood } : {}),
+      }),
     ),
     combine: (results) => ({
       sections: HOME_SECTIONS.map((kind, i) => ({
@@ -247,5 +314,14 @@ export function useRelatedRecs(workId: number | undefined, enabled: boolean, lim
     },
     enabled: enabled && workId != null,
     staleTime: 30_000,
+  });
+}
+
+/** useLogMood — записать выбор чипа настроения (POST /api/me/mood); лента об этом не знает — ей хватает &mood=. */
+export function useLogMood() {
+  return useMutation({
+    mutationFn: async (mood: Mood) => {
+      await apiFetch<{ mood: Mood }>('/api/me/mood', { method: 'POST', body: { mood } });
+    },
   });
 }

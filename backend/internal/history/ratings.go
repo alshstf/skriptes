@@ -20,6 +20,9 @@ var ErrInvalidRating = errors.New("rating must be between 1 and 5")
 // ErrInvalidRatingReason — причина низкой оценки вне списка recsys.AllRatingReasons.
 var ErrInvalidRatingReason = errors.New("unknown rating reason")
 
+// ErrInvalidMood — настроение не из recsys.AllMoods (recsys/03, 3.4).
+var ErrInvalidMood = errors.New("unknown mood")
+
 // SetRating — поставить/изменить оценку пользователя работе. Повторный вызов
 // обновляет оценку и rated_at. Снятие оценки — RemoveRating.
 //

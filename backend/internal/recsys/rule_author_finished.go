@@ -28,11 +28,38 @@ const (
 	AuthorMinReadUnrated = 2
 )
 
+// AuthorRating — оценка автора пользователем (план recsys/03, задача 3.6):
+// среднее его оценок работ автора; считается, не хранится. Карточка автора
+// считает то же SQL-ом (catalog.GetAuthor → Author.UserRating, «ваша средняя —
+// 4.5 по 6 книгам»); здесь — из Profile.Signals (харнесс прячет сигналы).
+type AuthorRating struct {
+	Sum   float64
+	Count int
+}
+
+// Add — учесть оценку работы (0 — нет оценки, не считается).
+func (r *AuthorRating) Add(rating int) {
+	if rating > 0 {
+		r.Sum += float64(rating)
+		r.Count++
+	}
+}
+
+// Known — есть хотя бы одна оценка.
+func (r AuthorRating) Known() bool { return r.Count > 0 }
+
+// Avg — средняя (0 без оценок).
+func (r AuthorRating) Avg() float64 {
+	if r.Count == 0 {
+		return 0
+	}
+	return r.Sum / float64(r.Count)
+}
+
 // authorAnchor — что пользователь прочитал у автора и что из этого последнее.
 type authorAnchor struct {
 	read      int
-	rated     int
-	ratingSum float64
+	rating    AuthorRating
 	lastWork  int64
 	lastTitle string
 	lastYear  int
@@ -45,8 +72,8 @@ func (a *authorAnchor) liked() bool {
 	if a.read == 0 {
 		return false
 	}
-	if a.rated > 0 {
-		return a.ratingSum/float64(a.rated) >= AuthorMinAvgRating
+	if a.rating.Known() {
+		return a.rating.Avg() >= AuthorMinAvgRating
 	}
 	return a.read >= AuthorMinReadUnrated
 }
@@ -75,10 +102,7 @@ func (AuthorFinished) Candidates(ctx context.Context, q Querier, p *Profile, n i
 				anchors[aid] = a
 			}
 			a.read++
-			if s.Rating > 0 {
-				a.ratingSum += float64(s.Rating)
-				a.rated++
-			}
+			a.rating.Add(s.Rating)
 			if a.lastWork == 0 || at.After(a.lastAt) {
 				a.lastWork, a.lastTitle, a.lastYear, a.lastAt = wid, m.Title, m.Year, at
 			}

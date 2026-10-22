@@ -75,17 +75,17 @@ func TestFitsTonight(t *testing.T) {
 
 	// Лента: минуты вне диапазона → 40; скорость неизвестна → по умолчанию.
 	feed := recsys.NewFeed(pool)
-	items, err := feed.Tonight(ctx, me, 0, recsys.Speed{}, recsys.Exclusions{}, 10)
+	items, err := feed.Tonight(ctx, me, 0, recsys.Speed{}, recsys.Exclusions{}, 10, "")
 	require.NoError(t, err)
 	require.Len(t, items, 2)
 	require.Equal(t, "Короткая sf+det", items[0].Title)
-	items, err = feed.Tonight(ctx, me, 20, recsys.Speed{BytesPerMin: 10_000, Sessions: 5}, recsys.Exclusions{}, 10)
+	items, err = feed.Tonight(ctx, me, 20, recsys.Speed{BytesPerMin: 10_000, Sessions: 5}, recsys.Exclusions{}, 10, "")
 	require.NoError(t, err)
 	require.Len(t, items, 2, "20 мин × 10 000 = 200 КБ: длинная не влезает")
 
 	// Нет любимых жанров — пусто.
 	nobody := f.user("nobody@example.com")
-	items, err = feed.Tonight(ctx, nobody, 40, recsys.Speed{}, recsys.Exclusions{}, 10)
+	items, err = feed.Tonight(ctx, nobody, 40, recsys.Speed{}, recsys.Exclusions{}, 10, "")
 	require.NoError(t, err)
 	require.Empty(t, items)
 	none, err := recsys.FitsTonight{Minutes: 40}.Candidates(ctx, pool, &recsys.Profile{}, 10)

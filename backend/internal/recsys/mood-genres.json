@@ -1,0 +1,47 @@
+{
+  "light": {
+    "genres": {
+      "adventure": 1, "adv_history": 1, "adv_maritime": 1, "adv_western": 1, "adv_indian": 1,
+      "adv_modern": 1, "adv_story": 1, "child_adv": 0.5,
+      "detective": 1, "det_classic": 1, "det_irony": 1, "det_cozy": 1, "det_history": 0.5,
+      "love_detective": 1, "det_su": 0.5, "det_police": 0.5, "det_action": 0.5,
+      "humor": 1, "humor_prose": 1, "sf_humor": 1, "humor_fantasy": 1, "sf_fantasy_irony": 1, "sf_irony": 1,
+      "love_contemporary": 1, "love_short": 1, "love_history": 1, "love": 0.5,
+      "fairy_fantasy": 0.5, "modern_tale": 0.5, "sf_space_opera": 0.5, "sf_heroic": 0.5,
+      "popadanec": 0.5, "sf_litrpg": 0.5, "sf_realrpg": 0.5, "boyar_anime": 0.5
+    }
+  },
+  "smart": {
+    "genres": {
+      "sci_philosophy": 1, "sci_popular": 1, "sci_history": 1, "sci_psychology": 1, "sci_culture": 1,
+      "sci_politics": 0.5, "sci_philology": 0.5, "sci_religion": 0.5, "sci_linguistic": 0.5,
+      "nonf_biography": 1, "nonf_publicism": 0.5, "nonf_criticism": 0.5, "essay": 1, "aphorisms": 0.5,
+      "prose_classic": 1, "prose_rus_classic": 1, "prose_su_classics": 0.5, "foreign_antique": 0.5,
+      "prose_contemporary": 0.5, "prose_magic": 0.5, "prose_counter": 0.5, "dissident": 0.5,
+      "sf_social": 1, "antique_myths": 0.5, "antique_ant": 0.5, "literature_19": 0.5
+    }
+  },
+  "dark": {
+    "genres": {
+      "sf_horror": 1, "thriller": 1, "thriller_psychology": 1, "thriller_mystery": 1,
+      "det_maniac": 1, "det_hard": 1, "det_crime": 0.5,
+      "sf_postapocalyptic": 1, "gothic_novel": 1, "sf_mystic": 1, "sf_cyberpunk": 0.5,
+      "sf_social": 0.5, "tragedy": 1, "prose_military": 0.5, "nonf_military": 0.5,
+      "dissident": 0.5, "prose_counter": 0.5
+    }
+  },
+  "funny": {
+    "genres": {
+      "humor": 1, "humor_prose": 1, "humor_satire": 1, "humor_verse": 1, "humor_anecdote": 1,
+      "sf_humor": 1, "humor_fantasy": 1, "sf_fantasy_irony": 1, "sf_irony": 1, "det_irony": 1,
+      "comedy": 1, "vaudeville": 0.5, "limerick": 0.5
+    }
+  },
+  "short": {
+    "max_bytes": 300000,
+    "genres": {
+      "short_story": 1, "story": 1, "great_story": 0.5, "essay": 0.5, "aphorisms": 0.5,
+      "humor_anecdote": 0.5, "fable": 0.5
+    }
+  }
+}

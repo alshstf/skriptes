@@ -14,8 +14,8 @@ import (
 )
 
 // Явная обратная связь (план recsys/03): причины низкой оценки (3.1), «не
-// предлагать» автора/цикл (3.2), полка «Хочу прочитать» (3.3). Всё — по
-// пользователю; каталог и поиск не меняются.
+// предлагать» автора/цикл (3.2), полка «Хочу прочитать» (3.3), лог настроения
+// сессии (3.4). Всё — по пользователю; каталог и поиск не меняются.
 
 // handleSetRatingReasons — PUT /api/works/{id}/rating-reasons {reasons: [...]}:
 // заменить набор причин низкой оценки (пустой — убрать). Неизвестная — 400.
@@ -157,5 +157,36 @@ func handleToRead(d HistoryDeps, add bool) http.HandlerFunc {
 			return
 		}
 		writeJSON(w, http.StatusOK, map[string]bool{"is_to_read": add})
+	}
+}
+
+// handleLogMood — POST /api/me/mood {mood}: записать выбор чипа настроения на
+// Главной (session_mood). Настроение само по себе — параметр mood= ленты
+// (recs.go), здесь только лог. Неизвестное — 400.
+func handleLogMood(d HistoryDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		u, ok := UserFromContext(r.Context())
+		if !ok {
+			writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "not authenticated"})
+			return
+		}
+		var req struct {
+			Mood recsys.Mood `json:"mood"`
+		}
+		if err := json.NewDecoder(http.MaxBytesReader(w, r.Body, 1024)).Decode(&req); err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid body"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 3*time.Second)
+		defer cancel()
+		if err := d.Service.LogMood(ctx, u.ID, req.Mood); err != nil {
+			if errors.Is(err, history.ErrInvalidMood) {
+				writeJSON(w, http.StatusBadRequest, map[string]string{"error": "unknown mood"})
+				return
+			}
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "save failed"})
+			return
+		}
+		writeJSON(w, http.StatusOK, map[string]string{"mood": string(req.Mood)})
 	}
 }

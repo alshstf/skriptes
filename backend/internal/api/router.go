@@ -236,6 +236,7 @@ func NewRouter(d Deps) http.Handler {
 					r.Get("/me/blocklist", handleListBlocklist(d.History))
 					r.With(bookGate).Post("/books/{id}/to-read", handleToRead(d.History, true))
 					r.Delete("/books/{id}/to-read", handleToRead(d.History, false))
+					r.Post("/me/mood", handleLogMood(d.History))
 					// Отложенные запросы оценки («Оцените прочитанное»).
 					r.Post("/works/{id}/rating-prompt/dismiss", handleDismissRatingPrompt(d.History))
 					r.Post("/works/{id}/rating-prompt/snooze", handleSnoozeRatingPrompt(d.History, d.Settings))

@@ -107,6 +107,9 @@ type Reason struct {
 	Source string  `json:"source,omitempty"`
 	// Genre — fb2-код жанра (fits_tonight; имя — фронт по useGenreMap).
 	Genre string `json:"genre,omitempty"`
+	// Mood — карточка поднята под настроение сессии (recsys/03, 3.4; mood.go):
+	// у секций правил — пересортировка, у «Забытой классики» — фильтр.
+	Mood Mood `json:"mood,omitempty"`
 }
 
 // Item — карточка ленты. ID — представительное ИЗДАНИЕ (on-demand обложка,
@@ -154,6 +157,34 @@ var AllRatingReasons = []RatingReason{
 func IsRatingReason(s string) bool {
 	for _, r := range AllRatingReasons {
 		if string(r) == s {
+			return true
+		}
+	}
+	return false
+}
+
+// Mood — настроение сессии (план recsys/03, задача 3.4): чип на Главной,
+// живёт в браузере и уходит параметром mood= в GET /me/recommendations;
+// выбор логируется в session_mood (миграция 0069). Закрытый список. До фазы 7
+// (атрибуты работ) настроение переводится в веса жанров по mood-genres.json
+// (mood.go); «короткое» — ещё и по размеру издания.
+type Mood string
+
+const (
+	MoodLight Mood = "light" // лёгкое
+	MoodSmart Mood = "smart" // умное
+	MoodDark  Mood = "dark"  // мрачное
+	MoodFunny Mood = "funny" // смешное
+	MoodShort Mood = "short" // короткое
+)
+
+// AllMoods — порядок чипов в UI; тот же список — в CHECK миграции 0069.
+var AllMoods = []Mood{MoodLight, MoodSmart, MoodDark, MoodFunny, MoodShort}
+
+// IsMood — s — известное настроение.
+func IsMood(s string) bool {
+	for _, m := range AllMoods {
+		if string(m) == s {
 			return true
 		}
 	}
