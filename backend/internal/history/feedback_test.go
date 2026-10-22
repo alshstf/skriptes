@@ -164,4 +164,19 @@ func TestService_Feedback(t *testing.T) {
 	require.NoError(t, err)
 	require.Empty(t, list.Authors)
 	require.Empty(t, list.Series)
+
+	// 3.4: лог настроения — append-only, неизвестное — ошибка.
+	require.ErrorIs(t, svc.LogMood(ctx, userID, recsys.Mood("sad")), history.ErrInvalidMood)
+	require.NoError(t, svc.LogMood(ctx, userID, recsys.MoodFunny))
+	require.NoError(t, svc.LogMood(ctx, userID, recsys.MoodFunny))
+	var moods []string
+	rows, err := pool.Query(ctx, `SELECT mood FROM session_mood WHERE user_id = $1 ORDER BY at, id`, userID)
+	require.NoError(t, err)
+	for rows.Next() {
+		var m string
+		require.NoError(t, rows.Scan(&m))
+		moods = append(moods, m)
+	}
+	rows.Close()
+	require.Equal(t, []string{"funny", "funny"}, moods)
 }

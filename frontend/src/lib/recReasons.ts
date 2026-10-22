@@ -1,4 +1,4 @@
-import type { RecReason } from './recs';
+import { moodLabel, type RecReason } from './recs';
 import { formatReadingTime, formatRelativeDays, pluralRu } from './format';
 
 // pluralBooksOf — «1 книгу / 2 книги / 5 книг» (винительный падеж: «полюбили N книг»).
@@ -20,6 +20,13 @@ export type ReasonContext = { genreName?: (code: string) => string | undefined }
 
 /** reasonParts — части текста причины; пустой массив — причину не показываем. */
 export function reasonParts(r: RecReason, now = new Date(), ctx: ReasonContext = {}): ReasonPart[] {
+  const parts = baseParts(r, now, ctx);
+  // Поднята под настроение (recsys/03, 3.4) — дописываем к причине правила.
+  if (parts.length > 0 && r.mood) parts.push({ text: ` · под настроение «${moodLabel(r.mood)}»` });
+  return parts;
+}
+
+function baseParts(r: RecReason, now: Date, ctx: ReasonContext): ReasonPart[] {
   const when = (at?: string) => (at ? ` · ${formatRelativeDays(at, now)}` : '');
   switch (r.kind) {
     case 'in_progress': {

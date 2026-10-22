@@ -9,13 +9,18 @@ import { useSuggest } from '@/lib/suggest';
 import { useHeroSearch } from '@/lib/heroSearch';
 import { useInstanceName } from '@/lib/version';
 import {
+  MOODS,
   TONIGHT_MINUTES,
+  moodLabel,
+  readMood,
   readTonightMinutes,
   useHomeSections,
+  useLogMood,
   workIdOf,
+  writeMood,
   writeTonightMinutes,
 } from '@/lib/recs';
-import type { RecItem, RecSectionKind } from '@/lib/recs';
+import type { Mood, RecItem, RecSectionKind } from '@/lib/recs';
 import { useHomeFeedSettings, useSetSectionCollapsed } from '@/lib/homeFeed';
 import { LOW_RATING_MAX, useFinishRatePrompt, useRatePrompt } from '@/lib/ratings';
 import { RatingControl } from '@/components/RatingControl';
@@ -41,7 +46,8 @@ import { pluralBooks } from '@/lib/format';
  * подпискам», «Отложенное, к которому доросли», «Забытая классика»,
  * «Перечитать», «Оцените прочитанное». Пустые секции не рендерятся, любую можно
  * свернуть (хранится в user_settings); пустая лента целиком — подсказка новому
- * пользователю.
+ * пользователю. Над лентой — чипы настроения (recsys/03, 3.4): секции правил
+ * перестраиваются под выбранное, «Забытая классика» фильтруется.
  *
  * Стиль монохромный (грабля №9): акценты — иконкой и насыщенностью, не цветом.
  */
@@ -320,36 +326,52 @@ const SECTION_META: Record<RecSectionKind, { title: string; card: (item: RecItem
 function RecFeed() {
   // «На вечер» (2.6): «у меня есть N минут» — чип живёт в localStorage.
   const [tonightMinutes, setTonightMinutes] = useState(readTonightMinutes);
-  const { sections, allLoaded, allEmpty } = useHomeSections(12, tonightMinutes);
+  // Настроение сессии (recsys/03, 3.4): чип над лентой, живёт вечер в
+  // localStorage; выбор логируется, секции правил перезапрашиваются с &mood=.
+  const [mood, setMood] = useState<Mood | undefined>(readMood);
+  const logMood = useLogMood();
+  const { sections, allLoaded, allEmpty } = useHomeSections(12, tonightMinutes, mood);
   const { data: feedSettings } = useHomeFeedSettings();
   const setCollapsed = useSetSectionCollapsed();
   const collapsed = new Set<RecSectionKind>(feedSettings?.collapsed ?? []);
-  if (allLoaded && allEmpty) return <EmptyFeed />;
+  const pickMood = (m: Mood) => {
+    const next = m === mood ? undefined : m;
+    setMood(next);
+    writeMood(next);
+    if (next) logMood.mutate(next);
+  };
+  const moodChips = <MoodChips mood={mood} onPick={pickMood} />;
+  if (allLoaded && allEmpty) {
+    if (!mood) return <EmptyFeed />;
+    // Под настроение ничего не нашлось — чипы остаются, чтобы его снять.
+    return (
+      <div className="space-y-3">
+        {moodChips}
+        <p className="text-sm text-pretty text-muted-foreground" data-testid="mood-empty">
+          Под настроение «{moodLabel(mood)}» ничего не подобрать — выберите другое или снимите чип.
+        </p>
+      </div>
+    );
+  }
   const tonightChips = (
     <div className="flex items-center gap-1" role="group" aria-label="Сколько у вас есть минут">
       {TONIGHT_MINUTES.map((m) => (
-        <button
+        <Chip
           key={m}
-          type="button"
-          aria-pressed={m === tonightMinutes}
+          pressed={m === tonightMinutes}
           onClick={() => {
             setTonightMinutes(m);
             writeTonightMinutes(m);
           }}
-          className={cn(
-            'rounded-full border px-2.5 py-0.5 text-xs transition-colors',
-            m === tonightMinutes
-              ? 'border-foreground bg-foreground text-background'
-              : 'border-border text-muted-foreground hover:bg-accent hover:text-foreground',
-          )}
         >
           {m} мин
-        </button>
+        </Chip>
       ))}
     </div>
   );
   return (
     <>
+      {moodChips}
       {sections.map(({ kind, items, isLoading }) => {
         const meta = SECTION_META[kind];
         if (isLoading) return <ShelfSkeleton key={kind} title={meta.title} />;
@@ -386,6 +408,41 @@ function RecFeed() {
         );
       })}
     </>
+  );
+}
+
+// Chip — круглая кнопка-переключатель секций ленты (минуты «На вечер»,
+// настроение); монохром: выбранный — инверсия, не цвет.
+function Chip({ pressed, onClick, children }: { pressed: boolean; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      aria-pressed={pressed}
+      onClick={onClick}
+      className={cn(
+        'rounded-full border px-2.5 py-0.5 text-xs transition-colors',
+        pressed
+          ? 'border-foreground bg-foreground text-background'
+          : 'border-border text-muted-foreground hover:bg-accent hover:text-foreground',
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+// MoodChips — «Настроение: лёгкое · умное · мрачное · смешное · короткое» над
+// лентой (recsys/03, 3.4). Повторный клик снимает выбор.
+function MoodChips({ mood, onPick }: { mood?: Mood; onPick: (m: Mood) => void }) {
+  return (
+    <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="Настроение" data-testid="mood-chips">
+      <span className="text-xs text-muted-foreground">Настроение:</span>
+      {MOODS.map(({ key, label }) => (
+        <Chip key={key} pressed={key === mood} onClick={() => onPick(key)}>
+          {label}
+        </Chip>
+      ))}
+    </div>
   );
 }
 

@@ -9,7 +9,8 @@ import (
 )
 
 // Явная обратная связь (план recsys/03): причины низкой оценки (3.1), «не
-// предлагать» автора/цикл (3.2), полка «Хочу прочитать» (3.3). Модель близости
+// предлагать» автора/цикл (3.2), полка «Хочу прочитать» (3.3), лог настроения
+// сессии (3.4). Модель близости
 // читает всё это в internal/recsys (LoadSignals, LoadBlocklist); здесь — запись
 // и чтение для карточек и профиля.
 
@@ -70,6 +71,22 @@ func (s *Service) RatingReasons(ctx context.Context, userID, workID int64) ([]re
 		out = append(out, recsys.RatingReason(r))
 	}
 	return out, rows.Err()
+}
+
+// ── 3.4 Настроение сессии ────────────────────────────────────────────
+
+// LogMood — записать выбор чипа настроения на Главной (session_mood,
+// append-only): само настроение живёт в браузере и уходит параметром mood= в
+// GET /me/recommendations, лог — чтобы потом видеть, что человек выбирает по
+// вечерам (приёмка 3.7). Неизвестное — ErrInvalidMood.
+func (s *Service) LogMood(ctx context.Context, userID int64, mood recsys.Mood) error {
+	if !recsys.IsMood(string(mood)) {
+		return ErrInvalidMood
+	}
+	if _, err := s.pool.Exec(ctx, `INSERT INTO session_mood (user_id, mood) VALUES ($1, $2)`, userID, string(mood)); err != nil {
+		return fmt.Errorf("log mood: %w", err)
+	}
+	return nil
 }
 
 // ── 3.2 «Не предлагать» автора / цикл ───────────────────────────────

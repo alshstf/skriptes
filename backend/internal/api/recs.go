@@ -17,12 +17,14 @@ import (
 // монтируются из RecsDeps.Feed, фронт собирает порядок сам (pages/HomePage.tsx).
 
 // sectionOpts — параметры секции из query: minutes — «у меня есть N минут»
-// (fits_tonight; 0 — по умолчанию).
+// (fits_tonight; 0 — по умолчанию); mood — настроение сессии (recsys/03, 3.4;
+// секции правил и «На вечер», "" — нет; неизвестное — 400).
 type sectionOpts struct {
 	Minutes int
+	Mood    recsys.Mood
 }
 
-// handleRecommendations — GET /api/me/recommendations?section=&limit=[&minutes=]
+// handleRecommendations — GET /api/me/recommendations?section=&limit=[&minutes=][&mood=]
 func handleRecommendations(hist HistoryDeps, set SettingsDeps, content ContentDeps, recs RecsDeps) http.HandlerFunc {
 	type provider func(ctx context.Context, userID int64, limit int, opts sectionOpts) ([]recsys.Item, error)
 	plain := func(f func(ctx context.Context, userID int64, limit int) ([]recsys.Item, error)) provider {
@@ -60,8 +62,8 @@ func handleRecommendations(hist HistoryDeps, set SettingsDeps, content ContentDe
 	if recs.Feed != nil {
 		for _, rule := range recsys.Rules {
 			kind := rule.Section()
-			providers[kind] = func(ctx context.Context, userID int64, limit int, _ sectionOpts) ([]recsys.Item, error) {
-				return recs.Feed.Section(ctx, kind, userID, exclusions(ctx, userID), limit)
+			providers[kind] = func(ctx context.Context, userID int64, limit int, opts sectionOpts) ([]recsys.Item, error) {
+				return recs.Feed.Section(ctx, kind, userID, exclusions(ctx, userID), limit, opts.Mood)
 			}
 		}
 		// «На вечер» (2.6): минуты из query, скорость — личная из журнала позиций.
@@ -70,7 +72,7 @@ func handleRecommendations(hist HistoryDeps, set SettingsDeps, content ContentDe
 			if err != nil {
 				return nil, err
 			}
-			return recs.Feed.Tonight(ctx, userID, opts.Minutes, speed, exclusions(ctx, userID), limit)
+			return recs.Feed.Tonight(ctx, userID, opts.Minutes, speed, exclusions(ctx, userID), limit, opts.Mood)
 		}
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -86,7 +88,12 @@ func handleRecommendations(hist HistoryDeps, set SettingsDeps, content ContentDe
 			return
 		}
 		limit := parseIntOr(r.URL.Query().Get("limit"), 12)
-		opts := sectionOpts{Minutes: parseIntOr(r.URL.Query().Get("minutes"), 0)}
+		mood := recsys.Mood(r.URL.Query().Get("mood"))
+		if mood != "" && !recsys.IsMood(string(mood)) {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "unknown mood"})
+			return
+		}
+		opts := sectionOpts{Minutes: parseIntOr(r.URL.Query().Get("minutes"), 0), Mood: mood}
 		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
 		defer cancel()
 		items, err := p(ctx, u.ID, limit, opts)

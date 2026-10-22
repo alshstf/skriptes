@@ -210,6 +210,13 @@ func (s *Service) GetAuthor(ctx context.Context, id, userID int64, excludeGenres
 			return Author{}, err
 		}
 		a.ReadCount = read
+		avg, n, err := s.queryAuthorUserRating(ctx, id, userID)
+		if err != nil {
+			return Author{}, err
+		}
+		if n > 0 {
+			a.UserRating, a.UserRatingCount = &avg, n
+		}
 	}
 
 	return a, nil
@@ -886,6 +893,28 @@ func (s *Service) queryAuthorReadCount(ctx context.Context, authorID, userID int
 		return 0, fmt.Errorf("query author read count: %w", err)
 	}
 	return n, nil
+}
+
+// queryAuthorUserRating — средняя и число оценок пользователя по работам
+// автора (recsys/03, 3.6: «ваша средняя — 4.5 по 6 книгам»). Оценка — по
+// работе, поэтому издания её не удваивают; без оценок — 0, 0.
+func (s *Service) queryAuthorUserRating(ctx context.Context, authorID, userID int64) (float64, int, error) {
+	var (
+		avg float64
+		n   int
+	)
+	err := s.pool.QueryRow(ctx, `
+		SELECT COALESCE(avg(br.rating), 0)::float8, count(*)::int
+		FROM book_ratings br
+		WHERE br.user_id = $2 AND br.work_id IN (
+			SELECT b.work_id FROM book_authors ba
+			JOIN books b ON b.id = ba.book_id
+			WHERE ba.author_id = $1 AND b.deleted = false AND b.work_id IS NOT NULL)
+	`, authorID, userID).Scan(&avg, &n)
+	if err != nil {
+		return 0, 0, fmt.Errorf("query author user rating: %w", err)
+	}
+	return avg, n, nil
 }
 
 // querySeriesYearStats — то же самое для серии: распределение книг в

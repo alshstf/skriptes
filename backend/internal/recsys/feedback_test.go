@@ -129,7 +129,7 @@ func TestFeedbackSignals(t *testing.T) {
 	require.True(t, ok)
 	require.True(t, recsys.IsSectionKind(string(recsys.SectionToRead)))
 	feed := &recsys.Feed{Q: pool, Weights: recsys.DefaultWeights, Now: func() time.Time { return now }}
-	fi, err := feed.Section(ctx, recsys.SectionToRead, me, recsys.Exclusions{}, 10)
+	fi, err := feed.Section(ctx, recsys.SectionToRead, me, recsys.Exclusions{}, 10, "")
 	require.NoError(t, err)
 	require.Len(t, fi, 1)
 	require.Equal(t, wA, fi[0].WorkID)
@@ -139,7 +139,7 @@ func TestFeedbackSignals(t *testing.T) {
 
 	// Открыли A в ридере — напоминание уходит.
 	f.exec(`INSERT INTO reads (user_id, book_id, fraction, last_pos, updated_at) VALUES ($1,$2,0.2,'p',now())`, me, eA)
-	fi, err = feed.Section(ctx, recsys.SectionToRead, me, recsys.Exclusions{}, 10)
+	fi, err = feed.Section(ctx, recsys.SectionToRead, me, recsys.Exclusions{}, 10, "")
 	require.NoError(t, err)
 	require.Empty(t, fi)
 

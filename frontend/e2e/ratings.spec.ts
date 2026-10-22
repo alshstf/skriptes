@@ -1,5 +1,5 @@
 import { test, expect } from './_fixtures';
-import { bookDetailFixture } from './_fixtures';
+import { authorDetailFixture, bookDetailFixture } from './_fixtures';
 
 // Пользовательская оценка на карточке книги (work-level, шкала 1–5).
 // Проверяем: нет сигнала «оценка читателей» → клик по звезде →
@@ -153,4 +153,26 @@ test('rating: оценка 2 → чипы причин → PUT rating-reasons', 
   await expect.poll(() => putBody).toEqual({ reasons: ['boring', 'too_long'] });
   await expect(prompt).toHaveCount(0);
   await expect(page.getByTestId('rating-reasons-line')).toContainText('Почему: скучно · слишком длинно');
+});
+
+// Оценка автора целиком (recsys/03, 3.6): «ваша средняя — 4.5 по 6 книгам» в
+// сводке карточки автора по вашим оценкам его работ; без оценок строки нет.
+test('rating: карточка автора — ваша средняя по вашим оценкам', async ({ mockedPage: page }) => {
+  await page.route(/\/api\/authors\/17$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ ...authorDetailFixture, user_rating: 4.5, user_rating_count: 6 }),
+    }),
+  );
+  await page.goto('/authors/17');
+  await expect(page.getByTestId('author-user-rating')).toHaveText(/ваша средняя — 4\.5 по 6 книгам/, {
+    timeout: 10_000,
+  });
+});
+
+test('rating: карточка автора без ваших оценок — строки нет', async ({ mockedPage: page }) => {
+  await page.goto('/authors/17');
+  await expect(page.getByRole('heading', { name: authorDetailFixture.full_name })).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByTestId('author-user-rating')).toHaveCount(0);
 });

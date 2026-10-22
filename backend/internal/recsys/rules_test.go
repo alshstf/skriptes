@@ -269,10 +269,10 @@ func TestFeedSectionAndHydrate(t *testing.T) {
 	f.exec(`INSERT INTO reads (user_id, book_id, completed_at, updated_at) VALUES ($1,$2,now(),now())`, me, e1)
 
 	feed := recsys.NewFeed(pool)
-	_, err := feed.Section(ctx, recsys.SectionKind("nope"), me, recsys.Exclusions{}, 10)
+	_, err := feed.Section(ctx, recsys.SectionKind("nope"), me, recsys.Exclusions{}, 10, "")
 	require.ErrorIs(t, err, recsys.ErrUnknownSection)
 
-	items, err := feed.Section(ctx, recsys.SectionNextInSeries, me, recsys.Exclusions{}, 10)
+	items, err := feed.Section(ctx, recsys.SectionNextInSeries, me, recsys.Exclusions{}, 10, "")
 	require.NoError(t, err)
 	require.Len(t, items, 1)
 	it := items[0]
@@ -287,14 +287,14 @@ func TestFeedSectionAndHydrate(t *testing.T) {
 
 	// Скрытый язык издания → карточки нет; скрытый жанр → тоже; «скрывать
 	// сборники» — работа-сборник выпадает.
-	items, err = feed.Section(ctx, recsys.SectionNextInSeries, me, recsys.Exclusions{Langs: []string{"en"}}, 10)
+	items, err = feed.Section(ctx, recsys.SectionNextInSeries, me, recsys.Exclusions{Langs: []string{"en"}}, 10, "")
 	require.NoError(t, err)
 	require.Empty(t, items)
 	f.exec(`INSERT INTO book_genres (book_id, genre_id) VALUES ($1,$2)`, e2, gHidden)
-	items, err = feed.Section(ctx, recsys.SectionNextInSeries, me, recsys.Exclusions{Genres: []string{"hidden_genre"}}, 10)
+	items, err = feed.Section(ctx, recsys.SectionNextInSeries, me, recsys.Exclusions{Genres: []string{"hidden_genre"}}, 10, "")
 	require.NoError(t, err)
 	require.Empty(t, items)
-	items, err = feed.Section(ctx, recsys.SectionNextInSeries, me, recsys.Exclusions{Genres: []string{"other"}, Langs: []string{"fr"}}, 10)
+	items, err = feed.Section(ctx, recsys.SectionNextInSeries, me, recsys.Exclusions{Genres: []string{"other"}, Langs: []string{"fr"}}, 10, "")
 	require.NoError(t, err)
 	require.Len(t, items, 1, "чужие исключения не мешают")
 
@@ -326,7 +326,7 @@ func TestFeedSectionAndHydrate(t *testing.T) {
 	require.Len(t, items, 1)
 
 	// Пустой профиль — пустая секция, без ошибки.
-	items, err = feed.Section(ctx, recsys.SectionAuthorFinished, f.user("nobody@example.com"), recsys.Exclusions{}, 10)
+	items, err = feed.Section(ctx, recsys.SectionAuthorFinished, f.user("nobody@example.com"), recsys.Exclusions{}, 10, "")
 	require.NoError(t, err)
 	require.Empty(t, items)
 

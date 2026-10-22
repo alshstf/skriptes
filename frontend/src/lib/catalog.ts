@@ -55,6 +55,9 @@ export type Author = {
   year_unknown?: number;
   /** Сколько книг автора пользователь хотя бы раз скачивал. */
   read_count?: number;
+  /** «Ваша средняя — 4.5 по 6 книгам» (recsys/03, 3.6): среднее ваших оценок по работам автора; нет оценок — нет поля. */
+  user_rating?: number;
+  user_rating_count?: number;
   /** Био-текст из Wikipedia (lazy enrichment). */
   bio?: string;
   /** sha256.ext в /cache/covers — фото автора. Отдаётся через /api/covers. */

@@ -69,7 +69,7 @@ func TestDroppedThenLoved(t *testing.T) {
 	_, _, _ = w2, e1, w1
 
 	// Лента: карточка с причиной.
-	items, err := recsys.NewFeed(pool).Section(ctx, recsys.SectionDropped, me, recsys.Exclusions{}, 10)
+	items, err := recsys.NewFeed(pool).Section(ctx, recsys.SectionDropped, me, recsys.Exclusions{}, 10, "")
 	require.NoError(t, err)
 	require.Len(t, items, 1)
 	require.Equal(t, "Брошенная", items[0].Title)
@@ -218,11 +218,11 @@ func TestForgottenClassic(t *testing.T) {
 	// Лента через DefaultClassics: карточки с причиной и исключениями.
 	recsys.DefaultClassics.Set(items, at)
 	t.Cleanup(func() { recsys.DefaultClassics.Set(nil, time.Time{}) })
-	cards, err := recsys.NewFeed(pool).Section(ctx, recsys.SectionForgottenClassic, me, recsys.Exclusions{Langs: []string{"en"}}, 10)
+	cards, err := recsys.NewFeed(pool).Section(ctx, recsys.SectionForgottenClassic, me, recsys.Exclusions{Langs: []string{"en"}}, 10, "")
 	require.NoError(t, err)
 	require.Empty(t, cards, "у me нет сигналов — профиль пуст, секция пуста")
 	f.exec(`INSERT INTO book_ratings (user_id, work_id, rating) VALUES ($1,$2,5)`, me, comp)
-	cards, err = recsys.NewFeed(pool).Section(ctx, recsys.SectionForgottenClassic, me, recsys.Exclusions{Langs: []string{"en"}}, 10)
+	cards, err = recsys.NewFeed(pool).Section(ctx, recsys.SectionForgottenClassic, me, recsys.Exclusions{Langs: []string{"en"}}, 10, "")
 	require.NoError(t, err)
 	require.Len(t, cards, 1, "английские издания скрыты")
 	require.Equal(t, flSF, cards[0].WorkID)
