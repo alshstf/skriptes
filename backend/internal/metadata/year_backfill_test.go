@@ -69,8 +69,9 @@ func TestWikidata_FetchYear(t *testing.T) {
 		case strings.HasSuffix(r.URL.Path, "/sparql"):
 			q := r.FormValue("query")
 			switch {
-			case strings.Contains(q, "P50"): // validateBookQID — автор
-				_, _ = io.WriteString(w, `{"results":{"bindings":[{"authorLabel":{"value":"Фёдор Достоевский"}}]}}`)
+			case strings.Contains(q, "P50"): // firstBookByAuthor — автор кандидата
+				_, _ = io.WriteString(w, `{"results":{"bindings":[{"book":{"value":"http://www.wikidata.org/entity/Q12345"},`+
+					`"author":{"value":"http://www.wikidata.org/entity/Q991"},"authorLabel":{"value":"Фёдор Достоевский"}}]}}`)
 			case strings.Contains(q, "P577"): // год публикации
 				_, _ = io.WriteString(w, `{"results":{"bindings":[{"year":{"value":"1872"}}]}}`)
 			default:

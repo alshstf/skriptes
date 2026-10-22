@@ -54,6 +54,12 @@ type BookQuery struct {
 	// находят Tier-2 группировки и «Известность»). Источник wikidata берёт его
 	// вместо поиска книги по названию (#294). Пустой — ищем сами.
 	WikidataQID string
+	// AuthorQIDs — QID авторов в Wikidata (authors.ext_ids->>'wd_qid') по позиции
+	// Authors: AuthorQIDs[i] — QID автора Authors[i], "" (или нет элемента) —
+	// неизвестен. Источник wikidata подтверждает найденную по названию книгу
+	// QID автора в P50, а не буквами имени: «Херберт Фрэнк» в каталоге и «Фрэнк
+	// Герберт» в Wikidata — один человек (#570).
+	AuthorQIDs []string
 }
 
 // CoverImage — сырая обложка для записи в /cache/covers.
@@ -369,6 +375,8 @@ type WorkQuery struct {
 	// группировки его резолвил) — позволяет источнику wikidata пропустить
 	// дорогой резолв по названию. Пустой — резолвим сами.
 	WikidataQID string
+	// AuthorQIDs — QID авторов по позиции Authors (как BookQuery.AuthorQIDs).
+	AuthorQIDs []string
 }
 
 // WorkKeyResolver — внешний источник идентификатора работы (OpenLibrary Work /

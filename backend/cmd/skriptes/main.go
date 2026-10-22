@@ -175,6 +175,7 @@ func run() error {
 		runOnceSplitAnthologyEditions(c, pool, imp, logger)
 		runOncePublisherSeries(c, pool, imp, logger)
 		runOnceAdaptationsScreenOnly(c, pool, imp, logger)
+		runOnceAdaptationsAuthorQIDRecheck(c, pool, logger)
 		runOnceWorkYears(c, pool, imp, logger)
 		runOnceWorkYearRules(c, pool, imp, logger)
 		runOnceExternalBookYears(c, pool, imp, logger)
@@ -1768,6 +1769,33 @@ func runOnceAdaptationsScreenOnly(ctx context.Context, pool *pgxpool.Pool, imp *
 		logger.Warn("adaptations cleanup: set flag failed (idempotent rerun)", "err", err)
 	}
 	logger.Info("one-time adaptations cleanup done", "works", len(works), "books_to_refetch", refetch)
+}
+
+// runOnceAdaptationsAuthorQIDRecheck — разовый перепроход промахов экранизаций
+// после проверки автора книги по QID (metadata.RecheckAdaptationsByAuthorQID,
+// #570): сброс маркера, перепросят воркер «Экранизации» (если включён) и
+// открытие карточки. Гейт adaptations_author_qid_recheck_v1.
+func runOnceAdaptationsAuthorQIDRecheck(ctx context.Context, pool *pgxpool.Pool, logger *slog.Logger) {
+	const flag = "adaptations_author_qid_recheck_v1"
+	var done bool
+	if err := pool.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil {
+		logger.Warn("adaptations recheck: check flag failed — skip", "err", err)
+		return
+	}
+	if done {
+		return
+	}
+	n, err := metadata.RecheckAdaptationsByAuthorQID(ctx, pool)
+	if err != nil {
+		logger.Warn("adaptations recheck failed — will retry next start", "err", err)
+		return
+	}
+	if _, err := pool.Exec(ctx,
+		`INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+		 ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+		logger.Warn("adaptations recheck: set flag failed (idempotent rerun)", "err", err)
+	}
+	logger.Info("one-time adaptations recheck by author QID done", "books_to_refetch", n)
 }
 
 // runOnceFantlabRatings — оценка Фантлаба (средняя и рейтинг, миграция 0050)

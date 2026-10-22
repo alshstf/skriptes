@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"strings"
+	"sync/atomic"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -15,12 +16,16 @@ import (
 // Wikidata: action API (wbsearchentities) и SPARQL endpoint.
 //
 // searchHits — что вернётся wbsearchentities (массив QID'ов).
-// authorLabels — что отдаст SPARQL "SELECT ?authorLabel WHERE { wd:QID wdt:P50 ... }".
+// authorLabels — метки автора (P50) книги в ответе проверки кандидатов
+// "VALUES ?book { wd:Q1 wd:Q2 } ?book wdt:P50 ?author"; authorQIDs — QID этого
+// автора (без него — синтетический Q900…, чужой любому QID из каталога).
 // adaptations — что отдаст SPARQL "?film wdt:P144 wd:QID" (список SPARQL-bindings).
 type wdMockArgs struct {
 	searchHits   []string                       // QID'ы кандидатов
-	authorLabels map[string][]string            // QID → []label (для validateBookQID)
+	authorLabels map[string][]string            // QID книги → []label автора (для firstBookByAuthor)
+	authorQIDs   map[string]string              // QID книги → QID автора
 	adaptations  map[string][]map[string]string // QID → []row (поля film, filmLabel, year, directorLabel, imdbId, image, kindLabel)
+	p50Calls     *atomic.Int32                  // сколько было запросов проверки кандидатов
 }
 
 func wdMockServer(t *testing.T, args wdMockArgs) *httptest.Server {
@@ -43,10 +48,11 @@ func wdMockServer(t *testing.T, args wdMockArgs) *httptest.Server {
 			// Определяем тип запроса по наличию маркеров.
 			switch {
 			case strings.Contains(q, "wdt:P50"):
-				// validateBookQID — найдём QID в запросе.
-				qid := extractFirstQID(q)
-				labels := args.authorLabels[qid]
-				_ = json.NewEncoder(w).Encode(buildAuthorLabelsResponse(labels))
+				// firstBookByAuthor — все кандидаты одним запросом (VALUES ?book).
+				if args.p50Calls != nil {
+					args.p50Calls.Add(1)
+				}
+				_ = json.NewEncoder(w).Encode(buildBookAuthorsResponse(args, extractAllQIDs(q)))
 			case strings.Contains(q, "wdt:P144"):
 				qid := extractFirstQID(q)
 				rows := args.adaptations[qid]
@@ -83,12 +89,49 @@ func extractFirstQID(q string) string {
 	return rest[:end]
 }
 
-func buildAuthorLabelsResponse(labels []string) map[string]any {
-	bindings := make([]map[string]map[string]string, 0, len(labels))
-	for _, l := range labels {
-		bindings = append(bindings, map[string]map[string]string{
-			"authorLabel": {"value": l},
-		})
+// extractAllQIDs — все "wd:QN" из SPARQL-строки (кандидаты в VALUES).
+func extractAllQIDs(q string) []string {
+	var out []string
+	for {
+		qid := extractFirstQID(q)
+		if qid == "" {
+			return out
+		}
+		out = append(out, qid)
+		q = q[strings.Index(q, "wd:"+qid)+3+len(qid):]
+	}
+}
+
+// buildBookAuthorsResponse — ответ проверки кандидатов: строка (книга, автор,
+// метка) на каждую метку; автор без меток — одна строка без метки; книга без
+// автора (фильм, ландшафт) — ни одной.
+func buildBookAuthorsResponse(args wdMockArgs, books []string) map[string]any {
+	var bindings []map[string]map[string]string
+	for _, book := range books {
+		author, hasAuthor := args.authorQIDs[book]
+		labels := args.authorLabels[book]
+		if !hasAuthor && len(labels) == 0 {
+			continue
+		}
+		if author == "" {
+			author = "Q900" + book[1:]
+		}
+		row := func(label string) map[string]map[string]string {
+			r := map[string]map[string]string{
+				"book":   {"value": "http://www.wikidata.org/entity/" + book},
+				"author": {"value": "http://www.wikidata.org/entity/" + author},
+			}
+			if label != "" {
+				r["authorLabel"] = map[string]string{"value": label}
+			}
+			return r
+		}
+		if len(labels) == 0 {
+			bindings = append(bindings, row(""))
+		}
+		for _, l := range labels {
+			bindings = append(bindings, row(l))
+		}
 	}
 	return map[string]any{"results": map[string]any{"bindings": bindings}}
 }
@@ -323,6 +366,105 @@ func TestMatchAuthor(t *testing.T) {
 	require.False(t, matchAuthorAny("Толстой Лев", []string{"Чарльз Диккенс"}))
 	// Не валится на пустом name.
 	require.False(t, matchAuthorAny("", []string{"X"}))
+}
+
+// #570: другая передача имени в каталоге и в Wikidata — тот же человек; одна
+// совпавшая фамилия (или двойное имя, частица) — нет.
+func TestMatchAuthor_Transliteration(t *testing.T) {
+	herbert := []string{"Frank Herbert", "Фрэнк Герберт", "Герберт, Фрэнк"}
+	require.True(t, matchAuthorAny("Херберт Фрэнк", herbert[1:2]), "Х/Г в одном алфавите")
+	require.True(t, matchAuthorAny("Херберт Фрэнк", herbert[:1]), "кириллица против латиницы, Фрэнк ≈ Frank")
+	require.True(t, matchAuthorAny("Герберт Франк", herbert[:1]), "Франк ≈ Frank между алфавитами")
+	require.False(t, matchAuthorAny("Херберт Брайан", herbert), "сын — та же фамилия, другое имя")
+	require.False(t, matchAuthorAny("Херберт Фрэнк", []string{"Brian Herbert", "Брайан Герберт"}))
+
+	require.True(t, matchAuthorAny("Азимов Айзек", []string{"Isaac Asimov"}), "з/с и русская передача имени")
+	require.True(t, matchAuthorAny("Гаррисон Гарри", []string{"Harry Harrison"}))
+	require.True(t, matchAuthorAny("Толкиен Джон Рональд Руэл", []string{"J. R. R. Tolkien", "Джон Рональд Руэл Толкин"}))
+	require.True(t, matchAuthorAny("Брэдбери Рэй", []string{"Рэй Брэдбери"}), "э/е транслит сводит сам")
+	require.True(t, matchAuthorAny("Семёнов Юлиан", []string{"Юлиан Семенов"}), "ё/е")
+
+	require.True(t, matchAuthorAny("Ле Гуин Урсула", []string{"Урсула Ле Гуин"}))
+	require.False(t, matchAuthorAny("Ван Вогт Альфред", []string{"Э. ван Вогт"}), "частица — не второе совпадение")
+	require.True(t, matchAuthorAny("Гранже Жан Кристоф", []string{"Жан-Кристоф Гранже"}), "двойное имя без дефиса")
+	require.False(t, matchAuthorAny("Руфен Жан-Кристоф", []string{"Жан-Кристоф Гранже"}), "двойное имя — одно слово")
+	require.False(t, matchAuthorAny("Иванов П.", []string{"Иван Иванов"}), "одна фамилия и чужой инициал")
+	require.True(t, matchAuthorAny("Иванов И.", []string{"Иван Иванов"}), "инициал совпал с именем")
+	require.False(t, matchAuthorAny("Иванов И.", []string{"Пётр Иванов"}), "инициал — не первая буква самой фамилии")
+	require.True(t, matchAuthorAny("Гомер", []string{"Гомер"}), "имя из одного слова — как раньше")
+}
+
+// authorsConfirm: известный QID автора — единственный критерий для него; без
+// QID — метки любого автора книги.
+func TestAuthorsConfirm(t *testing.T) {
+	dune := map[string][]string{"Q7934": {"Frank Herbert", "Фрэнк Герберт"}}
+	require.True(t, authorsConfirm([]string{"Херберт Фрэнк"}, []string{"Q7934"}, dune))
+	require.True(t, authorsConfirm([]string{"Совсем Другое Имя"}, []string{"Q7934"}, dune), "QID важнее букв")
+	require.False(t, authorsConfirm([]string{"Герберт Фрэнк"}, []string{"Q1"}, dune), "QID известен и не совпал — метки тёзки не в счёт")
+	require.True(t, authorsConfirm([]string{"Херберт Фрэнк"}, nil, dune), "без QID — по меткам")
+	require.True(t, authorsConfirm([]string{"Херберт Фрэнк"}, []string{""}, dune))
+	require.False(t, authorsConfirm([]string{"Херберт Фрэнк"}, []string{"Q7934"}, nil), "у кандидата нет P50")
+
+	// Соавторы: у первого QID чужой, второй без QID — сверяется по меткам.
+	prequel := map[string][]string{"Q5": {"Kevin J. Anderson", "Кевин Андерсон"}, "Q6": {"Brian Herbert"}}
+	require.True(t, authorsConfirm([]string{"Херберт Брайан", "Андерсон Кевин"}, []string{"Q123", ""}, prequel))
+	require.False(t, authorsConfirm([]string{"Херберт Брайан", "Андерсон Кевин"}, []string{"Q123", "Q456"}, prequel))
+}
+
+// #570: «Дюна» Херберта — кандидат подтверждается QID автора, хотя по буквам имя
+// не сходится; все кандидаты одним запросом.
+func TestWikidataAdaptations_AuthorQIDConfirmsBook(t *testing.T) {
+	var calls atomic.Int32
+	srv := wdMockServer(t, wdMockArgs{
+		searchHits: []string{"Q25391", "Q190192", "Q60834962"}, // дюна (ландшафт), роман, фильм 2021
+		authorLabels: map[string][]string{
+			"Q190192": {"Frank Herbert", "Фрэнк Герберт"},
+		},
+		authorQIDs: map[string]string{"Q190192": "Q7934"},
+		adaptations: map[string][]map[string]string{
+			"Q190192": {
+				{"film": "http://www.wikidata.org/entity/Q114819", "filmLabel": "Дюна", "year": "1984", "kindLabel": "film"},
+				{"film": "http://www.wikidata.org/entity/Q60834962", "filmLabel": "Дюна", "year": "2021", "kindLabel": "film"},
+			},
+		},
+		p50Calls: &calls,
+	})
+	defer srv.Close()
+	p := NewWikidataAdaptationsProvider(nil).WithEndpoints(srv.URL+"/w/api.php", srv.URL+"/sparql", "")
+
+	got, qid, err := p.FetchAdaptationsWithQID(context.Background(), BookQuery{
+		Title: "Дюна", Authors: []string{"Херберт Фрэнк"}, AuthorQIDs: []string{"Q7934"},
+	})
+	require.NoError(t, err)
+	require.Equal(t, "Q190192", qid)
+	require.Len(t, got, 2)
+	require.EqualValues(t, 1, calls.Load(), "три кандидата — один запрос проверки")
+}
+
+// Тёзка: метки автора кандидата совпадают с именем буква в букву, но QID нашего
+// автора известен и другой — книга чужая. Отвергнутые кандидаты при поиске на
+// втором языке не перепроверяются.
+func TestWikidataAdaptations_AuthorQIDRejectsNamesake(t *testing.T) {
+	var calls atomic.Int32
+	srv := wdMockServer(t, wdMockArgs{
+		searchHits:   []string{"Q11111"},
+		authorLabels: map[string][]string{"Q11111": {"Иван Иванов"}},
+		authorQIDs:   map[string]string{"Q11111": "Q2"},
+		adaptations:  map[string][]map[string]string{"Q11111": {{"film": "http://www.wikidata.org/entity/Q9", "filmLabel": "Фильм"}}},
+		p50Calls:     &calls,
+	})
+	defer srv.Close()
+	p := NewWikidataAdaptationsProvider(nil).WithEndpoints(srv.URL+"/w/api.php", srv.URL+"/sparql", "")
+
+	_, err := p.FetchAdaptations(context.Background(), BookQuery{
+		Title: "Рассказы", Authors: []string{"Иванов Иван"}, AuthorQIDs: []string{"Q1"},
+	})
+	require.ErrorIs(t, err, ErrNotFound)
+	require.EqualValues(t, 1, calls.Load(), "ru и en нашли того же кандидата — проверен один раз")
+
+	// Без QID автора — по меткам, как раньше: совпали имя и фамилия.
+	_, err = p.FetchAdaptations(context.Background(), BookQuery{Title: "Рассказы", Authors: []string{"Иванов Иван"}})
+	require.NoError(t, err)
 }
 
 func TestExtractQID(t *testing.T) {

@@ -1079,19 +1079,27 @@ func (e *Enricher) EnsureAdaptations(ctx context.Context, q BookQuery) {
 
 	var fetchedAt *time.Time
 	var workQID string
+	var names, qids []string
 	if err := e.pool.QueryRow(ctx, `
-		SELECT b.adaptations_fetched_at, COALESCE(w.ext_ids->>'wd_qid', '')
+		SELECT b.adaptations_fetched_at, COALESCE(w.ext_ids->>'wd_qid', ''),
+		       `+bookAuthorNamesCol("b")+`, `+bookAuthorQIDsCol("b")+`
 		FROM books b LEFT JOIN works w ON w.id = b.work_id
 		WHERE b.id = $1`, q.ID,
-	).Scan(&fetchedAt, &workQID); err != nil {
+	).Scan(&fetchedAt, &workQID, &names, &qids); err != nil {
 		e.logger.Warn("metadata: query book adaptations_fetched_at failed", "book_id", q.ID, "err", err)
 		return
 	}
 	if fetchedAt != nil {
-		return // уже пробовали; ретрай — отдельный механизм (вне scope этой версии)
+		return // уже пробовали; перепроверка — сбросом маркера (heal, RecheckAdaptationsByAuthorQID)
 	}
 	if q.WikidataQID == "" {
 		q.WikidataQID = workQID // QID работы уже нашли группировка или «Известность» (#294)
+	}
+	if len(names) > 0 && q.AuthorQIDs == nil {
+		// Имена и QID авторов — из базы, по позиции: Wikidata сверяет автора
+		// книги по QID, а не по буквам имени (#570). Ленивый путь карточки и
+		// воркер передают те же имена.
+		q.Authors, q.AuthorQIDs = names, qids
 	}
 
 	transient := false

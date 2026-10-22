@@ -12,6 +12,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode/utf8"
 )
 
 // WikidataAdaptationsProvider — экранизации книг через Wikidata.
@@ -19,8 +20,9 @@ import (
 // Алгоритм:
 //
 //  1. Резолвим книгу в QID через action=wbsearchentities (сначала ru,
-//     потом en). Берём топ-N кандидатов и валидируем каждого SPARQL'ом:
-//     должен иметь автора (P50), чьё имя матчится с q.Authors. Иначе
+//     потом en). Берём топ-N кандидатов и валидируем их одним SPARQL'ом:
+//     автор (P50) должен быть нашим — по QID автора, если он известен
+//     (q.AuthorQIDs), иначе по имени (q.Authors против меток). Иначе
 //     рискуем взять одноимённую книгу другого автора (типичный случай —
 //     "Идиот" Достоевского vs. одноимённые произведения других авторов).
 //
@@ -121,6 +123,7 @@ func (p *WikidataAdaptationsProvider) resolveBookQID(ctx context.Context, q Book
 	// быть среди непроверенных. Раньше сбой превращался в ErrNotFound: lookups
 	// писали not_found на 90 дней, экранизации — «нет» навсегда (грабля №20, #281).
 	var failure error
+	rejected := map[string]bool{} // отвергнутые при поиске на другом языке — не перепроверяем
 	for _, lang := range bookSearchLangs(q.Lang) {
 		qids, err := p.searchEntities(ctx, q.Title, lang)
 		if err != nil {
@@ -129,15 +132,22 @@ func (p *WikidataAdaptationsProvider) resolveBookQID(ctx context.Context, q Book
 			}
 			continue
 		}
+		var fresh []string
 		for _, qid := range qids {
-			ok, err := p.validateBookQID(ctx, qid, q.Authors)
-			if err != nil {
-				failure = err
-				continue
+			if isQID(qid) && !rejected[qid] {
+				fresh = append(fresh, qid)
 			}
-			if ok {
-				return qid, nil
-			}
+		}
+		qid, err := p.firstBookByAuthor(ctx, fresh, q)
+		if err != nil {
+			failure = err
+			continue
+		}
+		if qid != "" {
+			return qid, nil
+		}
+		for _, id := range fresh {
+			rejected[id] = true
 		}
 	}
 	if failure != nil {
@@ -161,7 +171,7 @@ func (p *WikidataAdaptationsProvider) ResolveWorkKey(ctx context.Context, q Work
 	if title == "" || len(q.Authors) == 0 {
 		return "", ErrNotFound // без автора Wikidata-валидация всё равно отвергнет
 	}
-	return p.resolveBookQID(ctx, BookQuery{ID: q.BookID, Title: title, Authors: q.Authors, Lang: q.Lang})
+	return p.resolveBookQID(ctx, BookQuery{ID: q.BookID, Title: title, Authors: q.Authors, AuthorQIDs: q.AuthorQIDs, Lang: q.Lang})
 }
 
 // searchEntities — wbsearchentities → массив QID'ов кандидатов.
@@ -207,43 +217,103 @@ func (p *WikidataAdaptationsProvider) searchEntities(ctx context.Context, title,
 	return out, nil
 }
 
-// validateBookQID — проверяем что у QID есть P50 (author), чьё имя
-// (rdfs:label) пересекается с q.Authors. Используем SPARQL — это
-// единый запрос, не надо тащить полную карточку через wbgetentities.
-//
-// Если в карточке нет P50 — отбрасываем (это может быть фильм,
-// одноимённый альбом, итд).
-func (p *WikidataAdaptationsProvider) validateBookQID(ctx context.Context, qid string, expectedAuthors []string) (bool, error) {
-	if len(expectedAuthors) == 0 {
+// firstBookByAuthor — первый в порядке поиска кандидат, у которого автор (P50)
+// — автор книги из каталога (authorsConfirm). Кандидаты без P50 (фильм,
+// одноимённый альбом, итд) отпадают. Все кандидаты проверяются одним
+// SPARQL-запросом: раньше — запрос на каждого, до 20 на промах. "" без
+// ошибки — никто не подтвердился.
+func (p *WikidataAdaptationsProvider) firstBookByAuthor(ctx context.Context, candidates []string, q BookQuery) (string, error) {
+	if len(candidates) == 0 || len(q.Authors) == 0 {
 		// Нечем валидировать — лучше отвергнуть, чем взять чужую книгу.
-		return false, nil
+		return "", nil
 	}
-	q := fmt.Sprintf(`
-SELECT DISTINCT ?authorLabel WHERE {
-  wd:%s wdt:P50 ?author .
-  ?author rdfs:label ?authorLabel .
-  FILTER(LANG(?authorLabel) IN ("ru","en"))
-}
-LIMIT 20
-`, qid)
-
-	labels, err := p.runSPARQLAuthorLabels(ctx, q)
+	authors, err := p.bookAuthors(ctx, candidates)
 	if err != nil {
-		return false, err
+		return "", err
 	}
-	if len(labels) == 0 {
-		return false, nil
-	}
-	// Совпадение — нечувствительный к регистру и порядку слов поиск:
-	// для каждого ожидаемого автора смотрим, есть ли среди labels такой,
-	// который содержит ВСЕ слова из имени автора. Это допускает
-	// "Толстой, Лев Николаевич" vs. "Лев Николаевич Толстой" vs. "Leo Tolstoy".
-	for _, expected := range expectedAuthors {
-		if matchAuthorAny(expected, labels) {
-			return true, nil
+	for _, c := range candidates {
+		if authorsConfirm(q.Authors, q.AuthorQIDs, authors[c]) {
+			return c, nil
 		}
 	}
-	return false, nil
+	return "", nil
+}
+
+// bookAuthors — авторы (P50) книг-кандидатов: книга → QID автора → его метки и
+// псевдонимы на ru, en и mul (у многих людей имя теперь только в mul). Автор
+// без меток на этих языках остаётся в ответе — его подтверждает QID.
+func (p *WikidataAdaptationsProvider) bookAuthors(ctx context.Context, books []string) (map[string]map[string][]string, error) {
+	query := fmt.Sprintf(`
+SELECT ?book ?author ?authorLabel WHERE {
+  VALUES ?book { wd:%s }
+  ?book wdt:P50 ?author .
+  OPTIONAL {
+    ?author rdfs:label|skos:altLabel ?authorLabel .
+    FILTER(LANG(?authorLabel) IN ("ru","en","mul"))
+  }
+}
+LIMIT 2000
+`, strings.Join(books, " wd:"))
+
+	body, err := p.doSPARQL(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer func() { _ = body.Close() }()
+
+	var resp struct {
+		Results struct {
+			Bindings []map[string]struct {
+				Value string `json:"value"`
+			} `json:"bindings"`
+		} `json:"results"`
+	}
+	if err := json.NewDecoder(body).Decode(&resp); err != nil {
+		return nil, fmt.Errorf("decode sparql: %w", err)
+	}
+	out := map[string]map[string][]string{}
+	for _, b := range resp.Results.Bindings {
+		book, author := extractQID(b["book"].Value), extractQID(b["author"].Value)
+		if book == "" || author == "" {
+			continue // «неизвестное значение» P50 — не сущность
+		}
+		if out[book] == nil {
+			out[book] = map[string][]string{}
+		}
+		labels := out[book][author]
+		if l := b["authorLabel"].Value; l != "" {
+			labels = append(labels, l)
+		}
+		out[book][author] = labels
+	}
+	return out, nil
+}
+
+// authorsConfirm — среди авторов книги в Wikidata (QID → метки) есть автор из
+// каталога. Автор с известным QID подтверждается только своим QID: метки тёзки
+// («Иван Иванов» — десятки людей) его не подтверждают, а другая передача имени
+// («Херберт Фрэнк» в каталоге, «Фрэнк Герберт» в Wikidata) не мешает (#570).
+// Автор без QID сверяется по меткам всех авторов книги (matchAuthorAny).
+func authorsConfirm(names, qids []string, wd map[string][]string) bool {
+	if len(wd) == 0 {
+		return false
+	}
+	var labels []string
+	for _, ls := range wd {
+		labels = append(labels, ls...)
+	}
+	for i, name := range names {
+		if i < len(qids) && isQID(qids[i]) {
+			if _, ok := wd[qids[i]]; ok {
+				return true
+			}
+			continue
+		}
+		if matchAuthorAny(name, labels) {
+			return true
+		}
+	}
+	return false
 }
 
 // queryAdaptations — SPARQL запрос экранизаций для подтверждённого QID.
@@ -283,34 +353,6 @@ LIMIT 200
 		return nil, err
 	}
 	return p.aggregateAdaptations(rows), nil
-}
-
-// runSPARQLAuthorLabels — упрощённая обёртка над SPARQL для одного
-// поля ?authorLabel. Возвращает все значения как массив строк.
-func (p *WikidataAdaptationsProvider) runSPARQLAuthorLabels(ctx context.Context, query string) ([]string, error) {
-	body, err := p.doSPARQL(ctx, query)
-	if err != nil {
-		return nil, err
-	}
-	defer func() { _ = body.Close() }()
-
-	var resp struct {
-		Results struct {
-			Bindings []map[string]struct {
-				Value string `json:"value"`
-			} `json:"bindings"`
-		} `json:"results"`
-	}
-	if err := json.NewDecoder(body).Decode(&resp); err != nil {
-		return nil, fmt.Errorf("decode sparql: %w", err)
-	}
-	out := make([]string, 0, len(resp.Results.Bindings))
-	for _, b := range resp.Results.Bindings {
-		if v, ok := b["authorLabel"]; ok && v.Value != "" {
-			out = append(out, v.Value)
-		}
-	}
-	return out, nil
 }
 
 // runSPARQLAdaptations — SPARQL-результат для экранизаций. Парсит
@@ -642,59 +684,127 @@ func bookSearchLangs(qLang string) []string {
 	}
 }
 
-// matchAuthorAny — нечувствительная к регистру и порядку проверка:
-// есть ли среди candidates строка, содержащая ≥2 слов имени (либо все
-// если в имени 1 токен). Имя нормализуется: запятые и точки убираются,
-// разбивается по пробелам. Допускает форматы:
+// matchAuthorAny — нечувствительная к регистру, порядку и алфавиту проверка:
+// есть ли среди candidates (меток автора в Wikidata) строка, в которой есть ≥2
+// слов имени (либо все, если значимое слово одно). Допускает форматы:
 //
 //	"Толстой, Лев Николаевич"  vs.  "Лев Толстой"  (отчества часто нет)
 //	"Tolstoy, Leo"             vs.  "Leo Tolstoy"
+//	"Херберт Фрэнк"            vs.  "Фрэнк Герберт" / "Frank Herbert"
 //
-// 2 токена — минимум для уверенности что это тот же человек: при 1
-// токене (например только фамилия) ловится слишком много ложных
+// Слова сравниваются транслитом с допусками authormatch.go (anyTokenMatches):
+// между алфавитами — одна буква («Фрэнк» ≈ Frank, «Толстой» ≈ Tolstoy), в одном
+// — разные передачи иностранного имени (Херберт ≈ Герберт, Азимов ≈ Асимов,
+// удвоения), плюс устойчивые русские передачи имён (Уильям ↔ William). Э/Е, Ё/Е,
+// Й/И и Ъ/Ь транслит сводит сам. Раньше слова искались подстрокой без
+// транслитерации, и «Херберт» не находился ни в «Фрэнк Герберт», ни в «Frank
+// Herbert» — «Дюна» осталась без экранизаций (#570).
+//
+// 2 слова — минимум для уверенности что это тот же человек: при 1
+// слове (например только фамилия) ловится слишком много ложных
 // срабатываний (одна "Толстой" может быть и Лев, и Алексей, и Татьяна).
-//
-// Cross-language (Кириллица vs Latin) разруливается тем, что SPARQL
-// возвращает обе локали — для русской книги в авторском labels-списке
-// будет и "Лев Толстой" и "Leo Tolstoy", достаточно чтобы хотя бы
-// одна совпала по 2 токенам.
+// Поэтому частицы (де, ван, ле…) и инициалы в счёт не идут: «ван Вогт» — одно
+// слово фамилии, а не два совпадения. Если значимое слово одно, а при нём
+// инициалы («Иванов И.»), инициалы должны совпасть с первыми буквами других слов
+// метки: иначе подтверждала бы одна фамилия.
 func matchAuthorAny(name string, candidates []string) bool {
-	tokens := authorTokens(name)
-	if len(tokens) == 0 {
+	words, initials := authorWords(name)
+	if len(words) == 0 {
 		return false
 	}
-	needed := 2
-	if len(tokens) < needed {
-		needed = len(tokens)
-	}
+	needed := min(2, len(words))
 	for _, c := range candidates {
-		if countMatchingTokens(strings.ToLower(c), tokens) >= needed {
+		cand := labelTokens(c)
+		n := 0
+		for _, w := range words {
+			if wordMatches(cand, w) {
+				n++
+			}
+		}
+		if n >= needed && (len(words) > 1 || initialsMatch(cand, words[0], initials)) {
 			return true
 		}
 	}
 	return false
 }
 
-func authorTokens(name string) []string {
-	cleaned := strings.NewReplacer(",", " ", ".", " ", "_", " ").Replace(name)
-	parts := strings.Fields(strings.ToLower(cleaned))
-	out := parts[:0]
-	for _, p := range parts {
-		// Игнорируем инициалы вида "и." (после Replace они стали "и") —
-		// они дают ложные срабатывания. Минимум 2 символа.
-		if len([]rune(p)) >= 2 {
-			out = append(out, p)
+func wordMatches(cand []nameToken, w authorWord) bool {
+	return anyTokenMatches(cand, w.lat, w.cyr) || firstNameEquivalentMatches(cand, w.word)
+}
+
+// initialsMatch — каждый инициал — первая буква слова метки, кроме самого слова w.
+func initialsMatch(cand []nameToken, w authorWord, initials []string) bool {
+	for _, in := range initials {
+		ok := false
+		for _, t := range cand {
+			if strings.HasPrefix(t.lat, in) && !wordMatches([]nameToken{t}, w) {
+				ok = true
+				break
+			}
+		}
+		if !ok {
+			return false
+		}
+	}
+	return true
+}
+
+// authorWord — значимое слово имени автора: как написано и транслитом.
+type authorWord struct {
+	word string
+	nameToken
+}
+
+// authorWords — значимые слова имени (без частиц, если в имени есть что-то
+// кроме них) и отдельно инициалы транслитом («и.» → "i"). Дефисное слово — одно
+// («Жан-Кристоф»): иначе двойное имя давало бы два совпадения с чужим
+// Жан-Кристофом.
+func authorWords(name string) (words []authorWord, initials []string) {
+	var all []authorWord
+	for _, f := range nameFields(name) {
+		lat := translitName(f)
+		if lat == "" {
+			continue
+		}
+		if utf8.RuneCountInString(f) < 2 {
+			initials = append(initials, lat) // как слово инициал даёт ложные совпадения
+			continue
+		}
+		w := authorWord{word: f, nameToken: nameToken{lat: lat, cyr: hasCyrillic(f)}}
+		all = append(all, w)
+		if !nameParticles[lat] {
+			words = append(words, w)
+		}
+	}
+	if len(words) == 0 {
+		words = all
+	}
+	return words, initials
+}
+
+// labelTokens — слова метки транслитом: дефисное слово целиком и по частям
+// («Жан-Кристоф» совпадёт и с «Жан-Кристоф», и с «Жан Кристоф» в каталоге).
+func labelTokens(label string) []nameToken {
+	var out []nameToken
+	add := func(s string) {
+		if t := translitName(s); t != "" {
+			out = append(out, nameToken{lat: t, cyr: hasCyrillic(s)})
+		}
+	}
+	for _, f := range nameFields(label) {
+		add(f)
+		if parts := strings.Split(f, "-"); len(parts) > 1 {
+			for _, p := range parts {
+				add(p)
+			}
 		}
 	}
 	return out
 }
 
-func countMatchingTokens(haystack string, tokens []string) int {
-	n := 0
-	for _, t := range tokens {
-		if strings.Contains(haystack, t) {
-			n++
-		}
-	}
-	return n
+// nameFields — слова имени по пробелам, запятым, точкам и подчёркиваниям.
+func nameFields(s string) []string {
+	return strings.FieldsFunc(s, func(r rune) bool {
+		return r == ' ' || r == ',' || r == '.' || r == '_' || r == '\t' || r == '\u00a0'
+	})
 }

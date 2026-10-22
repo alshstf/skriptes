@@ -8,6 +8,7 @@ type externalQueryFields struct {
 	title         string   // название издания (часто перевод, напр. русское)
 	lang          string   // язык издания (ISO)
 	authors       []string // "Фамилия Имя [Отчество]" как в каталоге (часто кириллица)
+	authorQIDs    []string // QID авторов в Wikidata по позиции authors ("" — неизвестен)
 	srcTitle      string   // оригинальное название (fb2 <src-title-info>), латиница
 	srcAuthorNorm string   // оригинальный автор, нормализованный (латиница)
 	srcLang       string   // язык оригинала (ISO)
@@ -43,5 +44,11 @@ func externalTitleAuthorLang(f externalQueryFields) (title string, authors []str
 
 func buildExternalQuery(f externalQueryFields) BookQuery {
 	title, authors, lang := externalTitleAuthorLang(f)
-	return BookQuery{ID: f.id, Title: title, Authors: authors, Lang: lang}
+	// У перевода вместо авторов — один латинский автор оригинала: QID — первого
+	// автора каталога (Wikidata сверяет книгу по QID, имя тогда не важно).
+	qids := f.authorQIDs
+	if len(qids) > len(authors) {
+		qids = qids[:len(authors)]
+	}
+	return BookQuery{ID: f.id, Title: title, Authors: authors, AuthorQIDs: qids, Lang: lang}
 }

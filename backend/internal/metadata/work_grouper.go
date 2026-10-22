@@ -396,6 +396,7 @@ type groupBook struct {
 	serNo         int
 	lastName      string
 	firstName     string
+	authorQID     string // QID автора в Wikidata — резолвер wikidata сверяет книгу по нему (#570)
 	scanned       bool   // work_scanned_at NOT NULL (контекст, не кандидат)
 	nAuthors      int    // число авторов издания — гейт антологий (#464)
 	authorSet     string // id авторов издания по возрастанию через запятую
@@ -483,7 +484,7 @@ func (g *WorkGrouper) loadAuthorBooks(ctx context.Context, authorID int64) ([]gr
 		       -- серии (series.kind='multi') не говорит, что это тот же том.
 		       COALESCE((SELECT s.id FROM series s WHERE s.id = b.series_id AND s.kind IS NULL), 0), COALESCE(b.ser_no, 0),
 		       (b.work_scanned_at IS NOT NULL),
-		       a.last_name, COALESCE(a.first_name,''),
+		       a.last_name, COALESCE(a.first_name,''), COALESCE(a.ext_ids->>'wd_qid',''),
 		       (SELECT count(*) FROM book_authors x WHERE x.book_id = b.id),
 		       (SELECT string_agg(x.author_id::text, ',' ORDER BY x.author_id) FROM book_authors x WHERE x.book_id = b.id)
 		FROM book_authors ba
@@ -502,7 +503,7 @@ func (g *WorkGrouper) loadAuthorBooks(ctx context.Context, authorID int64) ([]gr
 		if err := rows.Scan(&b.id, &b.workID, &b.title, &b.normTitle, &b.lang,
 			&b.srcTitle, &b.srcAuthorNorm, &b.srcLang, &b.docID, &b.isbn,
 			&b.seriesID, &b.serNo,
-			&b.scanned, &b.lastName, &b.firstName, &b.nAuthors, &b.authorSet); err != nil {
+			&b.scanned, &b.lastName, &b.firstName, &b.authorQID, &b.nAuthors, &b.authorSet); err != nil {
 			return nil, err
 		}
 		if isStubSrcTitle(b.srcTitle) {
@@ -750,7 +751,8 @@ func (g *WorkGrouper) applyTier2(ctx context.Context, books []groupBook, uf *uni
 		}
 		q := WorkQuery{
 			BookID: b.id, Title: b.title, SrcTitle: b.srcTitle, ISBN: isbn, Lang: b.lang,
-			Authors: []string{fullName(b.lastName, b.firstName)}, LastName: b.lastName, FirstName: b.firstName,
+			Authors: []string{fullName(b.lastName, b.firstName)}, AuthorQIDs: []string{b.authorQID},
+			LastName: b.lastName, FirstName: b.firstName,
 		}
 		for _, r := range g.resolvers {
 			name := r.Name()

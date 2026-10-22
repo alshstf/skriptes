@@ -36,11 +36,13 @@ func srcLangMockServer(t *testing.T, authorLabel string, codes []string) *httpte
 				})
 				return
 			}
-			// Валидация по автору (P50).
+			// Проверка кандидата по автору (P50).
 			_ = json.NewEncoder(w).Encode(map[string]any{
-				"results": map[string]any{"bindings": []map[string]map[string]string{
-					{"authorLabel": {"value": authorLabel}},
-				}},
+				"results": map[string]any{"bindings": []map[string]map[string]string{{
+					"book":        {"value": "http://www.wikidata.org/entity/Q42"},
+					"author":      {"value": "http://www.wikidata.org/entity/Q991"},
+					"authorLabel": {"value": authorLabel},
+				}}},
 			})
 		default:
 			http.NotFound(w, r)
