@@ -49,9 +49,24 @@ test('to-read: служебная полка на /shelves', async ({ mockedPage
   await page.route(/\/api\/me\/presets$/, (route) =>
     route.fulfill({ status: 200, contentType: 'application/json', body: '{"items":[]}' }),
   );
+  await page.route(/\/api\/me\/collections\/2$/, (route) =>
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        items: [{ id: 19, work_id: 1019, title: 'Отложенная книга', authors: ['Автор Отложенный'], added_at: '2026-08-01T00:00:00Z' }],
+      }),
+    }),
+  );
   await page.goto('/shelves');
   await expect(page.getByText('★ Избранное — книги, которые любите')).toBeVisible({ timeout: 10_000 });
   await expect(page.getByRole('button', { name: 'Удалить полку «Хочу прочитать»' })).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Удалить полку «Избранное»' })).toHaveCount(0);
   await expect(page.getByRole('button', { name: 'Удалить полку «Моя»' })).toBeVisible();
+
+  // Раскрытая полка: строка книги с миниатюрой обложки (издание на полке).
+  const row = page.getByRole('listitem').filter({ hasText: 'Хочу прочитать' }).first();
+  await row.getByRole('button', { name: 'Раскрыть полку' }).click();
+  await expect(page.getByRole('link', { name: /Отложенная книга/ })).toHaveAttribute('href', '/works/1019');
+  await expect(page.getByRole('img', { name: 'Обложка: Отложенная книга' })).toBeVisible();
 });

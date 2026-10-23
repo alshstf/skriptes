@@ -16,6 +16,7 @@ import {
 } from '@dnd-kit/core';
 import { Button } from '@/components/ui/button';
 import { BookMeta } from '@/components/BookMeta';
+import { BookCover } from '@/components/BookCover';
 import { BookListItem } from '@/components/BookListItem';
 import { SmartShelvesSection } from '@/components/SmartShelves';
 import { Callout } from '@/components/ui/callout';
@@ -205,8 +206,9 @@ function PresetBooksList({ presetKey }: { presetKey: string }) {
         const note = notes[String(b.work_id ?? b.id)];
         return (
           <li key={b.id}>
-            {/* Подборка экранизаций ведёт сразу к фильмам на карточке (#442). */}
-            <BookListItem book={b} hash={presetKey === 'adaptations' ? 'adaptations' : undefined} />
+            {/* Подборка экранизаций ведёт сразу к фильмам на карточке (#442);
+                миниатюра обложки — как на умных полках и карточках автора. */}
+            <BookListItem book={b} showCover hash={presetKey === 'adaptations' ? 'adaptations' : undefined} />
             {note ? <p className="-mt-2 px-3 pb-3 text-xs text-muted-foreground">{note}</p> : null}
           </li>
         );
@@ -355,6 +357,13 @@ function ShelfBookRow({
       )}
     >
       <GripVertical className="size-4 shrink-0 text-muted-foreground/50" aria-hidden />
+      {/* Миниатюра обложки: book.id — издание, лежащее на полке (on-demand обложка). */}
+      <BookCover
+        src={`/api/covers/book/${book.id}`}
+        title={book.title}
+        placeholder="monogram"
+        className="w-9 shrink-0 self-start sm:w-10"
+      />
       <Link
         to="/works/$id"
         params={{ id: String(book.work_id ?? book.id) }}

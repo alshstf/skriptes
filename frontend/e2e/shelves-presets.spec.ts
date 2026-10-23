@@ -35,4 +35,6 @@ test('подборки: список, раскрытие, пояснение, п
   await section.getByRole('button', { name: /Недочитанные серии/ }).click();
   await expect(section.getByRole('link', { name: /Дети Дюны/ })).toHaveAttribute('href', '/works/301');
   await expect(section.getByText('в серии прочитано 2 из 6')).toBeVisible();
+  // Миниатюра обложки в строке подборки (как на умных полках).
+  await expect(section.getByRole('img', { name: 'Обложка: Дети Дюны' })).toBeVisible();
 });
