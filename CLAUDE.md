@@ -138,8 +138,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     приёмка — `cmd/recseval`. Обратная связь (фаза 3): причины
     низкой оценки `recsys.RatingReason`, полка «Хочу прочитать» (`kind='to_read'`), «не предлагать» автора/цикл
     (`blocked_*` → `Exclusions.WithBlocklist`; не скрытие контента — каталог и поиск не трогать). Настроение сессии
-    `recsys.Mood` (`mood=` → `Feed.Section/Tonight`: правила пересортировывает `ApplyMood`, классика фильтрует сама —
-    `MoodAware`; жанры по настроению — `recsys/mood-genres.json`, правит владелец); «ваша средняя» по автору —
+    `recsys.Mood` (`mood=` → `Feed.Section/Tonight/Mood`: правила пересортировывает `ApplyMood`, классика фильтрует сама —
+    `MoodAware`, «На вечер» — пересечение, своя секция «Под настроение» — пул `DefaultMoods`, #580; жанры по настроению — `recsys/mood-genres.json`, правит владелец); «ваша средняя» по автору —
     считается (`catalog.Author.UserRating`, `recsys.AuthorRating`), не хранится.
     **Персона поиска переведена на негативы модели** (3.5): `PersonaProfile.Blocked*/NotInterestedWorks/DroppedWorks`
     (предикаты `recsys`) → малус в `books.applyPersonaBoost` (самый сильный, не сумма; точное название без малуса),

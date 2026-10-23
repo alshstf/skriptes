@@ -404,6 +404,15 @@ test('home: настроение — чип меняет первые карто
       { kind: 'author_you_finished', author_id: 5, author: 'Любимый Автор', work_id: 1024, title: 'Первый роман', mood: 'funny' },
     ],
   };
+  // Секция «Под настроение» (#580) — известное в каталоге под чип.
+  const MOOD_PICK: Item = {
+    id: 31,
+    work_id: 1031,
+    title: 'Трое в лодке',
+    authors: ['Джером Джером'],
+    lib_id: 'L31',
+    reasons: [{ kind: 'mood', mood: 'funny', genre: 'humor_prose' }],
+  };
   mockHome(page, { ref: [FEED] });
   const requested: Record<string, string[]> = {};
   page.route(/\/api\/me\/recommendations\?/, (route) => {
@@ -414,6 +423,7 @@ test('home: настроение — чип меняет первые карто
     let items: Item[] = [];
     if (section === 'author_you_finished') items = mood === 'funny' ? [FUNNY, BY_AUTHOR] : [BY_AUTHOR];
     else if (section === 'continue_reading') items = [CONTINUE];
+    else if (section === 'mood' && mood === 'funny') items = [MOOD_PICK];
     return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ section, items }) });
   });
   const logged: unknown[] = [];
@@ -431,9 +441,21 @@ test('home: настроение — чип меняет первые карто
   const funny = chips.getByRole('button', { name: 'смешное' });
   await expect(funny).toHaveAttribute('aria-pressed', 'false');
 
+  // Без настроения секции «Под настроение» нет и её не спрашивают.
+  await expect(page.getByRole('heading', { name: /Под настроение/ })).toHaveCount(0);
+  expect(requested.mood ?? []).toEqual([]);
+
   await funny.click();
   await expect(funny).toHaveAttribute('aria-pressed', 'true');
   await expect.poll(cards).toEqual(['/works/1023', '/works/1022']);
+  // Своя секция — первой в ленте, сразу под чипами: эффект виден всегда.
+  const moodSection = page.locator('section', { has: page.getByRole('heading', { name: 'Под настроение: смешное' }) });
+  await expect(moodSection.getByRole('link', { name: /Трое в лодке/ })).toBeVisible();
+  await expect(moodSection.getByTestId('rec-reason')).toContainText('Смешное · жанр:');
+  const headings = await page.getByRole('heading', { level: 2 }).allTextContents();
+  expect(headings.findIndex((h) => h.startsWith('Под настроение'))).toBeLessThan(
+    headings.findIndex((h) => h.startsWith('Продолжить чтение')),
+  );
   await expect(section.getByTestId('rec-reason').first()).toContainText('под настроение «смешное»');
   await expect.poll(() => logged).toEqual([{ mood: 'funny' }]);
   expect(requested.author_you_finished).toContain('funny');
@@ -456,6 +478,7 @@ test('home: настроение — чип меняет первые карто
     'false',
   );
   await expect.poll(cards).toEqual(['/works/1022']);
+  await expect(page.getByRole('heading', { name: /Под настроение/ })).toHaveCount(0);
   if (process.env.HOME_RECS_SHOTS) {
     await page.getByRole('group', { name: 'Настроение' }).getByRole('button', { name: 'смешное' }).click();
     await page.screenshot({ path: `${process.env.HOME_RECS_SHOTS}/home-mood.png` });

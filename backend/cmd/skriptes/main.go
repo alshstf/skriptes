@@ -243,6 +243,9 @@ func run() error {
 	// Пул «забытой классики» (recsys/02, 2.5): выборка по всему каталогу идёт
 	// десятки секунд на проде — считается фоном через 2 мин после старта и раз в 6 ч.
 	metadata.Go(func(c context.Context) { recsys.DefaultClassics.RefreshLoop(c, pool, 2*time.Minute, logger) })
+	// Пул секции «Под настроение» (#580): известное в жанрах каждого настроения —
+	// секунда-полторы на настроение на проде, поэтому фоном, раз в 6 ч.
+	metadata.Go(func(c context.Context) { recsys.DefaultMoods.RefreshLoop(c, pool, 3*time.Minute, logger) })
 	// Состав сборников из оглавления fb2 (#388): новые сборники — раз в 30 минут.
 	metadata.Go(func(c context.Context) {
 		metadata.NewContentsScanner(pool, cfg.BooksRoot, logger).Run(c, 5*time.Minute, 30*time.Minute)

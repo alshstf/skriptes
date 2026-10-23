@@ -23,16 +23,19 @@ export type RecSectionKind =
   | 'forgotten_classic'
   | 'reread'
   | 'fits_tonight'
-  | 'to_read_reminder';
+  | 'to_read_reminder'
+  | 'mood';
 
 /**
  * HOME_SECTIONS — порядок секций на Главной (план recsys/02, 2.9): продолжить →
  * появилось искомое → дальше в цикле → автор, которого дочитали → новинки по
  * подпискам → вы хотели прочитать (recsys/03, 3.3) → брошенное → забытая
  * классика → перечитать → на вечер → оцените прочитанное. Пустые не
- * рендерятся. Зеркало recsys.AllSections.
+ * рендерятся. Первой — «Под настроение» (#580): только при выбранном чипе,
+ * чтобы его эффект был виден сразу. Зеркало recsys.AllSections.
  */
 export const HOME_SECTIONS: readonly RecSectionKind[] = [
+  'mood',
   'continue_reading',
   'searched_appeared',
   'next_in_series',
@@ -117,11 +120,13 @@ export function writeMood(m: Mood | undefined, now = Date.now()) {
 }
 
 /**
- * MOOD_SECTIONS — секции, которые учитывают настроение: правила фазы 2
- * (пересортировка, «Забытая классика» — фильтр) и «На вечер». Остальные при
- * смене чипа не перезапрашиваются.
+ * MOOD_SECTIONS — секции, которые учитывают настроение: «Под настроение»
+ * (#580: известное в каталоге под настроение, без него не запрашивается),
+ * правила фазы 2 (пересортировка, «Забытая классика» — фильтр) и «На вечер»
+ * (пересечение). Остальные при смене чипа не перезапрашиваются.
  */
 export const MOOD_SECTIONS: ReadonlySet<RecSectionKind> = new Set<RecSectionKind>([
+  'mood',
   'next_in_series',
   'author_you_finished',
   'to_read_reminder',
@@ -154,7 +159,9 @@ type RecReasonBase =
   // Укладывается в minutes при вашей скорости; genre — fb2-код любимого жанра.
   | { kind: 'fits_tonight'; minutes?: number; genre?: string }
   // Положили на «Хочу прочитать» at и с тех пор не открывали (recsys/03, 3.3).
-  | { kind: 'to_read'; at?: string };
+  | { kind: 'to_read'; at?: string }
+  // Под настроение (#580): genre — fb2-код жанра настроения, minutes — «≈ N минут» у «короткого».
+  | { kind: 'mood'; genre?: string; minutes?: number };
 
 // RecItem — зеркало recsys.Item: id — представительное издание (обложка,
 // фолбэк ссылки), work_id — карточка книги. author_ids — те же авторы, что
@@ -203,6 +210,7 @@ const STALE_MS: Record<RecSectionKind, number> = {
   reread: 5 * 60_000,
   fits_tonight: 60_000,
   to_read_reminder: 5 * 60_000,
+  mood: 5 * 60_000,
 };
 
 /** SectionParams — параметры секции: minutes — «у меня есть N минут» (fits_tonight), mood — настроение (MOOD_SECTIONS). */
@@ -213,6 +221,8 @@ export function recSectionQueryOptions(kind: RecSectionKind, limit = 12, params:
   const extra = (params.minutes ? `&minutes=${params.minutes}` : '') + (params.mood ? `&mood=${params.mood}` : '');
   return queryOptions<RecItem[]>({
     queryKey: [...recSectionKey(kind), limit, params.minutes ?? 0, params.mood ?? ''],
+    // «Под настроение» без выбранного чипа не спрашиваем — секции нет.
+    enabled: kind !== 'mood' || params.mood != null,
     queryFn: async ({ signal }) => {
       const r = await apiFetch<RecSection>(
         `/api/me/recommendations?section=${kind}&limit=${limit}${extra}`,
