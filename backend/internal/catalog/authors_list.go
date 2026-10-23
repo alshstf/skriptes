@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/jackc/pgx/v5/pgtype"
+	"github.com/skriptes/skriptes/backend/internal/awards"
 	"github.com/skriptes/skriptes/backend/internal/books"
 )
 
@@ -60,9 +61,18 @@ type AuthorListItem struct {
 	// (works.written_year, правила правдоподобия work_years.go), у работы без
 	// года — её изданий, как в гистограмме; год издания бывает опечаткой fb2.
 	// written_year ≠ date_added (граблю №3). nil — года нет.
+	// Годы работ за пределами жизни автора (если она известна) не считаются:
+	// «1919–2009» у Булгакова — грязный год издания, не год написания (#579).
 	YearsActive *YearsRange `json:"years_active,omitempty"`
+	// BornYear/DiedYear — годы жизни (Wikidata P569/P570, authors.born_year/
+	// died_year, #465). Строка списка показывает их вместо годов работ (#579).
+	BornYear *int `json:"born_year,omitempty"`
+	DiedYear *int `json:"died_year,omitempty"`
 	// HasAdaptations — есть ли экранизация хоть у одной книги автора.
 	HasAdaptations bool `json:"has_adaptations"`
+	// HasAwards — лауреат премии из белого списка (автору или его работе, без
+	// кинопремий экранизаций) — то же условие, что фильтр «с премиями» (#579).
+	HasAwards bool `json:"has_awards"`
 	// ExternalRating — рейтинг автора по ВНЕШНИМ оценкам (НЕ пользовательский,
 	// #296): среднее пяти лучших работ (оценка работы — LIBRATE, иначе веб-оценка
 	// от 5 голосов), у кого их меньше — с подтяжкой к средней по коллекции.
@@ -282,7 +292,7 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 	query := fmt.Sprintf(`
 		WITH page AS (
 		    SELECT a.id, a.last_name, a.first_name, a.middle_name, a.photo_path,
-		           a.normalized_name, a.renown, a.name_note,
+		           a.normalized_name, a.renown, a.name_note, a.born_year, a.died_year,
 		           a.book_count AS stat_books, a.rating_score AS stat_rating
 		    FROM authors a%[1]s
 		    %[2]s
@@ -301,11 +311,14 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		          JOIN books b ON b.id = fcb.book_id
 		          WHERE ba.author_id = a.id AND b.deleted = false%[7]s)::int AS fav_books,
 		       (SELECT min(COALESCE(wy.written_year, b.written_year)) FROM book_authors ba JOIN books b ON b.id = ba.book_id LEFT JOIN works wy ON wy.id = b.work_id
-		          WHERE ba.author_id = a.id AND b.deleted = false AND COALESCE(wy.written_year, b.written_year) IS NOT NULL%[8]s) AS yr_from,
+		          WHERE ba.author_id = a.id AND b.deleted = false AND COALESCE(wy.written_year, b.written_year) IS NOT NULL
+		            AND COALESCE(wy.written_year, b.written_year) BETWEEN COALESCE(a.born_year, -32768) AND COALESCE(a.died_year, 32767)%[8]s) AS yr_from,
 		       (SELECT max(COALESCE(wy.written_year, b.written_year)) FROM book_authors ba JOIN books b ON b.id = ba.book_id LEFT JOIN works wy ON wy.id = b.work_id
-		          WHERE ba.author_id = a.id AND b.deleted = false AND COALESCE(wy.written_year, b.written_year) IS NOT NULL%[9]s) AS yr_to,
+		          WHERE ba.author_id = a.id AND b.deleted = false AND COALESCE(wy.written_year, b.written_year) IS NOT NULL
+		            AND COALESCE(wy.written_year, b.written_year) BETWEEN COALESCE(a.born_year, -32768) AND COALESCE(a.died_year, 32767)%[9]s) AS yr_to,
 		       EXISTS (SELECT 1 FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false
 		               JOIN book_adaptations ad ON ad.book_id = b.id WHERE ba.author_id = a.id%[10]s) AS has_adapt,
+		       a.born_year, a.died_year,
 		       a.stat_rating::float8 AS external_rating,
 		       CASE WHEN a.stat_rating IS NOT NULL THEN 'top_works' END AS external_rating_source,
 		       (SELECT avg(br.rating)::float8 FROM book_ratings br
@@ -342,13 +355,14 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 			note                string
 			photo               pgtype.Text
 			yrFrom, yrTo        pgtype.Int2
+			born, died          pgtype.Int2
 			extRating           pgtype.Float8
 			extSource           pgtype.Text
 			readerAvg           pgtype.Float8
 		)
 		if err := rows.Scan(&it.ID, &last, &first, &middle, &photo, &note,
 			&it.BookCount, &it.IsFavorite, &it.FavoritedBooksCount,
-			&yrFrom, &yrTo, &it.HasAdaptations, &extRating, &extSource,
+			&yrFrom, &yrTo, &it.HasAdaptations, &born, &died, &extRating, &extSource,
 			&readerAvg, &it.ReaderRatingCount, &it.CompilationCount); err != nil {
 			return AuthorListResult{}, fmt.Errorf("scan author: %w", err)
 		}
@@ -359,6 +373,14 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 		}
 		if yrFrom.Valid && yrTo.Valid {
 			it.YearsActive = &YearsRange{From: int(yrFrom.Int16), To: int(yrTo.Int16)}
+		}
+		if born.Valid {
+			v := int(born.Int16)
+			it.BornYear = &v
+		}
+		if died.Valid {
+			v := int(died.Int16)
+			it.DiedYear = &v
 		}
 		if extRating.Valid {
 			v := extRating.Float64
@@ -389,6 +411,9 @@ func (s *Service) ListAuthorsFiltered(ctx context.Context, p AuthorListParams) (
 			return AuthorListResult{}, err
 		}
 		if err := s.fillAuthorLanguages(ctx, ids, idx, out, p.ExcludeGenres, p.ExcludeLangs); err != nil {
+			return AuthorListResult{}, err
+		}
+		if err := s.fillAuthorAwards(ctx, ids, idx, out, p.ExcludeGenres, p.ExcludeLangs); err != nil {
 			return AuthorListResult{}, err
 		}
 	}
@@ -438,6 +463,42 @@ func (s *Service) fillAuthorTopGenres(
 		}
 		if i, ok := idx[authorID]; ok {
 			out[i].TopGenres = append(out[i].TopGenres, g)
+		}
+	}
+	return rows.Err()
+}
+
+// fillAuthorAwards — батч-добор значка премий (#579): премия автору или его
+// видимой работе, кинопремии экранизаций не в счёт — то же условие, что у
+// фильтра «с премиями» (author_where.go).
+func (s *Service) fillAuthorAwards(
+	ctx context.Context, ids []int64, idx map[int64]int, out []AuthorListItem,
+	excludeGenres, excludeLangs []string,
+) error {
+	// $1 — author_id, $2 — кинопремии, исключения — $3.. (bookExclusionClause).
+	exClause, exArgs := bookExclusionClause(3, excludeGenres, excludeLangs, false)
+	args := append([]any{ids, awards.FilmAwardKeys()}, exArgs...)
+	// EXISTS на автора, а не сбор всех премий: у классиков сотни работ, первая
+	// же найденная премия заканчивает проверку (прод 2026-10-23: 50 самых
+	// известных — ~90 мс против ~200 мс у UNION).
+	rows, err := s.pool.Query(ctx, `
+		SELECT x.id FROM unnest($1::bigint[]) AS x(id)
+		WHERE EXISTS (SELECT 1 FROM award_wins aw WHERE aw.author_id = x.id AND aw.kind = 'author')
+		   OR EXISTS (SELECT 1 FROM book_authors ba
+		              JOIN books b ON b.id = ba.book_id AND b.deleted = false
+		              JOIN award_wins aw ON aw.work_id = b.work_id
+		              WHERE ba.author_id = x.id AND aw.award <> ALL($2::text[])`+exClause+`)`, args...)
+	if err != nil {
+		return fmt.Errorf("query author awards: %w", err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var authorID int64
+		if err := rows.Scan(&authorID); err != nil {
+			return err
+		}
+		if i, ok := idx[authorID]; ok {
+			out[i].HasAwards = true
 		}
 	}
 	return rows.Err()
