@@ -218,61 +218,88 @@ func (p *WikidataAdaptationsProvider) searchEntities(ctx context.Context, title,
 }
 
 // firstBookByAuthor — первый в порядке поиска кандидат, у которого автор (P50)
-// — автор книги из каталога (authorsConfirm). Кандидаты без P50 (фильм,
-// одноимённый альбом, итд) отпадают. Все кандидаты проверяются одним
-// SPARQL-запросом: раньше — запрос на каждого, до 20 на промах. "" без
-// ошибки — никто не подтвердился.
+// — автор книги из каталога (authorsConfirm) и который сам не фильм, сериал,
+// игра, альбом или франшиза (bookCandidate.nonBook, #575: у фильма «Дюна» 2021
+// в Wikidata стоит P50 = Фрэнк Герберт, и без этого гейта он проходил как
+// книга). Кандидаты без P50 (одноимённый ландшафт, человек) отпадают сами. Все
+// кандидаты проверяются одним SPARQL-запросом: раньше — запрос на каждого, до
+// 20 на промах. "" без ошибки — никто не подтвердился.
 func (p *WikidataAdaptationsProvider) firstBookByAuthor(ctx context.Context, candidates []string, q BookQuery) (string, error) {
 	if len(candidates) == 0 || len(q.Authors) == 0 {
 		// Нечем валидировать — лучше отвергнуть, чем взять чужую книгу.
 		return "", nil
 	}
-	authors, err := p.bookAuthors(ctx, candidates)
+	cands, err := p.bookAuthors(ctx, candidates)
 	if err != nil {
 		return "", err
 	}
 	for _, c := range candidates {
-		if authorsConfirm(q.Authors, q.AuthorQIDs, authors[c]) {
+		cand := cands[c]
+		if cand.nonBook {
+			continue
+		}
+		if authorsConfirm(q.Authors, q.AuthorQIDs, cand.authors) {
 			return c, nil
 		}
 	}
 	return "", nil
 }
 
+// bookCandidate — что известно о кандидате из Wikidata: авторы (QID → метки) и
+// признак «не книга» по классу P31.
+type bookCandidate struct {
+	authors map[string][]string
+	nonBook bool
+}
+
+// nonBookClasses — классы P31 (с подклассами, P279*), которые у кандидата
+// означают «это не книга», даже если P50 совпал: аудиовизуальное произведение
+// (фильм, сериал, мультфильм, аниме), видеоигра, альбом, песня, медиафраншиза,
+// человек, музыкальная группа. Кандидат без P31 не отсекается (их мало, и
+// автора у них всё равно проверяем).
+const nonBookClasses = "wd:Q2431196 wd:Q7889 wd:Q482994 wd:Q7366 wd:Q196600 wd:Q5 wd:Q215380"
+
 // bookAuthors — авторы (P50) книг-кандидатов: книга → QID автора → его метки и
 // псевдонимы на ru, en и mul (у многих людей имя теперь только в mul). Автор
-// без меток на этих языках остаётся в ответе — его подтверждает QID.
-func (p *WikidataAdaptationsProvider) bookAuthors(ctx context.Context, books []string) (map[string]map[string][]string, error) {
+// без меток на этих языках остаётся в ответе — его подтверждает QID. Заодно —
+// признак nonBook: класс кандидата (P31/P279*) среди nonBookClasses.
+func (p *WikidataAdaptationsProvider) bookAuthors(ctx context.Context, books []string) (map[string]bookCandidate, error) {
 	query := fmt.Sprintf(`
-SELECT ?book ?author ?authorLabel WHERE {
+SELECT ?book ?author ?authorLabel ?nonBook WHERE {
   VALUES ?book { wd:%s }
   ?book wdt:P50 ?author .
   OPTIONAL {
     ?author rdfs:label|skos:altLabel ?authorLabel .
     FILTER(LANG(?authorLabel) IN ("ru","en","mul"))
   }
+  BIND(EXISTS { ?book wdt:P31/wdt:P279* ?cls . VALUES ?cls { %s } } AS ?nonBook)
 }
 LIMIT 2000
-`, strings.Join(books, " wd:"))
+`, strings.Join(books, " wd:"), nonBookClasses)
 
 	bindings, err := p.sparqlBindings(ctx, query)
 	if err != nil {
 		return nil, err
 	}
-	out := map[string]map[string][]string{}
+	out := map[string]bookCandidate{}
 	for _, b := range bindings {
 		book, author := extractQID(b["book"]), extractQID(b["author"])
 		if book == "" || author == "" {
 			continue // «неизвестное значение» P50 — не сущность
 		}
-		if out[book] == nil {
-			out[book] = map[string][]string{}
+		cand := out[book]
+		if cand.authors == nil {
+			cand.authors = map[string][]string{}
 		}
-		labels := out[book][author]
+		labels := cand.authors[author]
 		if l := b["authorLabel"]; l != "" {
 			labels = append(labels, l)
 		}
-		out[book][author] = labels
+		cand.authors[author] = labels
+		if b["nonBook"] == "true" {
+			cand.nonBook = true
+		}
+		out[book] = cand
 	}
 	return out, nil
 }
