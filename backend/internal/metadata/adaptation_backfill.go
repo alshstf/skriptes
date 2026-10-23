@@ -64,6 +64,7 @@ func (b *AdaptationBackfiller) Run(ctx context.Context) {
 			b.logger.Info("adaptation backfill: pass complete", "processed", n)
 		}
 		b.recheckPosters(ctx)
+		b.refreshReleaseDates(ctx)
 		if ctx.Err() != nil {
 			return
 		}
@@ -86,6 +87,22 @@ func (b *AdaptationBackfiller) recheckPosters(ctx context.Context) {
 	}
 	if checked > 0 {
 		b.logger.Info("adaptation backfill: poster holes rechecked", "checked", checked, "filled", filled)
+	}
+}
+
+// refreshReleaseDates — фаза дат выхода будущих фильмов (#581): один SPARQL на
+// цикл по фильмам, чья дата устарела (TTL 3 дня), — для подборки «Экранизации».
+func (b *AdaptationBackfiller) refreshReleaseDates(ctx context.Context) {
+	if ctx.Err() != nil {
+		return
+	}
+	checked, dated, err := b.enricher.RefreshReleaseDates(ctx, time.Now())
+	if err != nil {
+		b.logger.Warn("adaptation backfill: release dates failed", "err", err)
+		return
+	}
+	if checked > 0 {
+		b.logger.Info("adaptation backfill: release dates refreshed", "films", checked, "dated", dated)
 	}
 }
 
@@ -287,6 +304,7 @@ func (c *AdaptationBackfillController) RunOnce() {
 		b := NewAdaptationBackfiller(c.pool, c.enricher, rpm, c.logger)
 		n := b.drain(ctx)
 		b.recheckPosters(ctx)
+		b.refreshReleaseDates(ctx)
 		cancel()
 		c.mu.Lock()
 		c.onceCancel = nil

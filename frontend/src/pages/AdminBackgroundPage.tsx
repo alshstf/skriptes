@@ -1701,7 +1701,10 @@ export function AdminBackgroundPage() {
               {adaptationMode === 'bg' ? (
                 <div className="space-y-2">
                   <FieldLabel>Источники (только внешние)</FieldLabel>
-                  <p className="text-xs text-muted-foreground text-pretty">Wikidata (SPARQL) — источник фиксирован.</p>
+                  <p className="text-xs text-muted-foreground text-pretty">
+                    Wikidata (SPARQL) — источник фиксирован. Каждый проход заодно уточняет даты выхода фильмов этого и
+                    двух следующих лет — по ним сортируется подборка «Экранизации».
+                  </p>
                 </div>
               ) : null}
               {adaptationMode === 'bg' ? (

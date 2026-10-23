@@ -128,3 +128,12 @@ added_at)` и `blocked_series(user_id, series_id, added_at)` — «не пред
 на Главной («лёгкое · умное · мрачное · смешное · короткое», CHECK по `recsys.AllMoods`), индекс `(user_id, at)`;
 пишет `history.LogMood` (`POST /api/me/mood`). Само настроение живёт в браузере и уходит параметром `mood=` в
 `GET /api/me/recommendations`; лог — чтобы на приёмке 3.7 видеть, что выбирают по вечерам.
+
+## 0070_adaptation_release_date
+
+Дата выхода экранизации (#581). `book_adaptations.released_on DATE`, `released_precision SMALLINT` (10 — месяц, на
+1-е число; 11 — день; год без даты — только `year`), `released_checked_at` — TTL перепроса. Пишет фаза воркера
+«Экранизации» `metadata.RefreshReleaseDates` (`adaptation_release.go`): фильмы этого года и двух следующих, один SPARQL
+P577 с точностью по VALUES, дата — самая точная и ранняя в пределах `year` фильма (фестиваль прошлого года не в счёт),
+на все строки фильма `(provider, ext_id)` разом, TTL 3 дня. Читает подборка «Экранизации» (`books/presets.go`):
+порядок и подпись «1 мая 2026».

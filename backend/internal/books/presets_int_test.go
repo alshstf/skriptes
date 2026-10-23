@@ -97,6 +97,18 @@ func TestPresets(t *testing.T) {
 			VALUES ($1, 'wikidata', $2, $3, $4)`, book(a.title), "Q"+a.title, "Фильм по «"+a.title+"»", a.year)
 		require.NoError(t, err)
 	}
+	// #581: один фильм по двум работам (перевод — отдельная работа) — одна строка,
+	// представитель — самая известная видимая; дата выхода — в пояснении и порядке.
+	adapt := func(title, qid, film string, year int, released string, prec int) {
+		_, err := pool.Exec(ctx, `INSERT INTO book_adaptations (book_id, provider, ext_id, title, year, released_on, released_precision)
+			VALUES ($1, 'wikidata', $2, $3, $4, NULLIF($5,'')::date, NULLIF($6,0))`, book(title), qid, film, year, released, prec)
+		require.NoError(t, err)
+	}
+	adapt("Основание", "QF1", "Основание", 2026, "2026-05-01", 11)
+	adapt("The Gods Themselves", "QF1", "Основание", 2026, "2026-05-01", 11)
+	adapt("Я, робот", "QF2", "Я, робот", 2026, "2026-03-01", 10)
+	// Второй фильм по той же работе — та же строка, оба фильма в пояснении.
+	adapt("Дети Дюны", "QF3", "Дюна: Часть третья", 2027, "2027-12-18", 11)
 
 	svc := books.New(pool, mgr, nil)
 	p := books.PresetParams{UserID: userID, Now: now}
@@ -136,8 +148,16 @@ func TestPresets(t *testing.T) {
 
 	res, err = svc.PresetWorks(ctx, books.PresetAdaptations, p)
 	require.NoError(t, err)
-	require.ElementsMatch(t, []string{"Дети Дюны", "Чужая книга"}, titlesOf(res.Items), "2030 — не этот и не следующий год")
-	require.Equal(t, "2027 · «Фильм по «Дети Дюны»»", res.Notes[work("Дети Дюны")])
+	require.Equal(t, []string{"Я, робот", "Основание", "Чужая книга", "Дети Дюны"}, titlesOf(res.Items),
+		"строка на фильм; по дате выхода, без даты — после датированных своего года; 2030 — не этот и не следующий год")
+	require.Equal(t, "1 мая 2026 · «Основание»", res.Notes[work("Основание")])
+	require.Equal(t, "март 2026 · «Я, робот»", res.Notes[work("Я, робот")])
+	require.Equal(t, "2026 · «Фильм по «Чужая книга»»", res.Notes[work("Чужая книга")])
+	require.Equal(t, "18 декабря 2027 · «Дюна: Часть третья»; 2027 · «Фильм по «Дети Дюны»»", res.Notes[work("Дети Дюны")])
+	// Скрыт язык самой известной работы фильма — представитель другой.
+	res, err = svc.PresetWorks(ctx, books.PresetAdaptations, books.PresetParams{UserID: userID, Now: now, ExcludeLangs: []string{"ru"}})
+	require.NoError(t, err)
+	require.Equal(t, []string{"The Gods Themselves"}, titlesOf(res.Items), "фильм остаётся с видимой работой")
 	// Миниатюры в строках подборок: у каждой работы — издание для обложки, даже
 	// без cover_path (иначе фронт взял бы /api/covers/book/{work_id}, #399).
 	for _, it := range res.Items {
@@ -152,7 +172,7 @@ func TestPresets(t *testing.T) {
 		require.NotEmpty(t, pr.Title)
 	}
 	require.Equal(t, map[string]int{books.PresetUnfinishedSeries: 1, books.PresetAuthorsUnread: 4,
-		books.PresetReadThisYear: 3, books.PresetAdaptations: 2}, counts)
+		books.PresetReadThisYear: 3, books.PresetAdaptations: 4}, counts)
 	require.Equal(t, "Прочитано в 2026 году", presets[2].Title)
 
 	_, err = svc.PresetWorks(ctx, "nope", p)
