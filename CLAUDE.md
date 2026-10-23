@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.64.0**.
+конвертируются на лету через fb2cng. Текущая версия — **1.64.1**.
 
 ## Рабочее окружение
 
@@ -87,7 +87,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     висячее слово — `text-pretty`.
 11. **Четыре кэша картинок** — `/cache/covers` (регенерируются из fb2), `/cache/posters`, `/cache/author-photos` и
     `/cache/award-logos` (внешние, не регенерируются). Экранизации — белый список P31; книгу в Wikidata подтверждает
-    QID автора в P50, без QID — метки с транслитом (`authorsConfirm`, #570); постеры — TMDB → Commons P18.
+    QID автора в P50, без QID — метки с транслитом (`authorsConfirm`, #570), а кандидат-фильм/игра/альбом с P50
+    автора отсекается по классу P31 (`nonBookClasses`, #575); постеры — TMDB → Commons P18.
 12. **Lazy-обогащение автора** — single-shot по `metadata_fetched_at` (и `adaptations_fetched_at`); ретрай — только
     отдельным TTL-механизмом или разовым сбросом маркера на старте (`adaptations_author_qid_recheck_v1`, 1.64.0:
     доберёт воркер «Экранизации», выключен — только открытые карточки).

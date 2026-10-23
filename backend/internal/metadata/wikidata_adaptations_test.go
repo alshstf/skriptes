@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"strings"
 	"sync/atomic"
 	"testing"
@@ -24,6 +25,7 @@ type wdMockArgs struct {
 	searchHits   []string                       // QID'ы кандидатов
 	authorLabels map[string][]string            // QID книги → []label автора (для firstBookByAuthor)
 	authorQIDs   map[string]string              // QID книги → QID автора
+	nonBook      map[string]bool                // QID кандидата → его класс P31 — фильм/игра/альбом (ответ ?nonBook)
 	adaptations  map[string][]map[string]string // QID → []row (поля film, filmLabel, year, directorLabel, imdbId, image, kindLabel)
 	p50Calls     *atomic.Int32                  // сколько было запросов проверки кандидатов
 }
@@ -118,8 +120,9 @@ func buildBookAuthorsResponse(args wdMockArgs, books []string) map[string]any {
 		}
 		row := func(label string) map[string]map[string]string {
 			r := map[string]map[string]string{
-				"book":   {"value": "http://www.wikidata.org/entity/" + book},
-				"author": {"value": "http://www.wikidata.org/entity/" + author},
+				"book":    {"value": "http://www.wikidata.org/entity/" + book},
+				"author":  {"value": "http://www.wikidata.org/entity/" + author},
+				"nonBook": {"value": strconv.FormatBool(args.nonBook[book])},
 			}
 			if label != "" {
 				r["authorLabel"] = map[string]string{"value": label}
@@ -527,4 +530,46 @@ func TestWikidataAdaptations_DropsNonScreenAndUntitled(t *testing.T) {
 	}
 	require.Equal(t, map[string]string{"Хоббит": "film", "Кольца власти": "tv_series"}, titles,
 		"игра и запись без названия не сохраняются; сериал с меткой «произведение» не первой — сериал")
+}
+
+// TestWikidataAdaptations_NonBookCandidateSkipped — кандидат-фильм с P50 автора
+// (у «Дюны» 2021 в Wikidata P50 = Фрэнк Герберт, #575) не проходит как книга:
+// гейт по классу P31 (nonBook) пропускает его, и подтверждается следующий
+// кандидат — роман того же автора; кандидат без P31 проходит по автору.
+func TestWikidataAdaptations_NonBookCandidateSkipped(t *testing.T) {
+	srv := wdMockServer(t, wdMockArgs{
+		searchHits: []string{"Q60834962", "Q190192"}, // фильм первым, роман вторым
+		authorQIDs: map[string]string{"Q60834962": "Q7934", "Q190192": "Q7934"},
+		authorLabels: map[string][]string{
+			"Q60834962": {"Frank Herbert", "Фрэнк Герберт"},
+			"Q190192":   {"Frank Herbert", "Фрэнк Герберт"},
+		},
+		nonBook: map[string]bool{"Q60834962": true},
+		adaptations: map[string][]map[string]string{
+			"Q190192": {{"film": "http://www.wikidata.org/entity/Q114819", "filmLabel": "Дюна", "year": "1984", "kindLabel": "фильм"}},
+		},
+	})
+	defer srv.Close()
+	p := NewWikidataAdaptationsProvider(nil).WithEndpoints(srv.URL+"/w/api.php", srv.URL+"/sparql", "")
+
+	items, qid, err := p.FetchAdaptationsWithQID(context.Background(), BookQuery{
+		ID: 1, Title: "Дюна", Authors: []string{"Херберт Фрэнк"}, AuthorQIDs: []string{"Q7934"}, Lang: "ru",
+	})
+	require.NoError(t, err)
+	require.Equal(t, "Q190192", qid, "фильм с P50 автора отвергнут, роман принят")
+	require.Len(t, items, 1)
+
+	// Единственный кандидат — фильм: не найдено, не ошибка.
+	srv2 := wdMockServer(t, wdMockArgs{
+		searchHits:   []string{"Q60834962"},
+		authorQIDs:   map[string]string{"Q60834962": "Q7934"},
+		authorLabels: map[string][]string{"Q60834962": {"Frank Herbert"}},
+		nonBook:      map[string]bool{"Q60834962": true},
+	})
+	defer srv2.Close()
+	p2 := NewWikidataAdaptationsProvider(nil).WithEndpoints(srv2.URL+"/w/api.php", srv2.URL+"/sparql", "")
+	_, _, err = p2.FetchAdaptationsWithQID(context.Background(), BookQuery{
+		ID: 1, Title: "Дюна", Authors: []string{"Херберт Фрэнк"}, AuthorQIDs: []string{"Q7934"}, Lang: "ru",
+	})
+	require.ErrorIs(t, err, ErrNotFound)
 }
