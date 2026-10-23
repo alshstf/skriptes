@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
  * sticky: длинная полка (избранное на 50+, подборка экранизаций) — поле
  * закреплено сразу под шапкой приложения, пока полка в видимой области
  * (sticky ограничен своим <li>). top — как у саб-бара /books: высота шапки
- * (h-14) + safe-area-инсет (грабля 18). Тень — только когда поле прилипло.
+ * --header-h (index.css, грабля 18). Тень — только когда поле прилипло.
  */
 export function ShelfFilter({
   value,
@@ -32,7 +32,7 @@ export function ShelfFilter({
         data-testid="shelf-filter"
         className={cn(
           'border-b border-border/60 bg-background px-3 py-2',
-          sticky && 'sticky top-[calc(env(safe-area-inset-top)+3.5rem)] z-10',
+          sticky && 'sticky top-[var(--header-h)] z-10',
           sticky && stuck && 'shadow-[0_10px_22px_-10px_rgba(0,0,0,0.9)]',
         )}
       >
