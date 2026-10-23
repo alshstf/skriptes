@@ -4,10 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/meilisearch/meilisearch-go"
 )
 
@@ -155,7 +157,6 @@ func (s *Service) resolvePreset(ctx context.Context, key string, p PresetParams)
 	var (
 		entries []presetEntry
 		err     error
-		byPop   bool // порядок — по известности (иначе — как отдал SQL)
 	)
 	switch key {
 	case PresetUnfinishedSeries:
@@ -165,15 +166,14 @@ func (s *Service) resolvePreset(ctx context.Context, key string, p PresetParams)
 	case PresetReadThisYear:
 		entries, err = s.readThisYear(ctx, p.UserID, p.Now)
 	case PresetAdaptations:
-		entries, err = s.upcomingAdaptations(ctx, p.Now)
-		byPop = true
+		return s.upcomingAdaptations(ctx, p)
 	default:
 		return nil, nil, ErrUnknownPreset
 	}
 	if err != nil {
 		return nil, nil, err
 	}
-	items, err := s.visibleWorks(ctx, entries, presetExclusions(key, p), byPop)
+	items, err := s.visibleWorks(ctx, entries, presetExclusions(key, p), false)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -331,33 +331,154 @@ func (s *Service) readThisYear(ctx context.Context, userID int64, now time.Time)
 	return out, rows.Err()
 }
 
-// upcomingAdaptations — работы с экранизацией этого или следующего года.
-func (s *Service) upcomingAdaptations(ctx context.Context, now time.Time) ([]presetEntry, error) {
+// upcomingFilm — экранизация этого или следующего года и работы каталога по ней.
+type upcomingFilm struct {
+	title      string
+	year       int
+	released   *time.Time // дата выхода (#581), nil — известен только год
+	precision  int        // 11 — день, 10 — месяц
+	popularity int
+	works      []int64
+}
+
+// upcomingAdaptations — подборка экранизаций этого и следующего года (#581):
+// строка на фильм, а не на работу. Экранизации хранятся по изданию, а переводы
+// одного романа — отдельные работы, поэтому один фильм раскладывался на
+// несколько строк (прод 2026-10-23: 62 строки на 38 фильмов, «Скотный двор» —
+// шесть). Представитель фильма — самая известная из его видимых работ; фильмы
+// с общим представителем («Буратино» и «Пиноккио» по одной сказке) — одна
+// строка с обоими в пояснении. Порядок — по дате выхода (Wikidata P577,
+// metadata.RefreshReleaseDates); без даты — после датированных того же года.
+func (s *Service) upcomingAdaptations(ctx context.Context, p PresetParams) ([]ListItem, map[int64]string, error) {
 	rows, err := s.pool.Query(ctx, `
-		SELECT b.work_id, min(ba.year)::int,
-		       (array_agg(ba.title ORDER BY ba.year, ba.title))[1]
+		SELECT (array_agg(ba.title ORDER BY ba.created_at DESC, ba.id DESC))[1],
+		       min(ba.year)::int, min(ba.released_on), max(ba.released_precision)::int,
+		       COALESCE(max(ba.popularity), 0)::int,
+		       array_agg(DISTINCT b.work_id)
 		FROM book_adaptations ba
 		JOIN books b ON b.id = ba.book_id AND NOT b.deleted
 		WHERE ba.year BETWEEN $1 AND $1 + 1 AND b.work_id IS NOT NULL
-		GROUP BY b.work_id`, now.Year())
+		GROUP BY ba.provider, ba.ext_id`, p.Now.Year())
 	if err != nil {
-		return nil, fmt.Errorf("upcoming adaptations: %w", err)
+		return nil, nil, fmt.Errorf("upcoming adaptations: %w", err)
 	}
-	defer rows.Close()
-	var out []presetEntry
+	var films []upcomingFilm
 	for rows.Next() {
 		var (
-			e     presetEntry
-			year  int
-			title string
+			f        upcomingFilm
+			released pgtype.Date
+			prec     pgtype.Int4
 		)
-		if err := rows.Scan(&e.workID, &year, &title); err != nil {
-			return nil, err
+		if err := rows.Scan(&f.title, &f.year, &released, &prec, &f.popularity, &f.works); err != nil {
+			rows.Close()
+			return nil, nil, err
 		}
-		e.note = fmt.Sprintf("%d · «%s»", year, title)
-		out = append(out, e)
+		if released.Valid && prec.Valid {
+			t := released.Time
+			f.released, f.precision = &t, int(prec.Int32)
+		}
+		films = append(films, f)
 	}
-	return out, rows.Err()
+	rows.Close()
+	if err := rows.Err(); err != nil {
+		return nil, nil, err
+	}
+	sortUpcomingFilms(films)
+
+	// Видимость и известность работ — одним запросом в индекс works.
+	seen := map[int64]bool{}
+	var entries []presetEntry
+	for _, f := range films {
+		for _, w := range f.works {
+			if !seen[w] {
+				seen[w] = true
+				entries = append(entries, presetEntry{workID: w})
+			}
+		}
+	}
+	visible, err := s.visibleWorks(ctx, entries, p, true)
+	if err != nil {
+		return nil, nil, err
+	}
+	items, notes := groupUpcomingFilms(films, visible)
+	return items, notes, nil
+}
+
+// sortUpcomingFilms — по году, внутри года — по дате выхода (без даты — после
+// датированных), затем по известности фильма и названию.
+func sortUpcomingFilms(films []upcomingFilm) {
+	sort.SliceStable(films, func(i, j int) bool {
+		a, b := films[i], films[j]
+		if a.year != b.year {
+			return a.year < b.year
+		}
+		if (a.released == nil) != (b.released == nil) {
+			return a.released != nil
+		}
+		if a.released != nil && !a.released.Equal(*b.released) {
+			return a.released.Before(*b.released)
+		}
+		if a.popularity != b.popularity {
+			return a.popularity > b.popularity
+		}
+		return a.title < b.title
+	})
+}
+
+// groupUpcomingFilms — строки подборки из фильмов (уже по порядку) и видимых
+// работ (по известности): у фильма — самая известная его видимая работа,
+// фильмы с общей работой — одна строка, пояснение перечисляет их по порядку.
+func groupUpcomingFilms(films []upcomingFilm, visible []ListItem) ([]ListItem, map[int64]string) {
+	rank := make(map[int64]int, len(visible))
+	for i, it := range visible {
+		rank[it.ID] = i
+	}
+	var (
+		items []ListItem
+		notes = map[int64]string{}
+		rowOf = map[int64]int{}
+	)
+	for _, f := range films {
+		best := -1
+		for _, w := range f.works {
+			if r, ok := rank[w]; ok && (best < 0 || r < best) {
+				best = r
+			}
+		}
+		if best < 0 {
+			continue // ни одной видимой работы — фильма в подборке нет
+		}
+		it := visible[best]
+		note := releaseLabel(f) + " · «" + f.title + "»"
+		if _, ok := rowOf[it.ID]; ok {
+			notes[it.ID] += "; " + note
+			continue
+		}
+		if len(items) >= presetMaxItems {
+			continue
+		}
+		rowOf[it.ID] = len(items)
+		items = append(items, it)
+		notes[it.ID] = note
+	}
+	if items == nil {
+		items = []ListItem{}
+	}
+	return items, notes
+}
+
+var ruMonthsNominative = [...]string{"январь", "февраль", "март", "апрель", "май", "июнь",
+	"июль", "август", "сентябрь", "октябрь", "ноябрь", "декабрь"}
+
+// releaseLabel — «1 мая 2026», «май 2026» или «2026».
+func releaseLabel(f upcomingFilm) string {
+	switch {
+	case f.released != nil && f.precision >= 11:
+		return fmt.Sprintf("%s %d", ruDayMonth(*f.released), f.released.Year())
+	case f.released != nil:
+		return fmt.Sprintf("%s %d", ruMonthsNominative[f.released.Month()-1], f.released.Year())
+	}
+	return strconv.Itoa(f.year)
 }
 
 // authorsUnread — самые известные непрочитанные работы «любимых» авторов:
