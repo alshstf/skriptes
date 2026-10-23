@@ -26,12 +26,15 @@ const (
 	SectionFitsTonight      SectionKind = "fits_tonight"              // на вечер: «у меня есть N минут»
 	// Фаза 3 (recsys/03): напоминание о полке «Хочу прочитать».
 	SectionToRead SectionKind = "to_read_reminder" // вы хотели прочитать
+	// SectionMood — «Под настроение» (#580): только при выбранном настроении,
+	// первой в ленте (mood_pool.go).
+	SectionMood SectionKind = "mood"
 )
 
 // AllSections — все секции ленты в порядке Главной (для проверки настроек
 // сворачивания; фронт держит тот же порядок в HOME_SECTIONS).
 var AllSections = []SectionKind{
-	SectionContinueReading, SectionSearchedAppeared, SectionNextInSeries, SectionAuthorFinished,
+	SectionMood, SectionContinueReading, SectionSearchedAppeared, SectionNextInSeries, SectionAuthorFinished,
 	SectionSubscriptions, SectionToRead, SectionDropped, SectionForgottenClassic, SectionReread, SectionFitsTonight,
 	SectionRatePrompts,
 }
@@ -77,6 +80,9 @@ const (
 	ReasonFitsTonight ReasonKind = "fits_tonight"
 	// ReasonToRead — положили на полку «Хочу прочитать» At и с тех пор не открывали.
 	ReasonToRead ReasonKind = "to_read"
+	// ReasonMood — под настроение Mood (#580): Genre — fb2-код жанра настроения,
+	// Minutes — «≈ N минут» у «короткого».
+	ReasonMood ReasonKind = "mood"
 )
 
 // Reason — причина рекомендации: вид и параметры. Поля — плоские и

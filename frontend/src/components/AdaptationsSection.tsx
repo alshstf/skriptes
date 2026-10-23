@@ -37,7 +37,7 @@ export function AdaptationsSection({ bookId }: { bookId: number }) {
   const showSkeleton = (isLoading || !data || !exhausted) && items.length === 0;
 
   return (
-    <section id="adaptations" className="scroll-mt-20 space-y-3" aria-label="Экранизации">
+    <section id="adaptations" className="scroll-mt-2 space-y-3" aria-label="Экранизации">
       <h3 className="flex items-center gap-2 text-sm font-medium">
         <Film className="size-4" aria-hidden />
         По этой книге снято

@@ -18,7 +18,7 @@ import (
 
 // sectionOpts — параметры секции из query: minutes — «у меня есть N минут»
 // (fits_tonight; 0 — по умолчанию); mood — настроение сессии (recsys/03, 3.4;
-// секции правил и «На вечер», "" — нет; неизвестное — 400).
+// секции правил, «На вечер» и «Под настроение», "" — нет; неизвестное — 400).
 type sectionOpts struct {
 	Minutes int
 	Mood    recsys.Mood
@@ -73,6 +73,17 @@ func handleRecommendations(hist HistoryDeps, set SettingsDeps, content ContentDe
 				return nil, err
 			}
 			return recs.Feed.Tonight(ctx, userID, opts.Minutes, speed, exclusions(ctx, userID), limit, opts.Mood)
+		}
+		// «Под настроение» (#580): без mood= — пусто; скорость — для «короткого».
+		providers[recsys.SectionMood] = func(ctx context.Context, userID int64, limit int, opts sectionOpts) ([]recsys.Item, error) {
+			if opts.Mood == "" {
+				return []recsys.Item{}, nil
+			}
+			speed, err := hist.Service.ReadingSpeed(ctx, userID)
+			if err != nil {
+				return nil, err
+			}
+			return recs.Feed.Mood(ctx, userID, opts.Mood, speed, exclusions(ctx, userID), limit)
 		}
 	}
 	return func(w http.ResponseWriter, r *http.Request) {

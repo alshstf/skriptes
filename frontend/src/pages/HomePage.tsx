@@ -307,6 +307,8 @@ function SuggestRow({
 
 // sectionMeta — заголовок и карточка секции по её виду.
 const SECTION_META: Record<RecSectionKind, { title: string; card: (item: RecItem) => React.ReactNode }> = {
+  // Заголовок с названием настроения подставляет RecFeed (moodTitle).
+  mood: { title: 'Под настроение', card: (it) => <FeedCard item={it} /> },
   continue_reading: { title: 'Продолжить чтение', card: (it) => <ContinueCard item={it} /> },
   searched_appeared: { title: 'Появилось то, что вы искали', card: (it) => <FeedCard item={it} /> },
   next_in_series: { title: 'Дальше в цикле', card: (it) => <FeedCard item={it} /> },
@@ -374,7 +376,9 @@ function RecFeed() {
       {moodChips}
       {sections.map(({ kind, items, isLoading }) => {
         const meta = SECTION_META[kind];
-        if (isLoading) return <ShelfSkeleton key={kind} title={meta.title} />;
+        const title = kind === 'mood' && mood ? `Под настроение: ${moodLabel(mood)}` : meta.title;
+        if (kind === 'mood' && !mood) return null;
+        if (isLoading) return <ShelfSkeleton key={kind} title={title} />;
         if (items.length === 0) {
           if (kind === 'subscriptions') return <SubscriptionsHint key={kind} />;
           // «На вечер» пустая — секция остаётся: чипами можно дать больше времени.
@@ -393,7 +397,7 @@ function RecFeed() {
         return (
           <Shelf
             key={kind}
-            title={meta.title}
+            title={title}
             count={items.length}
             collapsed={isCollapsed}
             onToggle={() => setCollapsed.mutate({ kind, collapsed: !isCollapsed })}

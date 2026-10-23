@@ -18,6 +18,8 @@ type Feed struct {
 	Q       Querier
 	Weights Weights
 	Now     func() time.Time
+	// Moods — пул секции «Под настроение» (nil — DefaultMoods).
+	Moods *MoodPool
 }
 
 // NewFeed — лента с весами по умолчанию.
@@ -121,5 +123,61 @@ func (f *Feed) Tonight(ctx context.Context, userID int64, minutes int, speed Spe
 	if cands, err = ApplyMood(ctx, f.Q, cands, mood); err != nil {
 		return nil, fmt.Errorf("recsys: %s: %w", rule.Name(), err)
 	}
+	// «На вечер» под настроение — пересечение (#580): только подходящие, если
+	// такие есть; нет — прежний список, чтобы секция не пустела от чипа.
+	cands = keepMoodMatches(cands, mood)
 	return Hydrate(ctx, f.Q, cands, ex.WithBlocklist(p), limit)
+}
+
+// keepMoodMatches — кандидаты, поднятые под настроение (Reason.Mood), если хоть
+// один есть; иначе — все.
+func keepMoodMatches(cands []Candidate, mood Mood) []Candidate {
+	if mood == "" {
+		return cands
+	}
+	kept := make([]Candidate, 0, len(cands))
+	for _, c := range cands {
+		if c.Reason.Mood != "" {
+			kept = append(kept, c)
+		}
+	}
+	if len(kept) == 0 {
+		return cands
+	}
+	return kept
+}
+
+// Mood — секция «Под настроение» (#580): известное в каталоге под настроение
+// mood с учётом вкуса пользователя (ForMood по пулу DefaultMoods). Без
+// настроения — пусто; пустой профиль — не помеха (новичку тоже есть что
+// предложить). speed — для «≈ N минут» у «короткого».
+func (f *Feed) Mood(ctx context.Context, userID int64, mood Mood, speed Speed, ex Exclusions, limit int) ([]Item, error) {
+	if mood == "" || !IsMood(string(mood)) {
+		return []Item{}, nil
+	}
+	if limit <= 0 || limit > 100 {
+		limit = 20
+	}
+	p, err := BuildProfile(ctx, f.Q, userID, f.Now(), f.Weights)
+	if err != nil {
+		return nil, err
+	}
+	rule := ForMood{Pool: f.moods(), Mood: mood}
+	if speed.Known() {
+		rule.BytesPerMin = speed.BytesPerMin
+	}
+	// С запасом: часть отсеет скрытое у пользователя и «не предлагать».
+	cands, err := rule.Candidates(ctx, f.Q, p, 4*limit)
+	if err != nil {
+		return nil, fmt.Errorf("recsys: %s: %w", rule.Name(), err)
+	}
+	return Hydrate(ctx, f.Q, cands, ex.WithBlocklist(p), limit)
+}
+
+// moods — пул настроений ленты (тесты подменяют Feed.Moods).
+func (f *Feed) moods() *MoodPool {
+	if f.Moods != nil {
+		return f.Moods
+	}
+	return DefaultMoods
 }

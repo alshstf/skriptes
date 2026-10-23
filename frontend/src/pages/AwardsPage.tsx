@@ -212,7 +212,7 @@ export function AwardPage() {
         </p>
       ) : null}
       {years.map((y) => (
-        <section key={y.year} id={yearAnchor(y.year)} className="scroll-mt-20 space-y-2">
+        <section key={y.year} id={yearAnchor(y.year)} className="scroll-mt-2 space-y-2">
           <h2 className="text-lg font-semibold tabular-nums">{y.year}</h2>
           <div className="space-y-3">
             {y.noms.map((n) => (

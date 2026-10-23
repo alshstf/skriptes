@@ -21,8 +21,9 @@ export type ReasonContext = { genreName?: (code: string) => string | undefined }
 /** reasonParts — части текста причины; пустой массив — причину не показываем. */
 export function reasonParts(r: RecReason, now = new Date(), ctx: ReasonContext = {}): ReasonPart[] {
   const parts = baseParts(r, now, ctx);
-  // Поднята под настроение (recsys/03, 3.4) — дописываем к причине правила.
-  if (parts.length > 0 && r.mood) parts.push({ text: ` · под настроение «${moodLabel(r.mood)}»` });
+  // Поднята под настроение (recsys/03, 3.4) — дописываем к причине правила
+  // (у секции «Под настроение» оно уже в самой причине).
+  if (parts.length > 0 && r.mood && r.kind !== 'mood') parts.push({ text: ` · под настроение «${moodLabel(r.mood)}»` });
   return parts;
 }
 
@@ -96,6 +97,22 @@ function baseParts(r: RecReason, now: Date, ctx: ReasonContext): ReasonPart[] {
       return [
         {
           text: [r.minutes ? formatReadingTime(r.minutes) : '', genre ? `ваш жанр: ${genre}` : '']
+            .filter(Boolean)
+            .join(' · '),
+        },
+      ];
+    }
+    case 'mood': {
+      // «Лёгкое · жанр: Детектив» / «Короткое · ≈ 40 мин» (#580).
+      const label = r.mood ? moodLabel(r.mood) : 'под настроение';
+      const genre = r.genre ? (ctx.genreName?.(r.genre) ?? r.genre) : '';
+      return [
+        {
+          text: [
+            label.charAt(0).toUpperCase() + label.slice(1),
+            genre ? `жанр: ${genre}` : '',
+            r.minutes ? formatReadingTime(r.minutes) : '',
+          ]
             .filter(Boolean)
             .join(' · '),
         },

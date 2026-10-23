@@ -56,10 +56,12 @@ function Header({ user, heroSearchVisible }: { user: User | null; heroSearchVisi
     // граница (--border = 10% white) почти невидима → при скролле хэдер визуально
     // «сливался» с контентом. Мягкая тень даёт глубину (box-shadow на iOS Safari
     // надёжен в отличие от blur), хэдер читается как отдельный слой над контентом.
-    // pt-safe: в PWA standalone на iOS (status-bar-style=black-translucent) контент
-    // иначе лезет под системный бар с часами; на десктопе/в Safari инсет = 0.
+    // pt-safe-ui: в PWA standalone на iOS (status-bar-style=black-translucent)
+    // контент иначе лезет под системный бар с часами, а на iOS 26+ ещё и под
+    // полосу размытия под ним (#578) — опускаем кнопки ниже неё, как у ридера и
+    // дроверов. Высота шапки — --header-h (index.css); на десктопе/в Safari инсет = 0.
     <header
-      className="sticky top-0 z-20 border-b border-border bg-background pt-safe shadow-[0_10px_22px_-10px_rgba(0,0,0,0.9)]"
+      className="sticky top-0 z-20 border-b border-border bg-background pt-safe-ui shadow-[0_10px_22px_-10px_rgba(0,0,0,0.9)]"
     >
       <div className="mx-auto max-w-6xl px-4 h-14 flex items-center justify-between gap-2">
         <div className="flex items-center gap-4 min-w-0">

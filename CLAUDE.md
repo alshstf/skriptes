@@ -109,7 +109,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 17. **Два рейтинга:** внешний (LIBRATE → веб от 5 голосов; иконка `Globe`; рейтинг автора — среднее пяти лучших
     работ, Фантлаб первым в шкале LIBRATE) и читательский (оценки 1–5 инстанса, `BookHeart`). Не путать.
 18. **iOS safe-area — системно:** утилиты `pt-safe`/`pb-safe`, оверлеи на shadcn-примитивах получают инсеты сами;
-    новый fixed/sticky у края экрана — добавить инсет. Хэдер отделён тенью.
+    новый fixed/sticky у края экрана — добавить инсет; липнущее под шапку — `top-[var(--header-h)]` (хэдер на
+    `pt-safe-ui`, ниже размытия iOS 26+, #578). Хэдер отделён тенью.
 19. **Ручные правки метаданных материализуются в колонки** (`metadata_overrides` + `OverrideController`): поля,
     которые перетирает импорт, ре-применяет `ReapplyAfterImport`; recompute-пути гейтятся по наличию правки.
     Контролы правки на карточках — через `useCanEdit()` (админ + режим «Править» на ЭТОЙ карточке — ушли с неё,
@@ -138,8 +139,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     приёмка — `cmd/recseval`. Обратная связь (фаза 3): причины
     низкой оценки `recsys.RatingReason`, полка «Хочу прочитать» (`kind='to_read'`), «не предлагать» автора/цикл
     (`blocked_*` → `Exclusions.WithBlocklist`; не скрытие контента — каталог и поиск не трогать). Настроение сессии
-    `recsys.Mood` (`mood=` → `Feed.Section/Tonight`: правила пересортировывает `ApplyMood`, классика фильтрует сама —
-    `MoodAware`; жанры по настроению — `recsys/mood-genres.json`, правит владелец); «ваша средняя» по автору —
+    `recsys.Mood` (`mood=` → `Feed.Section/Tonight/Mood`: правила пересортировывает `ApplyMood`, классика фильтрует сама —
+    `MoodAware`, «На вечер» — пересечение, своя секция «Под настроение» — пул `DefaultMoods`, #580; жанры по настроению — `recsys/mood-genres.json`, правит владелец); «ваша средняя» по автору —
     считается (`catalog.Author.UserRating`, `recsys.AuthorRating`), не хранится.
     **Персона поиска переведена на негативы модели** (3.5): `PersonaProfile.Blocked*/NotInterestedWorks/DroppedWorks`
     (предикаты `recsys`) → малус в `books.applyPersonaBoost` (самый сильный, не сумма; точное название без малуса),

@@ -175,10 +175,110 @@ func TestFeedMood(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, nextB, tonightFunny[0].WorkID)
 	require.Equal(t, recsys.MoodFunny, tonightFunny[0].Reasons[0].Mood)
+	// Пересечение (#580): под настроение — только подходящие…
+	for _, it := range tonightFunny {
+		require.Equal(t, recsys.MoodFunny, it.Reasons[0].Mood, "в «На вечер» под «смешное» — только смешное")
+	}
+	// …а если подходящих нет — прежний список, секция не пустеет.
+	tonightDark, err := feed.Tonight(ctx, me, 600, recsys.Speed{}, recsys.Exclusions{}, 10, recsys.MoodDark)
+	require.NoError(t, err)
+	require.Len(t, tonightDark, len(tonight))
 
 	// ApplyMood напрямую: пустое настроение — как есть.
 	cands := []recsys.Candidate{{WorkID: nextA}, {WorkID: nextB}}
 	same, err := recsys.ApplyMood(ctx, pool, cands, "")
 	require.NoError(t, err)
 	require.Equal(t, cands, same)
+}
+
+// TestFeedMoodSection — секция «Под настроение» (#580): пул по каталогу —
+// известное в жанрах настроения («короткое» — по размеру), под пользователя —
+// любимые жанры выше, тронутое и скрытое — нет, не больше двух работ автора;
+// без настроения — пусто, новичку — просто известное.
+func TestFeedMoodSection(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	f := newFixture(t, ctx, pool)
+	me := f.user("me@example.com")
+	newbie := f.user("new@example.com")
+	gDet, gCozy, gHumor, gSF, gShort := f.genre("detective"), f.genre("det_cozy"), f.genre("humor_prose"), f.genre("sf"), f.genre("short_story")
+
+	mk := func(author int64, title string, size int64, editions int, gs ...int64) int64 {
+		w := f.work(title, ip(1990), nil)
+		f.exec(`UPDATE works SET edition_count = $2, primary_author_id = $3 WHERE id = $1`, w, editions, author)
+		e := f.edition(w, sp("ru"), nil)
+		f.exec(`UPDATE books SET size_bytes = $2, lang = 'ru' WHERE id = $1`, e, size)
+		f.exec(`INSERT INTO book_authors (book_id, author_id) VALUES ($1,$2)`, e, author)
+		for _, g := range gs {
+			f.exec(`INSERT INTO book_genres (book_id, genre_id) VALUES ($1,$2)`, e, g)
+		}
+		return w
+	}
+	christie, wodehouse, lem := f.author("Кристи"), f.author("Вудхаус"), f.author("Лем")
+	det1 := mk(christie, "Убийство в «Восточном экспрессе»", 600_000, 30, gDet)
+	det2 := mk(christie, "Десять негритят", 500_000, 25, gDet)
+	det3 := mk(christie, "Смерть на Ниле", 500_000, 20, gDet)
+	cozy := mk(wodehouse, "Дживс и Вустер", 700_000, 8, gCozy, gHumor)
+	sf := mk(lem, "Солярис", 800_000, 40, gSF)
+	story := mk(lem, "Рассказы о пилоте Пирксе", 120_000, 3, gSF, gShort)
+	read := mk(wodehouse, "Прочитанный Вудхаус", 400_000, 50, gHumor)
+	f.exec(`INSERT INTO book_ratings (user_id, work_id, rating, rated_at) VALUES ($1,$2,5,now())`, me, read)
+
+	moods := &recsys.MoodPool{}
+	n, err := moods.Refresh(ctx, pool, time.Now())
+	require.NoError(t, err)
+	require.Positive(t, n)
+	light, _ := moods.Snapshot(recsys.MoodLight)
+	inLight := map[int64]bool{}
+	for _, it := range light {
+		inLight[it.WorkID] = true
+	}
+	require.True(t, inLight[det1] && inLight[cozy], "детективы и юмор — лёгкое")
+	require.False(t, inLight[sf], "фантастика не в «лёгком»")
+
+	feed := recsys.NewFeed(pool)
+	feed.Moods = moods
+	ids := func(items []recsys.Item) []int64 {
+		out := make([]int64, 0, len(items))
+		for _, it := range items {
+			out = append(out, it.WorkID)
+		}
+		return out
+	}
+	items, err := feed.Mood(ctx, me, "", recsys.Speed{}, recsys.Exclusions{}, 10)
+	require.NoError(t, err)
+	require.Empty(t, items, "без настроения — пусто")
+
+	items, err = feed.Mood(ctx, me, recsys.MoodLight, recsys.Speed{}, recsys.Exclusions{}, 10)
+	require.NoError(t, err)
+	got := ids(items)
+	require.NotContains(t, got, read, "прочитанное не предлагаем")
+	require.NotContains(t, got, det3, "не больше двух работ автора")
+	require.Contains(t, got, det1)
+	require.Contains(t, got, det2)
+	require.Contains(t, got, cozy)
+	r := items[0].Reasons[0]
+	require.Equal(t, recsys.ReasonMood, r.Kind)
+	require.Equal(t, recsys.MoodLight, r.Mood)
+	require.NotEmpty(t, r.Genre, "жанр настроения — в причину")
+
+	// Новичок (пустой профиль) — тоже получает известное под настроение.
+	items, err = feed.Mood(ctx, newbie, recsys.MoodLight, recsys.Speed{}, recsys.Exclusions{}, 10)
+	require.NoError(t, err)
+	require.Equal(t, read, items[0].WorkID, "самое известное — первым (прочитал его другой пользователь)")
+
+	// Скрытый жанр у пользователя — мимо (те же исключения, что каталог).
+	items, err = feed.Mood(ctx, newbie, recsys.MoodLight, recsys.Speed{}, recsys.Exclusions{Genres: []string{"detective"}}, 10)
+	require.NoError(t, err)
+	require.NotContains(t, ids(items), det1)
+
+	// «Короткое» — по размеру, с «≈ N минут».
+	items, err = feed.Mood(ctx, me, recsys.MoodShort, recsys.Speed{}, recsys.Exclusions{}, 10)
+	require.NoError(t, err)
+	require.Equal(t, []int64{story}, ids(items))
+	require.Equal(t, 48, items[0].Reasons[0].Minutes, "120 000 байт при 2 500 байт/мин")
 }
