@@ -175,3 +175,13 @@ describe('reasonParts: фаза 3 (обратная связь)', () => {
     expect(reasonText({ kind: 'to_read' }, now)).toBe('Хотели прочитать');
   });
 });
+
+// «Под настроение» (#580): настроение и жанр — в самой причине, без хвоста «под настроение».
+describe('reasonParts: mood', () => {
+  it('настроение, жанр по имени, минуты у «короткого»', () => {
+    const genreName = (c: string) => (c === 'detective' ? 'Детектив' : undefined);
+    expect(reasonText({ kind: 'mood', mood: 'light', genre: 'detective' }, now, { genreName })).toBe('Лёгкое · жанр: Детектив');
+    expect(reasonText({ kind: 'mood', mood: 'short', minutes: 48 }, now)).toBe('Короткое · ≈ 50 мин');
+    expect(reasonText({ kind: 'mood', mood: 'dark' }, now)).toBe('Мрачное');
+  });
+});
