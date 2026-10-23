@@ -56,6 +56,9 @@ func (b *AdaptationBackfiller) Run(ctx context.Context) {
 	}
 	b.logger.Info("adaptation backfill: started", "workers", adaptationBackfillWorkers)
 	for {
+		// Даты выхода — до обхода: обход очереди книг на 20 книг/мин идёт часами
+		// (прод 2026-10-23: 8,4 тыс. в очереди ≈ 7 ч), а фаза дат — один SPARQL.
+		b.refreshReleaseDates(ctx)
 		n := b.drain(ctx)
 		if ctx.Err() != nil {
 			return
@@ -64,7 +67,6 @@ func (b *AdaptationBackfiller) Run(ctx context.Context) {
 			b.logger.Info("adaptation backfill: pass complete", "processed", n)
 		}
 		b.recheckPosters(ctx)
-		b.refreshReleaseDates(ctx)
 		if ctx.Err() != nil {
 			return
 		}
@@ -302,9 +304,9 @@ func (c *AdaptationBackfillController) RunOnce() {
 	c.mu.Unlock()
 	spawn(func() {
 		b := NewAdaptationBackfiller(c.pool, c.enricher, rpm, c.logger)
+		b.refreshReleaseDates(ctx)
 		n := b.drain(ctx)
 		b.recheckPosters(ctx)
-		b.refreshReleaseDates(ctx)
 		cancel()
 		c.mu.Lock()
 		c.onceCancel = nil
