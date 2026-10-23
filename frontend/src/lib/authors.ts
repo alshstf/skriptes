@@ -36,8 +36,14 @@ export type AuthorListItem = {
   favorited_books_count: number;
   top_genres?: GenreCount[];
   languages?: string[];
+  /** Годы написания работ в каталоге — в пределах жизни автора, если она известна. */
   years_active?: YearsRange;
+  /** Годы жизни (Wikidata, #465); строка списка показывает их вместо годов работ (#579). */
+  born_year?: number;
+  died_year?: number;
   has_adaptations: boolean;
+  /** Лауреат премии из белого списка (автору или работе; без кинопремий) — значок в строке. */
+  has_awards?: boolean;
   /** Единый ВНЕШНИЙ рейтинг автора: max по книгам от COALESCE(LIBRATE, web).
    *  Float (web даёт дробные). */
   external_rating?: number;
@@ -49,6 +55,28 @@ export type AuthorListItem = {
   /** Число пользовательских оценок (для бейджа «N оценок»). */
   reader_rating_count?: number;
 };
+
+/**
+ * authorYears — подпись годов в строке автора (#579). Годы жизни, если известны
+ * («1891–1940», живущий — «р. 1965»): без подписи диапазон лет работ читался как
+ * годы жизни. Иначе — явно «работы 1919–1940» (год написания в каталоге). title —
+ * для подсказки.
+ */
+export function authorYears(
+  a: Pick<AuthorListItem, 'born_year' | 'died_year' | 'years_active'>,
+  now = new Date().getFullYear(),
+): { text: string; title: string } | null {
+  const { born_year: born, died_year: died, years_active: yrs } = a;
+  if (born && died) return { text: `${born}–${died}`, title: 'Годы жизни' };
+  // Без года смерти «р. 1820» — скорее пробел в Wikidata, чем долгожитель.
+  if (born && born >= now - 100) return { text: `р. ${born}`, title: 'Год рождения' };
+  if (died && !born && !yrs) return { text: `ум. ${died}`, title: 'Год смерти' };
+  if (yrs) {
+    const span = yrs.from === yrs.to ? String(yrs.from) : `${yrs.from}–${yrs.to}`;
+    return { text: `работы ${span}`, title: 'Годы написания работ в каталоге' };
+  }
+  return null;
+}
 
 export type AuthorListResponse = {
   items: AuthorListItem[];

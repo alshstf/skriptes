@@ -245,6 +245,48 @@ func TestListAuthorsFiltered_Aggregates(t *testing.T) {
 	require.Nil(t, tolstoy.YearsActive, "нет written_year → nil")
 }
 
+// TestListAuthorsFiltered_LifeYears — годы жизни в строке и годы работ в их
+// пределах (#579): год работы после смерти автора — опечатка fb2, не «пишет до».
+func TestListAuthorsFiltered_LifeYears(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	f := seedAuthorsList(t, ctx, pool)
+	svc := catalog.New(pool)
+	// Кинг с работами 1977 и 1986: «умер» в 1980 → 1986 за пределами жизни.
+	_, err := pool.Exec(ctx, `UPDATE authors SET born_year = 1947, died_year = 1980 WHERE id = $1`, f.kingID)
+	require.NoError(t, err)
+	_, err = pool.Exec(ctx, `UPDATE authors SET born_year = 1920 WHERE id = $1`, f.asimovID)
+	require.NoError(t, err)
+
+	res, err := svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{})
+	require.NoError(t, err)
+	byID := map[int64]catalog.AuthorListItem{}
+	for _, it := range res.Items {
+		byID[it.ID] = it
+	}
+	king := byID[f.kingID]
+	require.NotNil(t, king.BornYear)
+	require.Equal(t, 1947, *king.BornYear)
+	require.NotNil(t, king.DiedYear)
+	require.Equal(t, 1980, *king.DiedYear)
+	require.NotNil(t, king.YearsActive)
+	require.Equal(t, YearsOf(1977, 1977), *king.YearsActive, "1986 позже смерти — не в диапазоне")
+
+	asimov := byID[f.asimovID]
+	require.NotNil(t, asimov.BornYear)
+	require.Nil(t, asimov.DiedYear, "год смерти неизвестен — открытый верх")
+	require.Equal(t, YearsOf(1951, 1951), *asimov.YearsActive)
+
+	require.Nil(t, byID[f.tolstoy].BornYear, "годы жизни неизвестны")
+}
+
+// YearsOf — короткий конструктор диапазона для сравнений.
+func YearsOf(from, to int) catalog.YearsRange { return catalog.YearsRange{From: from, To: to} }
+
 // TestListAuthorsFiltered_Filters — фильтры режут множество авторов.
 func TestListAuthorsFiltered_Filters(t *testing.T) {
 	if testing.Short() {
@@ -403,6 +445,14 @@ func TestListAuthorsFiltered_Filters(t *testing.T) {
 	require.Equal(t, 2, res.Total)
 	require.True(t, ids(res)[f.asimovID])
 	require.True(t, ids(res)[f.tolstoy])
+	// Значок премий в строке (#579) — то же условие, что фильтр: у Кинга
+	// только кинопремия экранизации, у остальных премий нет.
+	res, err = svc.ListAuthorsFiltered(ctx, catalog.AuthorListParams{})
+	require.NoError(t, err)
+	for _, it := range res.Items {
+		want := it.ID == f.asimovID || it.ID == f.tolstoy
+		require.Equal(t, want, it.HasAwards, "has_awards у %s", it.FullName)
+	}
 	_, err = catalog.RecomputeAuthorFacets(ctx, pool)
 	require.NoError(t, err)
 	fc, err := svc.AuthorFacets(ctx, catalog.AuthorListParams{})

@@ -33,6 +33,18 @@ beforeEach(() => {
 afterEach(() => vi.unstubAllGlobals());
 
 describe('GenreChips', () => {
+  it('max — не больше стольких чипсов, остальное за «+N» (#579)', async () => {
+    render(wrap(<GenreChips genres={['aaa', 'bbb', 'ccc']} max={1} />));
+    expect(await screen.findByText('aaa')).toBeInTheDocument();
+    expect(screen.queryByText('bbb')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Ещё 2 жанр(ов)' })).toHaveTextContent('+2');
+  });
+
+  it('names — запасные имена, пока словарь жанров пуст', async () => {
+    render(wrap(<GenreChips genres={['sf_horror']} names={{ sf_horror: 'Ужасы' }} />));
+    expect(await screen.findByText('Ужасы')).toBeInTheDocument();
+  });
+
   it('без фильтра — жанры в исходном порядке', async () => {
     render(wrap(<GenreChips genres={['aaa', 'bbb', 'ccc']} />));
     const chips = await screen.findAllByText(/^(aaa|bbb|ccc)$/);
