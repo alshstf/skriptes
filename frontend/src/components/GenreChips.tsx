@@ -26,13 +26,27 @@ import { cn } from '@/lib/utils';
  *
  * jsdom не считает layout (offsetWidth=0) → там влезают все чипсы без
  * «+N»; реальное overflow-поведение проверяется Playwright'ом.
+ *
+ * max — не больше стольких чипсов, даже если влезает больше (строка автора
+ * на телефоне: один основной жанр и «+N», #579). names — запасные имена
+ * жанров по коду, пока словарь не загрузился (топ-жанры автора приходят с ними).
  */
 
 const GAP_PX = 4; // соответствует gap-1 (0.25rem)
 
-export function GenreChips({ genres, highlight }: { genres: string[]; highlight?: string[] }) {
+export function GenreChips({
+  genres,
+  highlight,
+  max,
+  names,
+}: {
+  genres: string[];
+  highlight?: string[];
+  max?: number;
+  names?: Record<string, string>;
+}) {
   const genreMap = useGenreMap();
-  const label = (code: string) => genreMap.get(code)?.display ?? code;
+  const label = (code: string) => genreMap.get(code)?.display ?? names?.[code] ?? code;
   const chipCls = genreChipClass(useGenreChipStyle());
 
   // Если активен фильтр по жанрам — совпавшие двигаем в начало (стабильно),
@@ -59,29 +73,30 @@ export function GenreChips({ genres, highlight }: { genres: string[]; highlight?
   // жанров, и когда подгрузился словарь (коды → display) — тогда нужно
   // переснять ширины.
   const labelsKey = ordered.map(label).join('');
+  const limit = max != null && max > 0 ? max : Infinity;
 
   // Сброс в фазу замера при изменении содержимого/ширин.
   useLayoutEffect(() => {
     setMeasuring(true);
     setVisible(ordered.length);
-  }, [labelsKey, ordered.length]);
+  }, [labelsKey, ordered.length, limit]);
 
   const computeVisible = (avail: number): number => {
     const w = widthsRef.current;
     // Ширина строки ещё не известна (layout не посчитан — например jsdom,
-    // или скрытый display:none-родитель). Показываем все; реальный
-    // пересчёт придёт на ResizeObserver, когда появится ширина.
-    if (avail <= 0) return ordered.length;
-    if (w.length === 0) return ordered.length;
+    // или скрытый display:none-родитель). Показываем все (в пределах max);
+    // реальный пересчёт придёт на ResizeObserver, когда появится ширина.
+    if (avail <= 0) return Math.min(ordered.length, limit);
+    if (w.length === 0) return Math.min(ordered.length, limit);
     let sumAll = 0;
     w.forEach((x, i) => {
       sumAll += x + (i > 0 ? GAP_PX : 0);
     });
-    if (sumAll <= avail) return w.length; // всё влезает — без «+N»
+    if (sumAll <= avail && w.length <= limit) return w.length; // всё влезает — без «+N»
     const plusW = plusWRef.current;
     let used = 0;
     let count = 0;
-    for (let i = 0; i < w.length; i++) {
+    for (let i = 0; i < w.length && count < limit; i++) {
       const add = (count > 0 ? GAP_PX : 0) + w[i];
       if (used + add + GAP_PX + plusW <= avail) {
         used += add;
@@ -105,7 +120,7 @@ export function GenreChips({ genres, highlight }: { genres: string[]; highlight?
     setVisible(computeVisible(row.clientWidth));
     setMeasuring(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [measuring, labelsKey]);
+  }, [measuring, labelsKey, limit]);
 
   // Пересчёт при изменении ширины строки (из кэша ширин).
   useEffect(() => {

@@ -21,10 +21,17 @@ import {
 } from '@/components/ui/sheet';
 import { GroupedGenresFilter } from '@/components/GroupedGenresFilter';
 import { useDebouncedValue } from '@/lib/useDebouncedValue';
-import { useGenreMap } from '@/lib/genres';
 import { useEffectiveContent, useLanguageMap, useLanguages, useSrcLanguages } from '@/lib/content';
-import { useGenreChipStyle, genreChipClass } from '@/lib/appearance';
-import { useAuthorFacets, useAuthorsList, type AuthorFacets, type AuthorListItem, type AuthorsListParams } from '@/lib/authors';
+import {
+  authorYears,
+  useAuthorFacets,
+  useAuthorsList,
+  type AuthorFacets,
+  type AuthorListItem,
+  type AuthorsListParams,
+} from '@/lib/authors';
+import { GenreChips } from '@/components/GenreChips';
+import { useMediaQuery } from '@/lib/useMediaQuery';
 import { cn } from '@/lib/utils';
 import { pluralBooks, pluralRu } from '@/lib/format';
 
@@ -283,45 +290,52 @@ export function AuthorsPage() {
 // ── строка автора ───────────────────────────────────────────────────
 
 function AuthorRow({ author }: { author: AuthorListItem }) {
-  const genreMap = useGenreMap();
   const langMap = useLanguageMap();
-  const chipCls = genreChipClass(useGenreChipStyle());
-
-  const years = author.years_active
-    ? author.years_active.from === author.years_active.to
-      ? String(author.years_active.from)
-      : `${author.years_active.from}–${author.years_active.to}`
-    : null;
-
+  // Телефон: один основной жанр и «+N» (#579); шире — сколько влезет в строку.
+  const narrow = useMediaQuery('(max-width: 639px)');
+  const years = authorYears(author);
   const langNames = (author.languages ?? []).slice(0, 4).map((c) => langMap.get(c) ?? c);
+  const genres = author.top_genres ?? [];
 
   return (
-    <Link
-      to="/authors/$id"
-      params={{ id: String(author.id) }}
-      className="flex gap-3 rounded-md p-3 transition hover:bg-accent/40 focus-visible:outline-2 focus-visible:outline-ring"
-    >
+    // Stretched link (как BookListItem): ссылка — на имени, её ::after растянут
+    // на строку; «+N» жанров и тултип рейтинга подняты над ним (z-10), чтобы
+    // внутри ссылки не было кнопок (#518).
+    <div className="relative flex gap-3 rounded-md p-3 transition hover:bg-accent/40">
       <AuthorAvatar photoPath={author.photo_path} fullName={author.full_name} />
       <div className="min-w-0 flex-1 space-y-1">
         <div className="flex items-center gap-1.5">
-          <h3 className="text-base font-medium leading-tight">{author.full_name}</h3>
+          <h3 className="text-base font-medium leading-tight">
+            <Link
+              to="/authors/$id"
+              params={{ id: String(author.id) }}
+              className="rounded-md after:absolute after:inset-0 focus-visible:outline-2 focus-visible:outline-ring"
+            >
+              {author.full_name}
+            </Link>
+          </h3>
           {author.note ? <span className="truncate text-sm text-muted-foreground">{author.note}</span> : null}
           {author.is_favorite ? (
             // Подписка на автора — колокольчик (монохром), не «избранное».
             <Bell className="size-3.5 shrink-0 fill-foreground" aria-label="Подписан" />
+          ) : null}
+          {author.has_awards ? (
+            <Award className="size-3.5 shrink-0 text-muted-foreground" aria-label="Лауреат премий" />
           ) : null}
           {author.has_adaptations ? (
             <Film className="size-3.5 shrink-0 text-muted-foreground" aria-label="Есть экранизации" />
           ) : null}
         </div>
 
-        <p className="flex flex-wrap items-center gap-x-1 text-sm text-muted-foreground tabular-nums">
-          <span>
+        {/* Сводка без текстовых «·» (как BookMeta, #470): значения — неразрывные
+            блоки через gap, при переносе не остаётся висячего разделителя.
+            Рейтинги — сразу после числа книг, годы — последними. */}
+        <p className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm text-muted-foreground tabular-nums">
+          <span className="whitespace-nowrap">
             {author.book_count === 0 && (author.compilation_count ?? 0) > 0
               ? `${author.compilation_count} ${pluralRu(author.compilation_count ?? 0, ['сборник', 'сборника', 'сборников'])} в каталоге`
               : `${author.book_count} ${pluralBooks(author.book_count)} в каталоге`}
           </span>
-          {years ? <span>· {years}</span> : null}
           {author.external_rating != null ? (
             // Единый ВНЕШНИЙ рейтинг (LIBRATE ∪ web) — иконка Globe (НЕ звезда:
             // звезда строго за избранным; НЕ Library: занята кнопкой «На полку»).
@@ -330,10 +344,10 @@ function AuthorRow({ author }: { author: AuthorListItem }) {
             <Tooltip>
               <TooltipTrigger asChild>
                 <span
-                  className="inline-flex items-center gap-0.5"
+                  className="relative z-10 inline-flex items-center gap-0.5 whitespace-nowrap"
                   aria-label={`Внешний рейтинг ${fmtRating(author.external_rating)} · ${externalRatingSourceLabel(author.external_rating_source)}`}
                 >
-                  · <Globe className="size-3 text-muted-foreground" aria-hidden /> {fmtRating(author.external_rating)}
+                  <Globe className="size-3 shrink-0" aria-hidden /> {fmtRating(author.external_rating)}
                 </span>
               </TooltipTrigger>
               <TooltipContent>
@@ -345,13 +359,20 @@ function AuthorRow({ author }: { author: AuthorListItem }) {
           {author.reader_rating != null ? (
             // Оценка читателей этого инстанса (book_ratings) — иконка BookHeart.
             <span
-              className="inline-flex items-center gap-0.5"
+              className="inline-flex items-center gap-0.5 whitespace-nowrap"
               aria-label={`Оценка читателей ${author.reader_rating.toFixed(1)} (${author.reader_rating_count ?? 0})`}
             >
-              · <BookHeart className="size-3 text-muted-foreground" aria-hidden /> {author.reader_rating.toFixed(1)}
+              <BookHeart className="size-3 shrink-0" aria-hidden /> {author.reader_rating.toFixed(1)}
               {author.reader_rating_count ? (
                 <span className="text-muted-foreground/70"> ({author.reader_rating_count})</span>
               ) : null}
+            </span>
+          ) : null}
+          {years ? (
+            // Годы жизни, а без них — явно «работы …» (#579): голый диапазон лет
+            // работ читался как годы жизни.
+            <span className="whitespace-nowrap" title={years.title}>
+              {years.text}
             </span>
           ) : null}
         </p>
@@ -362,21 +383,19 @@ function AuthorRow({ author }: { author: AuthorListItem }) {
           </p>
         ) : null}
 
-        {author.top_genres && author.top_genres.length > 0 ? (
-          <div className="flex flex-wrap gap-1 pt-0.5">
-            {author.top_genres.map((g) => (
-              <Badge key={g.code} variant="secondary" className={chipCls}>
-                {genreMap.get(g.code)?.display ?? g.display}
-              </Badge>
-            ))}
-          </div>
+        {genres.length > 0 ? (
+          <GenreChips
+            genres={genres.map((g) => g.code)}
+            names={Object.fromEntries(genres.map((g) => [g.code, g.display]))}
+            max={narrow ? 1 : undefined}
+          />
         ) : null}
 
         {langNames.length > 0 ? (
           <p className="text-xs text-muted-foreground">{langNames.join(', ')}</p>
         ) : null}
       </div>
-    </Link>
+    </div>
   );
 }
 
