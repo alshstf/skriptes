@@ -108,13 +108,26 @@
   padding-top: var(--safe-top-ui);
 }
 
+/* Высота шапки приложения (Layout.tsx): pt-safe-ui + h-14. Шапка тоже опущена
+   ниже полосы размытия iOS 26+ (#578: в PWA верх шапки уходил под системный
+   фейд статус-бара — кнопки у самого инсета читались хуже). Всё, что липнет
+   под шапку (саб-бары /books, /authors, фильтр полки) и прокрутка к якорям,
+   считает отступ от этой переменной, а не от env() напрямую. На десктопе,
+   в Android и в Safari-вкладке инсет 0 → 3.5rem, как раньше. */
+:root {
+  --header-h: calc(var(--safe-top-ui) + 3.5rem);
+}
+html {
+  scroll-padding-top: calc(var(--header-h) + 0.5rem);
+}
+
 /* Toaster (sonner) — позиция top-right: на iOS standalone уводим из-под статус-бара.
    Сам sonner ставит контейнер на фикс. top; добавляем safe-area-инсет. На десктопе
    инсет = 0. (Часть граблі №18 — safe-area для всех край-оверлеев.) Отступ 4rem —
    ниже шапки (h-14): иначе тост ложился на кнопки шапки (ридер: «Закладка
    поставлена» поверх «Заметок», а под курсором тост не исчезает). */
 [data-sonner-toaster][data-y-position="top"] {
-  top: calc(env(safe-area-inset-top) + 4rem) !important;
+  top: calc(var(--header-h) + 0.5rem) !important;
 }
 [data-sonner-toaster][data-y-position="bottom"] {
   bottom: calc(env(safe-area-inset-bottom) + 1rem) !important;
