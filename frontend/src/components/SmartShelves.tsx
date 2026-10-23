@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from '@tanstack/react-router';
 import { BookmarkPlus, ChevronRight, Pencil, SlidersHorizontal, Trash2 } from 'lucide-react';
 import { BookListItem } from '@/components/BookListItem';
+import { ShelfFilter } from '@/components/ShelfFilter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -12,10 +13,13 @@ import {
   useRenameSmartShelf,
   useSmartShelfBooks,
   useSmartShelves,
+  withShelfQuery,
   type SmartFilters,
   type SmartShelf,
 } from '@/lib/smartShelves';
 import { useOpenToggle } from '@/lib/openState';
+import { SHELF_FILTER_MIN, SHELF_FILTER_STICKY_MIN, filterStatus, useShelfFilter } from '@/lib/shelfFilter';
+import { useDebouncedValue } from '@/lib/useDebouncedValue';
 import { cn } from '@/lib/utils';
 
 // Умные полки (#389): кнопка «Сохранить как полку» на /books и блок полок на
@@ -132,20 +136,44 @@ function SmartShelfRow({ shelf }: { shelf: SmartShelf }) {
         <RenameSmartShelfDialog shelf={shelf} />
         <DeleteSmartShelfDialog shelf={shelf} />
       </div>
-      {open ? <SmartShelfBooks shelf={shelf} /> : null}
+      {open ? <SmartShelfBooks shelf={shelf} shelfTotal={total} /> : null}
     </li>
   );
 }
 
-function SmartShelfBooks({ shelf }: { shelf: SmartShelf }) {
-  const q = useSmartShelfBooks(shelf.filters, PREVIEW);
-  if (q.isLoading) return <p className="px-4 pb-3 text-sm italic text-muted-foreground">Загрузка…</p>;
+function SmartShelfBooks({ shelf, shelfTotal }: { shelf: SmartShelf; shelfTotal?: number }) {
+  // Раскрыто только превью (PREVIEW книг) — фильтр по названию ищет по ВСЕЙ
+  // полке: текст добавляется к поиску полки (#582), запрос — после паузы ввода.
+  const [filter, setFilter] = useShelfFilter(`s:${shelf.id}`);
+  const text = useDebouncedValue(filter.trim(), 300);
+  const filters = text ? withShelfQuery(shelf.filters, text) : shelf.filters;
+  const q = useSmartShelfBooks(filters, PREVIEW);
+  const showFilter = (shelfTotal ?? 0) >= SHELF_FILTER_MIN || filter !== '';
+  const filterBar = showFilter ? (
+    <ShelfFilter
+      value={filter}
+      onChange={setFilter}
+      sticky={(shelfTotal ?? 0) >= SHELF_FILTER_STICKY_MIN}
+      status={text && q.data ? filterStatus(q.data.total, shelfTotal ?? q.data.total) : undefined}
+    />
+  ) : null;
+  if (q.isLoading) {
+    return (
+      <div className="border-t border-border/60">
+        {filterBar}
+        <p className="px-4 py-3 text-sm italic text-muted-foreground">Загрузка…</p>
+      </div>
+    );
+  }
   const items = q.data?.items ?? [];
   const total = q.data?.total ?? 0;
   return (
     <div className="border-t border-border/60">
+      {filterBar}
       {items.length === 0 ? (
-        <p className="px-4 py-3 text-sm italic text-muted-foreground">Сейчас под фильтры ничего не подходит.</p>
+        text ? null : (
+          <p className="px-4 py-3 text-sm italic text-muted-foreground">Сейчас под фильтры ничего не подходит.</p>
+        )
       ) : (
         <ul className="divide-y divide-border/60">
           {items.map((b) => (
@@ -158,7 +186,7 @@ function SmartShelfBooks({ shelf }: { shelf: SmartShelf }) {
       <div className="border-t border-border/60 px-3 py-2">
         <Link
           to="/books"
-          search={shelf.filters}
+          search={filters}
           className="text-sm text-muted-foreground transition hover:text-foreground"
         >
           {total > items.length

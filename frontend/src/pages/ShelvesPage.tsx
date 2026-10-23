@@ -19,6 +19,7 @@ import { BookMeta } from '@/components/BookMeta';
 import { BookCover } from '@/components/BookCover';
 import { BookListItem } from '@/components/BookListItem';
 import { SmartShelvesSection } from '@/components/SmartShelves';
+import { ShelfFilter } from '@/components/ShelfFilter';
 import { Callout } from '@/components/ui/callout';
 import { Input } from '@/components/ui/input';
 import {
@@ -41,6 +42,13 @@ import {
 } from '@/lib/collections';
 import { usePresetBooks, usePresets, type Preset } from '@/lib/presets';
 import { useOpenToggle } from '@/lib/openState';
+import {
+  SHELF_FILTER_MIN,
+  SHELF_FILTER_STICKY_MIN,
+  filterStatus,
+  matchesShelfFilter,
+  useShelfFilter,
+} from '@/lib/shelfFilter';
 import { cn } from '@/lib/utils';
 
 // dragData/dropData — типизированные payload'ы DnD. Draggable книги несёт исходную
@@ -192,6 +200,7 @@ function PresetRow({ preset }: { preset: Preset }) {
 
 function PresetBooksList({ presetKey }: { presetKey: string }) {
   const q = usePresetBooks(presetKey);
+  const [filter, setFilter] = useShelfFilter(`p:${presetKey}`);
   if (q.isLoading) {
     return <p className="px-4 pb-3 text-sm italic text-muted-foreground">Загрузка…</p>;
   }
@@ -200,20 +209,34 @@ function PresetBooksList({ presetKey }: { presetKey: string }) {
     return <p className="px-4 pb-3 text-sm italic text-muted-foreground">Пока пусто.</p>;
   }
   const notes = q.data?.notes ?? {};
+  // Подборка приходит целиком (до 100 работ) — фильтр по загруженному (#582).
+  const shown = filter ? items.filter((b) => matchesShelfFilter(filter, b)) : items;
   return (
-    <ul className="divide-y divide-border/60 border-t border-border/60">
-      {items.map((b) => {
-        const note = notes[String(b.work_id ?? b.id)];
-        return (
-          <li key={b.id}>
-            {/* Подборка экранизаций ведёт сразу к фильмам на карточке (#442);
-                миниатюра обложки — как на умных полках и карточках автора. */}
-            <BookListItem book={b} showCover hash={presetKey === 'adaptations' ? 'adaptations' : undefined} />
-            {note ? <p className="-mt-2 px-3 pb-3 text-xs text-muted-foreground">{note}</p> : null}
-          </li>
-        );
-      })}
-    </ul>
+    <div className="border-t border-border/60">
+      {items.length >= SHELF_FILTER_MIN || filter ? (
+        <ShelfFilter
+          value={filter}
+          onChange={setFilter}
+          sticky={items.length >= SHELF_FILTER_STICKY_MIN}
+          status={filterStatus(shown.length, items.length)}
+        />
+      ) : null}
+      {shown.length > 0 ? (
+        <ul className="divide-y divide-border/60">
+          {shown.map((b) => {
+            const note = notes[String(b.work_id ?? b.id)];
+            return (
+              <li key={b.id}>
+                {/* Подборка экранизаций ведёт сразу к фильмам на карточке (#442);
+                    миниатюра обложки — как на умных полках и карточках автора. */}
+                <BookListItem book={b} showCover hash={presetKey === 'adaptations' ? 'adaptations' : undefined} />
+                {note ? <p className="-mt-2 px-3 pb-3 text-xs text-muted-foreground">{note}</p> : null}
+              </li>
+            );
+          })}
+        </ul>
+      ) : null}
+    </div>
   );
 }
 
@@ -299,6 +322,7 @@ function ShelfBooks({ collectionId }: { collectionId: number }) {
   const booksQ = useCollectionBooks(collectionId);
   const remove = useRemoveBookFromCollection();
   const books = booksQ.data ?? [];
+  const [filter, setFilter] = useShelfFilter(`c:${collectionId}`);
 
   if (booksQ.isLoading) {
     return <p className="px-4 pb-3 text-sm italic text-muted-foreground">Загрузка…</p>;
@@ -310,18 +334,33 @@ function ShelfBooks({ collectionId }: { collectionId: number }) {
       </p>
     );
   }
+  // Полка приходит целиком — фильтр по загруженному, без запроса (#582). Поле
+  // остаётся, пока в нём есть текст, даже если книг стало меньше порога.
+  const shown = filter ? books.filter((b) => matchesShelfFilter(filter, b)) : books;
   return (
-    <ul className="border-t border-border/60 px-2 py-1">
-      {books.map((b) => (
-        <ShelfBookRow
-          key={b.id}
-          book={b}
-          collectionId={collectionId}
-          onRemove={() => remove.mutate({ collectionId, bookId: b.id })}
-          removing={remove.isPending}
+    <div className="border-t border-border/60">
+      {books.length >= SHELF_FILTER_MIN || filter ? (
+        <ShelfFilter
+          value={filter}
+          onChange={setFilter}
+          sticky={books.length >= SHELF_FILTER_STICKY_MIN}
+          status={filterStatus(shown.length, books.length)}
         />
-      ))}
-    </ul>
+      ) : null}
+      {shown.length > 0 ? (
+        <ul className="px-2 py-1">
+          {shown.map((b) => (
+            <ShelfBookRow
+              key={b.id}
+              book={b}
+              collectionId={collectionId}
+              onRemove={() => remove.mutate({ collectionId, bookId: b.id })}
+              removing={remove.isPending}
+            />
+          ))}
+        </ul>
+      ) : null}
+    </div>
   );
 }
 

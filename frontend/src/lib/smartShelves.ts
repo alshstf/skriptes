@@ -67,6 +67,15 @@ export function toBookFilters(f: SmartFilters): BookFilters {
   };
 }
 
+/**
+ * withShelfQuery — фильтры полки плюс текст фильтра по названию (#582): текст
+ * дописывается к поиску полки, остальные фильтры не трогаем.
+ */
+export function withShelfQuery(f: SmartFilters, text: string): SmartFilters {
+  const q = [f.q?.trim(), text.trim()].filter(Boolean).join(' ');
+  return q ? { ...f, q } : f;
+}
+
 /** useSmartShelves — умные полки пользователя. */
 export function useSmartShelves() {
   return useQuery<SmartShelf[]>({
@@ -84,6 +93,9 @@ export function useSmartShelfBooks(filters: SmartFilters, limit: number, enabled
       apiFetch<BookListResponse>(`/api/books?${buildBooksParams(toBookFilters(filters), limit, 0)}`, { signal }),
     enabled,
     staleTime: 60_000,
+    // Фильтр по названию меняет запрос на каждое слово — список не мигает
+    // «Загрузкой», пока едет ответ (#582).
+    placeholderData: (prev) => prev,
   });
 }
 
