@@ -138,6 +138,11 @@ func TestPresets(t *testing.T) {
 	require.NoError(t, err)
 	require.ElementsMatch(t, []string{"Дети Дюны", "Чужая книга"}, titlesOf(res.Items), "2030 — не этот и не следующий год")
 	require.Equal(t, "2027 · «Фильм по «Дети Дюны»»", res.Notes[work("Дети Дюны")])
+	// Миниатюры в строках подборок: у каждой работы — издание для обложки, даже
+	// без cover_path (иначе фронт взял бы /api/covers/book/{work_id}, #399).
+	for _, it := range res.Items {
+		require.Positive(t, it.CoverEditionID, "cover_edition_id у «%s»", it.Title)
+	}
 
 	presets, err := svc.Presets(ctx, p)
 	require.NoError(t, err)

@@ -107,6 +107,10 @@ func (s *Service) PresetWorks(ctx context.Context, key string, p PresetParams) (
 		return PresetResult{}, err
 	}
 	HydrateListMeta(ctx, s.pool, items)
+	// Миниатюры в строках подборок: cover_edition_id нужен каждой работе, даже
+	// без обложки (иначе фронт взял бы /api/covers/book/{work_id} — чужое издание
+	// с тем же номером, #399); представитель ниже перекроет видимым изданием.
+	s.hydrateWorkCovers(ctx, items)
 	ex := presetExclusions(key, p)
 	s.hydrateWorkRepresentative(ctx, items, ex.ExcludeGenres, ex.ExcludeLangs)
 	return PresetResult{Items: items, Notes: notes}, nil
@@ -128,6 +132,7 @@ func (s *Service) VisibleWorks(ctx context.Context, ids []int64, p PresetParams)
 		return nil, err
 	}
 	HydrateListMeta(ctx, s.pool, items)
+	s.hydrateWorkCovers(ctx, items)
 	s.hydrateWorkRepresentative(ctx, items, p.ExcludeGenres, p.ExcludeLangs)
 	return items, nil
 }
