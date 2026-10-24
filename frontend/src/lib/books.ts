@@ -495,6 +495,9 @@ export function useReadingPosition(bookId: number | string | undefined) {
       apiFetch<{ pos: string }>(`/api/books/${bookId}/position`, { signal }),
     enabled: bookId !== undefined && bookId !== '',
     staleTime: 1_000,
+    // Ридер ждёт ответа именно этого открытия (isFetchedAfterMount): позицию
+    // могли сдвинуть на другом устройстве, а кэш — от прошлого открытия (#591).
+    refetchOnMount: 'always',
   });
 }
 
@@ -506,14 +509,22 @@ export function useReadingPosition(bookId: number | string | undefined) {
  * fraction опциональный — foliate-js обычно его даёт, но в edge-cases
  * (fixed-layout epub'ы) может прислать null. Backend в этом случае
  * не перетирает прежнее значение (см. SavePosition в history service).
+ * keepalive — при уходе со страницы (запрос доживёт до сервера).
  */
 export function useSavePosition() {
+  const qc = useQueryClient();
   return useMutation({
-    mutationFn: ({ bookId, pos, fraction }: { bookId: number; pos: string; fraction?: number }) =>
+    mutationFn: ({ bookId, pos, fraction, keepalive }: { bookId: number; pos: string; fraction?: number; keepalive?: boolean }) =>
       apiFetch<{ pos: string; fraction?: number }>(`/api/books/${bookId}/position`, {
         method: 'PUT',
         body: fraction !== undefined ? { pos, fraction } : { pos },
+        keepalive,
       }),
+    // Кэш позиции — тот, что сервер: повторное открытие ридера в этой вкладке
+    // не должно начинаться с места первого открытия (#591).
+    onSuccess: (_data, { bookId, pos }) => {
+      qc.setQueryData(['book', String(bookId), 'position'], { pos });
+    },
   });
 }
 

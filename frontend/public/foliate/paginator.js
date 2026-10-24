@@ -21,6 +21,10 @@ const easeOutCubic = x => 1 - (1 - x) ** 3
 // свайпа доезжает пропорционально быстрее, но не быстрее ANIMATION_MIN_MS.
 const ANIMATION_MS = 200
 const ANIMATION_MIN_MS = 80
+// skriptes: фокус после нажатия клавиши в пределах этого окна (мс) — навигация
+// с клавиатуры; иначе фокус вернул браузер (#591).
+const FOCUS_KEY_MS = 500
+
 // skriptes: анимация с ручкой finish() — досрочно ставит конечную точку.
 // Новый тап или касание во время анимации не ждут её конца и не теряются
 // (апстрим блокировал навигацию на всё время анимации).
@@ -629,7 +633,14 @@ export class Paginator extends HTMLElement {
                     this.#scrollToAnchor(selRange)
                 }
             })
-            doc.addEventListener('focusin', e => this.scrolled ? null :
+            // skriptes: за фокусом листаем только при навигации с клавиатуры
+            // (Tab по ссылкам). Браузер возвращает фокус последнему элементу и
+            // при возврате в окно — свернули браузер, сменили приложение, — и
+            // страница уезжала назад, к давно нажатой ссылке-сноске (#591).
+            let lastKeyAt = -Infinity
+            doc.addEventListener('keydown', () => lastKeyAt = performance.now())
+            doc.addEventListener('focusin', e => this.scrolled
+                || performance.now() - lastKeyAt > FOCUS_KEY_MS ? null :
                 // NOTE: `requestAnimationFrame` is needed in WebKit
                 requestAnimationFrame(() => this.#scrollToAnchor(e.target)))
         })
