@@ -27,6 +27,10 @@
 //     text} родителю; родитель хранит заметки и присылает {type:'set-highlights',
 //     cfis} — подсвечиваем через overlayer foliate; клик по подсветке →
 //     {type:'annotation-click', cfi}; {type:'goto', cfi} — перейти к месту.
+//  7. Оглавление и слайдер (#592, #593): после открытия — {type:'toc', items}
+//     (плоский список {id, label, href, depth}; в {type:'position'} — tocId
+//     текущей главы); {type:'goto', href} — к главе, {type:'goto-fraction',
+//     fraction} — к доле книги (слайдер прогресса).
 
 import './foliate/view.js'
 import { Overlayer } from './foliate/overlayer.js'
@@ -124,6 +128,23 @@ const applyHighlights = (next) => {
   highlights = next
 }
 
+// Оглавление книги плоским списком с глубиной; id — те же, что у
+// relocate.tocItem (их раздаёт foliate при open).
+const fileOf = href => (href || '').split('#')[0]
+// fb2cng кладёт в оглавление каждую сноску: «Сноски» → 1, 2, … 300 в том же
+// файле. Это не главы — сам раздел оставляем, номера сносок нет. (Главы с
+// номерами вместо названий — отдельные файлы, их не трогает.)
+const isNotesList = it => Boolean(it.subitems?.length) && it.subitems.every(s =>
+  !s.subitems?.length && fileOf(s.href) === fileOf(it.href) && /^\d+$/.test((s.label || '').trim()))
+const flattenToc = (items, depth = 0, out = []) => {
+  for (const it of items ?? []) {
+    const label = (it.label || '').trim()
+    if (label && it.href) out.push({ id: it.id ?? null, label, href: it.href, depth })
+    if (!isNotesList(it)) flattenToc(it.subitems, depth + 1, out)
+  }
+  return out
+}
+
 const turn = dir => {
   if (!view) return
   const go = dir === 'left' ? view.goLeft()
@@ -147,9 +168,16 @@ window.addEventListener('message', (e) => {
       applyHighlights(next)
       break
     }
-    case 'goto':
-      if (view && msg.cfi) view.goTo(msg.cfi).catch(() => {})
+    case 'goto': {
+      const target = msg.cfi || msg.href
+      if (view && target) view.goTo(target).catch(() => {})
       break
+    }
+    case 'goto-fraction': {
+      const f = Number(msg.fraction)
+      if (view && opened && Number.isFinite(f)) view.goToFraction(Math.min(1, Math.max(0, f))).catch(() => {})
+      break
+    }
     case 'clear-selection':
       selectionDoc?.getSelection()?.removeAllRanges()
       selectionDoc = null
@@ -343,7 +371,7 @@ const updateMarginals = (detail) => {
     const fraction = typeof detail.fraction === 'number' ? detail.fraction : null
     if (cfi && cfi !== lastCfi) {
       lastCfi = cfi
-      post({ type: 'position', cfi, fraction, label: detail.tocItem?.label || '' })
+      post({ type: 'position', cfi, fraction, label: detail.tocItem?.label || '', tocId: detail.tocItem?.id ?? null })
     }
     updateMarginals(detail)
     // Дочитывание: foliate fraction может быть 1.0 на последней
@@ -375,6 +403,7 @@ const updateMarginals = (detail) => {
       await view.renderer.next()
     }
     opened = true
+    post({ type: 'toc', items: flattenToc(view.book.toc) })
     const pending = highlights
     highlights = new Set()
     applyHighlights(pending)

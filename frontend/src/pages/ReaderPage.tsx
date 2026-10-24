@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useParams, useNavigate, useSearch } from '@tanstack/react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ALargeSmall, ArrowLeft, Bookmark, BookmarkCheck, Check, Maximize, Minimize, NotebookPen } from 'lucide-react';
+import { ALargeSmall, ArrowLeft, Bookmark, BookmarkCheck, Check, Maximize, Minimize, NotebookPen, TableOfContents } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { apiFetch } from '@/lib/api';
@@ -25,6 +25,7 @@ import {
 } from '@/lib/annotations';
 import { AnnotationsSheet, NoteDialog, SelectionBar } from '@/components/ReaderAnnotations';
 import { ReaderSettingsSheet } from '@/components/ReaderSettings';
+import { ProgressBar, TocSheet, type ReturnPlace, type TocItem } from '@/components/ReaderNavigation';
 
 /**
  * ReaderPage — full-screen ридер на foliate-js через iframe.
@@ -55,16 +56,19 @@ import { ReaderSettingsSheet } from '@/components/ReaderSettings';
  * стоит — не дублируем.
  *
  * Экран — только страница книги (на телефоне без лишних полей). Панель
- * (назад, закладка, заметки, настройки, во весь экран) — оверлей поверх
- * страницы: видна при открытии, прячется при перелистывании
- * (`{type:'turned'}`), тап по центру страницы — `{type:'toggle-ui'}`.
+ * (назад, оглавление, закладка, заметки, настройки, во весь экран; снизу —
+ * слайдер прогресса) — оверлей поверх страницы: видна при открытии, прячется
+ * при перелистывании (`{type:'turned'}`), тап по центру страницы —
+ * `{type:'toggle-ui'}`. Прыжок по оглавлению, слайдеру или заметке оставляет
+ * «Вернуться» на прежнее место (components/ReaderNavigation).
  * Настройки (тема, шрифт, поля, свайп/тап/анимация) — `lib/readerSettings`:
  * стартовые уходят в URL iframe, изменения — `{type:'settings'}`.
  */
 
 type ReaderMessage =
   | { type: 'ready' }
-  | { type: 'position'; cfi: string; fraction: number | null; label?: string }
+  | { type: 'position'; cfi: string; fraction: number | null; label?: string; tocId?: number | null }
+  | { type: 'toc'; items: TocItem[] }
   | { type: 'completed'; cfi: string }
   | { type: 'selection'; cfi: string; text: string }
   | { type: 'selection-clear' }
@@ -149,11 +153,17 @@ export function ReaderPage() {
   const saveAnnotation = useSaveAnnotation(bookId);
   const updateNote = useUpdateAnnotationNote();
   const deleteAnnotation = useDeleteAnnotation();
-  const [place, setPlace] = useState<{ cfi: string; fraction: number | null; label: string }>({
+  const [place, setPlace] = useState<{ cfi: string; fraction: number | null; label: string; tocId: number | null }>({
     cfi: '',
     fraction: null,
     label: '',
+    tocId: null,
   });
+  const [toc, setToc] = useState<TocItem[]>([]);
+  const [tocOpen, setTocOpen] = useState(false);
+  // Место до прыжка по оглавлению/слайдеру/заметке — для «Вернуться» (первое из
+  // серии прыжков: вернуться туда, где читал).
+  const [returnTo, setReturnTo] = useState<ReturnPlace | null>(null);
   const [selection, setSelection] = useState<{ cfi: string; text: string } | null>(null);
   const [notesOpen, setNotesOpen] = useState(false);
   const [noteFor, setNoteFor] = useState<{ cfi: string; excerpt: string; existing?: Annotation } | null>(null);
@@ -175,7 +185,7 @@ export function ReaderPage() {
     if (ready) toReader({ type: 'settings', settings: frame });
   }, [ready, frame, toReader]);
   const fullscreen = useFullscreen();
-  const overlayOpen = notesOpen || settingsOpen || noteFor !== null;
+  const overlayOpen = notesOpen || settingsOpen || tocOpen || noteFor !== null;
 
   // Клавиши, пока фокус в самом приложении (а не в странице книги — там их
   // ловит iframe): стрелки, PageUp/PageDown, пробел.
@@ -332,8 +342,11 @@ export function ReaderPage() {
           if (msg.cfi) {
             rememberLocalPosition(bookId, msg.cfi, msg.fraction);
             scheduleSave(msg.cfi, msg.fraction);
-            setPlace({ cfi: msg.cfi, fraction: msg.fraction, label: msg.label ?? '' });
+            setPlace({ cfi: msg.cfi, fraction: msg.fraction, label: msg.label ?? '', tocId: msg.tocId ?? null });
           }
+          break;
+        case 'toc':
+          setToc(Array.isArray(msg.items) ? msg.items : []);
           break;
         case 'selection':
           setSelection({ cfi: msg.cfi, text: msg.text });
@@ -391,6 +404,18 @@ export function ReaderPage() {
     window.addEventListener('message', handler);
     return () => window.removeEventListener('message', handler);
   }, [bookId, completed, save, scheduleSave, toggleRead, qc]);
+
+  // Прыжок по книге: запоминаем, откуда, — «Вернуться» в нижней полосе.
+  const placeRef = useRef(place);
+  placeRef.current = place;
+  const jump = useCallback(
+    (msg: Record<string, unknown>) => {
+      const from = placeRef.current;
+      if (from.cfi) setReturnTo((r) => r ?? { cfi: from.cfi, fraction: from.fraction });
+      toReader(msg);
+    },
+    [toReader],
+  );
 
   // Стартовое место книги фиксируем один раз: src iframe не должен меняться,
   // когда position перезапросится (смена src перезагрузила бы книгу).
@@ -529,6 +554,16 @@ export function ReaderPage() {
           variant="ghost"
           size="icon-sm"
           className="shrink-0"
+          disabled={!ready || toc.length === 0}
+          onClick={() => setTocOpen(true)}
+          aria-label="Оглавление"
+        >
+          <TableOfContents className="size-4" aria-hidden />
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          className="shrink-0"
           disabled={!ready || !place.cfi || saveAnnotation.isPending || deleteAnnotation.isPending}
           aria-label={bookmarkHere ? 'Убрать закладку' : 'Закладка на этой странице'}
           aria-pressed={Boolean(bookmarkHere)}
@@ -579,8 +614,21 @@ export function ReaderPage() {
           </Button>
         ) : null}
       </header>
+      {ready ? (
+        <ProgressBar
+          visible={uiVisible}
+          fraction={place.fraction}
+          returnTo={returnTo}
+          onSeek={(fraction) => jump({ type: 'goto-fraction', fraction })}
+          onReturn={() => {
+            if (returnTo) toReader({ type: 'goto', cfi: returnTo.cfi });
+            setReturnTo(null);
+          }}
+        />
+      ) : null}
       {selection ? (
         <SelectionBar
+          raised={uiVisible}
           text={selection.text}
           busy={saveAnnotation.isPending}
           onCancel={() => {
@@ -607,7 +655,7 @@ export function ReaderPage() {
         onOpenChange={setNotesOpen}
         items={annotations}
         onGo={(a) => {
-          toReader({ type: 'goto', cfi: a.cfi });
+          jump({ type: 'goto', cfi: a.cfi });
           setNotesOpen(false);
         }}
         onDelete={(a) => deleteAnnotation.mutate(a.id)}
@@ -644,6 +692,16 @@ export function ReaderPage() {
               },
             },
           );
+        }}
+      />
+      <TocSheet
+        open={tocOpen}
+        onOpenChange={setTocOpen}
+        items={toc}
+        currentId={place.tocId}
+        onGo={(it) => {
+          jump({ type: 'goto', href: it.href });
+          setTocOpen(false);
         }}
       />
       <ReaderSettingsSheet
