@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { placeLabel, type Annotation } from '@/lib/annotations';
+import { cn } from '@/lib/utils';
 
 // Закладки и выделения с заметками в ридере (#389): список, полоса действий
 // над выделением, диалог заметки.
@@ -76,11 +77,14 @@ export function AnnotationsSheet({
 export function SelectionBar({
   text,
   busy,
+  raised = false,
   onHighlight,
   onNote,
   onCancel,
 }: {
   text: string;
+  /** Над нижней полосой панели ридера (слайдер прогресса), когда она видна. */
+  raised?: boolean;
   busy: boolean;
   onHighlight: () => void;
   onNote: () => void;
@@ -90,7 +94,10 @@ export function SelectionBar({
     <div
       role="toolbar"
       aria-label="Выделенный текст"
-      className="absolute inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-10 mx-auto flex max-w-xl items-center gap-2 rounded-lg border border-border bg-popover p-2 shadow-lg"
+      className={cn(
+        'absolute inset-x-3 z-30 mx-auto flex max-w-xl items-center gap-2 rounded-lg border border-border bg-popover p-2 shadow-lg',
+        raised ? 'bottom-[calc(4.25rem+env(safe-area-inset-bottom))]' : 'bottom-[calc(0.75rem+env(safe-area-inset-bottom))]',
+      )}
     >
       <span className="min-w-0 flex-1 truncate px-1 text-sm text-muted-foreground">«{text}»</span>
       <Button size="sm" variant="outline" className="gap-1" disabled={busy} onClick={onHighlight}>
