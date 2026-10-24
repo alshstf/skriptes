@@ -54,6 +54,10 @@ test('импорт: файл → выбор → применить → отме�
   await page.goto('/me/import');
   await expect(page.getByRole('link', { name: 'Импорт' })).toBeVisible();
   await expect(page.getByRole('link', { name: /Скачать шаблон/ })).toHaveAttribute('href', '/api/me/import/template.csv');
+  await expect(page.getByRole('link', { name: 'ваша история из этой библиотеки' })).toHaveAttribute(
+    'href',
+    '/api/me/import/export.csv',
+  );
 
   await page.locator('input[type=file]').setInputFiles({
     name: 'goodreads_library_export.csv', mimeType: 'text/csv', buffer: Buffer.from('Title,My Rating\nX,5\n'),
