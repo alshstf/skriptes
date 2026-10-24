@@ -769,6 +769,7 @@ func run() error {
 		Download:    api.DownloadDeps{Books: booksSvc, Converter: conv, Limiter: downloadLimiter},
 		History:     api.HistoryDeps{Service: historySvc},
 		Recs:        api.RecsDeps{SearchLog: searchLog, Feed: recsys.NewFeed(pool)},
+		Import:      api.ImportDeps{Pool: pool, Search: booksSvc, MaxBytes: int64(cfg.ImportMaxMB) << 20},
 		Kindle: api.KindleDeps{
 			Service:   kindleSvc,
 			Email:     emailSender,

@@ -38,7 +38,7 @@ func TestMigrateAndPool(t *testing.T) {
 		"annotations", "app_settings",
 		"archives", "author_bio", "author_duplicate_rejections", "author_event_hides", "author_facets", "author_fantlab_lookups", "author_merges", "author_meta_recheck", "author_splits", "authors", "award_wins", "blocked_authors", "blocked_series", "book_adaptations", "book_authors", "book_cover_lookups", "book_external_rating_lookups", "book_genres", "book_rating_prompts", "book_ratings", "book_src_lang_lookups", "book_work_lookups", "book_year_lookups", "books",
 		"collections", "device_passwords", "favorite_authors", "favorite_series",
-		"feed_dismissals", "genres", "hidden_authors", "hidden_works", "import_jobs", "kindle_targets", "metadata_cache",
+		"feed_dismissals", "genres", "hidden_authors", "hidden_works", "import_batches", "import_jobs", "kindle_targets", "metadata_cache",
 		"metadata_overrides", "rating_reasons",
 		"read_positions", "reads", "search_log", "search_matches", "series", "session_mood", "sessions", "smart_shelves",
 		"user_collection_books", "user_collections", "user_favorite_genres",

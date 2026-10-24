@@ -137,6 +137,9 @@ test('карточка: «Мои заметки» ведут в ридер на 
         items: [
           { id: 1, book_id: 19, kind: 'highlight', cfi: 'epubcfi(/6/2!/4/2,/1:0,/1:20)', excerpt: 'Страх убивает разум.',
             note: 'литания', label: 'Литания', fraction: 0.4, created_at: '', updated_at: '' },
+          // Из импорта (Kindle, recsys/04): места в тексте нет — не ссылка.
+          { id: 2, book_id: 19, kind: 'highlight', cfi: 'import:0123456789abcdef', excerpt: 'Пряность должна течь.',
+            note: '', label: '', created_at: '', updated_at: '' },
         ],
       }),
     }),
@@ -146,4 +149,7 @@ test('карточка: «Мои заметки» ведут в ридер на 
   await expect(section).toBeVisible({ timeout: 10_000 });
   await expect(section.getByText('литания', { exact: true })).toBeVisible();
   await expect(section.getByRole('link')).toHaveAttribute('href', /\/books\/19\/read\?cfi=epubcfi/);
+  await expect(section.getByText('«Пряность должна течь.»')).toBeVisible();
+  await expect(section.getByText(/из импорта/)).toBeVisible();
+  await expect(section.getByRole('link')).toHaveCount(1);
 });

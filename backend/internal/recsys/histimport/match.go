@@ -7,6 +7,7 @@ import (
 	"slices"
 	"sort"
 	"strings"
+	"unicode"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/skriptes/skriptes/backend/internal/metadata"
@@ -15,10 +16,14 @@ import (
 )
 
 // Сопоставление книг из файла с работами каталога (recsys/04, 4.3). Точность
-// важнее полноты (грабля 13): «уверенно» — только когда совпали и название, и
-// автор (тем же гейтом имени, что у обогащения), и такая работа одна; иначе —
-// до трёх кандидатов на выбор пользователю; ISBN — лишь подсказка (в fb2 его
-// почти нет).
+// важнее полноты (грабля 13): «уверенно» — только когда название совпало точно
+// и автор — тем же гейтом имени, что у обогащения (нестрогое имя — только с
+// этим точным названием, как MatchLoose), и такая работа одна; иначе — до трёх
+// кандидатов на выбор пользователю; ISBN — лишь подсказка (в fb2 его почти нет).
+// Сухой прогон на проде (cmd/importdry) показал две ловушки, они — правила
+// classify: подзаголовок («451° по Фаренгейту. Повести. Рассказы» — сборник)
+// и русское название, совпавшее с оригинальным названием английского издания
+// (src_title «Пикник на обочине» у «Roadside Picnic»), — «на выбор».
 
 // Confidence — насколько уверенно сопоставлено.
 type Confidence string
@@ -70,7 +75,8 @@ type level int
 const (
 	levelNone    level = 0
 	levelPartial level = 1 // название: подзаголовок; автор: только фамилия
-	levelFull    level = 2
+	levelLoose   level = 2 // автор: нестрогое совпадение имени (транслит) — верно только с точным названием
+	levelFull    level = 3
 	levelUnknown level = -1 // у книги в файле нет автора
 )
 
@@ -144,15 +150,16 @@ func (m *Matcher) Match(ctx context.Context, items []Item, ex recsys.Exclusions)
 		out[i] = classify(it, candidatesOf(it, works, byAuthor, byName, byISBN))
 	}
 
-	// Запасной путь — поиск по названию для книг, которым по автору и ISBN
-	// не нашлось ни одного кандидата с подходящим названием.
+	// Запасной путь — поиск по названию для книг, которым по автору и ISBN не
+	// нашлось уверенного совпадения: новые кандидаты (переводное название,
+	// латинское имя, автор, которого гейт не взял) — к прежним.
 	if m.Search == nil {
 		return out, nil
 	}
 	found := map[int][]int64{}
 	var more []int64
 	for i, it := range items {
-		if out[i].Confidence != ConfidenceNone {
+		if out[i].Confidence == ConfidenceHigh {
 			continue
 		}
 		q := searchQuery(it)
@@ -173,9 +180,9 @@ func (m *Matcher) Match(ctx context.Context, items []Item, ex recsys.Exclusions)
 		return nil, err
 	}
 	for i, ids := range found {
-		var cands []*workInfo
+		cands := candidatesOf(items[i], works, byAuthor, byName, byISBN)
 		for _, id := range ids {
-			if w := works[id]; w != nil {
+			if w := works[id]; w != nil && !slices.Contains(cands, w) {
 				cands = append(cands, w)
 			}
 		}
@@ -190,16 +197,25 @@ func classify(it Item, cands []*workInfo) Match {
 		w    *workInfo
 		t, a level
 		isbn bool
+		// foreign — книга в файле названа по-русски, а у работы своё название
+		// не кириллицей: совпали через название оригинала (src_title) с
+		// переводом на другой язык — читали, скорее, оригинал.
+		foreign bool
 	}
+	cyr := hasCyrillic(it.Title)
 	var ss []scored
 	for _, w := range cands {
-		s := scored{w: w, t: titleLevel(it.Title, w.titles), a: worksAuthorLevel(it.Authors, w.authors)}
+		s := scored{w: w, t: titleLevel(it.Title, w.titles), a: worksAuthorLevel(it.Authors, w.authors),
+			foreign: cyr && !hasCyrillic(w.title)}
 		for _, isbn := range it.ISBNs {
 			if slices.Contains(w.isbns, isbn) {
 				s.isbn = true
 			}
 		}
-		if s.t > levelNone || s.isbn {
+		// Кандидат — точное название, подзаголовок у того же автора (хотя бы
+		// фамилия) или ISBN. Подзаголовок у чужого автора — шум с прода:
+		// «Пикник на обочине с Малышом», «„Пикник на обочине“ Братьев Стругацких».
+		if s.t == levelFull || (s.t == levelPartial && s.a >= levelPartial) || s.isbn {
 			ss = append(ss, s)
 		}
 	}
@@ -208,6 +224,9 @@ func classify(it Item, cands []*workInfo) Match {
 	}
 	sort.SliceStable(ss, func(i, j int) bool {
 		a, b := ss[i], ss[j]
+		if a.foreign != b.foreign {
+			return b.foreign
+		}
 		if a.a != b.a {
 			return a.a > b.a
 		}
@@ -222,23 +241,13 @@ func classify(it Item, cands []*workInfo) Match {
 		}
 		return a.w.id < b.w.id
 	})
-	// Уверенно: название и автор совпали, и такая работа одна (среди равных по
-	// названию — одна с точным названием).
+	// Уверенно: название совпало точно, автор — полностью или нестрого (с
+	// точным названием это и есть подтверждение книгой), работа не «чужая» по
+	// языку, и такая работа одна.
 	var sure []scored
 	for _, s := range ss {
-		if s.a == levelFull && s.t > levelNone {
+		if s.t == levelFull && s.a >= levelLoose && !s.foreign {
 			sure = append(sure, s)
-		}
-	}
-	if len(sure) > 1 {
-		var exact []scored
-		for _, s := range sure {
-			if s.t == levelFull {
-				exact = append(exact, s)
-			}
-		}
-		if len(exact) == 1 {
-			sure = exact
 		}
 	}
 	if len(sure) == 1 {
@@ -293,16 +302,27 @@ func candidatesOf(it Item, works map[int64]*workInfo, byAuthor map[int64][]*work
 }
 
 // authorLevel — автор каталога и имя из файла: полное совпадение (фамилия и
-// имя — гейт обогащения, или латинское имя из переводов словами), только
-// фамилия или ничего.
+// имя — гейт обогащения, или латинское имя из переводов словами), нестрогое
+// (транслит: Dostoevsky/Достоевский), только фамилия или ничего.
 func authorLevel(ca catAuthor, name string) level {
-	if metadata.AuthorNameMatches(ca.last, ca.first, name) || sameWords(ca.latin, name) {
+	switch {
+	case metadata.AuthorNameMatches(ca.last, ca.first, name) || sameWords(ca.latin, name):
 		return levelFull
-	}
-	if metadata.AuthorSurnameMatches(ca.last, name) {
+	case metadata.AuthorLooseMatches(ca.last, ca.first, name):
+		return levelLoose
+	case metadata.AuthorSurnameMatches(ca.last, name):
 		return levelPartial
 	}
 	return levelNone
+}
+
+func hasCyrillic(s string) bool {
+	for _, r := range s {
+		if unicode.Is(unicode.Cyrillic, r) {
+			return true
+		}
+	}
+	return false
 }
 
 // worksAuthorLevel — лучшее совпадение авторов работы с авторами книги файла.

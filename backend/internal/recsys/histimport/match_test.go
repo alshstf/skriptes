@@ -93,9 +93,10 @@ func (f *fakeSearch) SearchWorkCandidates(_ context.Context, q string, limit int
 	return nil, nil
 }
 
-// TestMatch — точность важнее полноты: «уверенно» — только одна работа с
-// совпавшими названием и автором; однофамилец, книга без автора, совпадение
-// по ISBN или транслит, который гейт не берёт, — на выбор; скрытое — нет.
+// TestMatch — точность важнее полноты: «уверенно» — только одна работа с точно
+// совпавшим названием и автором (транслит — только с точным названием);
+// однофамилец, книга без автора, совпадение по ISBN или по подзаголовку,
+// «чужой» по языку перевод — на выбор; скрытое — нет.
 func TestMatch(t *testing.T) {
 	if testing.Short() {
 		t.Skip("integration: requires docker")
@@ -111,6 +112,8 @@ func TestMatch(t *testing.T) {
 	bulg := c.author("Булгаков", "Михаил", "")
 	lev, alexei := c.author("Толстой", "Лев", ""), c.author("Толстой", "Алексей", "")
 	other := c.author("Другой", "Автор", "")
+	brothers := c.author("Стругацкие", "Братья", "") // коллективный автор, гейт имени его не берёт
+	dost := c.author("Достоевский", "Федор", "")
 
 	picnic := c.work("Пикник на обочине", []int64{strA, strB})
 	walk := c.work("Долгая прогулка", []int64{king}, ed{lang: "ru", src: "The Long Walk"})
@@ -124,6 +127,13 @@ func TestMatch(t *testing.T) {
 	c.exec(`UPDATE works SET instance_hidden = true WHERE id = $1`, hidden)
 	c.work("Немецкое", []int64{strA}, ed{lang: "de"})
 	byISBN := c.work("Совсем иначе", []int64{other}, ed{lang: "ru", isbn: "9785170000001"})
+	// Ловушки с прода (cmd/importdry): русский оригинал — у «Стругацких
+	// Братьев», а у английского перевода src_title — русское название.
+	godRu := c.work("Трудно быть богом", []int64{brothers})
+	godEn := c.work("Hard to Be a God", []int64{strA, strB}, ed{lang: "en", src: "Трудно быть богом"})
+	// Совпадение только по подзаголовку — сборник, а не роман.
+	guard := c.work("Белая гвардия. Пьесы", []int64{bulg})
+	crime := c.work("Crime and Punishment", []int64{dost}, ed{lang: "en"})
 
 	items := []Item{
 		{Title: "Пикник на обочине", Authors: []string{"Стругацкий, Аркадий"}},        // 0 high
@@ -137,10 +147,15 @@ func TestMatch(t *testing.T) {
 		{Title: "Немецкое", Authors: []string{"Аркадий Стругацкий"}},                              // 8 язык скрыт у пользователя
 		{Title: "Другое название", Authors: []string{"Кто-то"}, ISBNs: []string{"9785170000001"}}, // 9 ISBN — на выбор
 		{Title: "Несуществующая книга", Authors: []string{"Стругацкий Аркадий"}},                  // 10 нет
+		{Title: "Трудно быть богом", Authors: []string{"Аркадий Стругацкий"}},                     // 11 перевод «чужой» — на выбор
+		{Title: "Белая гвардия", Authors: []string{"Михаил Булгаков"}},                            // 12 только подзаголовок — на выбор
+		{Title: "Crime and Punishment", Authors: []string{"Fyodor Dostoevsky"}},                   // 13 нестрогое имя + точное название
 	}
 	search := &fakeSearch{byTitle: map[string][]int64{
-		"Пикник на обочине": {picnic},
-		"Мы":                {weZam, weIv},
+		"Пикник на обочине":    {picnic},
+		"Мы":                   {weZam, weIv},
+		"Трудно быть богом":    {godRu},
+		"Crime and Punishment": {crime},
 	}}
 	m := &Matcher{DB: pool, Search: search}
 	got, err := m.Match(ctx, items, recsys.Exclusions{Langs: []string{"de"}})
@@ -168,7 +183,7 @@ func TestMatch(t *testing.T) {
 
 	high(0, picnic)
 	require.Equal(t, []string{"Стругацкий Аркадий", "Стругацкий Борис"}, got[0].Candidates[0].Authors)
-	medium(1, picnic)
+	medium(1, picnic) // транслит, который не берёт и нестрогий гейт
 	high(2, walk)
 	high(3, weZam)
 	medium(4, weZam, weIv)
@@ -178,11 +193,15 @@ func TestMatch(t *testing.T) {
 	none(8)
 	medium(9, byISBN)
 	none(10)
+	medium(11, godRu, godEn)
+	require.Equal(t, godRu, got[11].Candidates[0].WorkID, "русская работа — первой")
+	medium(12, guard)
+	high(13, crime)
 
 	// Запасной поиск — только для ненайденных, с названием без хвостов и автором.
-	require.Contains(t, search.queries, "Пикник на обочине Arkady Strugatsky")
 	require.Contains(t, search.queries, "Мы")
-	require.NotContains(t, search.queries, "Мы Евгений Замятин")
+	require.Contains(t, search.queries, "Трудно быть богом Аркадий Стругацкий", "спорные — тоже")
+	require.NotContains(t, search.queries, "Мы Евгений Замятин", "уверенные — нет")
 }
 
 func TestTitleVariants(t *testing.T) {

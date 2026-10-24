@@ -77,6 +77,16 @@ export function useDeleteAnnotation() {
 }
 
 /** placeLabel — «Глава 3 · 42 %» для списка. */
+/**
+ * Подчёркивания из импорта истории чтения (Kindle и др., recsys/04): места в
+ * тексте нет — cfi вида «import:…». В ридере их не рисуем и к ним не переходим.
+ */
+export const IMPORT_CFI_PREFIX = 'import:';
+
+export function isImportedAnnotation(a: Pick<Annotation, 'cfi'>): boolean {
+  return a.cfi.startsWith(IMPORT_CFI_PREFIX);
+}
+
 export function placeLabel(a: Pick<Annotation, 'label' | 'fraction'>): string {
   const parts = [];
   if (a.label) parts.push(a.label);

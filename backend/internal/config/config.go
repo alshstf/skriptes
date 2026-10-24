@@ -43,6 +43,11 @@ type Config struct {
 	// ненайденного для админа). 0 — лог не вести.
 	SearchLogDays int `env:"SKRIPTES_SEARCH_LOG_DAYS" envDefault:"365"`
 
+	// ImportMaxMB — предел файла импорта истории чтения (профиль → «Импорт»:
+	// Kindle, calibre, Goodreads, CSV), МБ. Файл разбирается в памяти и не
+	// сохраняется.
+	ImportMaxMB int `env:"SKRIPTES_IMPORT_MAX_MB" envDefault:"20"`
+
 	// FBCPath — путь к бинарю fb2cng (rupor-github/fb2cng).
 	// В production-образе лежит в /usr/local/bin/fbc; пустая строка =
 	// искать в $PATH.

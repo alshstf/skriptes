@@ -25,7 +25,9 @@ RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH \
     go build -trimpath -ldflags="-s -w" \
     -o /out/recseval ./cmd/recseval && \
     go build -trimpath -ldflags="-s -w" \
-    -o /out/searchdry ./cmd/searchdry
+    -o /out/searchdry ./cmd/searchdry && \
+    go build -trimpath -ldflags="-s -w" \
+    -o /out/importdry ./cmd/importdry
 
 # ── bio dataset ─────────────────────────────────────────────────
 # Датасет био-таймлайна — отдельный репо alshstf/skriptes-bio; коммит закреплён
@@ -90,6 +92,7 @@ COPY --from=builder /out/skriptes-seed /usr/local/bin/skriptes-seed
 COPY --from=builder /out/skriptes-explain /usr/local/bin/skriptes-explain
 COPY --from=builder /out/recseval /usr/local/bin/recseval
 COPY --from=builder /out/searchdry /usr/local/bin/searchdry
+COPY --from=builder /out/importdry /usr/local/bin/importdry
 COPY --from=fb2cng  /opt/fb2cng/fbc    /usr/local/bin/fbc
 COPY --from=biodata /out/bio.pack.gz   /usr/share/skriptes/bio.pack.gz
 # Smoke-test: бинарь должен запускаться в финальном образе. Если

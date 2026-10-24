@@ -26,6 +26,9 @@ var ErrInvalidMood = errors.New("unknown mood")
 // SetRating — поставить/изменить оценку пользователя работе. Повторный вызов
 // обновляет оценку и rated_at. Снятие оценки — RemoveRating.
 //
+// Оценка и «прочитано» поверх импорта (recsys/04) снимают метку пакета
+// (import_batch_id): подтверждённое пользователем откат импорта не трогает.
+//
 // Оценил ⇒ прочитал: заодно авто-проставляем явную «Прочитана» (completed_at) на
 // представительном издании работы (предпочитаем издание, у которого уже есть
 // reads-строка), чтобы книга считалась прочитанной во всём приложении. Обе записи
@@ -44,7 +47,7 @@ func (s *Service) SetRating(ctx context.Context, userID, workID int64, rating in
 		INSERT INTO book_ratings (user_id, work_id, rating)
 		VALUES ($1, $2, $3)
 		ON CONFLICT (user_id, work_id)
-		DO UPDATE SET rating = EXCLUDED.rating, rated_at = now()
+		DO UPDATE SET rating = EXCLUDED.rating, rated_at = now(), import_batch_id = NULL
 	`, userID, workID, rating); err != nil {
 		return fmt.Errorf("set rating: %w", err)
 	}
@@ -65,7 +68,7 @@ func (s *Service) SetRating(ctx context.Context, userID, workID int64, rating in
 		ORDER BY (EXISTS (SELECT 1 FROM reads r WHERE r.user_id = $1 AND r.book_id = b.id)) DESC, b.id
 		LIMIT 1
 		ON CONFLICT (user_id, book_id)
-		DO UPDATE SET completed_at = COALESCE(reads.completed_at, now()), updated_at = now()
+		DO UPDATE SET completed_at = COALESCE(reads.completed_at, now()), updated_at = now(), import_batch_id = NULL
 	`, userID, workID); err != nil {
 		return fmt.Errorf("set rating: auto-mark read: %w", err)
 	}

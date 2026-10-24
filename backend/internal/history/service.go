@@ -70,7 +70,8 @@ func (s *Service) RecordView(ctx context.Context, userID, bookID int64) error {
 // (rating_prompts.go — download/Kindle пишет reads.acquired_at) и
 // SavePosition (ридер). Находка аудита 2026-07.)
 
-// MarkRead — пользователь явно отметил книгу как прочитанную.
+// MarkRead — пользователь явно отметил книгу как прочитанную (метку импорта
+// снимает — см. recsys/histimport.Undo).
 // Идемпотентна: повторный вызов перетирает completed_at тем же now() —
 // это нормально (точное время «первой отметки» нам не критично).
 //
@@ -82,7 +83,7 @@ func (s *Service) MarkRead(ctx context.Context, userID, bookID int64) error {
 		INSERT INTO reads (user_id, book_id, completed_at, updated_at)
 		VALUES ($1, $2, now(), now())
 		ON CONFLICT (user_id, book_id)
-		DO UPDATE SET completed_at = now(), updated_at = now()
+		DO UPDATE SET completed_at = now(), updated_at = now(), import_batch_id = NULL
 	`, userID, bookID)
 	if err != nil {
 		return fmt.Errorf("mark read: %w", err)
@@ -108,7 +109,7 @@ func (s *Service) MarkRead(ctx context.Context, userID, bookID int64) error {
 // книги без work_id (легаси-инвариант).
 func (s *Service) UnmarkRead(ctx context.Context, userID, bookID int64) error {
 	_, err := s.pool.Exec(ctx, `
-		UPDATE reads SET completed_at = NULL, updated_at = now()
+		UPDATE reads SET completed_at = NULL, updated_at = now(), import_batch_id = NULL
 		WHERE user_id = $1 AND book_id IN (
 			SELECT b2.id FROM books b1
 			JOIN books b2 ON b2.work_id = b1.work_id

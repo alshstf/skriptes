@@ -3,7 +3,7 @@ import { Bookmark, Highlighter, Trash2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { placeLabel, type Annotation } from '@/lib/annotations';
+import { isImportedAnnotation, placeLabel, type Annotation } from '@/lib/annotations';
 import { cn } from '@/lib/utils';
 
 // Закладки и выделения с заметками в ридере (#389): список, полоса действий
@@ -41,7 +41,13 @@ export function AnnotationsSheet({
           <ul className="flex-1 divide-y divide-border overflow-y-auto">
             {items.map((a) => (
               <li key={a.id} className="flex gap-2 px-4 py-3">
-                <button type="button" className="min-w-0 flex-1 space-y-1 text-left" onClick={() => onGo(a)}>
+                {/* Подчёркивание из импорта — без места в тексте: не кнопка. */}
+                <button
+                  type="button"
+                  className="min-w-0 flex-1 space-y-1 text-left disabled:cursor-default"
+                  disabled={isImportedAnnotation(a)}
+                  onClick={() => onGo(a)}
+                >
                   <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
                     {a.kind === 'bookmark' ? (
                       <Bookmark className="size-3.5 shrink-0" aria-hidden />
@@ -49,7 +55,7 @@ export function AnnotationsSheet({
                       <Highlighter className="size-3.5 shrink-0" aria-hidden />
                     )}
                     {a.kind === 'bookmark' ? 'Закладка' : 'Выделение'}
-                    {placeLabel(a) ? ` · ${placeLabel(a)}` : ''}
+                    {isImportedAnnotation(a) ? ' · из импорта' : placeLabel(a) ? ` · ${placeLabel(a)}` : ''}
                   </span>
                   {a.excerpt ? <span className="line-clamp-3 block text-sm text-pretty">«{a.excerpt}»</span> : null}
                   {a.note ? <span className="block text-sm text-pretty text-muted-foreground">{a.note}</span> : null}

@@ -70,6 +70,8 @@ services:
       SKRIPTES_INPX_FILES: ${SKRIPTES_INPX_FILES:-}
       # Как часто проверять INPX и импортировать новый без рестарта; 0 — только при старте.
       SKRIPTES_INPX_WATCH_INTERVAL: ${SKRIPTES_INPX_WATCH_INTERVAL:-10m}
+      # Импорт истории чтения из файла (профиль → «Импорт»): предел файла, МБ.
+      SKRIPTES_IMPORT_MAX_MB: ${SKRIPTES_IMPORT_MAX_MB:-20}
       SKRIPTES_CACHE_ROOT: /cache
       SKRIPTES_COOKIE_SECURE: ${SKRIPTES_COOKIE_SECURE:-true}
       SKRIPTES_COOKIE_DOMAIN: ${SKRIPTES_COOKIE_DOMAIN:-}

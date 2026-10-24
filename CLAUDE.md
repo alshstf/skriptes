@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.67.0**.
+конвертируются на лету через fb2cng. Текущая версия — **1.68.0**.
 
 ## Рабочее окружение
 
@@ -62,7 +62,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 - **Релиз:** бамп `SKRIPTES_VERSION` в `infra/.env.example` + README + «Текущая версия» здесь + запись в
   `docs/assistant/release-history.md` → PR → merge → аннотированный тег `vX.Y.Z` → `release.yml` (multi-arch в ghcr).
   Moving-теги `latest`/`X.Y`/`X` — только на stable. `infra/.env.public.example` держит `SKRIPTES_VERSION=1`.
-- **Миграции:** верхняя — `0070_adaptation_release_date`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
+- **Миграции:** верхняя — `0071_import_batches`. Номер — на момент МЕРЖА (параллельные ветки берут один номер; кто
   мержится вторым — перенумеровывается: golang-migrate молча пропустит меньший номер). Применённые не правим.
   Разовое преобразование данных без смены схемы — идемпотентный шаг на старте (гейт в `app_settings`), не миграция.
 
@@ -168,7 +168,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 | Поиск-подсказки (Cmd+K, hero) | `components/CommandPalette.tsx`, `lib/suggest.ts`; авторы/серии — `catalog/suggest.go` |
 | Главная | `pages/HomePage.tsx`, `lib/home.ts`, `history/service.go` |
 | Рекомендации: лента Главной с причинами, близость пользователь × работа, правила | `backend/internal/recsys/` (контракт `Item`/`Reason`, `BuildProfile`, веса — `DefaultWeights`; правила фазы 2 — `rules.go` (`Rule`, `Rules`, `Profile.Engaged`), `rule_*.go`, пул «забытой классики» — `classics.go` (фоновый `RefreshLoop`), «на вечер» — `rule_tonight.go` (не в `Rules`: нужен параметр минут), карточки с исключениями — `hydrate.go`, `feed.go` (`Section`, `Related`, `Tonight`)), `api/recs.go` (`GET /me/recommendations?section=`, `…/related?work_id=`, `GET/PUT /me/home-feed`), фронт — `lib/recs.ts` (`HOME_SECTIONS`), `lib/recReasons.ts`, `lib/homeFeed.ts`, `components/Rec*.tsx`, `Shelf.tsx`; харнесс оценки — `cmd/recseval`, сухой прогон персоны поиска — `cmd/searchdry` (оба только чтение, можно на проде); план — `~/projects/plans/skriptes/recsys-roadmap.md` |
-| Импорт истории чтения (Kindle, calibre, Goodreads, CSV) | `internal/recsys/histimport` (разбор `Parse`, сопоставление `Matcher` — гейты грабли 13); план — `recsys/04` |
+| Импорт истории чтения (Kindle, calibre, Goodreads, CSV) | `internal/recsys/histimport` (`Parse`, `Matcher` — гейты грабли 13, `Apply`/`Undo` — метка `import_batch_id`, пользовательская запись её снимает), `api/import.go`, `pages/ProfileImportPage.tsx`; сухой прогон — `cmd/importdry`; план — `recsys/04` |
 | Авторы (список, фильтры, известность) | `pages/AuthorsPage.tsx`, `catalog/authors_list.go`, `catalog/author_stats.go`, `importer/author_renown.go` |
 | Премии | `internal/awards/`, `api/awards.go`, `pages/AwardsPage.tsx`, `components/AwardBadges.tsx` |
 | Жанры, полки, подборки, умные полки | `pages/ShelvesPage.tsx`, `internal/collections/` (`smart.go`), `books/presets.go`, `components/SmartShelves.tsx` |
