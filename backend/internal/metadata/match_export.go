@@ -35,3 +35,11 @@ func WorkTitleKey(s string) string { return workTitleKey(s) }
 // TitlesMatch — названия одного произведения: равны по ключу или одно — начало
 // другого с подзаголовком («Dune: A Novel»).
 func TitlesMatch(a, b string) bool { return titlesMatch(a, b) }
+
+// AuthorLooseMatches — имя совпало лишь нестрого: разные передачи иностранного
+// или русского имени (Dostoevsky/Достоевский, Ширли/Шерли). Так совпадают и
+// разные люди (Фирсов/Фурсов), поэтому — только с подтверждением книгой, как
+// MatchLoose у обогащения (импорт: точное название работы).
+func AuthorLooseMatches(lastName, firstName, candidate string) bool {
+	return looseNameMatches(AuthorQuery{LastName: lastName, FirstName: firstName}, candidate)
+}

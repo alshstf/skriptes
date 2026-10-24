@@ -21,6 +21,7 @@ import {
   useDeleteAnnotation,
   useSaveAnnotation,
   useUpdateAnnotationNote,
+  isImportedAnnotation,
   type Annotation,
 } from '@/lib/annotations';
 import { AnnotationsSheet, NoteDialog, SelectionBar } from '@/components/ReaderAnnotations';
@@ -208,8 +209,9 @@ export function ReaderPage() {
   const annotationsRef = useRef<Annotation[]>([]);
   annotationsRef.current = annotations;
   // Подсветки — в iframe, как только ридер готов и при каждом изменении.
+  // Подчёркивания из импорта (Kindle и др.) места в тексте не имеют — только списком.
   const highlightCfis = useMemo(
-    () => annotations.filter((a) => a.kind === 'highlight').map((a) => a.cfi),
+    () => annotations.filter((a) => a.kind === 'highlight' && !isImportedAnnotation(a)).map((a) => a.cfi),
     [annotations],
   );
   useEffect(() => {

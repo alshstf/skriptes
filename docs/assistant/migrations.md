@@ -137,3 +137,12 @@ added_at)` и `blocked_series(user_id, series_id, added_at)` — «не пред
 P577 с точностью по VALUES, дата — самая точная и ранняя в пределах `year` фильма (фестиваль прошлого года не в счёт),
 на все строки фильма `(provider, ext_id)` разом, TTL 3 дня. Читает подборка «Экранизации» (`books/presets.go`):
 порядок и подпись «1 мая 2026».
+
+## 0071_import_batches
+
+Импорт истории чтения из файла (recsys/04, 4.4, 1.68.0): `import_batches(id, user_id, source kindle|calibre|goodreads|csv,
+file_name, items, applied, ratings, reads, to_read, highlights, kept, applied_at, undone_at)` — итоги пакета, файла нет;
+nullable `import_batch_id` (FK `ON DELETE SET NULL`, частичные индексы) в `book_ratings`, `reads`, `annotations`,
+`user_collection_books` — что записал пакет. Пишет `histimport.Apply` (своё пользователя не перетирает), откат —
+`histimport.Undo` (удаляет помеченное; у `reads` снимает `completed_at`, строку — только пустую). Пользовательская запись
+поверх снимает метку: `history.SetRating` (оценка и авто-«прочитано»), `MarkRead`, `UnmarkRead`, `UpdateAnnotationNote`.

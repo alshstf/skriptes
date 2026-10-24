@@ -84,10 +84,11 @@ func (s *Service) SaveAnnotation(ctx context.Context, userID, bookID int64, a An
 	return out, nil
 }
 
-// UpdateAnnotationNote меняет заметку.
+// UpdateAnnotationNote меняет заметку (у подчёркивания из импорта — снимает
+// метку пакета: откат импорта его больше не удалит).
 func (s *Service) UpdateAnnotationNote(ctx context.Context, userID, id int64, note string) (Annotation, error) {
 	row := s.pool.QueryRow(ctx, `
-		UPDATE annotations a SET note = $3, updated_at = now()
+		UPDATE annotations a SET note = $3, updated_at = now(), import_batch_id = NULL
 		WHERE a.id = $1 AND a.user_id = $2
 		RETURNING `+annotationCols, id, userID, clip(note, maxNote))
 	out, err := scanAnnotation(row)

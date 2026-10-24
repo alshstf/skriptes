@@ -51,7 +51,10 @@ export async function apiFetch<T>(path: string, opts: RequestOpts = {}): Promise
     keepalive: opts.keepalive,
     headers: {},
   };
-  if (opts.body !== undefined) {
+  if (opts.body instanceof FormData) {
+    // multipart (загрузка файла): границу частей в Content-Type ставит браузер.
+    init.body = opts.body;
+  } else if (opts.body !== undefined) {
     init.body = JSON.stringify(opts.body);
     (init.headers as Record<string, string>)['Content-Type'] = 'application/json';
   }

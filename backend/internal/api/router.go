@@ -39,6 +39,8 @@ type Deps struct {
 	Bio BioDeps
 	// Hiding — скрытие авторов и работ на инстансе; Store == nil → ручки не монтируются.
 	Hiding HidingDeps
+	// Import — импорт истории чтения из файла (recsys/04); Pool == nil → ручки не монтируются.
+	Import ImportDeps
 	// OPDS — опционально. Если Handler == nil, /opds/* не монтируется.
 	// BaseURL прокидывается извне (cfg.AllowedOrigins[0] обычно).
 	OPDS OPDSDeps
@@ -254,6 +256,14 @@ func NewRouter(d Deps) http.Handler {
 					r.Get("/me/search-log", handleListSearchLog(d.Recs))
 					r.Delete("/me/search-log", handleDeleteSearchLog(d.Recs, false))
 					r.Delete("/me/search-log/{id}", handleDeleteSearchLog(d.Recs, true))
+					// Импорт истории чтения из файла (recsys/04, import.go).
+					if d.Import.Pool != nil {
+						r.Post("/me/import/preview", handleImportPreview(d.Import, d.Content))
+						r.Post("/me/import/apply", handleImportApply(d.Import))
+						r.Get("/me/import/batches", handleImportBatches(d.Import))
+						r.Delete("/me/import/batches/{id}", handleImportUndo(d.Import))
+						r.Get("/me/import/template.csv", handleImportTemplate())
+					}
 					// Явная отметка «прочитано» (кнопка на карточке книги +
 					// auto-mark из ридера при дочитывании). Основной сигнал
 					// для read_count в статистике автора/серии.
