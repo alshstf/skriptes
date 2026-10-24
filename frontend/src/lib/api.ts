@@ -32,6 +32,9 @@ export type RequestOpts = {
   method?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   body?: unknown;
   signal?: AbortSignal;
+  // keepalive — запрос доживает до сервера, даже если страницу сейчас
+  // заморозят или выгрузят (уход из ридера в фон на телефоне, #591).
+  keepalive?: boolean;
 };
 
 /**
@@ -45,6 +48,7 @@ export async function apiFetch<T>(path: string, opts: RequestOpts = {}): Promise
     method: opts.method ?? 'GET',
     credentials: 'include',
     signal: opts.signal,
+    keepalive: opts.keepalive,
     headers: {},
   };
   if (opts.body !== undefined) {

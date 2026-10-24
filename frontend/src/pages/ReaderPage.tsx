@@ -7,6 +7,14 @@ import { Button } from '@/components/ui/button';
 import { apiFetch } from '@/lib/api';
 import { useReadingPosition, useSavePosition, useToggleRead, type Book } from '@/lib/books';
 import { frameSettings, useReaderSettings, useSystemDark } from '@/lib/readerSettings';
+import {
+  adoptServerPosition,
+  clearLocalPosition,
+  loadLocalPosition,
+  markPositionSynced,
+  rememberLocalPosition,
+  startPosition,
+} from '@/lib/readerPosition';
 import { cn } from '@/lib/utils';
 import {
   useBookAnnotations,
@@ -118,7 +126,9 @@ export function ReaderPage() {
   const [ready, setReady] = useState(false);
   const [completed, setCompleted] = useState(false);
 
-  const { data: position, isLoading: posLoading } = useReadingPosition(bookId);
+  // isFetchedAfterMount: кэш позиции из прошлого открытия в этой вкладке не
+  // годится — книга открылась бы там, где её открывали тогда (#591).
+  const { data: position, isFetchedAfterMount: posFresh, isError: posError } = useReadingPosition(bookId);
   // Название — в панель. Тот же ключ, что у карточки (без её поллинга
   // обогащения): пришли с карточки — уже в кэше.
   const { data: book } = useQuery<Book>({
@@ -216,31 +226,38 @@ export function ReaderPage() {
         const p = pendingPos.current;
         if (!p || !p.cfi || p.cfi === lastSavedCfi.current) return;
         lastSavedCfi.current = p.cfi;
-        save.mutate({
-          bookId,
-          pos: p.cfi,
-          fraction: p.fraction ?? undefined,
-        });
+        save.mutate(
+          { bookId, pos: p.cfi, fraction: p.fraction ?? undefined },
+          { onSuccess: () => markPositionSynced(bookId, p.cfi) },
+        );
       }, DEBOUNCE_MS);
     },
     [bookId, save],
   );
 
   // Ушли из браузера (телефон: другое приложение, блокировка) раньше, чем
-  // сработал debounce, — сохраняем сразу: фоновую вкладку iOS может
-  // выгрузить, и таймер не доживёт.
+  // сработал debounce, — сохраняем сразу и с keepalive: фоновую вкладку iOS
+  // замораживает или выгружает, и таймер не доживёт, а обычный запрос может
+  // не уйти. Не ушёл и он — выручит локальная копия (lib/readerPosition).
   const savePosition = save.mutate;
   useEffect(() => {
-    const flush = () => {
-      if (document.visibilityState !== 'hidden') return;
+    const flush = (e: Event) => {
+      if (e.type === 'visibilitychange' && document.visibilityState !== 'hidden') return;
       const p = pendingPos.current;
       if (!p || !p.cfi || p.cfi === lastSavedCfi.current) return;
       if (saveTimer.current) clearTimeout(saveTimer.current);
       lastSavedCfi.current = p.cfi;
-      savePosition({ bookId, pos: p.cfi, fraction: p.fraction ?? undefined });
+      savePosition(
+        { bookId, pos: p.cfi, fraction: p.fraction ?? undefined, keepalive: true },
+        { onSuccess: () => markPositionSynced(bookId, p.cfi) },
+      );
     };
     document.addEventListener('visibilitychange', flush);
-    return () => document.removeEventListener('visibilitychange', flush);
+    window.addEventListener('pagehide', flush);
+    return () => {
+      document.removeEventListener('visibilitychange', flush);
+      window.removeEventListener('pagehide', flush);
+    };
   }, [bookId, savePosition]);
 
   // Cleanup при размонтировании ridera:
@@ -262,6 +279,7 @@ export function ReaderPage() {
 
       const finalBody: Record<string, unknown> | null = (() => {
         if (wasCompletedRef.current) {
+          clearLocalPosition(bookId);
           return { pos: '', fraction: 1.0 };
         }
         const p = pendingPos.current;
@@ -276,12 +294,19 @@ export function ReaderPage() {
       if (finalBody) {
         // Fire-and-forget — не ждём ответа, ошибки логируем но не
         // показываем (юзер уже на другой странице).
+        const pos = String(finalBody.pos);
         void apiFetch(`/api/books/${bookId}/position`, {
           method: 'PUT',
           body: finalBody,
-        }).catch((err) => {
-          console.warn('reader: final position write failed', err);
-        });
+          keepalive: true,
+        })
+          .then(() => {
+            if (pos) markPositionSynced(bookId, pos);
+            qc.setQueryData(['book', String(bookId), 'position'], { pos });
+          })
+          .catch((err) => {
+            console.warn('reader: final position write failed', err);
+          });
       }
 
       void qc.invalidateQueries({ queryKey: ['book', String(bookId)] });
@@ -305,6 +330,7 @@ export function ReaderPage() {
           break;
         case 'position':
           if (msg.cfi) {
+            rememberLocalPosition(bookId, msg.cfi, msg.fraction);
             scheduleSave(msg.cfi, msg.fraction);
             setPlace({ cfi: msg.cfi, fraction: msg.fraction, label: msg.label ?? '' });
           }
@@ -368,10 +394,24 @@ export function ReaderPage() {
 
   // Стартовое место книги фиксируем один раз: src iframe не должен меняться,
   // когда position перезапросится (смена src перезагрузила бы книгу).
+  // Серверная позиция сверяется с локальной копией: не дошедшее до сервера
+  // чтение (вкладку выгрузили в фоне) не теряем. Сервер недоступен — открываем
+  // по копии на устройстве.
   const [startCfi, setStartCfi] = useState<string | null>(null);
   useEffect(() => {
-    if (startCfi === null && !posLoading) setStartCfi(cfiParam || position?.pos || '');
-  }, [startCfi, posLoading, cfiParam, position?.pos]);
+    if (startCfi !== null || (!posFresh && !posError)) return;
+    if (cfiParam) {
+      setStartCfi(cfiParam);
+      return;
+    }
+    if (posError) {
+      setStartCfi(loadLocalPosition(bookId)?.cfi ?? '');
+      return;
+    }
+    const start = startPosition(bookId, position?.pos ?? '');
+    if (!start.fromLocal) adoptServerPosition(bookId, start.cfi);
+    setStartCfi(start.cfi);
+  }, [startCfi, posFresh, posError, cfiParam, position?.pos, bookId]);
 
   // URL ридера-iframe: src = /api/books/{id}/epub, cfi = последняя
   // сохранённая позиция (если есть), settings — стартовые настройки
