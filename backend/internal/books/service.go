@@ -1906,6 +1906,31 @@ func (s *Service) SearchWorkIDs(ctx context.Context, q string, within []int64) (
 	if err != nil {
 		return nil, fmt.Errorf("meili match search: %w", err)
 	}
+	return hitIDs(res), nil
+}
+
+// SearchWorkCandidates — до limit работ по тексту q (название и автор; в
+// индексе works — и названия оригинала, и латинские имена авторов), без порога
+// уверенности: импорт истории чтения (histimport.TitleSearcher) проверяет
+// кандидатов своими гейтами названия и имени. Скрытое на инстансе —
+// searchVisible.
+func (s *Service) SearchWorkCandidates(ctx context.Context, q string, limit int) ([]int64, error) {
+	if s.meili == nil || strings.TrimSpace(q) == "" || limit <= 0 {
+		return nil, nil
+	}
+	req := &meilisearch.SearchRequest{
+		Limit:                int64(limit),
+		AttributesToRetrieve: []string{"id"},
+	}
+	res, err := searchVisible(ctx, s.meili.Index(worksIndexName), textnorm.FoldYo(q), req)
+	if err != nil {
+		return nil, fmt.Errorf("meili candidates search: %w", err)
+	}
+	return hitIDs(res), nil
+}
+
+// hitIDs — id документов из выдачи Meili (AttributesToRetrieve: id).
+func hitIDs(res *meilisearch.SearchResponse) []int64 {
 	out := make([]int64, 0, len(res.Hits))
 	for _, h := range res.Hits {
 		var doc struct {
@@ -1919,5 +1944,5 @@ func (s *Service) SearchWorkIDs(ctx context.Context, q string, within []int64) (
 			out = append(out, doc.ID)
 		}
 	}
-	return out, nil
+	return out
 }
