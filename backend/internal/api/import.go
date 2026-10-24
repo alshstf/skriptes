@@ -27,6 +27,7 @@ import (
 //	GET    /api/me/import/batches            пакеты пользователя
 //	DELETE /api/me/import/batches/{id}       откат пакета
 //	GET    /api/me/import/template.csv       универсальный шаблон
+//	GET    /api/me/import/export.csv         своя история в формате шаблона (4.5)
 
 // ImportDeps — зависимости импорта; Pool == nil → ручки не монтируются.
 type ImportDeps struct {
@@ -278,5 +279,27 @@ func handleImportTemplate() http.HandlerFunc {
 		w.Header().Set("Content-Type", "text/csv; charset=utf-8")
 		w.Header().Set("Content-Disposition", `attachment; filename="skriptes-import-template.csv"`)
 		_, _ = io.WriteString(w, "\ufeff"+histimport.CSVTemplate)
+	}
+}
+
+// handleExportHistory — GET /api/me/import/export.csv: своя история (оценки,
+// прочитанное, полки, подчёркивания) в формате шаблона — импортируется
+// обратно сюда и на другой инстанс (recsys/04, 4.5).
+func handleExportHistory(d ImportDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		u, ok := UserFromContext(r.Context())
+		if !ok {
+			writeJSON(w, http.StatusUnauthorized, map[string]string{"error": "not authenticated"})
+			return
+		}
+		var buf bytes.Buffer
+		if err := histimport.Export(r.Context(), d.Pool, u.ID, &buf); err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "не удалось выгрузить историю"})
+			return
+		}
+		w.Header().Set("Content-Type", "text/csv; charset=utf-8")
+		w.Header().Set("Content-Disposition",
+			`attachment; filename="skriptes-history-`+time.Now().Format("2006-01-02")+`.csv"`)
+		_, _ = w.Write(buf.Bytes())
 	}
 }

@@ -263,6 +263,7 @@ func NewRouter(d Deps) http.Handler {
 						r.Get("/me/import/batches", handleImportBatches(d.Import))
 						r.Delete("/me/import/batches/{id}", handleImportUndo(d.Import))
 						r.Get("/me/import/template.csv", handleImportTemplate())
+						r.Get("/me/import/export.csv", handleExportHistory(d.Import))
 					}
 					// Явная отметка «прочитано» (кнопка на карточке книги +
 					// auto-mark из ридера при дочитывании). Основной сигнал

@@ -75,6 +75,18 @@ export function ProfileImportPage() {
           <Download className="size-4" aria-hidden />
           Скачать шаблон таблицы (CSV)
         </a>
+        <p className="text-sm text-pretty text-muted-foreground">
+          В обратную сторону —{" "}
+          <a
+            href="/api/me/import/export.csv"
+            download
+            className="text-foreground underline underline-offset-2"
+          >
+            ваша история из этой библиотеки
+          </a>{" "}
+          (оценки, прочитанное, полки, подчёркивания) в том же формате: её можно
+          импортировать на другой сервер или открыть в таблице.
+        </p>
       </section>
 
       <form
