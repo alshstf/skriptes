@@ -51,13 +51,14 @@ export const READER_THEMES: Record<Exclude<ReaderTheme, 'auto'>, ThemeColors> = 
 };
 
 /**
- * Поля страницы: margin — сверху и снизу (px, там же колонтитулы: глава и
- * процент), gap — промежуток колонок в % ширины (по краям — половина).
+ * Поля страницы: margin — сверху и снизу (px; колонтитулов нет — глава в
+ * панели, процент в слайдере, #600), gap — промежуток колонок в % ширины (по
+ * краям — половина).
  */
 export const READER_MARGINS: Record<ReaderMargins, { label: string; margin: number; gap: number }> = {
-  narrow: { label: 'Узкие', margin: 24, gap: 4 },
-  normal: { label: 'Средние', margin: 40, gap: 7 },
-  wide: { label: 'Широкие', margin: 56, gap: 11 },
+  narrow: { label: 'Узкие', margin: 8, gap: 4 },
+  normal: { label: 'Средние', margin: 20, gap: 7 },
+  wide: { label: 'Широкие', margin: 32, gap: 11 },
 };
 
 /** То, что получает iframe ридера, — без «авто» и названий. */

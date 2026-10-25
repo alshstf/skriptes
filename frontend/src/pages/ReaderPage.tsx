@@ -186,6 +186,15 @@ export function ReaderPage() {
     if (ready) toReader({ type: 'settings', settings: frame });
   }, [ready, frame, toReader]);
   const fullscreen = useFullscreen();
+  // iOS 26 PWA: окно короче экрана на высоту статус-бара, и полосу под ридером
+  // (≈ 59pt внизу) закрашивает фон html/body — цвет приложения, а не страницы
+  // (#600). Пока открыт ридер — фон страницы.
+  useEffect(() => {
+    const els = [document.documentElement, document.body];
+    const prev = els.map((el) => el.style.backgroundColor);
+    for (const el of els) el.style.backgroundColor = frame.bg;
+    return () => els.forEach((el, i) => (el.style.backgroundColor = prev[i]));
+  }, [frame.bg]);
   const overlayOpen = notesOpen || settingsOpen || tocOpen || noteFor !== null;
 
   // Клавиши, пока фокус в самом приложении (а не в странице книги — там их
@@ -457,8 +466,8 @@ export function ReaderPage() {
   const src = `/foliate-reader.html?src=${encodeURIComponent(`/api/books/${bookId}/epub`)}${
     startCfi ? `&cfi=${encodeURIComponent(startCfi)}` : ''
   }&settings=${encodeURIComponent(JSON.stringify(initialFrame))}`;
-  const percent = place.fraction !== null ? `${Math.round(place.fraction * 100)} %` : '';
-  const subtitle = [place.label, percent].filter(Boolean).join(' · ');
+  // Подзаголовок панели — глава; процент — в слайдере (#600).
+  const subtitle = place.label;
 
   return (
     <div className="fixed inset-0 overflow-hidden" style={{ backgroundColor: frame.bg }}>

@@ -1,6 +1,6 @@
 import { test, expect } from './_fixtures';
 import type { Page } from '@playwright/test';
-import { location, openReader, stubReader } from './_reader';
+import { location, openReader, readerFrame, stubReader } from './_reader';
 
 // Навигация по книге (#592, #593): оглавление отдельной кнопкой, слайдер
 // прогресса — индикатор и быстрый переход, «Вернуться» после прыжка.
@@ -43,7 +43,7 @@ test('оглавление: главы, текущая отмечена, пер�
   await expect(page.getByRole('button', { name: /Вернуться на прежнее место/ })).toHaveCount(0);
 });
 
-test('слайдер прогресса: показывает долю книги, переносит по отпусканию, «Вернуться»', async ({ mockedPage: page }) => {
+test('слайдер прогресса: показывает долю книги, переносит, «Вернуться»', async ({ mockedPage: page }) => {
   await stubReader(page);
   await openReader(page);
   await toPage3(page);
@@ -82,4 +82,52 @@ test('панель спрятана — слайдер тоже (не перех
   // Тап у нижнего края листает, а не двигает слайдер.
   await page.touchscreen.tap(W - 30, H - 30);
   await expect.poll(() => location(page)).toEqual({ index: 0, page: 3 });
+});
+
+test('слайдер: страница едет за ползунком до отпускания (#600)', async ({ mockedPage: page }) => {
+  await stubReader(page);
+  await openReader(page);
+  const box = (await slider(page).boundingBox())!;
+  const y = box.y + box.height / 2;
+  await page.mouse.move(box.x + 4, y);
+  await page.mouse.down();
+  await page.mouse.move(box.x + box.width * 0.8, y, { steps: 12 });
+  // Ещё не отпустили — а вторая глава уже на экране.
+  await expect.poll(() => location(page).then((l) => l?.index)).toBe(1);
+  await page.mouse.move(box.x + box.width * 0.3, y, { steps: 8 });
+  await expect.poll(() => location(page).then((l) => l?.index)).toBe(0);
+  await page.mouse.up();
+  await expect(page.getByRole('button', { name: /Вернуться на прежнее место/ })).toBeVisible();
+});
+
+test('страница без колонтитулов; глава — в панели, процента там нет (#600)', async ({ mockedPage: page }) => {
+  await stubReader(page);
+  await openReader(page);
+  await page.touchscreen.tap(W - 30, H / 2);
+  await expect.poll(() => location(page)).toEqual({ index: 0, page: 2 });
+  const marginals = await readerFrame(page)!.evaluate(() => {
+    const r = (document.querySelector('foliate-view') as unknown as { renderer: { heads?: Element[]; feet?: Element[] } }).renderer;
+    return [...(r.heads ?? []), ...(r.feet ?? [])].map((el) => el.textContent ?? '').join('');
+  });
+  expect(marginals).toBe('');
+  await page.touchscreen.tap(W / 2, H / 2);
+  await expect(header(page)).toContainText('Глава 1');
+  await expect(header(page)).not.toContainText('%');
+});
+
+test('прыжок слайдером к концу книгу прочитанной не делает (#600)', async ({ mockedPage: page }) => {
+  // «Прочитано» — только перелистыванием до конца (доля ≥ 0.99; у короткой
+  // тестовой книги последняя страница — ≈ 0.95, поэтому здесь — только запрет).
+  await stubReader(page);
+  let marked = 0;
+  await page.route(/\/api\/books\/19\/read$/, (route) => {
+    if (route.request().method() === 'POST') marked++;
+    return route.fulfill({ status: 200, contentType: 'application/json', body: '{"is_read":true}' });
+  });
+  await openReader(page);
+  await slider(page).fill('1000');
+  await expect.poll(() => location(page).then((l) => l?.index)).toBe(1);
+  await page.waitForTimeout(800);
+  expect(marked).toBe(0);
+  await expect(page.getByText('Книга отмечена как прочитанная')).toHaveCount(0);
 });
