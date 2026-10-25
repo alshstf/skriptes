@@ -30,6 +30,6 @@ describe('frameSettings', () => {
 
   it('поля и способы листать — в пиксели и флаги iframe', () => {
     const f = frameSettings({ ...READER_DEFAULTS, margins: 'wide', swipe: false, animation: false }, false);
-    expect(f).toMatchObject({ margin: 56, gap: 11, swipe: false, tap: true, animated: false });
+    expect(f).toMatchObject({ margin: 32, gap: 11, swipe: false, tap: true, animated: false });
   });
 });

@@ -13,8 +13,9 @@
 //  3. Открываем в <foliate-view>, при наличии cfi восстанавливаем позицию.
 //  4. Слушаем relocate event → отправляем postMessage родителю
 //     {type:'position', cfi, fraction}. Родитель debounce'нуто PUT'ит
-//     в /api/books/{id}/position. При достижении конца (fraction >= 0.99)
-//     отправляем {type:'completed'} — родитель вызывает MarkRead.
+//     в /api/books/{id}/position. Дочитал до конца перелистыванием
+//     (fraction >= 0.99) — {type:'completed'}, родитель вызывает MarkRead;
+//     прыжок слайдером или оглавлением к концу книгу прочитанной не делает.
 //     Перелистывание пользователем (тап/свайп/клавиши) → {type:'turned'} —
 //     родитель прячет свою панель.
 //  5. Перелистывание: свайп — сам foliate-paginator (страница едет за
@@ -30,7 +31,10 @@
 //  7. Оглавление и слайдер (#592, #593): после открытия — {type:'toc', items}
 //     (плоский список {id, label, href, depth}; в {type:'position'} — tocId
 //     текущей главы); {type:'goto', href} — к главе, {type:'goto-fraction',
-//     fraction} — к доле книги (слайдер прогресса).
+//     fraction} — к доле книги (слайдер прогресса; шлётся и пока его тянут —
+//     страница едет за ползунком, лишние промежуточные цели пропускаются).
+//  8. Колонтитулов нет (#600): страница — только текст, глава — в панели,
+//     процент — в слайдере.
 
 import './foliate/view.js'
 import { Overlayer } from './foliate/overlayer.js'
@@ -44,7 +48,7 @@ const post = msg => parent.postMessage(msg, location.origin)
 // Значения по умолчанию — как READER_DEFAULTS (тёмная тема, узкие поля).
 const DEFAULT_SETTINGS = {
   bg: '#141414', fg: '#d0d0d0', dark: true,
-  fontSize: 100, margin: 24, gap: 4,
+  fontSize: 100, margin: 8, gap: 4,
   swipe: true, tap: true, animated: true,
 }
 const parseSettings = raw => {
@@ -145,6 +149,28 @@ const flattenToc = (items, depth = 0, out = []) => {
   return out
 }
 
+// Переход к доле книги, пока тянут слайдер: цель обновляется на каждый шаг
+// ползунка, а foliate грузит большую главу не мгновенно, — идём к последней
+// цели, промежуточные, накопившиеся за переход, пропускаем.
+let seekTarget = null
+let seeking = false
+const seek = async (f) => {
+  seekTarget = f
+  // Панель со слайдером видна раньше, чем книга встала на стартовое место, —
+  // ранний переход дождётся конца открытия (после него seek(seekTarget)).
+  if (seeking || !opened) return
+  seeking = true
+  try {
+    while (seekTarget !== null) {
+      const target = seekTarget
+      seekTarget = null
+      await view.goToFraction(target).catch(() => {})
+    }
+  } finally {
+    seeking = false
+  }
+}
+
 const turn = dir => {
   if (!view) return
   const go = dir === 'left' ? view.goLeft()
@@ -175,7 +201,7 @@ window.addEventListener('message', (e) => {
     }
     case 'goto-fraction': {
       const f = Number(msg.fraction)
-      if (view && opened && Number.isFinite(f)) view.goToFraction(Math.min(1, Math.max(0, f))).catch(() => {})
+      if (view && Number.isFinite(f)) seek(Math.min(1, Math.max(0, f)))
       break
     }
     case 'clear-selection':
@@ -288,18 +314,6 @@ host.addEventListener('pointerdown', e => onPointerDown(e, null))
 host.addEventListener('pointerup', e => onPointerUp(e, null, 0))
 host.addEventListener('pointercancel', onPointerCancel)
 
-// Колонтитулы: сверху — глава, снизу — процент книги (в развороте — под
-// правой колонкой). Пересоздаются на каждый render paginator'а, поэтому
-// заполняем на каждый relocate.
-const updateMarginals = (detail) => {
-  const r = view?.renderer
-  if (!r) return
-  const label = (detail.tocItem?.label || '').trim()
-  const pct = typeof detail.fraction === 'number' ? `${Math.round(detail.fraction * 100)}%` : ''
-  r.heads?.forEach((el, i) => { el.textContent = i === 0 ? label : '' })
-  r.feet?.forEach((el, i, all) => { el.textContent = i === all.length - 1 ? pct : '' })
-}
-
 ;(async () => {
   let blob
   try {
@@ -373,23 +387,26 @@ const updateMarginals = (detail) => {
       lastCfi = cfi
       post({ type: 'position', cfi, fraction, label: detail.tocItem?.label || '', tocId: detail.tocItem?.id ?? null })
     }
-    updateMarginals(detail)
-    // Дочитывание: foliate fraction может быть 1.0 на последней
-    // секции, но во многих epub'ах последний "spread" вообще не
-    // достигается из-за оглавления/выходных данных. 0.99 — компромисс.
-    if (!completedReported && fraction !== null && fraction >= 0.99) {
-      completedReported = true
-      post({ type: 'completed', cfi })
-    }
   })
 
   try {
     await view.open(file)
     // Причина перемещения есть только у события renderer'а: page — тап,
     // клавиша; snap — свайп. Это перелистывания пользователем.
+    // Обработчик view (relocate → lastLocation) зарегистрирован раньше этого,
+    // в view.open, — lastLocation здесь уже про это перемещение.
     view.renderer.addEventListener('relocate', (e) => {
       const reason = e.detail?.reason
-      if (reason === 'page' || reason === 'snap') post({ type: 'turned' })
+      if (reason !== 'page' && reason !== 'snap') return
+      post({ type: 'turned' })
+      // Дочитывание — только перелистыванием (не прыжком к концу). Fraction
+      // может быть 1.0 на последней секции, но во многих epub'ах последний
+      // разворот не достигается из-за оглавления/выходных данных — 0.99.
+      const loc = view.lastLocation
+      if (!completedReported && typeof loc?.fraction === 'number' && loc.fraction >= 0.99) {
+        completedReported = true
+        post({ type: 'completed', cfi: loc.cfi || '' })
+      }
     })
     applyRenderer(settings)
     // ВАЖНО: view.open() только инициализирует renderer, но НЕ загружает
@@ -403,6 +420,7 @@ const updateMarginals = (detail) => {
       await view.renderer.next()
     }
     opened = true
+    if (seekTarget !== null) seek(seekTarget)
     post({ type: 'toc', items: flattenToc(view.book.toc) })
     const pending = highlights
     highlights = new Set()

@@ -75,8 +75,8 @@ const STEPS = 1000;
 
 /**
  * ProgressBar — нижняя полоса панели ридера: слайдер по доле книги (индикатор
- * и быстрый переход: тянешь — видно, куда, отпустил — переход) и «Вернуться»
- * после прыжка.
+ * и быстрый переход: страница едет за ползунком, пока тянешь, #600) и
+ * «Вернуться» после прыжка.
  */
 export function ProgressBar({
   visible,
@@ -97,17 +97,26 @@ export function ProgressBar({
   const inputRef = useRef<HTMLInputElement | null>(null);
   useEffect(() => setTarget(null), [fraction]);
 
-  // Переход — на отпускание (change), не на каждый шаг ползунка (input).
+  // Переход — на каждый шаг ползунка (input): страница видна, пока тянешь;
+  // лишние промежуточные цели пропускает сам ридер. На отпускание (change) —
+  // ползунок отдаёт место индикатору, повторного перехода нет.
   const onSeekRef = useRef(onSeek);
   onSeekRef.current = onSeek;
+  const sent = useRef<number | null>(null);
+  const seekTo = (f: number) => {
+    if (sent.current === f) return;
+    sent.current = f;
+    onSeekRef.current(f);
+  };
   useEffect(() => {
     const el = inputRef.current;
     if (!el) return;
     const commit = () => {
       const f = Number(el.value) / STEPS;
+      seekTo(f);
+      sent.current = null;
       setDrag(null);
       setTarget(f);
-      onSeekRef.current(f);
     };
     el.addEventListener('change', commit);
     return () => el.removeEventListener('change', commit);
@@ -143,7 +152,11 @@ export function ProgressBar({
           step={1}
           disabled={fraction === null}
           value={Math.round((shown ?? 0) * STEPS)}
-          onChange={(e) => setDrag(Number(e.target.value) / STEPS)}
+          onChange={(e) => {
+            const f = Number(e.target.value) / STEPS;
+            setDrag(f);
+            seekTo(f);
+          }}
           aria-label="Прогресс книги"
           aria-valuetext={percentLabel(shown)}
           className="h-8 min-w-0 flex-1 cursor-pointer accent-foreground disabled:cursor-default disabled:opacity-50"
