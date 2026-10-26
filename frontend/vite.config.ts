@@ -128,7 +128,7 @@ export default defineConfig({
             urlPattern: /\/foliate\/.*$/,
             handler: 'StaleWhileRevalidate',
             options: {
-              cacheName: 'skriptes-foliate-v3',
+              cacheName: 'skriptes-foliate-v4',
               expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 30 },
               cacheableResponse: { statuses: [0, 200] },
             },

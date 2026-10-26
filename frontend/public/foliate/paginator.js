@@ -21,6 +21,13 @@ const easeOutCubic = x => 1 - (1 - x) ** 3
 // свайпа доезжает пропорционально быстрее, но не быстрее ANIMATION_MIN_MS.
 const ANIMATION_MS = 200
 const ANIMATION_MIN_MS = 80
+// skriptes: свайп листает, только если палец прошёл хотя бы столько (px) по
+// горизонтали и больше вбок, чем вверх-вниз. Снап решает по скорости ПОСЛЕДНЕГО
+// отсчёта touchmove, а iOS шлёт его на каждый сдвиг: палец, который просто
+// лежит на экране и дёрнулся на 5px за 8мс при отрыве (или большой палец,
+// держащий телефон), перелистывал страницу «сам» (#607).
+const SWIPE_MIN_PX = 30
+
 // skriptes: фокус после нажатия клавиши в пределах этого окна (мс) — навигация
 // с клавиатуры; иначе фокус вернул браузер (#591).
 const FOCUS_KEY_MS = 500
@@ -853,6 +860,7 @@ export class Paginator extends HTMLElement {
         const touch = e.changedTouches[0]
         this.#touchState = {
             x: touch?.screenX, y: touch?.screenY,
+            x0: touch?.screenX, y0: touch?.screenY, // skriptes: где палец коснулся (путь свайпа)
             t: e.timeStamp,
             vx: 0, xy: 0,
             moved: false, // skriptes: был ли сдвиг (иначе это тап — без снапа)
@@ -894,9 +902,17 @@ export class Paginator extends HTMLElement {
         // XXX: Firefox seems to report scale as 1... sometimes...?
         // at this point I'm basically throwing `requestAnimationFrame` at
         // anything that doesn't work
+        // skriptes: короткий или вертикальный сдвиг — не свайп: страница
+        // возвращается на место (снап без скорости), а не уезжает дальше.
+        const state = this.#touchState
+        const pathX = Math.abs(state.x - state.x0)
+        const pathY = Math.abs(state.y - state.y0)
+        const swipe = this.#vertical
+            ? pathY >= SWIPE_MIN_PX && pathY > pathX
+            : pathX >= SWIPE_MIN_PX && pathX > pathY
         requestAnimationFrame(() => {
             if (globalThis.visualViewport.scale === 1)
-                this.snap(this.#touchState.vx, this.#touchState.vy)
+                swipe ? this.snap(state.vx, state.vy) : this.snap(0, 0)
         })
     }
     // allows one to process rects as if they were LTR and horizontal
