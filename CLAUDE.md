@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.69.1**.
+конвертируются на лету через fb2cng. Текущая версия — **1.69.2**.
 
 ## Рабочее окружение
 
@@ -110,7 +110,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     работ, Фантлаб первым в шкале LIBRATE) и читательский (оценки 1–5 инстанса, `BookHeart`). Не путать.
 18. **iOS safe-area — системно:** утилиты `pt-safe`/`pb-safe`, оверлеи на shadcn-примитивах получают инсеты сами;
     новый fixed/sticky у края экрана — добавить инсет; липнущее под шапку — `top-[var(--header-h)]` (хэдер на
-    `pt-safe-ui`, ниже размытия iOS 26+, #578). Хэдер отделён тенью.
+    `pt-safe-ui`, ниже размытия iOS 26+, #578). Хэдер отделён тенью. iOS 26 PWA: окно короче экрана на высоту
+    статус-бара (WebKit 301108) — лечит `html { min-height }` в `index.css`, не растягивание оверлея.
 19. **Ручные правки метаданных материализуются в колонки** (`metadata_overrides` + `OverrideController`): поля,
     которые перетирает импорт, ре-применяет `ReapplyAfterImport`; recompute-пути гейтятся по наличию правки.
     Контролы правки на карточках — через `useCanEdit()` (админ + режим «Править» на ЭТОЙ карточке — ушли с неё,
