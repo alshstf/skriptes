@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.69.4**.
+конвертируются на лету через fb2cng. Текущая версия — **1.69.5**.
 
 ## Рабочее окружение
 
@@ -147,6 +147,8 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
     (предикаты `recsys`) → малус в `books.applyPersonaBoost` (самый сильный, не сумма; точное название без малуса),
     `sortByFinalScore` опускает хит не глубже `maxMalusDrop` = 3 от места без малуса. Правка пересортировки —
     golden-тесты `books/persona_*_test.go` + сухой прогон `cmd/searchdry` на проде (`tools/search-dryrun.sh` в plans).
+27. **SW-кэш `/api`** — позиция, заметки, скачивания мимо SW; данные — NetworkFirst; SWR отдаёт ПРОШЛЫЙ ответ (#609).
+    e2e блокирует SW — поведение SW проверяет `pwa-data-cache.spec.ts`.
 
 ## Где что искать (коротко; подробно — `docs/assistant/code-map.md`)
 

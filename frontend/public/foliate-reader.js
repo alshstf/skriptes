@@ -104,6 +104,15 @@ const bookCSS = s => `
   pre {
     white-space: pre-wrap !important;
   }
+  /* Глава и так начинается с новой страницы (своя секция foliate). Разрыв
+     перед первым элементом (fb2cng ставит его заголовку главы) WebKit рисует
+     пустой колонкой — пустая страница перед каждой главой в Safari (#610). */
+  body > :first-child,
+  body > :first-child > :first-child,
+  body > :first-child > :first-child > :first-child {
+    break-before: auto !important;
+    page-break-before: auto !important;
+  }
 `
 
 const applyPageColors = s => {

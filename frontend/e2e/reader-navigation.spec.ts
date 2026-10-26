@@ -1,6 +1,6 @@
 import { test, expect } from './_fixtures';
 import type { Page } from '@playwright/test';
-import { location, openReader, readerFrame, stubReader } from './_reader';
+import { chapterDoc, location, openReader, readerFrame, stubReader } from './_reader';
 
 // Навигация по книге (#592, #593): оглавление отдельной кнопкой, слайдер
 // прогресса — индикатор и быстрый переход, «Вернуться» после прыжка.
@@ -136,4 +136,24 @@ test('прыжок слайдером к концу книгу прочитан�
   await page.waitForTimeout(800);
   expect(marked).toBe(0);
   await expect(page.getByText('Книга отмечена как прочитанная')).toHaveCount(0);
+});
+
+// fb2cng ставит заголовку главы разрыв страницы; в начале секции WebKit рисует
+// его пустой колонкой — пустая страница перед главой (#610). Chromium разрыв в
+// начале и так пропускает, поэтому проверяем сам стиль: снят.
+test('разрыв страницы перед первым элементом главы снят (#610)', async ({ mockedPage: page }) => {
+  await stubReader(page);
+  await openReader(page);
+  const doc = await chapterDoc(page, 1);
+  const breaks = await doc.evaluate(() =>
+    ['.main-body', '.section-title', 'h1'].map((sel) => getComputedStyle(document.querySelector(sel)!).breakBefore),
+  );
+  expect(breaks).toEqual(['auto', 'auto', 'auto']);
+  // Разрывы дальше в тексте не трогаем — только цепочку первых элементов.
+  const inner = await doc.evaluate(() => {
+    const p = document.getElementById('p1-2')!;
+    p.style.breakBefore = 'page';
+    return getComputedStyle(p).breakBefore;
+  });
+  expect(inner).toBe('page');
 });

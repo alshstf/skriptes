@@ -52,6 +52,7 @@ export async function registerPWA(): Promise<void> {
     void unregisterAllSW();
     return;
   }
+  void dropLegacyCaches();
   try {
     const mod = (await import(/* @vite-ignore */ 'virtual:pwa-register')) as {
       registerSW: (opts: {
@@ -307,6 +308,24 @@ function markDismissed(): void {
     localStorage.setItem(DISMISS_KEY, String(Date.now()));
   } catch {
     // ignore
+  }
+}
+
+/**
+ * LEGACY_CACHES — runtime-кэши прежних версий SW, которые новый уже не
+ * читает. Workbox сам чистит только precache, свои runtime-кэши — нет.
+ * skriptes-data (до 1.69.5) держал устаревшие позиции чтения, заметки и
+ * скачанные книги (#609).
+ */
+export const LEGACY_CACHES = ['skriptes-data'];
+
+/** dropLegacyCaches — удалить кэши LEGACY_CACHES; best-effort. */
+export async function dropLegacyCaches(): Promise<void> {
+  try {
+    if (typeof caches === 'undefined') return;
+    await Promise.all(LEGACY_CACHES.map((name) => caches.delete(name)));
+  } catch {
+    // Cache Storage недоступен (приватный режим и т.п.) — нечего чистить
   }
 }
 
