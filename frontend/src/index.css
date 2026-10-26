@@ -147,3 +147,38 @@ html {
 [data-sonner-toaster][data-y-position="bottom"] {
   bottom: calc(env(safe-area-inset-bottom) + 1rem) !important;
 }
+
+/* Слайдер прогресса ридера (#600, components/ReaderNavigation): дорожка своя,
+   с заливкой по доле (--pct, ставит компонент). Нативная на iOS — вся светлая,
+   пройденное от оставшегося не отличить, а слайдер — ещё и индикатор. Высота
+   элемента — зона касания (h-8), дорожка — полоска 4px по центру. */
+.reader-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: linear-gradient(
+      to right,
+      var(--foreground) var(--pct),
+      color-mix(in oklab, var(--muted-foreground) 40%, transparent) var(--pct)
+    )
+    center / 100% 4px no-repeat;
+}
+.reader-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--foreground);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.5);
+}
+.reader-range::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--foreground);
+}
+.reader-range::-moz-range-track {
+  background: transparent;
+}
