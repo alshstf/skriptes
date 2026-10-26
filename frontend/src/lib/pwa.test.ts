@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { isLocalhostHost } from './pwa';
+import { afterEach, describe, it, expect, vi } from 'vitest';
+import { dropLegacyCaches, isLocalhostHost, LEGACY_CACHES } from './pwa';
 
 /**
  * isLocalhostHost управляет тем, регистрируется ли SW. Регрессия здесь
@@ -46,5 +46,28 @@ describe('isLocalhostHost', () => {
     // Маленькая защита от подделок типа "localhost.evil.com".
     expect(isLocalhostHost('localhost.evil.com')).toBe(false);
     expect(isLocalhostHost('mylocal.app')).toBe(false);
+  });
+});
+
+// Прежний runtime-кэш данных держал устаревшие позиции чтения (#609) —
+// новый SW его не читает, но и не удаляет: это делает страница.
+describe('dropLegacyCaches', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('удаляет кэши прежних версий, включая skriptes-data', async () => {
+    const del = vi.fn(async () => true);
+    vi.stubGlobal('caches', { delete: del });
+    await dropLegacyCaches();
+    expect(LEGACY_CACHES).toContain('skriptes-data');
+    expect(del.mock.calls.map((c) => (c as unknown[])[0])).toEqual(LEGACY_CACHES);
+  });
+
+  it('без Cache Storage и при ошибке — молча', async () => {
+    vi.stubGlobal('caches', undefined);
+    await expect(dropLegacyCaches()).resolves.toBeUndefined();
+    vi.stubGlobal('caches', { delete: () => Promise.reject(new Error('denied')) });
+    await expect(dropLegacyCaches()).resolves.toBeUndefined();
   });
 });

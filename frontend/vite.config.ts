@@ -133,20 +133,45 @@ export default defineConfig({
               cacheableResponse: { statuses: [0, 200] },
             },
           },
-          // GET-данные приложения (книги/авторы/серии) — StaleWhileRevalidate:
-          // моментально отдаём из кэша, в фоне обновляем. Если оффлайн —
-          // показываем последнее что видели; новые карточки не доступны,
-          // но "вернуться в недавнее" работает.
+          // epub для ридера — StaleWhileRevalidate: книга открывается сразу из
+          // кэша (и оффлайн), свежая конвертация подтянется к следующему разу.
+          // Свой кэш: файлы по мегабайту и больше, держим немного.
+          {
+            urlPattern: ({ url, request }) =>
+              request.method === 'GET' && /^\/api\/books\/\d+\/epub$/.test(url.pathname),
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'skriptes-epub',
+              expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          // GET-данные приложения (книги/авторы/серии) — NetworkFirst: в сети
+          // всегда свежие (в карточках есть прогресс чтения, отметки, оценки
+          // пользователя), кэш — только оффлайн или если сеть не ответила за
+          // 4 с. Не StaleWhileRevalidate: он отдаёт ответ ПРОШЛОГО запроса.
+          //
+          // Позиция чтения и заметки — мимо SW вовсе: устаревшая позиция
+          // открывала книгу там, где её открывали в прошлый раз, и ридер
+          // записывал это место поверх свежего (#609). Оффлайн ридер берёт
+          // позицию из своей копии на устройстве (lib/readerPosition).
+          // Скачивания — тоже мимо: это файлы, не данные.
+          //
+          // urlPattern сериализуется в sw.js — только аргументы, без внешних имён.
           {
             urlPattern: ({ url, request }) =>
               request.method === 'GET' &&
               (url.pathname.startsWith('/api/books') ||
                 url.pathname.startsWith('/api/authors') ||
                 url.pathname.startsWith('/api/series') ||
-                url.pathname.startsWith('/api/search/suggest')),
-            handler: 'StaleWhileRevalidate',
+                url.pathname.startsWith('/api/search/suggest')) &&
+              !/^\/api\/books\/\d+\/(position|annotations|download)$/.test(url.pathname),
+            handler: 'NetworkFirst',
             options: {
-              cacheName: 'skriptes-data',
+              // -v2: в прежнем skriptes-data лежат устаревшие позиции — его
+              // удаляет lib/pwa.ts (dropLegacyCaches).
+              cacheName: 'skriptes-data-v2',
+              networkTimeoutSeconds: 4,
               expiration: { maxEntries: 200, maxAgeSeconds: 60 * 60 * 24 * 7 }, // 7д TTL
               cacheableResponse: { statuses: [0, 200] },
             },

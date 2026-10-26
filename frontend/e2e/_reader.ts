@@ -9,6 +9,7 @@ const PARA =
   'кроме как под камнями, где прятались ящерицы и прочая мелкая живность пустыни. ';
 
 function chapter(n: number): string {
+  // Разметка как у fb2cng: заголовок главы с разрывом страницы перед ним (#610).
   // В первом абзаце — ссылка-сноска: на неё тапают, и она остаётся в фокусе (#591).
   const ps = Array.from(
     { length: 40 },
@@ -17,7 +18,7 @@ function chapter(n: number): string {
   ).join('');
   return `<?xml version="1.0" encoding="utf-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><title>ch${n}</title></head>
-<body><h1>Глава ${n}</h1>${ps}</body></html>`;
+<body><div class="main-body"><div class="section-title" style="page-break-before: always"><h1>Глава ${n}</h1></div>${ps}</div></body></html>`;
 }
 
 export function longEpub(): Buffer {
