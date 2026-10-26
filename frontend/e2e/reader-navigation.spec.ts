@@ -94,6 +94,12 @@ test('слайдер: страница едет за ползунком до о�
   await page.mouse.move(box.x + box.width * 0.8, y, { steps: 12 });
   // Ещё не отпустили — а вторая глава уже на экране.
   await expect.poll(() => location(page).then((l) => l?.index)).toBe(1);
+  // Появилась «Вернуться» — а слайдер под пальцем не сдвинулся (строкой выше).
+  await expect(page.getByRole('button', { name: /Вернуться на прежнее место/ })).toBeVisible();
+  const after = (await slider(page).boundingBox())!;
+  expect(Math.round(after.x)).toBe(Math.round(box.x));
+  expect(Math.round(after.y)).toBe(Math.round(box.y));
+  expect(Math.round(after.width)).toBe(Math.round(box.width));
   await page.mouse.move(box.x + box.width * 0.3, y, { steps: 8 });
   await expect.poll(() => location(page).then((l) => l?.index)).toBe(0);
   await page.mouse.up();

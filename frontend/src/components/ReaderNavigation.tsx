@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Undo2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -131,19 +131,27 @@ export function ProgressBar({
         visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-full opacity-0',
       )}
     >
-      <div className="mx-auto flex max-w-3xl items-center gap-3">
-        {returnTo ? (
+      {/* «Вернуться» — строкой НАД слайдером: появляется на первом же шаге
+          ползунка, и в одной строке с ним сдвигал бы слайдер под пальцем
+          (симулятор iOS, #600). Полоса прижата к низу — растёт вверх. */}
+      {returnTo ? (
+        <div className="mx-auto mb-1.5 flex max-w-3xl">
           <Button
             variant="outline"
             size="sm"
-            className="shrink-0 gap-1 px-2"
+            className="gap-1 px-2"
             onClick={onReturn}
             aria-label={`Вернуться на прежнее место${returnTo.fraction !== null ? `, ${percentLabel(returnTo.fraction)}` : ''}`}
           >
             <Undo2 className="size-4" aria-hidden />
-            <span className="tabular-nums">{returnTo.fraction !== null ? percentLabel(returnTo.fraction) : 'Назад'}</span>
+            Вернуться
+            {returnTo.fraction !== null ? (
+              <span className="text-muted-foreground tabular-nums">{percentLabel(returnTo.fraction)}</span>
+            ) : null}
           </Button>
-        ) : null}
+        </div>
+      ) : null}
+      <div className="mx-auto flex max-w-3xl items-center gap-3">
         <input
           ref={inputRef}
           type="range"
@@ -159,7 +167,8 @@ export function ProgressBar({
           }}
           aria-label="Прогресс книги"
           aria-valuetext={percentLabel(shown)}
-          className="h-8 min-w-0 flex-1 cursor-pointer accent-foreground disabled:cursor-default disabled:opacity-50"
+          style={{ '--pct': `${(shown ?? 0) * 100}%` } as CSSProperties}
+          className="reader-range h-8 min-w-0 flex-1 cursor-pointer disabled:cursor-default disabled:opacity-50"
         />
         <span
           className={cn('w-12 shrink-0 text-right text-sm tabular-nums', drag !== null ? 'font-medium' : 'text-muted-foreground')}
