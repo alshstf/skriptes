@@ -35,6 +35,8 @@
 //     страница едет за ползунком, лишние промежуточные цели пропускаются).
 //  8. Колонтитулов нет (#600): страница — только текст, глава — в панели,
 //     процент — в слайдере.
+//  9. Шрифт (settings.font — font-family из меню ридера, пусто — шрифт книги):
+//     @font-face — /fonts/fonts.css, подключается @import в стилях книги.
 
 import './foliate/view.js'
 import { Overlayer } from './foliate/overlayer.js'
@@ -48,7 +50,7 @@ const post = msg => parent.postMessage(msg, location.origin)
 // Значения по умолчанию — как READER_DEFAULTS (тёмная тема, узкие поля).
 const DEFAULT_SETTINGS = {
   bg: '#141414', fg: '#d0d0d0', dark: true,
-  fontSize: 100, margin: 8, gap: 4,
+  font: "'Literata', Georgia, serif", fontSize: 100, margin: 8, gap: 4,
   swipe: true, tap: true, animated: true,
 }
 const parseSettings = raw => {
@@ -72,9 +74,28 @@ let highlights = new Set()
 let selectionDoc = null
 let opened = false
 
+// font-family из настроек — только имена шрифтов: settings приходят и из URL
+// iframe, CSS-конструкции (скобки, точка с запятой) в стили книги не пускаем.
+const fontFamily = f => (typeof f === 'string' && /^[\w\s,'-]+$/.test(f) ? f : '')
+
+// Шрифт из меню — поверх шрифтов книги, моноширинное остаётся моноширинным.
+// Документ книги — blob:, относительный URL от него не строится: адрес полный.
+const fontCSS = family => family ? {
+  head: `@import url("${location.origin}/fonts/fonts.css");`,
+  body: `
+  html, body, body * {
+    font-family: ${family} !important;
+  }
+  pre, code, kbd, samp, tt, pre *, code * {
+    font-family: ui-monospace, Menlo, Consolas, monospace !important;
+  }`,
+} : { head: '', body: '' }
+
 // Стили страницы книги поверх её собственных: цвета темы (принудительно —
-// иначе чёрный текст книги на тёмном фоне), размер шрифта, переносы.
-const bookCSS = s => `
+// иначе чёрный текст книги на тёмном фоне), шрифт и его размер, переносы.
+const bookCSS = s => {
+  const font = fontCSS(fontFamily(s.font))
+  return `${font.head}
   @namespace epub "http://www.idpf.org/2007/ops";
   html {
     color-scheme: ${s.dark ? 'dark' : 'light'};
@@ -112,8 +133,9 @@ const bookCSS = s => `
   body > :first-child > :first-child > :first-child {
     break-before: auto !important;
     page-break-before: auto !important;
-  }
+  }${font.body}
 `
+}
 
 const applyPageColors = s => {
   const root = document.documentElement

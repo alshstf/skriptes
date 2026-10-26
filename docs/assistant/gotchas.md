@@ -772,7 +772,14 @@ set-based SQL + в Meili изменившиеся и все скрытые; по
   (иначе гонка с тап-зонами), атрибут `no-swipe`, свайп листает только при пути пальца ≥ `SWIPE_MIN_PX` (30px) вбок (#607: снап по скорости последнего touchmove, а iOS шлёт его на любой сдвиг — дрожание пальца при отрыве листало «само»; Chromium гасит сдвиги до ~15px, e2e — синтетические TouchEvent), `focusin` листает только после клавиши (#591: браузер
   при возврате в окно отдаёт фокус нажатой ранее ссылке-сноске). Обновляя foliate — перенести патч. В стилях книги
   (`bookCSS` в `foliate-reader.js`) снят разрыв страницы с цепочки первых элементов секции: WebKit рисует его пустой
-  колонкой, получалась пустая страница перед каждой главой fb2cng (#610; Chromium разрыв в начале пропускает). Файлы
+  колонкой, получалась пустая страница перед каждой главой fb2cng (#610; Chromium разрыв в начале пропускает).
+- ⚠️ Шрифты ридера — `frontend/public/fonts`: `fonts.css` (все `@font-face`) + папка на шрифт с `OFL.txt`. Literata,
+  Bitter, Jost — подмножества Google Fonts по `unicode-range`. У PT Serif, PT Sans и OpenDyslexic зарезервированное имя
+  (RFN): по OFL-FAQ урезанный файл нельзя выпускать под тем же именем, поэтому их файлы целые, только TTF → WOFF2
+  перепаковкой. Собирать скриптами `~/projects/plans/skriptes/tools/reader-fonts/` (`fetch.sh`, `build.py`), не
+  руками. woff2 исключены из precache SW (`globIgnores`), runtime-кэш — `skriptes-fonts-vN`, CacheFirst: заменил
+  файл шрифта — бампнуть N. Новый шрифт — только OFL/Apache с кириллицей и настоящим курсивом, см.
+  `~/projects/plans/skriptes/reader-fonts.md`. Файлы
   `/foliate/*` без хэша в имени: SW кэширует их StaleWhileRevalidate в `skriptes-foliate-vN`
   — при следующем патче бампнуть N (с CacheFirst патч не доезжал бы до PWA до 30 дней).
 **Phase 6 (сделано) — отдельный works-индекс Meili + маршрут `/works/{id}`:**

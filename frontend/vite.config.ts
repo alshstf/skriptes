@@ -70,8 +70,9 @@ export default defineConfig({
         // foliate-reader тяжёлый (~600 KiB JS), но нужен только когда
         // юзер реально открывает книгу в ридере. Прекэшировать сразу —
         // лишний траффик при первом заходе на сайт. Runtime-кэш ниже
-        // подхватит при первом открытии и оставит навсегда.
-        globIgnores: ['**/foliate/**'],
+        // подхватит при первом открытии и оставит навсегда. Шрифты ридера
+        // (public/fonts, ~2,4 МБ на все) — так же: нужен один выбранный.
+        globIgnores: ['**/foliate/**', '**/fonts/**/*.woff2'],
         // navigateFallback=index.html — все non-asset GET'ы (роуты SPA)
         // отдают index.html из кэша → offline-shell. Исключаем /api/* и
         // /opds/* — на эти пути ходить через сеть, кэш не должен их
@@ -130,6 +131,17 @@ export default defineConfig({
             options: {
               cacheName: 'skriptes-foliate-v4',
               expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 30 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+          // Шрифты ридера — CacheFirst: файлы не меняются; заменили шрифт —
+          // бампнуть версию в имени кэша (имена файлов без хэша).
+          {
+            urlPattern: /\/fonts\/[^/]+\/[^/]+\.woff2$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'skriptes-fonts-v1',
+              expiration: { maxEntries: 60, maxAgeSeconds: 60 * 60 * 24 * 365 },
               cacheableResponse: { statuses: [0, 200] },
             },
           },

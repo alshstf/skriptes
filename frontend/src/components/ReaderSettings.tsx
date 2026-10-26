@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import { useEffect, type CSSProperties } from 'react';
 import { AArrowDown, AArrowUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -8,8 +8,11 @@ import {
   FONT_SIZE_MAX,
   FONT_SIZE_MIN,
   FONT_SIZE_STEP,
+  READER_FONTS,
+  READER_FONTS_CSS,
   READER_MARGINS,
   READER_THEMES,
+  type ReaderFont,
   type ReaderMargins,
   type ReaderSettings,
   type ReaderTheme,
@@ -26,6 +29,23 @@ const THEME_OPTIONS: { value: ReaderTheme; label: string }[] = [
   { value: 'dark', label: READER_THEMES.dark.label },
   { value: 'black', label: READER_THEMES.black.label },
 ];
+
+/**
+ * useReaderFontsStylesheet — @font-face шрифтов ридера в документе страницы:
+ * названия в меню «Шрифт» показаны самим шрифтом. Файлы шрифтов браузер
+ * грузит, только когда шрифт где-то применён (открыли меню или выбрали).
+ */
+function useReaderFontsStylesheet() {
+  useEffect(() => {
+    if (document.querySelector(`link[href="${READER_FONTS_CSS}"]`)) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = READER_FONTS_CSS;
+    document.head.append(link);
+  }, []);
+}
+
+const FONT_OPTIONS = Object.keys(READER_FONTS) as ReaderFont[];
 
 function swatchStyle(theme: ReaderTheme): CSSProperties {
   if (theme === 'auto') {
@@ -53,6 +73,7 @@ export function ReaderSettingsSheet({
   // Один способ листать остаётся всегда — иначе страницу не перелистнуть.
   const swipeLocked = settings.swipe && !settings.tapZones;
   const tapLocked = settings.tapZones && !settings.swipe;
+  useReaderFontsStylesheet();
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
@@ -98,6 +119,37 @@ export function ReaderSettingsSheet({
                 Светлая или тёмная — как системная тема устройства.
               </p>
             ) : null}
+          </section>
+
+          <section className="space-y-2">
+            <h3 className="text-xs font-medium text-muted-foreground">Шрифт</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {FONT_OPTIONS.map((f, i) => {
+                const selected = settings.font === f;
+                // Нечётный последний — во всю ширину (OpenDyslexic широкий).
+                const wide = i === FONT_OPTIONS.length - 1 && FONT_OPTIONS.length % 2 === 1;
+                const { label, hint, family } = READER_FONTS[f];
+                return (
+                  <button
+                    key={f}
+                    type="button"
+                    aria-pressed={selected}
+                    aria-label={`${label} — ${hint}`}
+                    onClick={() => onChange({ font: f })}
+                    className={cn(
+                      'min-w-0 rounded-md border px-3 py-1.5 text-left transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none',
+                      wide && 'col-span-2',
+                      selected ? 'border-primary bg-accent text-accent-foreground' : 'border-border hover:bg-accent/50',
+                    )}
+                  >
+                    <span className="block truncate text-base" style={{ fontFamily: family || 'serif' }}>
+                      {label}
+                    </span>
+                    <span className="block truncate text-xs text-muted-foreground">{hint}</span>
+                  </button>
+                );
+              })}
+            </div>
           </section>
 
           <section className="space-y-2">
