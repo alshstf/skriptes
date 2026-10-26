@@ -1,6 +1,6 @@
 /**
- * lib/readerSettings.ts — настройки веб-ридера: тема страницы, размер шрифта,
- * поля, способы перелистывания.
+ * lib/readerSettings.ts — настройки веб-ридера: тема страницы, шрифт и его
+ * размер, поля, способы перелистывания.
  *
  * Хранение — только localStorage этого устройства, без сервера: на телефоне и
  * на компьютере нужны разные шрифт, поля и способы листать (тап-зоны —
@@ -14,9 +14,12 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 export type ReaderTheme = 'auto' | 'light' | 'sepia' | 'dark' | 'black';
 export type ReaderMargins = 'narrow' | 'normal' | 'wide';
+export type ReaderFont = 'book' | 'literata' | 'ptserif' | 'bitter' | 'ptsans' | 'jost' | 'opendyslexic';
 
 export type ReaderSettings = {
   theme: ReaderTheme;
+  /** Шрифт текста книги; 'book' — как задано в книге. */
+  font: ReaderFont;
   /** Размер шрифта книги, % от исходного. */
   fontSize: number;
   margins: ReaderMargins;
@@ -30,6 +33,7 @@ export type ReaderSettings = {
 
 export const READER_DEFAULTS: ReaderSettings = {
   theme: 'dark',
+  font: 'literata',
   fontSize: 100,
   margins: 'narrow',
   swipe: true,
@@ -61,11 +65,33 @@ export const READER_MARGINS: Record<ReaderMargins, { label: string; margin: numb
   wide: { label: 'Широкие', margin: 32, gap: 11 },
 };
 
+/**
+ * Шрифты по мотивам меню Kindle (~/projects/plans/skriptes/reader-fonts.md):
+ * по одному свободному (OFL) шрифту с кириллицей и курсивом на группу, почти-
+ * дубли Kindle (Bookerly и Georgia, Palatino и Baskerville…) свёрнуты в один.
+ * Файлы и @font-face — public/fonts (fonts.css), грузится только выбранный или
+ * показанный в меню. family — значение font-family для текста книги.
+ */
+export const READER_FONTS: Record<ReaderFont, { label: string; hint: string; family: string }> = {
+  book: { label: 'Как в книге', hint: 'стиль издания', family: '' },
+  literata: { label: 'Literata', hint: 'книжный', family: "'Literata', Georgia, serif" },
+  ptserif: { label: 'PT Serif', hint: 'классический', family: "'PT Serif', Georgia, serif" },
+  bitter: { label: 'Bitter', hint: 'брусковый', family: "'Bitter', Georgia, serif" },
+  ptsans: { label: 'PT Sans', hint: 'без засечек', family: "'PT Sans', system-ui, sans-serif" },
+  jost: { label: 'Jost', hint: 'геометрический', family: "'Jost', system-ui, sans-serif" },
+  opendyslexic: { label: 'OpenDyslexic', hint: 'для дислексии', family: "'OpenDyslexic', system-ui, sans-serif" },
+};
+
+/** Стили @font-face шрифтов ридера (public/fonts). */
+export const READER_FONTS_CSS = '/fonts/fonts.css';
+
 /** То, что получает iframe ридера, — без «авто» и названий. */
 export type ReaderFrameSettings = {
   bg: string;
   fg: string;
   dark: boolean;
+  /** font-family текста книги; пусто — шрифт книги. */
+  font: string;
   fontSize: number;
   margin: number;
   gap: number;
@@ -86,6 +112,7 @@ export function frameSettings(s: ReaderSettings, systemDark: boolean): ReaderFra
     bg,
     fg,
     dark,
+    font: READER_FONTS[s.font].family,
     fontSize: s.fontSize,
     margin,
     gap,
@@ -101,6 +128,7 @@ const EVT = 'skriptes:reader-settings-changed';
 
 const THEMES: ReaderTheme[] = ['auto', 'light', 'sepia', 'dark', 'black'];
 const MARGINS: ReaderMargins[] = ['narrow', 'normal', 'wide'];
+const FONTS = Object.keys(READER_FONTS) as ReaderFont[];
 
 export function normalizeReaderSettings(raw: unknown): ReaderSettings {
   const r = (raw && typeof raw === 'object' ? raw : {}) as Partial<Record<keyof ReaderSettings, unknown>>;
@@ -112,6 +140,7 @@ export function normalizeReaderSettings(raw: unknown): ReaderSettings {
       : d.fontSize;
   const s: ReaderSettings = {
     theme: THEMES.includes(r.theme as ReaderTheme) ? (r.theme as ReaderTheme) : d.theme,
+    font: FONTS.includes(r.font as ReaderFont) ? (r.font as ReaderFont) : d.font,
     fontSize: size,
     margins: MARGINS.includes(r.margins as ReaderMargins) ? (r.margins as ReaderMargins) : d.margins,
     swipe: bool(r.swipe, d.swipe),

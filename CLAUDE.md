@@ -21,7 +21,7 @@
 
 skriptes — каталогизатор fb2-библиотеки. Go (chi + pgx + raw SQL + golang-migrate) на бэке, React + Vite + TanStack
 Router + shadcn/ui на фронте, Postgres + Meilisearch + Caddy в docker compose. Книги лежат на read-only volume и
-конвертируются на лету через fb2cng. Текущая версия — **1.69.5**.
+конвертируются на лету через fb2cng. Текущая версия — **1.70.0**.
 
 ## Рабочее окружение
 
@@ -162,7 +162,7 @@ docker compose exec frontend ls /usr/share/nginx/html/assets/   # хэш index-*
 | Год книги, гистограмма | `metadata/fb2_provider.go`, `metadata/enricher.go::EnsureYearLocal`, `catalog/service.go`, `YearHistogram.tsx` |
 | Порядок книг в серии | `catalog/seriesorder.go::assignSeriesOrder` |
 | Состав сборников (#388) | `metadata/contents.go`, `books/contents.go`, `components/CompilationContents.tsx` |
-| Веб-ридер (оверлей, тема, перелистывание, место чтения) | `pages/ReaderPage.tsx`, `public/foliate-reader.js`, `lib/readerSettings.ts`, `lib/readerPosition.ts`; foliate вендорен с патчем — `skriptes:` в `public/foliate/paginator.js` |
+| Веб-ридер (оверлей, тема, шрифт, перелистывание, место чтения) | `pages/ReaderPage.tsx`, `public/foliate-reader.js`, `lib/readerSettings.ts`, `lib/readerPosition.ts`, шрифты — `public/fonts` (OFL); foliate вендорен с патчем — `skriptes:` в `public/foliate/paginator.js` |
 | Конвертация формата | `backend/internal/converter/fb2cng.go` |
 | Send-to-Kindle | `api/kindle.go`, `email/sender.go`, `lib/kindle.ts` |
 | OPDS | `backend/internal/opds/` |
