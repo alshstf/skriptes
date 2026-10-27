@@ -52,6 +52,13 @@ import (
 // а впечённая версия точна (это реальный собранный тег). См. effectiveVersion.
 var version = "dev"
 
+// Группировка находит эти возможности импортера type-assert'ом — сломанная
+// сигнатура молча выключила бы синк поиска и флагов скрытия после слияния (#622).
+var (
+	_ metadata.WorksIndexSyncer     = (*importer.Importer)(nil)
+	_ metadata.InstanceHiddenSyncer = (*importer.Importer)(nil)
+)
+
 // effectiveVersion — что показать в UI/логах: впечённая версия сборки (без
 // ведущего «v»), иначе fallback на env SKRIPTES_VERSION (envVersion). Так образ
 // `:latest`, собранный из тега v1.9.0, рапортует «1.9.0», а не «latest».

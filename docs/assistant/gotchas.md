@@ -618,7 +618,10 @@ set-based SQL + в Meili изменившиеся и все скрытые; по
   (FK `ON DELETE CASCADE`) и клик `search_log.clicked_work_id` (SET NULL) с поглощаемых
   работ на каноническую, иначе GC сносит данные пользователя безвозвратно (ON CONFLICT →
   target побеждает). Новая таблица с `work_id` пользователя — сразу в этот список
-  (`search_matches` забыли на полгода, #566). Split/RegroupWorks
+  (`search_matches` забыли на полгода, #566). Там же — явное скрытие на инстансе
+  `hidden_works` (#622): скрытая работа поглощена — скрыта итоговая (вся книга), а после
+  коммита, если слияние задело скрытую работу, — `InstanceHiddenSyncer.SyncInstanceHidden`
+  (пересчёт флагов и поиска). Split/RegroupWorks
   переносить НЕ нужно: источник сохраняет якорь, не GC'ится. book-level (reads/views/
   полки/★) keyed по books.id — едет с изданиями само.
 - Настройки `settings.WorkGroupingConfig` (ключ `work_grouping`, зеркало

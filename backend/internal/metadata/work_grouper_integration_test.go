@@ -391,6 +391,61 @@ func TestMergeWorks_PreservesUserData(t *testing.T) {
 	require.Equal(t, target, *clicked, "клик из выдачи указывает на target")
 }
 
+// hiddenSyncRecorder — WorkIDResyncer + InstanceHiddenSyncer: сигналит о
+// пересчёте флагов скрытия после слияния.
+type hiddenSyncRecorder struct{ synced chan struct{} }
+
+func (h *hiddenSyncRecorder) ResyncWorkIDsFor(context.Context, []int64) (int, error) { return 0, nil }
+func (h *hiddenSyncRecorder) SyncInstanceHidden(context.Context) (int, int, error) {
+	h.synced <- struct{}{}
+	return 0, 0, nil
+}
+
+// #622: работа, скрытая на инстансе, поглощена видимой — скрытие переходит на
+// итоговую работу (иначе CASCADE снёс бы его, и после пересчёта издания снова
+// видны), а после коммита пересчитываются флаги скрытия.
+func TestMergeWorks_KeepsInstanceHiding(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+	author := seedGroupAuthor(t, ctx, pool, "Автор", "автор тест")
+	visibleBook := seedGroupBook(t, ctx, pool, collID, archID, author, "A", "Книга", "книга", "ru", "", "", "")
+	hiddenBook := seedGroupBook(t, ctx, pool, collID, archID, author, "B", "Книга (издание)", "книга (издание)", "ru", "", "", "")
+	target, loser := workIDOf(t, ctx, pool, visibleBook), workIDOf(t, ctx, pool, hiddenBook)
+	for _, q := range []string{
+		`INSERT INTO hidden_works (work_id, note) VALUES ($1, 'по просьбе')`,
+		`UPDATE works SET instance_hidden = true WHERE id = $1`,
+		`UPDATE books SET instance_hidden = true WHERE work_id = $1`,
+	} {
+		_, err := pool.Exec(ctx, q, loser)
+		require.NoError(t, err)
+	}
+
+	rec := &hiddenSyncRecorder{synced: make(chan struct{}, 1)}
+	c := NewWorkGroupController(pool, nil, nil, WorkGroupConfig{}, rec, quiet)
+	_, err := c.MergeWorks(ctx, []int64{target, loser}, target)
+	require.NoError(t, err)
+
+	var note string
+	require.NoError(t, pool.QueryRow(ctx, `SELECT note FROM hidden_works WHERE work_id = $1`, target).Scan(&note))
+	require.Equal(t, "по просьбе", note, "скрытие перешло на итоговую работу вместе с заметкой")
+	select {
+	case <-rec.synced:
+	case <-time.After(10 * time.Second):
+		t.Fatal("после слияния со скрытой работой флаги скрытия не пересчитаны")
+	}
+}
+
 // TestTier1Merge_PreservesRatings — оценка переживает и АВТО-merge (Tier-1 apply),
 // не только ручной MergeWorks: оба зовут reassignWorkUserData перед GC.
 func TestTier1Merge_PreservesRatings(t *testing.T) {
