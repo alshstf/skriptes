@@ -413,7 +413,7 @@ function ActionButtons({ book, multi }: { book: Book; multi: boolean }) {
  * (Скачать / На Kindle с текстом + ★ иконкой). Так важное действие не оказывается
  * иконкой ниже второстепенных полки/деталей (см. правку раскладки мобайла). При
  * нескольких изданиях Читать/скачивание — на каждое издание в секции «Издания»,
- * поэтому здесь только ★.
+ * поэтому здесь одна строка: «На полку» на месте «Читать», закладка и ★.
  */
 function MobileActions({ book, multi }: { book: Book; multi: boolean }) {
   // Две ровные строки во всю ширину (#470): «Читать» + ★ квадратом той же высоты,
@@ -423,19 +423,33 @@ function MobileActions({ book, multi }: { book: Book; multi: boolean }) {
   // Три кнопки в ряд: уже 400px иконки не помещаются вместе с подписью и счётчиком
   // полок — прячем иконку (первый svg), подпись остаётся.
   const row3 = cn(cell, 'max-[400px]:[&_svg:first-child]:hidden');
+  // Закладка «Хочу прочитать» перед ★: ★ остаётся крайней справа, ряды действий
+  // выровнены по правому краю (#470). Квадратами — три подписи в ряд не помещаются
+  // на телефоне («Хочу прочитать» налезала на соседнюю кнопку, #612).
+  const marks = (
+    <>
+      <ToReadButton
+        bookId={book.id}
+        isToRead={book.is_to_read ?? false}
+        variant="outline"
+        labelHidden
+        className="h-9 w-9 shrink-0 px-0"
+      />
+      <FavoriteButton
+        target="book"
+        id={book.id}
+        isFavorite={book.is_favorite ?? false}
+        variant="outline"
+        labelHidden
+        className="h-9 w-9 shrink-0 px-0"
+      />
+    </>
+  );
   if (multi) {
     return (
-      <div className="grid grid-cols-3 gap-2">
-        <FavoriteButton
-          target="book"
-          id={book.id}
-          isFavorite={book.is_favorite ?? false}
-          variant="outline"
-          showLabel
-          className={row3}
-        />
-        <ToReadButton bookId={book.id} isToRead={book.is_to_read ?? false} variant="outline" showLabel className={row3} />
-        <AddToShelfDialog bookId={book.id} toolbar shelves={shelves} className={row3} />
+      <div className="flex gap-2">
+        <AddToShelfDialog bookId={book.id} toolbar shelves={shelves} className={cn(cell, 'flex-1')} />
+        {marks}
       </div>
     );
   }
@@ -453,23 +467,7 @@ function MobileActions({ book, multi }: { book: Book; multi: boolean }) {
             {readButtonLabel(book.reading_fraction)}
           </Link>
         </Button>
-        {/* Закладка «Хочу прочитать» перед ★: ★ остаётся крайней справа, ряды
-            действий выровнены по правому краю (#470). */}
-        <ToReadButton
-          bookId={book.id}
-          isToRead={book.is_to_read ?? false}
-          variant="outline"
-          labelHidden
-          className="h-9 w-9 shrink-0 px-0"
-        />
-        <FavoriteButton
-          target="book"
-          id={book.id}
-          isFavorite={book.is_favorite ?? false}
-          variant="outline"
-          labelHidden
-          className="h-9 w-9 shrink-0 px-0"
-        />
+        {marks}
       </div>
       <div className="grid grid-cols-3 gap-2">
         <DownloadMenu bookId={book.id} showLabel variant="outline" className={row3} />

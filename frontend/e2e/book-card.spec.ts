@@ -159,6 +159,57 @@ for (const width of [320, 360, 414]) {
   });
 }
 
+// #612: у работы с несколькими изданиями в ряду действий были три подписи
+// («В избранное · Хочу прочитать · На полку») — на телефоне не помещались и
+// налезали друг на друга; длинный чип серии издания растягивал страницу вбок.
+for (const width of [320, 390, 402]) {
+  test(`карточка на мобиле: несколько изданий — кнопки не налезают, страница не шире экрана (${width}px)`, async ({
+    mockedPage: page,
+  }) => {
+    const edition = { lang: 'ru', size_bytes: 1, ext: 'fb2', archive: 'a.zip' };
+    const multi = {
+      ...bookDetailFixture,
+      work_id: 500,
+      editions: [
+        { ...edition, id: 19, file_name: '1' },
+        {
+          ...edition,
+          id: 20,
+          file_name: '2',
+          edition_title: 'Собрание сочинений в пяти томах. Том 5',
+          series: { id: 7, title: 'Булгаков М.А. Собрание сочинений в 5 т.' },
+        },
+      ],
+    };
+    await page.route(/\/api\/books\/19$/, (route) =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(multi) }),
+    );
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/books/19');
+    const chip = page.getByText('Серия: Булгаков М.А. Собрание сочинений в 5 т.');
+    await expect(chip).toBeVisible({ timeout: 10_000 });
+
+    const shelf = page.getByRole('button', { name: 'Добавить на полку' }).last();
+    const toRead = page.getByRole('button', { name: 'Добавить в «Хочу прочитать»' }).last();
+    const star = page.getByRole('button', { name: /избранное/i }).last();
+    const boxes = await Promise.all([shelf, toRead, star].map((l) => l.boundingBox()));
+    expect(boxes.every(Boolean)).toBe(true);
+    const row = boxes.map((x) => x!).sort((a, c) => a.x - c.x);
+    for (let i = 1; i < row.length; i++) {
+      expect(Math.abs(row[i].y - row[0].y)).toBeLessThan(2); // одна строка
+      expect(row[i - 1].x + row[i - 1].width).toBeLessThanOrEqual(row[i].x); // не налезают
+    }
+    expect(row[row.length - 1].x + row[row.length - 1].width).toBeLessThanOrEqual(width);
+    // Подпись не вылезает за свою кнопку.
+    for (const l of [shelf, toRead, star]) {
+      expect(await l.evaluate((el) => el.scrollWidth <= el.clientWidth)).toBe(true);
+    }
+    const c = await chip.boundingBox();
+    expect(c!.x + c!.width).toBeLessThanOrEqual(width);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+  });
+}
+
 test('карточка на мобиле: книга на полках — «Полки N» в ряду действий, чипы ниже', async ({ mockedPage: page }) => {
   await page.route(/\/api\/books\/19\/collections$/, (route) =>
     route.fulfill({

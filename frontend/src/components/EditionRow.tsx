@@ -69,7 +69,8 @@ export function EditionRow({
                 </InlineEditableField>
               ) : null}
               {ownTitle && edition.series?.title ? (
-                <Badge variant="outline" className="font-normal">
+                // Длинное имя серии переносится, а не растягивает страницу вбок (#612).
+                <Badge variant="outline" className="max-w-full font-normal whitespace-normal text-pretty">
                   Серия: {edition.series.title}
                 </Badge>
               ) : null}
