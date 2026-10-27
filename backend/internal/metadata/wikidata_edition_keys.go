@@ -11,7 +11,7 @@ import (
 // editionKeysBatch — QID на один SPARQL-запрос P629 (как у меток авторов).
 const editionKeysBatch = 300
 
-// RepairEditionWorkKeys — разовый догон #574. До 1.70.2 поиск книги в Wikidata
+// RepairEditionWorkKeys — разовый догон #574. До 1.71.0 поиск книги в Wikidata
 // принимал элемент-издание («2001 edition of The Godfather») за произведение, и
 // QID издания осел ключом группировки (book_work_lookups) и QID работы
 // (works.ext_ids.wd_qid): на проде 2026-10-27 — 1108 из 24,5 тыс. ключей, 1014
