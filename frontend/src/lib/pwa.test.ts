@@ -1,5 +1,15 @@
-import { afterEach, describe, it, expect, vi } from 'vitest';
-import { dropLegacyCaches, isLocalhostHost, LEGACY_CACHES } from './pwa';
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest';
+import { toast } from 'sonner';
+import {
+  __resetUpdateForTest,
+  applyPendingUpdate,
+  dropLegacyCaches,
+  isLocalhostHost,
+  LEGACY_CACHES,
+  onNewVersion,
+} from './pwa';
+
+vi.mock('sonner', () => ({ toast: { info: vi.fn(), success: vi.fn() } }));
 
 /**
  * isLocalhostHost управляет тем, регистрируется ли SW. Регрессия здесь
@@ -69,5 +79,63 @@ describe('dropLegacyCaches', () => {
     await expect(dropLegacyCaches()).resolves.toBeUndefined();
     vi.stubGlobal('caches', { delete: () => Promise.reject(new Error('denied')) });
     await expect(dropLegacyCaches()).resolves.toBeUndefined();
+  });
+});
+
+// #526: новая версия активна — страницу перезагружаем не посреди ввода, а в
+// фоне, при переходе на другую страницу или по кнопке в тосте.
+describe('onNewVersion', () => {
+  let visibility: DocumentVisibilityState = 'visible';
+  const nav = { reload: vi.fn(), assign: vi.fn() };
+  const setVisibility = (v: DocumentVisibilityState) => {
+    visibility = v;
+    document.dispatchEvent(new Event('visibilitychange'));
+  };
+
+  beforeEach(() => {
+    visibility = 'visible';
+    Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => visibility });
+    nav.reload.mockClear();
+    nav.assign.mockClear();
+    vi.mocked(toast.info).mockClear();
+    __resetUpdateForTest(nav);
+  });
+  afterEach(() => {
+    __resetUpdateForTest(null);
+  });
+
+  it('страница в фоне — перезагрузка сразу, без тоста', () => {
+    visibility = 'hidden';
+    onNewVersion();
+    expect(nav.reload).toHaveBeenCalledTimes(1);
+    expect(toast.info).not.toHaveBeenCalled();
+  });
+
+  it('на экране — не перезагружает, показывает тост с кнопкой «Обновить» (один раз)', () => {
+    onNewVersion();
+    onNewVersion();
+    expect(nav.reload).not.toHaveBeenCalled();
+    expect(toast.info).toHaveBeenCalledTimes(1);
+    const opts = vi.mocked(toast.info).mock.calls[0][1] as { action: { label: string; onClick: () => void } };
+    expect(opts.action.label).toBe('Обновить');
+    opts.action.onClick();
+    expect(nav.reload).toHaveBeenCalledTimes(1);
+  });
+
+  it('уход в фон после новой версии — перезагрузка', () => {
+    onNewVersion();
+    setVisibility('visible');
+    expect(nav.reload).not.toHaveBeenCalled();
+    setVisibility('hidden');
+    expect(nav.reload).toHaveBeenCalledTimes(1);
+  });
+
+  it('переход на другую страницу — полная загрузка цели; смена query — нет', () => {
+    expect(applyPendingUpdate('/authors', true)).toBe(false); // обновления нет
+    onNewVersion();
+    expect(applyPendingUpdate('/books?q=бре', false)).toBe(false); // ввод в поиске
+    expect(nav.assign).not.toHaveBeenCalled();
+    expect(applyPendingUpdate('/authors/7', true)).toBe(true);
+    expect(nav.assign).toHaveBeenCalledWith('/authors/7');
   });
 });
