@@ -196,6 +196,7 @@ func NewRouter(d Deps) http.Handler {
 					r.Get("/authors/facets", handleAuthorFacets(d.Catalog, d.Content)) // счётчики фильтров (#389)
 					r.With(authorGate).Get("/authors/{id}", handleGetAuthor(d.Catalog, d.History, d.Metadata, d.Content))
 					r.With(authorGate).Get("/authors/{id}/series", handleAuthorSeries(d.Catalog)) // серии автора (пикер переноса)
+					r.With(authorGate).Get("/authors/{id}/contemporaries", handleAuthorContemporaries(d.Catalog))
 					r.With(seriesGate).Get("/series/{id}", handleGetSeries(d.Catalog, d.History, d.Content, d.Metadata))
 					r.Get("/genres", handleListGenres(d.Catalog))
 					r.Get("/languages", handleListLanguages(d.Catalog))

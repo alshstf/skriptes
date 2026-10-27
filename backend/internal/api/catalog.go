@@ -115,6 +115,29 @@ func handleAuthorSeries(d CatalogDeps) http.HandlerFunc {
 	}
 }
 
+// handleAuthorContemporaries — GET /api/authors/{id}/contemporaries: известные
+// авторы, жившие в одно время (#505).
+func handleAuthorContemporaries(d CatalogDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+		if err != nil || id <= 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid id"})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second)
+		defer cancel()
+		items, err := d.Service.Contemporaries(ctx, id)
+		if err != nil {
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
+			return
+		}
+		if items == nil {
+			items = []catalog.Contemporary{}
+		}
+		writeJSON(w, http.StatusOK, map[string]any{"items": items})
+	}
+}
+
 func handleGetAuthor(d CatalogDeps, hist HistoryDeps, meta MetadataDeps, content ContentDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
