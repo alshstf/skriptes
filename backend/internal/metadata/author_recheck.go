@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -224,7 +225,7 @@ func (r *AuthorRechecker) checkOne(ctx context.Context, a authorCandidate, st *A
 	default:
 		st.PhotoNew++
 	}
-	if err := r.apply(ctx, a.id, oldBio, bio, bioTrace.Reason(), oldPhoto, photo, photoTrace.Reason()); err != nil {
+	if err := r.apply(ctx, a.id, oldBio, bio, bioTrace.Reason(), oldPhoto, photo, photoTrace.Reason(), bioTrace.RejectedQIDs()); err != nil {
 		r.logger.Warn("author recheck: write failed", "author_id", a.id, "err", err)
 		st.Deferred++
 		return
@@ -233,12 +234,30 @@ func (r *AuthorRechecker) checkOne(ctx context.Context, a authorCandidate, st *A
 }
 
 // apply пишет результат и журнал (с причиной решения) одной транзакцией и ставит маркер.
-func (r *AuthorRechecker) apply(ctx context.Context, id int64, oldBio, bio, bioReason, oldPhoto, photo, photoReason string) error {
+// Био очищена, а QID автора — QID отвергнутого сейчас кандидата (rejected): QID и
+// годы жизни записал прежний приём этого кандидата (RecordingCandidateCheck) —
+// они уходят вместе с био, иначе чужой QID не даёт подтвердить книги автора, а
+// чужие годы сдвигают правила года (#572: богослов Хукер у «MASH»).
+func (r *AuthorRechecker) apply(ctx context.Context, id int64, oldBio, bio, bioReason, oldPhoto, photo, photoReason string, rejected []string) error {
 	tx, err := r.pool.Begin(ctx)
 	if err != nil {
 		return err
 	}
 	defer func() { _ = tx.Rollback(ctx) }()
+	if oldBio != "" && bio == "" && len(rejected) > 0 {
+		var qid string
+		err := tx.QueryRow(ctx, `
+			UPDATE authors a SET ext_ids = a.ext_ids - 'wd_qid', born_year = NULL, died_year = NULL
+			FROM (SELECT ext_ids->>'wd_qid' AS q FROM authors WHERE id = $1) old
+			WHERE a.id = $1 AND old.q = ANY($2)
+			RETURNING old.q`, id, rejected).Scan(&qid)
+		switch {
+		case err == nil:
+			bioReason += " · снят QID " + qid + " и годы жизни отвергнутого кандидата"
+		case !errors.Is(err, pgx.ErrNoRows):
+			return err
+		}
+	}
 	for _, f := range []struct{ field, col, old, new, reason string }{
 		{"bio", "bio", oldBio, bio, bioReason},
 		{"photo", "photo_path", oldPhoto, photo, photoReason},
