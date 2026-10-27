@@ -155,9 +155,9 @@ export function ProfileImportPage() {
           data={preview.data}
           busy={apply.isPending}
           onCancel={() => preview.reset()}
-          onApply={(choices) =>
+          onApply={(choices, watch) =>
             apply.mutate(
-              { file, source: preview.data!.source, choices },
+              { file, source: preview.data!.source, choices, watch },
               {
                 onSuccess: (rep) => {
                   setReport(rep);
@@ -208,6 +208,7 @@ function counts(r: ImportReport): string {
     r.reads ? `прочитано — ${r.reads}` : "",
     r.to_read ? `«хочу прочитать» — ${r.to_read}` : "",
     r.highlights ? `цитат — ${r.highlights}` : "",
+    r.wishlist ? `ждём появления — ${r.wishlist}` : "",
     r.kept ? `уже было своё — ${r.kept}` : "",
   ].filter(Boolean);
   return parts.length ? parts.join(" · ") : "нового ничего — всё уже было";
@@ -222,7 +223,7 @@ function PreviewView({
 }: {
   data: ImportPreview;
   busy: boolean;
-  onApply: (choices: ImportChoice[]) => void;
+  onApply: (choices: ImportChoice[], watch: number[]) => void;
   onCancel: () => void;
 }) {
   const high = data.items.filter((it) => it.match.confidence === "high");
@@ -231,6 +232,10 @@ function PreviewView({
   // Уверенные — по умолчанию отмечены; спорные — не выбраны, пока не выберете.
   const [excluded, setExcluded] = useState<Set<number>>(() => new Set());
   const [picked, setPicked] = useState<Map<number, number>>(() => new Map());
+  // Ненайденные — в список желаний (#597): появятся при обновлении библиотеки —
+  // Главная скажет «Появилось то, что вы искали». По умолчанию — следить.
+  const [watchMissing, setWatchMissing] = useState(true);
+  const watch = watchMissing ? none.map((it) => it.i) : [];
 
   const choices = useMemo(() => {
     const out: ImportChoice[] = [];
@@ -349,6 +354,21 @@ function PreviewView({
         </details>
       ) : null}
 
+      {none.length > 0 ? (
+        <label className="flex cursor-pointer items-start gap-3 text-sm">
+          <input
+            type="checkbox"
+            className="mt-0.5 size-4 shrink-0 accent-foreground"
+            checked={watchMissing}
+            onChange={(e) => setWatchMissing(e.target.checked)}
+          />
+          <span className="text-pretty">
+            Следить за ненайденными — когда книга появится в библиотеке, Главная
+            скажет «Появилось то, что вы искали»
+          </span>
+        </label>
+      ) : null}
+
       {data.skipped_total > 0 ? (
         <details className="rounded-md border border-border">
           <summary className="cursor-pointer px-3 py-2 text-sm font-medium">
@@ -370,12 +390,14 @@ function PreviewView({
 
       <div className="flex flex-wrap items-center gap-2">
         <Button
-          disabled={busy || choices.length === 0}
-          onClick={() => onApply(choices)}
+          disabled={busy || (choices.length === 0 && watch.length === 0)}
+          onClick={() => onApply(choices, watch)}
         >
           {busy
             ? "Применяем…"
-            : `Применить — ${choices.length} ${pluralBooks(choices.length)}`}
+            : choices.length > 0
+              ? `Применить — ${choices.length} ${pluralBooks(choices.length)}`
+              : `Следить — ${watch.length} ${pluralBooks(watch.length)}`}
         </Button>
         <Button variant="ghost" onClick={onCancel} disabled={busy}>
           Отмена
@@ -558,7 +580,12 @@ function UndoConfirm({
   onConfirm: () => void;
   onCancel: () => void;
 }) {
-  const total = batch.ratings + batch.reads + batch.to_read + batch.highlights;
+  const total =
+    batch.ratings +
+    batch.reads +
+    batch.to_read +
+    batch.highlights +
+    (batch.wishlist ?? 0);
   return (
     <div className="flex flex-wrap items-center gap-2 pt-1">
       <span className="text-xs text-pretty text-muted-foreground">

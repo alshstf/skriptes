@@ -86,7 +86,7 @@ func TestApplyUndo(t *testing.T) {
 	}}
 	choices := []histimport.Choice{{0, wA}, {1, wB}, {2, wC}, {3, wD}, {4, wE}, {5, wF}}
 
-	rep, err := histimport.Apply(ctx, pool, me, res, "goodreads.csv", choices)
+	rep, err := histimport.Apply(ctx, pool, me, res, "goodreads.csv", choices, nil)
 	require.NoError(t, err)
 	require.Equal(t, histimport.Report{BatchID: rep.BatchID, Applied: 6, Ratings: 1, Reads: 3, ToRead: 1, Highlights: 2, Kept: 2}, rep)
 
@@ -106,15 +106,15 @@ func TestApplyUndo(t *testing.T) {
 	require.EqualValues(t, 1, d.int(`SELECT count(*) FROM annotations WHERE user_id=$1 AND note='мысль'`, me))
 
 	// Повтор того же файла: ничего нового, всё — «уже было».
-	rep2, err := histimport.Apply(ctx, pool, me, res, "goodreads.csv", choices)
+	rep2, err := histimport.Apply(ctx, pool, me, res, "goodreads.csv", choices, nil)
 	require.NoError(t, err)
 	require.Equal(t, 0, rep2.Ratings+rep2.Reads+rep2.ToRead+rep2.Highlights)
 	require.EqualValues(t, 2, d.int(`SELECT count(*) FROM annotations WHERE user_id=$1`, me))
 
 	// Скрытая работа и строка вне файла — отказ целиком.
-	_, err = histimport.Apply(ctx, pool, me, res, "x", []histimport.Choice{{6, wH}})
+	_, err = histimport.Apply(ctx, pool, me, res, "x", []histimport.Choice{{6, wH}}, nil)
 	require.ErrorIs(t, err, histimport.ErrBadChoice)
-	_, err = histimport.Apply(ctx, pool, me, res, "x", []histimport.Choice{{7, wA}})
+	_, err = histimport.Apply(ctx, pool, me, res, "x", []histimport.Choice{{7, wA}}, nil)
 	require.ErrorIs(t, err, histimport.ErrBadChoice)
 
 	// Человек переоценил A сам — это уже его оценка.
@@ -136,4 +136,60 @@ func TestApplyUndo(t *testing.T) {
 	require.NotNil(t, batches[1].UndoneAt)
 	require.Equal(t, histimport.SourceGoodreads, batches[1].Source)
 	require.Equal(t, 7, batches[1].Items)
+}
+
+// TestApplyWishlist — ненайденные книги файла под наблюдением (#597): в списке
+// желаний как «название автор», повтор файла не дублирует, применить можно и
+// без выбранных книг, откат удаляет желания пакета.
+func TestApplyWishlist(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	d := &db{t: t, ctx: ctx, pool: pool}
+	d.coll = d.int(`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`)
+	d.arch = d.int(`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, d.coll)
+	me := d.int(`INSERT INTO users (email, display_name, password_hash, role) VALUES ('w@x','U','x','user') RETURNING id`)
+	wA, _, _ := d.work("A")
+
+	res := &histimport.Result{Source: histimport.SourceGoodreads, Items: []histimport.Item{
+		{Title: "A", Rating: 5},
+		{Title: "Дом, в котором…", Authors: []string{"Мариам Петросян"}, Shelf: histimport.ShelfToRead},
+		{Title: "Пикник на обочине", Authors: []string{"Аркадий Стругацкий", "Борис Стругацкий"}},
+		{Title: "Ы"}, // слишком коротко для поиска — не в список
+	}}
+	rep, err := histimport.Apply(ctx, pool, me, res, "goodreads.csv", []histimport.Choice{{0, wA}}, []int{1, 2, 3})
+	require.NoError(t, err)
+	require.Equal(t, 2, rep.Wishlist)
+	rows, err := pool.Query(ctx, `SELECT q FROM wishlist WHERE user_id=$1 ORDER BY q`, me)
+	require.NoError(t, err)
+	var qs []string
+	for rows.Next() {
+		var q string
+		require.NoError(t, rows.Scan(&q))
+		qs = append(qs, q)
+	}
+	rows.Close()
+	require.Equal(t, []string{"Дом, в котором… Мариам Петросян", "Пикник на обочине Аркадий Стругацкий"}, qs)
+
+	// Повтор файла и применение без выбранных книг: желания уже есть.
+	rep2, err := histimport.Apply(ctx, pool, me, res, "goodreads.csv", nil, []int{1, 2})
+	require.NoError(t, err)
+	require.Zero(t, rep2.Wishlist)
+	require.EqualValues(t, 2, d.int(`SELECT count(*) FROM wishlist WHERE user_id=$1`, me))
+
+	_, err = histimport.Apply(ctx, pool, me, res, "x", nil, []int{9})
+	require.ErrorIs(t, err, histimport.ErrBadChoice, "строка вне файла")
+
+	batches, err := histimport.Batches(ctx, pool, me)
+	require.NoError(t, err)
+	require.Equal(t, 2, batches[len(batches)-1].Wishlist)
+
+	// Откат второго пакета желаний не трогает (они первого), первого — удаляет.
+	require.NoError(t, histimport.Undo(ctx, pool, me, rep2.BatchID))
+	require.EqualValues(t, 2, d.int(`SELECT count(*) FROM wishlist WHERE user_id=$1`, me))
+	require.NoError(t, histimport.Undo(ctx, pool, me, rep.BatchID))
+	require.EqualValues(t, 0, d.int(`SELECT count(*) FROM wishlist WHERE user_id=$1`, me))
 }

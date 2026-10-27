@@ -24,7 +24,10 @@ import (
 //     прочитана;
 //   - «хочу прочитать» → полка to_read, если работа не прочитана и ещё не там;
 //   - подчёркивания → annotations kind=highlight с cfi «import:<sha1>» (без
-//     места в тексте: ридер показывает их списком, не в тексте), fraction NULL.
+//     места в тексте: ридер показывает их списком, не в тексте), fraction NULL;
+//   - книги, которых нет в библиотеке (watch), → список желаний wishlist
+//     «название автор» (#597): появятся при импорте INPX — Главная скажет
+//     «Появилось то, что вы искали» (recsys.Matcher).
 
 // ImportCFIPrefix — «место» подчёркивания из импорта: в тексте его нет.
 const ImportCFIPrefix = "import:"
@@ -44,6 +47,7 @@ type Report struct {
 	ToRead     int   `json:"to_read"`
 	Highlights int   `json:"highlights"`
 	Kept       int   `json:"kept"`
+	Wishlist   int   `json:"wishlist"` // ненайденных под наблюдением (новых в списке желаний)
 }
 
 // Batch — пакет импорта в списке профиля.
@@ -69,8 +73,9 @@ const (
 	toReadName = "Хочу прочитать" // как history.toReadName
 )
 
-// Apply записывает выбранные книги одной транзакцией и создаёт пакет.
-func Apply(ctx context.Context, pool *pgxpool.Pool, userID int64, res *Result, fileName string, choices []Choice) (Report, error) {
+// Apply записывает выбранные книги одной транзакцией и создаёт пакет; watch —
+// книги файла (индексы), которых нет в библиотеке, — в список желаний.
+func Apply(ctx context.Context, pool *pgxpool.Pool, userID int64, res *Result, fileName string, choices []Choice, watch []int) (Report, error) {
 	var rep Report
 	works := make(map[int64]struct{}, len(choices))
 	for _, c := range choices {
@@ -78,6 +83,11 @@ func Apply(ctx context.Context, pool *pgxpool.Pool, userID int64, res *Result, f
 			return rep, ErrBadChoice
 		}
 		works[c.WorkID] = struct{}{}
+	}
+	for _, i := range watch {
+		if i < 0 || i >= len(res.Items) {
+			return rep, ErrBadChoice
+		}
 	}
 	tx, err := pool.Begin(ctx)
 	if err != nil {
@@ -199,15 +209,40 @@ func Apply(ctx context.Context, pool *pgxpool.Pool, userID int64, res *Result, f
 			}
 		}
 	}
+	for _, i := range watch {
+		q := wishQuery(res.Items[i])
+		norm := recsys.NormalizeQuery(q)
+		if len([]rune(norm)) < recsys.MissMinLen {
+			continue
+		}
+		// Желание уже есть (прошлый импорт) — не дублируем и не перехватываем.
+		tag, err := tx.Exec(ctx, `
+			INSERT INTO wishlist (user_id, q, norm, import_batch_id) VALUES ($1, $2, $3, $4)
+			ON CONFLICT (user_id, norm) DO NOTHING`, userID, q, norm, rep.BatchID)
+		if err != nil {
+			return rep, fmt.Errorf("histimport: список желаний: %w", err)
+		}
+		rep.Wishlist += int(tag.RowsAffected())
+	}
 	if _, err := tx.Exec(ctx, `
-		UPDATE import_batches SET applied = $2, ratings = $3, reads = $4, to_read = $5, highlights = $6, kept = $7
-		WHERE id = $1`, rep.BatchID, rep.Applied, rep.Ratings, rep.Reads, rep.ToRead, rep.Highlights, rep.Kept); err != nil {
+		UPDATE import_batches SET applied = $2, ratings = $3, reads = $4, to_read = $5, highlights = $6, kept = $7, wishlist = $8
+		WHERE id = $1`, rep.BatchID, rep.Applied, rep.Ratings, rep.Reads, rep.ToRead, rep.Highlights, rep.Kept, rep.Wishlist); err != nil {
 		return rep, fmt.Errorf("histimport: итоги пакета: %w", err)
 	}
 	if err := tx.Commit(ctx); err != nil {
 		return rep, fmt.Errorf("histimport: commit: %w", err)
 	}
 	return rep, nil
+}
+
+// wishQuery — запрос желания, как его искал бы человек: «название автор»
+// (первый автор файла).
+func wishQuery(it Item) string {
+	q := clipText(it.Title, 300)
+	if len(it.Authors) > 0 {
+		q += " " + clipText(it.Authors[0], 200)
+	}
+	return strings.TrimSpace(q)
 }
 
 func tally(affected int64, done, kept *int) {
@@ -279,6 +314,7 @@ func Undo(ctx context.Context, pool *pgxpool.Pool, userID, batchID int64) error 
 	for _, q := range []string{
 		`DELETE FROM book_ratings WHERE user_id = $1 AND import_batch_id = $2`,
 		`DELETE FROM annotations WHERE user_id = $1 AND import_batch_id = $2`,
+		`DELETE FROM wishlist WHERE user_id = $1 AND import_batch_id = $2`,
 		`DELETE FROM user_collection_books cb USING user_collections c
 		WHERE cb.collection_id = c.id AND c.user_id = $1 AND cb.import_batch_id = $2`,
 	} {
@@ -295,7 +331,7 @@ func Undo(ctx context.Context, pool *pgxpool.Pool, userID, batchID int64) error 
 // Batches — пакеты пользователя, новые сверху.
 func Batches(ctx context.Context, q recsys.Querier, userID int64) ([]Batch, error) {
 	rows, err := q.Query(ctx, `
-		SELECT id, source, file_name, items, applied, ratings, reads, to_read, highlights, kept, applied_at, undone_at
+		SELECT id, source, file_name, items, applied, ratings, reads, to_read, highlights, kept, wishlist, applied_at, undone_at
 		FROM import_batches WHERE user_id = $1 ORDER BY applied_at DESC, id DESC LIMIT 100`, userID)
 	if err != nil {
 		return nil, fmt.Errorf("histimport: пакеты: %w", err)
@@ -304,7 +340,7 @@ func Batches(ctx context.Context, q recsys.Querier, userID int64) ([]Batch, erro
 	err = forEach(rows, func(r pgx.Rows) error {
 		var b Batch
 		if err := r.Scan(&b.BatchID, &b.Source, &b.FileName, &b.Items, &b.Applied, &b.Ratings, &b.Reads, &b.ToRead,
-			&b.Highlights, &b.Kept, &b.AppliedAt, &b.UndoneAt); err != nil {
+			&b.Highlights, &b.Kept, &b.Wishlist, &b.AppliedAt, &b.UndoneAt); err != nil {
 			return err
 		}
 		out = append(out, b)

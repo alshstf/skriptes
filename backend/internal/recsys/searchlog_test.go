@@ -150,3 +150,38 @@ func TestSearchLog(t *testing.T) {
 	require.NoError(t, err)
 	require.Zero(t, id)
 }
+
+// Желание из импорта истории (#597) сопоставляется с новой работой и при
+// выключенном логе поиска (у списка желаний нет срока), исполненное —
+// вычёркивается.
+func TestMatcher_Wishlist(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	me := seedUser(t, ctx, pool, "wish@e.com")
+	_, err := pool.Exec(ctx, `INSERT INTO wishlist (user_id, q, norm) VALUES ($1, 'Пикник на обочине', 'пикник на обочине'), ($1, 'Нет такой', 'нет такой')`, me)
+	require.NoError(t, err)
+	var w int64
+	require.NoError(t, pool.QueryRow(ctx, `INSERT INTO works (title, normalized_title) VALUES ('Пикник на обочине','пикник на обочине') RETURNING id`).Scan(&w))
+
+	m := recsys.NewMatcher(pool, &fakeSearcher{titles: map[int64]string{w: "Пикник на обочине"}}, recsys.NewSearchLog(pool, 0))
+	n, err := m.MatchNewWorks(ctx, []int64{w})
+	require.NoError(t, err)
+	require.Equal(t, 1, n)
+	var q string
+	require.NoError(t, pool.QueryRow(ctx, `SELECT q FROM search_matches WHERE user_id=$1 AND work_id=$2`, me, w).Scan(&q))
+	require.Equal(t, "Пикник на обочине", q)
+	var left []string
+	rows, err := pool.Query(ctx, `SELECT norm FROM wishlist WHERE user_id=$1`, me)
+	require.NoError(t, err)
+	for rows.Next() {
+		var s string
+		require.NoError(t, rows.Scan(&s))
+		left = append(left, s)
+	}
+	rows.Close()
+	require.Equal(t, []string{"нет такой"}, left, "исполненное желание вычеркнуто, остальное ждёт")
+}
