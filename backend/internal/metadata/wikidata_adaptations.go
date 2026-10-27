@@ -224,6 +224,12 @@ func (p *WikidataAdaptationsProvider) searchEntities(ctx context.Context, title,
 // книга). Кандидаты без P50 (одноимённый ландшафт, человек) отпадают сами. Все
 // кандидаты проверяются одним SPARQL-запросом: раньше — запрос на каждого, до
 // 20 на промах. "" без ошибки — никто не подтвердился.
+//
+// Кандидат-издание («2001 edition of The Godfather», P629 = произведение) — не
+// книга-произведение: экранизации (P144), год (P577) и известность ссылаются на
+// произведение, у издания их нет или они свои (#574). Подтверждённое издание
+// заменяем его произведением; издание нескольких произведений (омнибус)
+// пропускаем.
 func (p *WikidataAdaptationsProvider) firstBookByAuthor(ctx context.Context, candidates []string, q BookQuery) (string, error) {
 	if len(candidates) == 0 || len(q.Authors) == 0 {
 		// Нечем валидировать — лучше отвергнуть, чем взять чужую книгу.
@@ -238,18 +244,26 @@ func (p *WikidataAdaptationsProvider) firstBookByAuthor(ctx context.Context, can
 		if cand.nonBook {
 			continue
 		}
-		if authorsConfirm(q.Authors, q.AuthorQIDs, cand.authors) {
+		if !authorsConfirm(q.Authors, q.AuthorQIDs, cand.authors) {
+			continue
+		}
+		switch len(cand.works) {
+		case 0:
 			return c, nil
+		case 1:
+			return cand.works[0], nil
 		}
 	}
 	return "", nil
 }
 
-// bookCandidate — что известно о кандидате из Wikidata: авторы (QID → метки) и
-// признак «не книга» по классу P31.
+// bookCandidate — что известно о кандидате из Wikidata: авторы (QID → метки),
+// признак «не книга» по классу P31 и произведения, изданием которых он является
+// (P629; у произведения пусто).
 type bookCandidate struct {
 	authors map[string][]string
 	nonBook bool
+	works   []string
 }
 
 // nonBookClasses — классы P31 (с подклассами, P279*), которые у кандидата
@@ -262,19 +276,21 @@ const nonBookClasses = "wd:Q2431196 wd:Q7889 wd:Q482994 wd:Q7366 wd:Q196600 wd:Q
 // bookAuthors — авторы (P50) книг-кандидатов: книга → QID автора → его метки и
 // псевдонимы на ru, en и mul (у многих людей имя теперь только в mul). Автор
 // без меток на этих языках остаётся в ответе — его подтверждает QID. Заодно —
-// признак nonBook: класс кандидата (P31/P279*) среди nonBookClasses.
+// признак nonBook: класс кандидата (P31/P279*) среди nonBookClasses, и P629 —
+// произведения, если кандидат — издание (#574).
 func (p *WikidataAdaptationsProvider) bookAuthors(ctx context.Context, books []string) (map[string]bookCandidate, error) {
 	query := fmt.Sprintf(`
-SELECT ?book ?author ?authorLabel ?nonBook WHERE {
+SELECT ?book ?author ?authorLabel ?nonBook ?work WHERE {
   VALUES ?book { wd:%s }
   ?book wdt:P50 ?author .
   OPTIONAL {
     ?author rdfs:label|skos:altLabel ?authorLabel .
     FILTER(LANG(?authorLabel) IN ("ru","en","mul"))
   }
+  OPTIONAL { ?book wdt:P629 ?work }
   BIND(EXISTS { ?book wdt:P31/wdt:P279* ?cls . VALUES ?cls { %s } } AS ?nonBook)
 }
-LIMIT 2000
+LIMIT 4000
 `, strings.Join(books, " wd:"), nonBookClasses)
 
 	bindings, err := p.sparqlBindings(ctx, query)
@@ -298,6 +314,9 @@ LIMIT 2000
 		cand.authors[author] = labels
 		if b["nonBook"] == "true" {
 			cand.nonBook = true
+		}
+		if w := extractQID(b["work"]); w != "" && !slices.Contains(cand.works, w) {
+			cand.works = append(cand.works, w)
 		}
 		out[book] = cand
 	}

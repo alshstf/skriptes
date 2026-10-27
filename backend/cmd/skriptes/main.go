@@ -670,6 +670,46 @@ func run() error {
 			}
 		}
 	})
+	// QID изданий вместо произведений (#574): ключи группировки и QID работ —
+	// на произведение, год из элемента-издания стёрт и пересчитан, экранизации и
+	// известность перепросят воркеры. ~85 запросов P629, 30 в минуту; сбой
+	// Wikidata — повтор через час.
+	metadata.Go(func(c context.Context) {
+		const flag = "wikidata_edition_keys_v1"
+		for attempt := 1; ; attempt++ {
+			var done bool
+			if err := pool.QueryRow(c, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil || done {
+				return
+			}
+			changed, editions, books, err := metadata.RepairEditionWorkKeys(c, pool, wdAdaptations, 30)
+			if err == nil {
+				if len(changed) > 0 {
+					if err := imp.UpsertWorksToIndex(c, changed); err != nil {
+						logger.Warn("works index sync after edition keys repair failed", "err", err)
+					}
+				}
+				if _, err := imp.ResyncYears(c); err != nil {
+					logger.Warn("books index year resync after edition keys repair failed", "err", err)
+				}
+				if _, err := pool.Exec(c, `INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+					ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+					logger.Warn("edition keys repair: set flag failed", "err", err)
+				}
+				logger.Info("one-time wikidata edition keys repair done", "editions", editions, "books", books, "works_year_changed", len(changed))
+				return
+			}
+			if c.Err() != nil || attempt >= 24 {
+				logger.Warn("edition keys repair stopped — will retry next start", "err", err)
+				return
+			}
+			logger.Warn("edition keys repair paused after source failure — retry in 1h", "attempt", attempt, "err", err)
+			select {
+			case <-c.Done():
+				return
+			case <-time.After(time.Hour):
+			}
+		}
+	})
 	workGroupCtl := metadata.NewWorkGroupController(pool, olProvider, wdAdaptations, metadata.WorkGroupConfig{
 		OpenLibrary:       wgCfg.OpenLibrary,
 		Wikidata:          wgCfg.Wikidata,

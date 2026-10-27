@@ -26,6 +26,7 @@ type wdMockArgs struct {
 	authorLabels map[string][]string            // QID книги → []label автора (для firstBookByAuthor)
 	authorQIDs   map[string]string              // QID книги → QID автора
 	nonBook      map[string]bool                // QID кандидата → его класс P31 — фильм/игра/альбом (ответ ?nonBook)
+	editionOf    map[string][]string            // QID кандидата-издания → его произведения (P629, ответ ?work)
 	adaptations  map[string][]map[string]string // QID → []row (поля film, filmLabel, year, directorLabel, imdbId, image, kindLabel)
 	p50Calls     *atomic.Int32                  // сколько было запросов проверки кандидатов
 }
@@ -129,11 +130,27 @@ func buildBookAuthorsResponse(args wdMockArgs, books []string) map[string]any {
 			}
 			return r
 		}
+		var rows []map[string]map[string]string
 		if len(labels) == 0 {
-			bindings = append(bindings, row(""))
+			rows = append(rows, row(""))
 		}
 		for _, l := range labels {
-			bindings = append(bindings, row(l))
+			rows = append(rows, row(l))
+		}
+		// P629 — OPTIONAL: у издания строки множатся на каждое произведение.
+		works := args.editionOf[book]
+		if len(works) == 0 {
+			bindings = append(bindings, rows...)
+			continue
+		}
+		for _, w := range works {
+			for _, r := range rows {
+				withWork := map[string]map[string]string{"work": {"value": "http://www.wikidata.org/entity/" + w}}
+				for k, v := range r {
+					withWork[k] = v
+				}
+				bindings = append(bindings, withWork)
+			}
 		}
 	}
 	return map[string]any{"results": map[string]any{"bindings": bindings}}
@@ -572,4 +589,45 @@ func TestWikidataAdaptations_NonBookCandidateSkipped(t *testing.T) {
 		ID: 1, Title: "Дюна", Authors: []string{"Херберт Фрэнк"}, AuthorQIDs: []string{"Q7934"}, Lang: "ru",
 	})
 	require.ErrorIs(t, err, ErrNotFound)
+}
+
+// #574: wbsearchentities ставит элемент-издание («2001 edition of The Godfather»,
+// P629 = роман) выше произведения. Подтверждённое по автору издание заменяется
+// произведением — экранизации ссылаются на него; издание нескольких
+// произведений (омнибус) пропускается.
+func TestWikidataAdaptations_EditionCandidateResolvesToWork(t *testing.T) {
+	srv := wdMockServer(t, wdMockArgs{
+		searchHits: []string{"Q100287822"}, // только издание: произведение в выдаче поиска не всплыло
+		authorQIDs: map[string]string{"Q100287822": "Q312720"},
+		authorLabels: map[string][]string{
+			"Q100287822": {"Mario Puzo"},
+		},
+		editionOf: map[string][]string{"Q100287822": {"Q1744399"}},
+		adaptations: map[string][]map[string]string{
+			"Q1744399": {{"film": "http://www.wikidata.org/entity/Q47703", "filmLabel": "Крёстный отец", "year": "1972", "kindLabel": "фильм"}},
+		},
+	})
+	defer srv.Close()
+	p := NewWikidataAdaptationsProvider(nil).WithEndpoints(srv.URL+"/w/api.php", srv.URL+"/sparql", "")
+	items, qid, err := p.FetchAdaptationsWithQID(context.Background(), BookQuery{
+		ID: 1, Title: "The Godfather", Authors: []string{"Пьюзо Марио"}, AuthorQIDs: []string{"Q312720"}, Lang: "en",
+	})
+	require.NoError(t, err)
+	require.Equal(t, "Q1744399", qid, "QID произведения, а не издания")
+	require.Len(t, items, 1)
+
+	// Омнибус (издание двух произведений) пропускается, следующий кандидат — роман.
+	srv2 := wdMockServer(t, wdMockArgs{
+		searchHits:   []string{"Q500", "Q1744399"},
+		authorQIDs:   map[string]string{"Q500": "Q312720", "Q1744399": "Q312720"},
+		authorLabels: map[string][]string{"Q500": {"Mario Puzo"}, "Q1744399": {"Mario Puzo"}},
+		editionOf:    map[string][]string{"Q500": {"Q1744399", "Q501"}},
+	})
+	defer srv2.Close()
+	p2 := NewWikidataAdaptationsProvider(nil).WithEndpoints(srv2.URL+"/w/api.php", srv2.URL+"/sparql", "")
+	key, err := p2.ResolveWorkKey(context.Background(), WorkQuery{
+		BookID: 1, Title: "The Godfather", Authors: []string{"Пьюзо Марио"}, AuthorQIDs: []string{"Q312720"}, Lang: "en",
+	})
+	require.NoError(t, err)
+	require.Equal(t, "Q1744399", key)
 }
