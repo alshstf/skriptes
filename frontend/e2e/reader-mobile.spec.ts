@@ -1,6 +1,6 @@
 import { test, expect } from './_fixtures';
 import { zipStored } from './_epub';
-import type { Frame, Page } from '@playwright/test';
+import type { Frame, Locator, Page } from '@playwright/test';
 
 // Ридер на телефоне: страница на весь экран, панель — оверлей по тапу в центр,
 // перелистывание тапом по краям и свайпом (каждое отключается в настройках),
@@ -223,6 +223,37 @@ test('iOS PWA: страница и панель — ниже системног�
   const title = page.getByRole('dialog', { name: 'Заметки' }).getByRole('heading', { name: 'Заметки' });
   await expect(title).toBeVisible();
   expect(await title.evaluate((el) => el.getBoundingClientRect().top)).toBeGreaterThanOrEqual(BAND);
+});
+
+test('iOS PWA: крестик шторки — в строке заголовка, у нижней без отступа статус-бара (#615)', async ({
+  mockedPage: page,
+}) => {
+  const cdp = await page.context().newCDPSession(page);
+  await cdp.send('Emulation.setSafeAreaInsetsOverride' as never, { insets: { top: 59, bottom: 34 } } as never);
+  await openReader(page);
+  const rect = (l: Locator) => l.evaluate((el) => el.getBoundingClientRect().toJSON() as DOMRect);
+  const sameRow = async (dialog: Locator, heading: string) => {
+    const close = await rect(dialog.getByRole('button', { name: 'Закрыть' }));
+    const title = await rect(dialog.getByRole('heading', { name: heading }));
+    expect(close.bottom).toBeGreaterThan(title.top);
+    expect(close.top).toBeLessThan(title.bottom);
+    return close;
+  };
+
+  // Боковая шторка — от верха экрана: крестик ниже полосы размытия, вровень с заголовком.
+  await page.getByRole('button', { name: 'Заметки и закладки' }).click();
+  const notes = page.getByRole('dialog', { name: 'Заметки' });
+  await expect(notes).toBeVisible();
+  expect((await sameRow(notes, 'Заметки')).top).toBeGreaterThanOrEqual(59 + 20);
+  await page.keyboard.press('Escape');
+  await expect(notes).toBeHidden();
+
+  // Нижняя — верха не касается: крестик у её края, а не на высоту статус-бара ниже (налезал на темы).
+  await page.getByRole('button', { name: 'Настройки чтения' }).click();
+  const settings = page.getByRole('dialog', { name: 'Настройки чтения' });
+  await expect(settings).toBeVisible();
+  const close = await sameRow(settings, 'Настройки чтения');
+  expect(close.top - (await rect(settings)).top).toBeLessThan(20);
 });
 
 test('тема страницы: тёмная по умолчанию, светлая и шрифт — из настроек', async ({ mockedPage: page }) => {

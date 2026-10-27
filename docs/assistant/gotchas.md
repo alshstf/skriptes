@@ -975,9 +975,11 @@ safe-area-инсет**, иначе контент лезет под бар. Ра
   `pt-safe-ui` (`index.css`: инсет + `min(инсет, 1.5rem)` — добавка только при ненулевом
   инсете): ридер (страница, панель, ленточка закладки), Sheet, Cmd+K. e2e эмулирует инсеты
   CDP `Emulation.setSafeAreaInsetsOverride` (`reader-mobile.spec.ts`).
-- **Sheet-дроверы** (`ui/sheet.tsx`, ВСЕ usage — nav/мобильные фильтры): `pt-safe-ui pb-safe`
-  на боковых (во всю высоту), `pt-safe-ui`/`pb-safe` на верх/низ; close-кнопка
-  `top-[calc(var(--safe-top-ui)+0.75rem)]` (absolute, иначе под баром).
+- **Sheet-дроверы** (`ui/sheet.tsx`, ВСЕ usage — nav/мобильные фильтры, шторки ридера): `pt-safe-ui pb-safe`
+  на боковых (во всю высоту), `pt-safe-ui`/`pb-safe` на верх/низ; close-кнопка — по стороне
+  (`closeTopClasses`): у шторок от верха `top-[calc(var(--safe-top-ui)+0.75rem)]` (absolute, иначе под
+  баром), у нижней — `top-3`: верха экрана она не касается, с отступом крестик на iPhone сползал на
+  темы «Настроек чтения» (#615, 1.70.1; e2e — `reader-mobile.spec.ts`, крестик в строке заголовка).
 - **Sticky-саб-бары фильтров** (`AuthorsPage`/`BooksPage`, фильтр полки `ShelfFilter`): липнут
   ПОД хэдером → `top-[var(--header-h)]`. На `top-14` уезжали бы ПОД хэдер (который на iOS
   выше на инсет) и пропадали. e2e — `header-chrome.spec.ts` (CDP-инсеты, кнопки ниже полосы,
