@@ -3,6 +3,7 @@ package metadata
 import (
 	"context"
 	"fmt"
+	"slices"
 	"strings"
 	"sync"
 )
@@ -78,6 +79,18 @@ func (t *AuthorTrace) Steps() []TraceStep {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	return append([]TraceStep(nil), t.steps...)
+}
+
+// RejectedQIDs — QID кандидатов, которых отвергла политика приёма (шаг policy:
+// Input — QID кандидата).
+func (t *AuthorTrace) RejectedQIDs() []string {
+	var out []string
+	for _, s := range t.Steps() {
+		if s.Stage == "policy" && s.Outcome == TraceReject && isQID(s.Input) && !slices.Contains(out, s.Input) {
+			out = append(out, s.Input)
+		}
+	}
+	return out
 }
 
 // Reason — коротко, чем кончился поиск в каждом источнике (и языке): решающий

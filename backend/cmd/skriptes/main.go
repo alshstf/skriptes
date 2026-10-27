@@ -789,6 +789,23 @@ func run() error {
 	// Точечная перепроверка под гейт #572 (умер за века до книг современных жанров).
 	metadata.Go(func(c context.Context) {
 		runAuthorEraRecheck(c, pool, enricher, baCfg.BiosRPM, gatesResolver, logger)
+		// В 1.71.0 она очистила чужие био, но оставила QID и годы того же
+		// отвергнутого кандидата — снять (после перепроверки, по её журналу).
+		const flag = "era_rejected_qid_clear_v1"
+		var done bool
+		if err := pool.QueryRow(c, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil || done {
+			return
+		}
+		n, err := metadata.ClearEraRejectedQIDs(c, pool)
+		if err != nil {
+			logger.Warn("era rejected QIDs clear failed — will retry next start", "err", err)
+			return
+		}
+		if _, err := pool.Exec(c, `INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+			ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+			logger.Warn("era rejected QIDs: set flag failed", "err", err)
+		}
+		logger.Info("one-time era rejected QIDs cleared", "authors", n)
 	})
 
 	// Kindle: CRUD по target'ам всегда доступен, send-to-kindle — только

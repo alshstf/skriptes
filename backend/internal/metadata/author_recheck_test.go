@@ -196,3 +196,82 @@ func TestAuthorRechecker_AllAuthors(t *testing.T) {
 	require.NoError(t, pool.QueryRow(ctx, `SELECT action FROM author_meta_recheck WHERE author_id = $1`, plain).Scan(&action))
 	require.Equal(t, "added", action)
 }
+
+// #572: био очищена, и QID автора — QID отвергнутого кандидата → QID и годы
+// жизни уходят вместе с био (их записал прежний приём того же кандидата).
+// QID, которого в этой перепроверке никто не отверг, не трогаем. Разовый догон
+// снимает QID у очищенных гейтом эпохи по журналу.
+func TestAuthorRecheck_ClearsRejectedQID(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	r := NewAuthorRechecker(pool, nil, 0, slog.New(slog.NewTextHandler(io.Discard, nil)))
+
+	mk := func(last, qid string) int64 {
+		var id int64
+		require.NoError(t, pool.QueryRow(ctx, `
+			INSERT INTO authors (last_name, normalized_name, bio, ext_ids, born_year, died_year)
+			VALUES ($1, lower($1), 'чужая био', jsonb_build_object('wd_qid', $2::text), 1554, 1600) RETURNING id`,
+			last, qid).Scan(&id))
+		return id
+	}
+	state := func(id int64) (qid *string, born *int) {
+		require.NoError(t, pool.QueryRow(ctx, `SELECT ext_ids->>'wd_qid', born_year FROM authors WHERE id=$1`, id).Scan(&qid, &born))
+		return
+	}
+
+	hooker := mk("Хукер", "Q443783")
+	require.NoError(t, r.apply(ctx, hooker, "чужая био", "", "wikipedia/ru: reject policy", "", "", "", []string{"Q443783"}))
+	qid, born := state(hooker)
+	require.Nil(t, qid, "QID отвергнутого кандидата снят")
+	require.Nil(t, born, "годы жизни сняты")
+	var reason string
+	require.NoError(t, pool.QueryRow(ctx, `SELECT reason FROM author_meta_recheck WHERE author_id=$1 AND field='bio'`, hooker).Scan(&reason))
+	require.Contains(t, reason, "снят QID Q443783")
+
+	other := mk("Другой", "Q1")
+	require.NoError(t, r.apply(ctx, other, "чужая био", "", "reason", "", "", "", []string{"Q2"}))
+	qid, born = state(other)
+	require.NotNil(t, qid, "QID не отвергнутого кандидата остаётся")
+	require.Equal(t, "Q1", *qid)
+	require.NotNil(t, born)
+
+	kept := mk("Оставлен", "Q3")
+	require.NoError(t, r.apply(ctx, kept, "чужая био", "новая био", "reason", "", "", "", []string{"Q3"}))
+	qid, _ = state(kept)
+	require.NotNil(t, qid, "био не очищена (заменена) — QID пишет приём нового кандидата, не трогаем")
+
+	// Разовый догон по журналу (очищенные в 1.71.0 без снятия QID).
+	var cleared, notEra int64
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO authors (last_name, normalized_name, ext_ids, born_year, died_year)
+		VALUES ('Уортон', 'уортон', '{"wd_qid":"Q1971218"}', 1728, 1790) RETURNING id`).Scan(&cleared))
+	require.NoError(t, pool.QueryRow(ctx, `
+		INSERT INTO authors (last_name, normalized_name, ext_ids, born_year, died_year)
+		VALUES ('Горгий', 'горгий', '{"wd_qid":"Q201000"}', -483, -376) RETURNING id`).Scan(&notEra))
+	_, err := pool.Exec(ctx, `INSERT INTO author_meta_recheck (author_id, field, action, old_value, reason) VALUES
+		($1, 'bio', 'cleared', 'x', 'wikipedia/ru: reject policy «died 1790, only modern genres from 2002»; openlibrary: reject search'),
+		($2, 'bio', 'cleared', 'x', 'wikipedia/ru: reject policy «adjacent without confirmation»')`, cleared, notEra)
+	require.NoError(t, err)
+	n, err := ClearEraRejectedQIDs(ctx, pool)
+	require.NoError(t, err)
+	require.EqualValues(t, 1, n)
+	qid, _ = state(cleared)
+	require.Nil(t, qid)
+	qid, _ = state(notEra)
+	require.NotNil(t, qid, "очищено другим гейтом — не трогаем")
+}
+
+func TestAuthorTrace_RejectedQIDs(t *testing.T) {
+	var tr AuthorTrace
+	ctx := WithAuthorTrace(context.Background(), &tr)
+	traceStep(ctx, TraceStep{Source: "wikipedia", Lang: "ru", Stage: "qid", Outcome: TraceInfo, Input: "x", Value: "Q1"})
+	traceStep(ctx, TraceStep{Source: "wikipedia", Lang: "ru", Stage: "policy", Outcome: TraceReject, Input: "Q1", Value: "died"})
+	traceStep(ctx, TraceStep{Source: "wikipedia", Lang: "en", Stage: "policy", Outcome: TraceReject, Input: "Q1", Value: "loose"})
+	traceStep(ctx, TraceStep{Source: "wikipedia", Lang: "en", Stage: "policy", Outcome: TracePass, Input: "Q2", Value: "writer"})
+	traceStep(ctx, TraceStep{Source: "openlibrary", Stage: "policy", Outcome: TraceReject, Input: "", Value: "no qid"})
+	require.Equal(t, []string{"Q1"}, tr.RejectedQIDs())
+}
