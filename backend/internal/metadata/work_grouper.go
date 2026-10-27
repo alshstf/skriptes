@@ -53,6 +53,15 @@ type WorksIndexSyncer interface {
 	DeleteWorksFromIndex(ctx context.Context, ids []int64) error
 }
 
+// InstanceHiddenSyncer — пересчёт флагов скрытия на инстансе и синк поиска
+// (реализуется *importer.Importer). Слияние, задевшее скрытую работу, зовёт его
+// после коммита (#622): издания влитой работы должны скрыться (или открыться,
+// если их работу поглотила видимая — тогда скрытие переносится и остаётся).
+// Опционален — type-assert из WorkIDResyncer.
+type InstanceHiddenSyncer interface {
+	SyncInstanceHidden(ctx context.Context) (books, works int, err error)
+}
+
 // ErrSplitAnchor — попытка вынести через split ЯКОРНОЕ издание работы (то, чьё
 // название совпадает с названием работы). Запрещено: якорь держит идентичность
 // работы. API мапит это в 400.
@@ -73,8 +82,11 @@ type WorkGrouper struct {
 
 	merged       atomic.Int64       // сколько изданий переназначено за проход (для логов)
 	touchedWorks map[int64]struct{} // канонические работы, изменённые за проход (для works-индекса)
-	deletedWorks map[int64]struct{} // работы, удалённые (GC) за проход
-	tier2Cursor  int64              // курсор по author_id для батчей внешнего краулера (Tier-2)
+	// hiddenTouched — за проход слили скрытую на инстансе работу (#622): после
+	// прохода пересчитать флаги скрытия.
+	hiddenTouched atomic.Bool
+	deletedWorks  map[int64]struct{} // работы, удалённые (GC) за проход
+	tier2Cursor   int64              // курсор по author_id для батчей внешнего краулера (Tier-2)
 
 	domLang    string // доминирующий язык библиотеки (для локализации works.title), кэш
 	domLangSet bool   // domLang вычислен (мемоизация; группировщик однопоточный)
@@ -268,6 +280,9 @@ func (g *WorkGrouper) resetPassState() {
 // syncSearchAfterPass синкает поиск, если за проход что-то менялось: books-индекс
 // work_id (distinct/OPDS) + таргетный works-индекс (upsert изменённых, delete GC).
 func (g *WorkGrouper) syncSearchAfterPass(ctx context.Context) {
+	if g.hiddenTouched.Swap(false) {
+		syncHidden(ctx, g.resyncer, g.logger)
+	}
 	if g.resyncer != nil && g.merged.Load() > 0 && ctx.Err() == nil {
 		// Перенесённые издания — в канонических работах, те в touchedWorks.
 		if n, err := g.resyncer.ResyncWorkIDsFor(ctx, keysOf(g.touchedWorks)); err != nil {
@@ -997,12 +1012,41 @@ func reassignWorkUserData(ctx context.Context, ex pgxExec, canonical int64, lose
 		 ON CONFLICT (user_id, work_id) DO NOTHING`,
 		// Клик из выдачи поиска: SET NULL при GC стёр бы, по какой работе кликнули.
 		`UPDATE search_log SET clicked_work_id = $1 WHERE clicked_work_id = ANY($2)`,
+		// Явное скрытие на инстансе (#622): скрытая работа — книга целиком, и всё,
+		// что с ней склеилось, — та же книга. CASCADE снёс бы скрытие, и после
+		// пересчёта флагов её издания снова стали бы видны.
+		`INSERT INTO hidden_works (work_id, hidden_at, hidden_by, note)
+		 SELECT $1, hidden_at, hidden_by, note FROM hidden_works WHERE work_id = ANY($2)
+		 ORDER BY hidden_at LIMIT 1
+		 ON CONFLICT (work_id) DO NOTHING`,
 	} {
 		if _, err := ex.Exec(ctx, q, canonical, losers); err != nil {
 			return fmt.Errorf("reassign work user data: %w", err)
 		}
 	}
 	return nil
+}
+
+// touchesHidden — среди работ слияния есть скрытая на инстансе: после коммита
+// нужен пересчёт флагов скрытия (InstanceHiddenSyncer).
+func touchesHidden(ctx context.Context, ex pgxExec, ids []int64) (bool, error) {
+	var hidden bool
+	err := ex.QueryRow(ctx, `SELECT EXISTS (SELECT 1 FROM works WHERE id = ANY($1) AND instance_hidden)`, ids).Scan(&hidden)
+	if err != nil {
+		return false, fmt.Errorf("merge: hidden works: %w", err)
+	}
+	return hidden, nil
+}
+
+// syncHidden — пересчёт флагов скрытия после слияния, задевшего скрытую работу.
+func syncHidden(ctx context.Context, resyncer WorkIDResyncer, logger *slog.Logger) {
+	syncer, ok := resyncer.(InstanceHiddenSyncer)
+	if !ok || ctx.Err() != nil {
+		return
+	}
+	if _, _, err := syncer.SyncInstanceHidden(ctx); err != nil {
+		logger.Warn("work merge: instance hidden sync failed", "err", err)
+	}
 }
 
 // apply — транзакционно применяет кластеры: переназначает work_id на каноническую
@@ -1049,6 +1093,11 @@ func (g *WorkGrouper) apply(ctx context.Context, authorID int64, books []groupBo
 			// ДО GC (иначе CASCADE удалит их при DELETE FROM works ниже).
 			if err := reassignWorkUserData(ctx, tx, canonical, keysOf(loserSet)); err != nil {
 				return err
+			}
+			if hidden, err := touchesHidden(ctx, tx, append(keysOf(loserSet), canonical)); err != nil {
+				return err
+			} else if hidden {
+				g.hiddenTouched.Store(true)
 			}
 			g.merged.Add(int64(len(moved)))
 		}
@@ -1308,6 +1357,10 @@ func (c *WorkGroupController) MergeWorks(ctx context.Context, workIDs []int64, t
 	if err := reassignWorkUserData(ctx, tx, target, others); err != nil {
 		return 0, err
 	}
+	hidden, err := touchesHidden(ctx, tx, append(append([]int64{}, others...), target))
+	if err != nil {
+		return 0, err
+	}
 	gcDeleted, err := scanInt64s(ctx, tx, `
 		DELETE FROM works w WHERE w.id = ANY($1) AND NOT EXISTS (SELECT 1 FROM books b WHERE b.work_id = w.id)
 		RETURNING w.id
@@ -1328,6 +1381,9 @@ func (c *WorkGroupController) MergeWorks(ctx context.Context, workIDs []int64, t
 	}
 	// Синк поиска: target upsert, поглощённые работы — удалить из works-индекса.
 	c.syncSearchAfterManual([]int64{target}, gcDeleted)
+	if hidden {
+		spawn(func() { syncHidden(workersCtx, c.resyncer, c.logger) })
+	}
 	return target, nil
 }
 
