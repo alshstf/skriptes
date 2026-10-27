@@ -88,6 +88,26 @@ export function useAuthorSeries(authorId: number | undefined, enabled: boolean) 
   });
 }
 
+/** Современник автора (#505): известный автор, чья взрослая жизнь пересекалась с его жизнью. */
+export type Contemporary = {
+  id: number;
+  last_name: string;
+  first_name?: string;
+  born_year: number;
+  died_year?: number;
+};
+
+/** useAuthorContemporaries — до 8 самых известных современников (считает бэкенд по годам жизни). */
+export function useAuthorContemporaries(authorId: number | undefined) {
+  return useQuery({
+    queryKey: ['author-contemporaries', authorId],
+    enabled: !!authorId,
+    queryFn: () =>
+      apiFetch<{ items: Contemporary[] }>(`/api/authors/${authorId}/contemporaries`).then((r) => r.items),
+    staleTime: 10 * 60_000,
+  });
+}
+
 export type Series = {
   id: number;
   title: string;

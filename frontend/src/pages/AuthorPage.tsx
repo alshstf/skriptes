@@ -2,6 +2,7 @@ import { Link, useParams } from '@tanstack/react-router';
 import { useState } from 'react';
 import { BarChart3, BookHeart, BookOpen, ChevronDown, ChevronRight, Film, Globe, User as UserIcon } from 'lucide-react';
 import { AuthorAwards } from '@/components/AwardBadges';
+import { AuthorContemporaries } from '@/components/AuthorContemporaries';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -157,6 +158,7 @@ export function AuthorPage() {
           <AuthorDuplicates author={a} />
 
           <AuthorBio bio={a.bio} enrichmentExhausted={enrichmentExhausted} />
+          <AuthorContemporaries authorId={a.id} />
         </CardContent>
       </Card>
 
