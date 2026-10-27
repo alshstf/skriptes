@@ -64,6 +64,16 @@ const sideClasses: Record<SheetSide, string> = {
     "inset-x-0 bottom-0 h-auto border-t pb-safe data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom",
 }
 
+// Крестик — в строке заголовка. У шторок от верхнего края (pt-safe-ui) он ниже на
+// тот же отступ статус-бара; нижней шторке отступ лишний — верха экрана она не
+// касается, и на iPhone крестик сползал в контент (#615).
+const closeTopClasses: Record<SheetSide, string> = {
+  left: "top-[calc(var(--safe-top-ui)+0.75rem)]",
+  right: "top-[calc(var(--safe-top-ui)+0.75rem)]",
+  top: "top-[calc(var(--safe-top-ui)+0.75rem)]",
+  bottom: "top-3",
+}
+
 function SheetContent({
   className,
   children,
@@ -91,7 +101,12 @@ function SheetContent({
       >
         {children}
         {showCloseButton ? (
-          <SheetPrimitive.Close className="absolute top-[calc(var(--safe-top-ui)+0.75rem)] right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none">
+          <SheetPrimitive.Close
+            className={cn(
+              "absolute right-4 rounded-xs opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none",
+              closeTopClasses[side],
+            )}
+          >
             <XIcon className="size-4" />
             <span className="sr-only">Закрыть</span>
           </SheetPrimitive.Close>
