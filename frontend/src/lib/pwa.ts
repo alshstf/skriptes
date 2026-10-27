@@ -22,9 +22,9 @@ import { toast } from 'sonner';
  * import; на dev-сервере без enabled.devOptions он тоже отсутствует —
  * молча выходим.
  *
- * autoUpdate (см. vite.config.ts) сам активирует новый SW при следующей
- * навигации; toast «обновление доступно» — просто визуальный сигнал
- * пользователю, что вот сейчас он увидит свежую версию.
+ * autoUpdate (см. vite.config.ts) активирует новый SW сразу после скачивания;
+ * перезагрузку страницы под новую версию откладывает onNewVersion — не посреди
+ * ввода (#526).
  *
  * Пропускаем регистрацию на *.localhost хостах. Caddy там выдаёт TLS-
  * сертификат через локальный CA, которому system keychain браузера не
@@ -57,7 +57,7 @@ export async function registerPWA(): Promise<void> {
     const mod = (await import(/* @vite-ignore */ 'virtual:pwa-register')) as {
       registerSW: (opts: {
         immediate?: boolean;
-        onNeedRefresh?: () => void;
+        onNeedReload?: () => void;
         onOfflineReady?: () => void;
         onRegisterError?: (err: unknown) => void;
       }) => () => Promise<void>;
@@ -69,12 +69,9 @@ export async function registerPWA(): Promise<void> {
           description: 'Открытые карточки и обложки кэшированы.',
         });
       },
-      onNeedRefresh: () => {
-        toast.info('Доступна новая версия', {
-          description: 'Обновится при следующей навигации.',
-          duration: 6000,
-        });
-      },
+      // Без onNeedReload плагин перезагружает страницу сразу, как только новый
+      // SW активен, — под пальцами: набранное в поиске пропадало (#526).
+      onNeedReload: () => onNewVersion(),
       onRegisterError: (err) => {
         // Не падаем — SW не критичен. В dev режиме virtual:pwa-register
         // в no-op варианте может не запуститься; молча логируем.
@@ -85,6 +82,62 @@ export async function registerPWA(): Promise<void> {
     // virtual:pwa-register отсутствует (dev без enabled.devOptions, тесты).
     // Это ожидаемо; ничего не делаем.
   }
+}
+
+// ── Обновление версии ───────────────────────────────────────────────
+
+/** PageNav — то, чем страница перезагружается; в тестах — подмена. */
+export type PageNav = Pick<Location, 'reload' | 'assign'>;
+
+let updatePending = false;
+let pageNav: PageNav | null = null;
+const nav = (): PageNav => pageNav ?? window.location;
+
+/**
+ * onNewVersion — новый SW уже активен и раздаёт новую сборку, а на экране
+ * старая. Страница в фоне — перезагружаем сразу (никто не смотрит). На экране —
+ * ждём безопасного момента: уход в фон, переход на другую страницу
+ * (applyPendingUpdate) или кнопка «Обновить» в тосте. Посреди ввода не
+ * перезагружаем: так терялось набранное в поиске (#526). Старая сборка до
+ * перезагрузки работает: бандл один, ленивых чанков, которые пропали бы с
+ * сервера, у приложения нет.
+ */
+export function onNewVersion(): void {
+  if (document.visibilityState === 'hidden') {
+    nav().reload();
+    return;
+  }
+  if (updatePending) return;
+  updatePending = true;
+  document.addEventListener('visibilitychange', reloadWhenHidden);
+  toast.info('Доступна новая версия', {
+    description: 'Обновится при переходе на другую страницу.',
+    action: { label: 'Обновить', onClick: () => nav().reload() },
+    duration: 10_000,
+  });
+}
+
+function reloadWhenHidden(): void {
+  if (document.visibilityState === 'hidden') nav().reload();
+}
+
+/**
+ * applyPendingUpdate — переход на другую страницу при ждущем обновлении:
+ * полная загрузка href вместо SPA-перехода. true — загрузка пошла. Только
+ * при смене пути: смена query (поиск на /books пишет запрос в URL на каждый
+ * символ) — тот же ввод.
+ */
+export function applyPendingUpdate(href: string, pathChanged: boolean): boolean {
+  if (!updatePending || !pathChanged) return false;
+  nav().assign(href);
+  return true;
+}
+
+/** __resetUpdateForTest — сбросить ждущее обновление и подменить перезагрузку. */
+export function __resetUpdateForTest(p: PageNav | null): void {
+  updatePending = false;
+  pageNav = p;
+  document.removeEventListener('visibilitychange', reloadWhenHidden);
 }
 
 // ── Install prompt ──────────────────────────────────────────────────

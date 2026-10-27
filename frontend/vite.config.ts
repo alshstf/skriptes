@@ -21,9 +21,10 @@ export default defineConfig({
     react(),
     tailwindcss(),
     // ── PWA: service worker + web app manifest ──────────────────────
-    // registerType=autoUpdate — новая версия SW активируется без
-    // ручного "обновить страницу". Старые tab'ы доживают на старом SW,
-    // следующая навигация подхватит новый.
+    // registerType=autoUpdate — новый SW активируется сразу после
+    // скачивания (skipWaiting + clientsClaim). Страницу под новую сборку
+    // перезагружает lib/pwa.ts::onNewVersion — в фоне сразу, на экране при
+    // переходе на другую страницу или по кнопке в тосте, не посреди ввода (#526).
     //
     // injectRegister=null — регистрируем SW вручную в src/main.tsx
     // (через virtual:pwa-register). Это даёт точку контроля: показать

@@ -5,7 +5,7 @@ import { RouterProvider } from '@tanstack/react-router';
 import { Toaster } from 'sonner';
 import { createAppRouter } from './router';
 import { InstallPromptBanner } from './components/InstallPromptBanner';
-import { installPromptStore, registerPWA } from './lib/pwa';
+import { applyPendingUpdate, installPromptStore, registerPWA } from './lib/pwa';
 import './index.css';
 
 const queryClient = new QueryClient({
@@ -15,6 +15,11 @@ const queryClient = new QueryClient({
 });
 
 const router = createAppRouter(queryClient);
+// Вышла новая версия, пока приложение открыто: переход на другую страницу —
+// момент её применить (см. onNewVersion в lib/pwa).
+router.subscribe('onBeforeNavigate', (e) => {
+  applyPendingUpdate(e.toLocation.href, e.pathChanged);
+});
 
 // PWA: подписываемся на beforeinstallprompt ДО регистрации SW — событие
 // может прилететь сразу после bootstrap. Сам SW регистрируем после
