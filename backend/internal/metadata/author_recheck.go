@@ -47,8 +47,16 @@ type AuthorRechecker struct {
 	enricher *Enricher
 	logger   *slog.Logger
 	gate     *rateGate
-	all      bool // все авторы с книгами, а не только с био/фото (WithAllAuthors)
-	workers  int  // авторов одновременно (WithWorkers), по умолчанию 1
+	all      bool    // все авторы с книгами, а не только с био/фото (WithAllAuthors)
+	workers  int     // авторов одновременно (WithWorkers), по умолчанию 1
+	ids      []int64 // только эти авторы (WithIDs); nil — все
+}
+
+// WithIDs — перепроверять только этих авторов: точечная перепроверка после
+// нового гейта, который заведомо задевает немногих (#572).
+func (r *AuthorRechecker) WithIDs(ids []int64) *AuthorRechecker {
+	r.ids = ids
+	return r
 }
 
 // WithWorkers — сколько авторов проверять одновременно. Темп всё равно держит
@@ -153,8 +161,9 @@ func (r *AuthorRechecker) batch(ctx context.Context, since time.Time, lastRenown
 		                      WHERE r.author_id = authors.id AND r.action = 'cleared') END
 		  AND (metadata_fetched_at IS NULL OR metadata_fetched_at < $1)
 		  AND (renown, id) < ($2, $3)
+		  AND ($5::bigint[] IS NULL OR id = ANY($5))
 		ORDER BY renown DESC, id DESC
-		LIMIT 200`, since, lastRenown, lastID, r.all)
+		LIMIT 200`, since, lastRenown, lastID, r.all, r.ids)
 	if err != nil {
 		return nil, fmt.Errorf("recheck candidates: %w", err)
 	}

@@ -767,6 +767,10 @@ func run() error {
 	metadata.Go(func(c context.Context) {
 		runAuthorMetaRecheck(c, pool, enricher, baCfg.BiosRPM, gatesResolver, logger)
 	})
+	// Точечная перепроверка под гейт #572 (умер за века до книг современных жанров).
+	metadata.Go(func(c context.Context) {
+		runAuthorEraRecheck(c, pool, enricher, baCfg.BiosRPM, gatesResolver, logger)
+	})
 
 	// Kindle: CRUD по target'ам всегда доступен, send-to-kindle — только
 	// если задан SMTP-конфиг. emailSender вернёт nil если SMTPHost пустой,
@@ -1654,12 +1658,64 @@ const authorMetaRecheckKey = "author_meta_recheck_v4"
 // обогащение авторов выключено в админке.
 func runAuthorMetaRecheck(ctx context.Context, pool *pgxpool.Pool, enricher *metadata.Enricher, rpm int,
 	gates *settings.EnrichmentGateResolver, logger *slog.Logger) {
+	runAuthorRecheck(ctx, pool, enricher, rpm, gates, logger, authorMetaRecheckKey, nil)
+}
+
+// authorEraRecheckKey — точечная перепроверка после гейта «умер за 200+ лет до
+// книг современных жанров» (#572): только авторы с био или фото, которых гейт
+// может задеть, — год смерти раньше типичного года книг больше чем на 200 лет и
+// книги только современных жанров (на проде 2026-10-27 — 17, все — чужие био). Шире не
+// берём: перепроверка заново решает всё, и классиков, которых нынешние гейты
+// отвергли бы по другим причинам, трогать этим шагом незачем.
+const authorEraRecheckKey = "author_recheck_era_v1"
+
+// runAuthorEraRecheck — перепроверка авторов, которых может задеть гейт #572.
+func runAuthorEraRecheck(ctx context.Context, pool *pgxpool.Pool, enricher *metadata.Enricher, rpm int,
+	gates *settings.EnrichmentGateResolver, logger *slog.Logger) {
+	rows, err := pool.Query(ctx, `
+		SELECT a.id, COALESCE((SELECT array_agg(DISTINCT g.fb2_code)
+		                         FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false
+		                         JOIN book_genres bg ON bg.book_id = b.id JOIN genres g ON g.id = bg.genre_id
+		                        WHERE ba.author_id = a.id), '{}')
+		FROM authors a
+		WHERE a.died_year IS NOT NULL AND (COALESCE(a.bio, '') <> '' OR COALESCE(a.photo_path, '') <> '')
+		  AND a.died_year < (
+		      SELECT percentile_disc(0.5) WITHIN GROUP (ORDER BY y.v) FILTER (WHERE y.v BETWEEN 1000 AND 2100)
+		      FROM (SELECT LEAST(COALESCE(w.written_year, b.written_year), b.edition_year) AS v
+		            FROM book_authors ba JOIN books b ON b.id = ba.book_id AND b.deleted = false
+		            LEFT JOIN works w ON w.id = b.work_id WHERE ba.author_id = a.id) y) - $1`, metadata.ModernBooksEraGap)
+	if err != nil {
+		logger.Warn("author era recheck: candidates failed — will retry next start", "err", err)
+		return
+	}
+	var ids []int64
+	var id int64
+	var genres []string
+	if _, err := pgx.ForEachRow(rows, []any{&id, &genres}, func() error {
+		if metadata.ModernGenresOnly(genres) {
+			ids = append(ids, id)
+		}
+		return nil
+	}); err != nil {
+		logger.Warn("author era recheck: candidates failed — will retry next start", "err", err)
+		return
+	}
+	logger.Info("author era recheck: candidates", "authors", len(ids))
+	if len(ids) == 0 {
+		ids = []int64{0} // пустой список — «все авторы» у WithIDs; 0 — никто
+	}
+	runAuthorRecheck(ctx, pool, enricher, rpm, gates, logger, authorEraRecheckKey, ids)
+}
+
+func runAuthorRecheck(ctx context.Context, pool *pgxpool.Pool, enricher *metadata.Enricher, rpm int,
+	gates *settings.EnrichmentGateResolver, logger *slog.Logger, key string, ids []int64) {
+	logger = logger.With("recheck", key)
 	var state struct {
 		Since time.Time `json:"since"`
 		Done  bool      `json:"done"`
 	}
 	var raw []byte
-	err := pool.QueryRow(ctx, `SELECT value FROM app_settings WHERE key = $1`, authorMetaRecheckKey).Scan(&raw)
+	err := pool.QueryRow(ctx, `SELECT value FROM app_settings WHERE key = $1`, key).Scan(&raw)
 	switch {
 	case errors.Is(err, pgx.ErrNoRows):
 		state.Since = time.Now().UTC()
@@ -1680,7 +1736,7 @@ func runAuthorMetaRecheck(ctx context.Context, pool *pgxpool.Pool, enricher *met
 		if _, err := pool.Exec(ctx, `
 			INSERT INTO app_settings (key, value, updated_at) VALUES ($1, $2, now())
 			ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()`,
-			authorMetaRecheckKey, b); err != nil {
+			key, b); err != nil {
 			logger.Warn("author recheck: save state failed", "err", err)
 		}
 	}
@@ -1691,7 +1747,7 @@ func runAuthorMetaRecheck(ctx context.Context, pool *pgxpool.Pool, enricher *met
 	// Два автора одновременно: один автор — несколько последовательных запросов к
 	// Википедии и Wikidata (~7 с), в один поток 140 тыс. авторов шли бы недели;
 	// темп держит RPM. Больше двух потоков Википедия отвечает 429 (сухой прогон).
-	r := metadata.NewAuthorRechecker(pool, enricher, rpm, logger).WithAllAuthors().WithWorkers(2)
+	r := metadata.NewAuthorRechecker(pool, enricher, rpm, logger).WithAllAuthors().WithWorkers(2).WithIDs(ids)
 	logger.Info("author recheck: started", "since", state.Since, "rpm", rpm)
 	for pass := 1; ; pass++ {
 		if gates != nil && gates.Gates().AuthorDisabled {
