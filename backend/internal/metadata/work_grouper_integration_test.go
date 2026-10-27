@@ -109,6 +109,46 @@ func TestWorkGrouper_Tier1_Integration(t *testing.T) {
 	require.Equal(t, wOrig, workIDOf(t, ctx, pool, tr1))
 }
 
+// #537: «Том 4. Белая гвардия» уже просмотрен группировкой и стоял отдельной
+// работой. Разовый сброс возвращает в Tier-1 только томы, которые склеит
+// правило; проход склеивает том с романом, сборник и часть романа не трогает.
+func TestTomeRegroup_Integration(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	quiet := slog.New(slog.NewTextHandler(io.Discard, nil))
+
+	var collID, archID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO collections (name, inpx_filename) VALUES ('t','t.inpx') RETURNING id`).Scan(&collID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO archives (collection_id, filename) VALUES ($1,'a.zip') RETURNING id`, collID).Scan(&archID))
+	bulgakov := seedGroupAuthor(t, ctx, pool, "Булгаков", "булгаков")
+	novel := seedGroupBook(t, ctx, pool, collID, archID, bulgakov, "N", "Белая гвардия", "белая гвардия", "ru", "", "", "")
+	tome := seedGroupBook(t, ctx, pool, collID, archID, bulgakov, "T", "Том 4. Белая гвардия", "том 4. белая гвардия", "ru", "", "", "")
+	stories := seedGroupBook(t, ctx, pool, collID, archID, bulgakov, "S", "Том 1. Рассказы", "том 1. рассказы", "ru", "", "", "")
+	part := seedGroupBook(t, ctx, pool, collID, archID, bulgakov, "P", "Том 2. Белая гвардия. Часть первая", "том 2. белая гвардия. часть первая", "ru", "", "", "")
+	_, err := pool.Exec(ctx, `UPDATE books SET work_scanned_at = now()`)
+	require.NoError(t, err)
+
+	n, err := ResetTomeEditionsForRegroup(ctx, pool)
+	require.NoError(t, err)
+	require.EqualValues(t, 1, n, "только том, который склеится")
+
+	g := NewWorkGrouper(pool, nil, nil, WorkGroupConfig{}, nil, quiet)
+	g.drainAll(ctx)
+	require.Equal(t, workIDOf(t, ctx, pool, novel), workIDOf(t, ctx, pool, tome), "том — издание романа")
+	require.NotEqual(t, workIDOf(t, ctx, pool, novel), workIDOf(t, ctx, pool, stories))
+	require.NotEqual(t, workIDOf(t, ctx, pool, novel), workIDOf(t, ctx, pool, part))
+
+	n, err = ResetTomeEditionsForRegroup(ctx, pool)
+	require.NoError(t, err)
+	require.Zero(t, n, "склеенный том уже в работе романа")
+}
+
 // TestWorkGrouper_Tier15_Series_Integration — Tier-1.5: два разно-названных перевода
 // одного тома серии (один ser_no) сливаются в работу БЕЗ src-title-info и без сети.
 func TestWorkGrouper_Tier15_Series_Integration(t *testing.T) {

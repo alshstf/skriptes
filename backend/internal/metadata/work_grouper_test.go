@@ -33,6 +33,21 @@ func TestClusterTier1(t *testing.T) {
 		require.Equal(t, [][]int64{{1, 2}, {3}}, clustersOf(books, clusterTier1(books)))
 	})
 
+	// #537: «Том N. <роман>» собрания сочинений — издание романа.
+	t.Run("том собрания с одним романом — к роману того же языка", func(t *testing.T) {
+		books := []groupBook{
+			{id: 1, workID: 1, normTitle: "белая гвардия", lang: "ru"},
+			{id: 2, workID: 2, normTitle: "том 4. белая гвардия", lang: "ru"},
+			{id: 3, workID: 3, normTitle: "том 9: мастер и маргарита", lang: "ru"}, // романа нет — не к чему
+			{id: 4, workID: 4, normTitle: "том 1. рассказы", lang: "ru"},           // сборник
+			{id: 5, workID: 5, normTitle: "рассказы", lang: "ru"},
+			{id: 6, workID: 6, normTitle: "том 2. тихий дон. книга первая", lang: "ru"}, // часть романа
+			{id: 7, workID: 7, normTitle: "тихий дон", lang: "ru"},
+			{id: 8, workID: 8, normTitle: "том 4. белая гвардия", lang: "uk"}, // другой язык
+		}
+		require.Equal(t, [][]int64{{1, 2}, {3}, {4}, {5}, {6}, {7}, {8}}, clustersOf(books, clusterTier1(books)))
+	})
+
 	t.Run("разные языки без src НЕ сливаются", func(t *testing.T) {
 		books := []groupBook{
 			{id: 1, workID: 1, normTitle: "the hobbit", lang: "en"},

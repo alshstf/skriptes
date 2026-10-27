@@ -721,6 +721,25 @@ func run() error {
 			}
 		}
 	})
+	// «Том N. <роман>» — к роману (#537): тома, уже помеченные просмотренными,
+	// вернуть группировке. Один UPDATE.
+	metadata.Go(func(c context.Context) {
+		const flag = "tome_regroup_v1"
+		var done bool
+		if err := pool.QueryRow(c, `SELECT EXISTS(SELECT 1 FROM app_settings WHERE key = $1)`, flag).Scan(&done); err != nil || done {
+			return
+		}
+		n, err := metadata.ResetTomeEditionsForRegroup(c, pool)
+		if err != nil {
+			logger.Warn("tome regroup reset failed — will retry next start", "err", err)
+			return
+		}
+		if _, err := pool.Exec(c, `INSERT INTO app_settings (key, value, updated_at) VALUES ($1, 'true'::jsonb, now())
+			ON CONFLICT (key) DO NOTHING`, flag); err != nil {
+			logger.Warn("tome regroup: set flag failed", "err", err)
+		}
+		logger.Info("one-time tome editions reset for regroup", "books", n)
+	})
 	workGroupCtl := metadata.NewWorkGroupController(pool, olProvider, wdAdaptations, metadata.WorkGroupConfig{
 		OpenLibrary:       wgCfg.OpenLibrary,
 		Wikidata:          wgCfg.Wikidata,
