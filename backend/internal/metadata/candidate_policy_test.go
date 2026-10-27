@@ -181,6 +181,39 @@ func TestCandidateCheck_FactsCached(t *testing.T) {
 }
 
 // Нестрогое имя — только с книгой автора в Wikidata; не человек — никогда (#280).
+// #572: кандидат умер за 200+ лет до книг, а книги только современных жанров —
+// не их автор (богослов Хукер у «MASH»). Классики с книгами в современных
+// изданиях (Хайям — поэзия, Сирано — «prose», Челеби — путевые заметки)
+// принимаются по-прежнему.
+func TestDecideCandidate_DiedLongBeforeModernBooks(t *testing.T) {
+	writer := func(died int) CandidateFacts {
+		return CandidateFacts{QID: "Q1", Human: true, Occupations: []string{"богослов", "писатель"}, Writer: true, Died: died}
+	}
+	ok, why := decideCandidate(AuthorQuery{LastName: "Хукер", FirstName: "Ричард", BooksYear: 1968, Genres: []string{"humor_prose"}},
+		"Хукер, Ричард", writer(1600), MatchName)
+	require.False(t, ok, why)
+	require.Equal(t, "died 1600, only modern genres from 1968", why)
+
+	for _, genres := range [][]string{{"poetry", "antique_east"}, {"prose"}, {"travel_notes"}, {"humor_prose", "religion_rel"}, nil} {
+		ok, why = decideCandidate(AuthorQuery{LastName: "Хайям", BooksYear: 2014, Genres: genres}, "Омар Хайям", writer(1131), MatchName)
+		require.True(t, ok, "%v: %s", genres, why)
+	}
+	// До н. э. — тоже «умер давно».
+	ok, why = decideCandidate(AuthorQuery{LastName: "Будда", BooksYear: 2016, Genres: []string{"sf_social"}}, "Будда", writer(-500), MatchName)
+	require.False(t, ok, why)
+	// Разрыв меньше 200 лет или год смерти неизвестен — правило молчит.
+	ok, why = decideCandidate(AuthorQuery{LastName: "Джером", BooksYear: 2005, Genres: []string{"humor_prose"}}, "Джером", writer(1927), MatchName)
+	require.True(t, ok, why)
+	ok, why = decideCandidate(AuthorQuery{LastName: "Икс", BooksYear: 2005, Genres: []string{"humor_prose"}}, "Икс", writer(0), MatchName)
+	require.True(t, ok, why)
+	// Книга в Wikidata подтверждает и тогда.
+	anchored := writer(1600)
+	anchored.Works = []string{"MASH"}
+	ok, why = decideCandidate(AuthorQuery{LastName: "Хукер", BooksYear: 1968, Genres: []string{"humor_prose"}, BookTitles: []string{"MASH"}},
+		"Хукер, Ричард", anchored, MatchName)
+	require.True(t, ok, why)
+}
+
 func TestDecideCandidate_LooseAndNotHuman(t *testing.T) {
 	q := AuthorQuery{LastName: "Джексон", FirstName: "Ширли", BookTitles: []string{"Призрак дома на холме"}}
 	writer := CandidateFacts{QID: "Q1", Human: true, Occupations: []string{"писательница"}, Writer: true}

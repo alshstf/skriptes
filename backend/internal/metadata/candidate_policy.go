@@ -151,6 +151,12 @@ func decideCandidate(q AuthorQuery, title string, f CandidateFacts, match MatchK
 	switch {
 	case f.Born > 0 && q.BooksYear > 0 && f.Born > q.BooksYear-12:
 		return false, fmt.Sprintf("born %d, books from %d", f.Born, q.BooksYear)
+	case f.Died != 0 && q.BooksYear > 0 && f.Died < q.BooksYear-ModernBooksEraGap && ModernGenresOnly(q.Genres):
+		// Богослов XVI века у автора военного юмора «MASH» 1968 (#572). Одной эпохи
+		// мало: «типичный год» книг классиков — год современных изданий (Хайям,
+		// Цицерон, Петрарка принимаются тем же «writer» без книги в Wikidata), их
+		// отличают жанры — античная литература, поэзия, религия, драматургия.
+		return false, fmt.Sprintf("died %d, only modern genres from %d", f.Died, q.BooksYear)
 	case f.Died > 0 && f.Died < 2000 && q.NetShare >= 0.5:
 		return false, fmt.Sprintf("died %d, network literature", f.Died)
 	case q.NetShare >= 0.5 && !netlitWriter(f) && (f.QID != "" || !patronymicMatches(title, q.MiddleName)):
@@ -178,6 +184,43 @@ func decideCandidate(q AuthorQuery, title string, f CandidateFacts, match MatchK
 		}
 		return false, "non-writer"
 	}
+}
+
+// ModernBooksEraGap — кандидат умер раньше «типичного года» книг автора больше чем
+// на столько лет: если все книги к тому же современных жанров, это не их автор
+// (#572). Сухой прогон 2026-10-27 по всем 1026 авторам с таким разрывом и био.
+const ModernBooksEraGap = 200
+
+// classicGenrePrefixes — жанры, в которых книги давно умершего автора — норма:
+// античная и старинная литература, поэзия, драматургия, религия, наука и
+// нон-фикшн, классическая проза, фольклор, путешествия. Прочие (детектив,
+// фантастика, любовный роман, современная и юмористическая проза…) — признак
+// современного автора. Без жанров или с жанром «prose» без уточнения решить
+// нечем — правило молчит.
+var classicGenrePrefixes = []string{
+	"antique", "poetry", "lyrics", "epic", "dramaturgy", "comedy", "tragedy", "drama", "fable", "aphorism",
+	"epistolary", "religion", "sci_", "science", "nonf_", "nonfiction", "prose_classic", "prose_rus_classic",
+	"prose_su_classics", "prose_history", "adv_history", "love_history", "love_all", "story", "folk", "child_tale",
+	"myths", "sagas", "song", "humor_verse", "literature", "foreign_", "travel", "adv_geo", "home_health",
+}
+
+// ModernGenresOnly — у книг автора есть жанры, и ни одного из classicGenrePrefixes
+// (жанр «prose» без уточнения — тоже не современный признак).
+func ModernGenresOnly(genres []string) bool {
+	if len(genres) == 0 {
+		return false
+	}
+	for _, g := range genres {
+		if g == "prose" {
+			return false
+		}
+		for _, p := range classicGenrePrefixes {
+			if strings.HasPrefix(g, p) {
+				return false
+			}
+		}
+	}
+	return true
 }
 
 // netlitWriter — кандидат годится в авторы сетевой литературы без подтверждения
