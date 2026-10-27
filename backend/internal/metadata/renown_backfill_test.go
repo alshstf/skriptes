@@ -1,6 +1,7 @@
 package metadata
 
 import (
+	"bytes"
 	"context"
 	"io"
 	"log/slog"
@@ -430,4 +431,34 @@ func TestRenownBackfiller_StaleCounters(t *testing.T) {
 	again, err := ClearStaleRenown(ctx, pool)
 	require.NoError(t, err)
 	require.Empty(t, again, "повтор ничего не меняет")
+}
+
+// Работу слили или убрали, пока воркер спрашивал источники (#589): маркер писать
+// некуда (FK work_renown_lookups) — молча, без WARN; живой работе маркер пишется.
+func TestRenownBackfiller_LookupForGoneWorkIsQuiet(t *testing.T) {
+	if testing.Short() {
+		t.Skip("integration: requires docker")
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+	pool := testpg.Pool(t, ctx)
+	var logs bytes.Buffer
+	bf := NewRenownBackfiller(pool, nil, nil, nil, nil, RenownBackfillConfig{},
+		slog.New(slog.NewTextHandler(&logs, &slog.HandlerOptions{Level: slog.LevelWarn})))
+
+	bf.upsertLookup(ctx, 375491, "fantlab", "found")
+	require.Empty(t, logs.String(), "удалённая работа — без WARN")
+
+	var authorID, workID int64
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO authors (last_name, normalized_name) VALUES ('А', 'а') RETURNING id`).Scan(&authorID))
+	require.NoError(t, pool.QueryRow(ctx,
+		`INSERT INTO works (title, normalized_title, primary_author_id) VALUES ('Р', 'р', $1) RETURNING id`,
+		authorID).Scan(&workID))
+	bf.upsertLookup(ctx, workID, "fantlab", "found")
+	var outcome string
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT outcome FROM work_renown_lookups WHERE work_id = $1 AND source = 'fantlab'`, workID).Scan(&outcome))
+	require.Equal(t, "found", outcome)
+	require.Empty(t, logs.String())
 }

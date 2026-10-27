@@ -33,8 +33,9 @@ func TestBuildExternalQuery(t *testing.T) {
 		if q.Title != "Original" {
 			t.Fatalf("title = %q, want Original", q.Title)
 		}
-		if len(q.Authors) != 1 || q.Authors[0] == "" || q.Authors[0] == "Асприн Роберт" {
-			t.Fatalf("authors = %v, want транслитерированные (латиница)", q.Authors)
+		// По словам, не одним словом «asprinrobert» (#571).
+		if len(q.Authors) != 1 || q.Authors[0] != "asprin robert" {
+			t.Fatalf("authors = %v, want [asprin robert]", q.Authors)
 		}
 	})
 

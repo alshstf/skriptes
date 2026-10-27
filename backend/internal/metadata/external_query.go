@@ -1,5 +1,7 @@
 package metadata
 
+import "strings"
+
 // externalQueryFields — поля книги для построения ВНЕШНЕГО поискового запроса
 // (cover/rating/year backfill): локализованные поля издания + оригинал из fb2
 // <src-title-info> (для переводных книг).
@@ -21,7 +23,7 @@ type externalQueryFields struct {
 // великолепный МИФ» / «Асприн Роберт» → 0, а по «Another Fine Myth» / «Robert
 // Asprin» → есть. Поэтому для переводных книг (есть src_title из fb2
 // <src-title-info>) ищем по ОРИГИНАЛУ: src_title + латинский автор
-// (src_author_normalized, иначе транслитерация первого автора через translitName)
+// (src_author_normalized, иначе транслитерация первого автора по словам — translitWords)
 // + src_lang. Без src_title — по локализованным полям (как было: для книг, где
 // язык издания = язык оригинала, это и есть оригинал).
 // externalTitleAuthorLang — ядро выбора: для переводных книг (есть srcTitle) —
@@ -32,7 +34,7 @@ func externalTitleAuthorLang(f externalQueryFields) (title string, authors []str
 	if f.srcTitle != "" {
 		author := f.srcAuthorNorm
 		if author == "" && len(f.authors) > 0 {
-			author = translitName(f.authors[0])
+			author = translitWords(f.authors[0])
 		}
 		if author != "" {
 			authors = []string{author}
@@ -40,6 +42,19 @@ func externalTitleAuthorLang(f externalQueryFields) (title string, authors []str
 		return f.srcTitle, authors, f.srcLang
 	}
 	return f.title, f.authors, f.lang
+}
+
+// translitWords — translitName по словам: «Асприн Роберт» → «asprin robert».
+// translitName рассчитан на одно слово и пробелы выбрасывает — автор уходил во
+// внешний поиск одним словом «asprinrobert» и не находился (#571).
+func translitWords(s string) string {
+	var words []string
+	for _, w := range strings.Fields(s) {
+		if t := translitName(w); t != "" {
+			words = append(words, t)
+		}
+	}
+	return strings.Join(words, " ")
 }
 
 func buildExternalQuery(f externalQueryFields) BookQuery {

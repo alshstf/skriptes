@@ -614,9 +614,11 @@ set-based SQL + в Meili изменившиеся и все скрытые; по
   `ext_ids` += work_key. Ручные `SplitEditions`/`MergeWorks` (стабильны, т.к.
   scanned-книги не переобрабатываются). ⚠️ **MERGE-пути (`apply`+`MergeWorks`) ОБЯЗАНЫ
   звать `reassignWorkUserData(canonical, losers)` ДО GC** — переносят work-level
-  `book_ratings`/`book_rating_prompts`/`feed_dismissals` (все PK `(user_id,work_id)`,
-  FK `ON DELETE CASCADE`) с поглощаемых работ на каноническую, иначе GC сносит оценки
-  пользователя безвозвратно (ON CONFLICT → target побеждает). Split/RegroupWorks
+  `book_ratings`/`book_rating_prompts`/`feed_dismissals`/`rating_reasons`/`search_matches`
+  (FK `ON DELETE CASCADE`) и клик `search_log.clicked_work_id` (SET NULL) с поглощаемых
+  работ на каноническую, иначе GC сносит данные пользователя безвозвратно (ON CONFLICT →
+  target побеждает). Новая таблица с `work_id` пользователя — сразу в этот список
+  (`search_matches` забыли на полгода, #566). Split/RegroupWorks
   переносить НЕ нужно: источник сохраняет якорь, не GC'ится. book-level (reads/views/
   полки/★) keyed по books.id — едет с изданиями само.
 - Настройки `settings.WorkGroupingConfig` (ключ `work_grouping`, зеркало

@@ -346,6 +346,9 @@ func TestMergeWorks_PreservesUserData(t *testing.T) {
 	// промпт и скрытие ленты на loser у u2 → тоже переезжают.
 	exec(`INSERT INTO book_rating_prompts (user_id, work_id, state) VALUES ($1,$2,'never')`, u2, loser)
 	exec(`INSERT INTO feed_dismissals (user_id, work_id) VALUES ($1,$2)`, u2, loser)
+	// «Появилось то, что вы искали» и клик из выдачи на loser (#566).
+	exec(`INSERT INTO search_matches (user_id, work_id, q, searched_at) VALUES ($1,$2,'книга перевод',now())`, u2, loser)
+	exec(`INSERT INTO search_log (user_id, q, norm, hits, clicked_work_id) VALUES ($1,'книга','книга',2,$2)`, u2, loser)
 
 	c := NewWorkGroupController(pool, nil, nil, WorkGroupConfig{}, nil, quiet)
 	_, err := c.MergeWorks(ctx, []int64{target, loser}, target)
@@ -378,6 +381,14 @@ func TestMergeWorks_PreservesUserData(t *testing.T) {
 	require.NoError(t, pool.QueryRow(ctx,
 		`SELECT count(*) FROM feed_dismissals WHERE work_id=$1 AND user_id=$2`, target, u2).Scan(&dismissals))
 	require.Equal(t, 1, dismissals, "скрытие ленты переехало на target")
+	var matchQ string
+	require.NoError(t, pool.QueryRow(ctx,
+		`SELECT q FROM search_matches WHERE work_id=$1 AND user_id=$2`, target, u2).Scan(&matchQ))
+	require.Equal(t, "книга перевод", matchQ, "находка ненайденного поиска переехала на target")
+	var clicked *int64
+	require.NoError(t, pool.QueryRow(ctx, `SELECT clicked_work_id FROM search_log WHERE user_id=$1`, u2).Scan(&clicked))
+	require.NotNil(t, clicked)
+	require.Equal(t, target, *clicked, "клик из выдачи указывает на target")
 }
 
 // TestTier1Merge_PreservesRatings — оценка переживает и АВТО-merge (Tier-1 apply),
