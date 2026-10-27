@@ -10,6 +10,7 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgxpool"
 
 	"github.com/skriptes/skriptes/backend/internal/metrics"
@@ -588,6 +589,13 @@ func (b *RenownBackfiller) upsertLookup(ctx context.Context, workID int64, sourc
 		ON CONFLICT (work_id, source)
 		DO UPDATE SET outcome = EXCLUDED.outcome, checked_at = now()
 	`, workID, source, outcome); err != nil {
+		// Работу слили или убрали пустой, пока воркер спрашивал источники (#589):
+		// маркер писать некуда, и это не сбой — не шумим WARN.
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == "23503" { // foreign_key_violation
+			b.logger.Debug("renown backfill: work gone, lookup skipped", "work_id", workID, "source", source)
+			return
+		}
 		b.logger.Warn("renown backfill: upsert lookup failed", "work_id", workID, "source", source, "err", err)
 	}
 }

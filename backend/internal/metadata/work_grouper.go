@@ -962,11 +962,12 @@ func sameLangTitleConflict(books []groupBook, idxs []int) bool {
 }
 
 // reassignWorkUserData переносит WORK-LEVEL пользовательские данные (оценки,
-// отложенные промпты оценки, скрытия ленты) с поглощаемых работ (losers) на
+// отложенные промпты оценки, скрытия ленты, причины оценок, находки ненайденных
+// поисков и клики из выдачи) с поглощаемых работ (losers) на
 // каноническую ДО их GC. Без этого FK `ON DELETE CASCADE` при `DELETE FROM works`
 // удалил бы оценку/интент пользователя безвозвратно при слиянии работ. Здесь
 // строки только КОПИРУЮТСЯ на canonical; оригиналы на losers снесёт сам CASCADE
-// при GC. PK всех трёх таблиц — (user_id, work_id); при конфликте (пользователь
+// при GC. PK таблиц — (user_id, work_id) (у причин ещё reason); при конфликте (пользователь
 // взаимодействовал и с целью, и с источником — редкая двойная оценка до-мерджевых
 // фрагментов одной книги) выигрывает уже существующая на цели строка
 // (ON CONFLICT DO NOTHING).
@@ -990,6 +991,12 @@ func reassignWorkUserData(ctx context.Context, ex pgxExec, canonical int64, lose
 		`INSERT INTO rating_reasons (user_id, work_id, reason, at)
 		 SELECT user_id, $1, reason, at FROM rating_reasons WHERE work_id = ANY($2)
 		 ON CONFLICT (user_id, work_id, reason) DO NOTHING`,
+		// «Появилось то, что вы искали» (#566): иначе CASCADE уносил находку.
+		`INSERT INTO search_matches (user_id, work_id, q, searched_at, matched_at)
+		 SELECT user_id, $1, q, searched_at, matched_at FROM search_matches WHERE work_id = ANY($2)
+		 ON CONFLICT (user_id, work_id) DO NOTHING`,
+		// Клик из выдачи поиска: SET NULL при GC стёр бы, по какой работе кликнули.
+		`UPDATE search_log SET clicked_work_id = $1 WHERE clicked_work_id = ANY($2)`,
 	} {
 		if _, err := ex.Exec(ctx, q, canonical, losers); err != nil {
 			return fmt.Errorf("reassign work user data: %w", err)
