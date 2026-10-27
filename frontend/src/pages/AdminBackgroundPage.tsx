@@ -228,6 +228,7 @@ function buildExtRatingInput(d: ExternalRatingSettings, patch: Partial<ExternalR
     whole_collection: d.whole_collection,
     googlebooks_rpm: d.googlebooks_rpm,
     googlebooks_daily_cap: d.googlebooks_daily_cap,
+    googlebooks_disabled: d.googlebooks_disabled ?? false,
     openlibrary_rpm: d.openlibrary_rpm,
     not_found_retry_days: d.not_found_retry_days,
     error_retry_hours: d.error_retry_hours,
@@ -771,6 +772,8 @@ export function AdminBackgroundPage() {
   const ratingRunning = rq.data?.external_rating_running ?? false;
   const ratingOnce = rq.data?.external_rating_mode === 'once';
   const rCov = rq.data?.coverage;
+  const gbOff = rq.data?.googlebooks_disabled ?? false;
+  const gbOffLabel = (label: string) => (gbOff ? `${label} — выключен в «Общих»` : label);
   const applyRating = async (patch: Partial<ExternalRatingInput>, msg: string) => {
     if (!rq.data) return;
     try {
@@ -1218,6 +1221,23 @@ export function AdminBackgroundPage() {
                 </Callout>
               ) : null}
 
+              {/* Выключатель источника целиком (#506): Google Books из России
+                  отвечает 503 и пустыми выдачами — не спрашивать его нигде. */}
+              <div className="space-y-2 border-t border-border pt-3">
+                <FieldLabel>Внешние источники</FieldLabel>
+                <SourceSwitch
+                  id="src-gb-global"
+                  label="Google Books"
+                  checked={!gbOff}
+                  disabled={!rq.data || updateRating.isPending}
+                  onChange={(v) => void applyRating({ googlebooks_disabled: !v }, v ? 'Google Books включён' : 'Google Books выключен')}
+                />
+                <p className="text-xs text-muted-foreground text-pretty">
+                  Все запросы к Google Books: обложки и аннотации с карточек, воркеры обложек и рейтинга. Выключите,
+                  если источник не отвечает, — его не будут спрашивать вовсе.
+                </p>
+              </div>
+
               {/* Локальная обработка fb2 — collection-wide разовый проход (общий
                   для обложек/аннотаций/года: они извлекаются из fb2 одним проходом). */}
               <div className="space-y-2 border-t border-border pt-3">
@@ -1291,9 +1311,9 @@ export function AdminBackgroundPage() {
                   />
                   <SourceSwitch
                     id="cover-src-gb"
-                    label="Google Books"
+                    label={gbOffLabel('Google Books')}
                     checked={coverGb}
-                    disabled={updateCover.isPending}
+                    disabled={updateCover.isPending || gbOff}
                     onChange={(v) => toggleCoverProvider('googlebooks', v)}
                   />
                   <p className="text-xs text-muted-foreground text-pretty">
@@ -1821,9 +1841,9 @@ export function AdminBackgroundPage() {
                     <FieldLabel>Источники (только внешние)</FieldLabel>
                     <SourceSwitch
                       id="rating-src-gb"
-                      label="Google Books (averageRating)"
+                      label={gbOffLabel('Google Books (averageRating)')}
                       checked={rq.data?.googlebooks ?? false}
-                      disabled={updateRating.isPending}
+                      disabled={updateRating.isPending || gbOff}
                       onChange={(v) => toggleRatingProvider('googlebooks', v)}
                     />
                     <SourceSwitch

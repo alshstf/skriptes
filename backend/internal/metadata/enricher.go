@@ -337,7 +337,9 @@ func (e *Enricher) ensureCover(
 			continue
 		}
 		if err != nil {
-			e.logger.Info("metadata: provider failed", "provider", p.Name(), "book_id", q.ID, "err", err)
+			if !errors.Is(err, ErrSourcePaused) { // пауза или выключен (#299, #506) — без строки на каждую книгу
+				e.logger.Info("metadata: provider failed", "provider", p.Name(), "book_id", q.ID, "err", err)
+			}
 			continue
 		}
 		if img == nil || img.Reader == nil {
@@ -523,7 +525,9 @@ func (e *Enricher) ensureAnnotation(
 			continue
 		}
 		if err != nil {
-			e.logger.Info("metadata: annotation provider failed", "provider", p.Name(), "book_id", q.ID, "err", err)
+			if !errors.Is(err, ErrSourcePaused) { // пауза или выключен (#299, #506) — без строки на каждую книгу
+				e.logger.Info("metadata: annotation provider failed", "provider", p.Name(), "book_id", q.ID, "err", err)
+			}
 			continue
 		}
 		if text == "" {

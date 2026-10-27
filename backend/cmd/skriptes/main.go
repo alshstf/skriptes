@@ -351,6 +351,9 @@ func run() error {
 	}
 	metadata.SetHostDailyQuota(metadata.GoogleBooksHost,
 		metadata.NewDailyQuota(pool, metadata.GoogleBooksHost, extRatingCfg.GoogleBooksDailyCap, logger))
+	// Выключатель Google Books целиком (#506) — там же, в настройках рейтинга.
+	metadata.SetHostDisabled(metadata.GoogleBooksHost, extRatingCfg.GoogleBooksDisabled)
+	logger.Info("google books source", "disabled", extRatingCfg.GoogleBooksDisabled)
 	coverCfg, err := settingsStore.Cover(ctx())
 	if err != nil {
 		logger.Warn("read cover settings — using defaults", "err", err)
@@ -472,6 +475,7 @@ func run() error {
 		WholeCollection:     extRatingCfg.WholeCollection,
 		GoogleBooksRPM:      extRatingCfg.GoogleBooksRPM,
 		GoogleBooksDailyCap: extRatingCfg.GoogleBooksDailyCap,
+		GoogleBooksDisabled: extRatingCfg.GoogleBooksDisabled,
 		OpenLibraryRPM:      extRatingCfg.OpenLibraryRPM,
 		NotFoundRetryDays:   extRatingCfg.NotFoundRetryDays,
 		ErrorRetryHours:     extRatingCfg.ErrorRetryHours,

@@ -35,14 +35,19 @@ const (
 )
 
 // SourcePausedError несёт хост и время, до которого он на паузе. Quota — пауза
-// не из-за сбоев, а из-за выбранной дневной квоты хоста (daily_quota.go).
+// не из-за сбоев, а из-за выбранной дневной квоты хоста (daily_quota.go);
+// Disabled — источник выключен в настройках (SetHostDisabled), Until пустой.
 type SourcePausedError struct {
-	Host  string
-	Until time.Time
-	Quota bool
+	Host     string
+	Until    time.Time
+	Quota    bool
+	Disabled bool
 }
 
 func (e *SourcePausedError) Error() string {
+	if e.Disabled {
+		return fmt.Sprintf("%s disabled in settings", e.Host)
+	}
 	if e.Quota {
 		return fmt.Sprintf("%s daily quota exhausted until %s", e.Host, e.Until.UTC().Format(time.RFC3339))
 	}
@@ -159,6 +164,11 @@ type breakerTransport struct {
 
 func (t *breakerTransport) RoundTrip(r *http.Request) (*http.Response, error) {
 	host := r.URL.Host // с портом, если он есть в адресе: у источников его нет, а тестовые серверы не мешают друг другу
+	// Выключенный в настройках источник (#506) — как пауза, но без прерывателя:
+	// запрос не уходит, состояние хоста не меняется.
+	if HostDisabled(host) {
+		return nil, &SourcePausedError{Host: host, Disabled: true}
+	}
 	ok, probe, until := t.b.allow(host)
 	if !ok {
 		return nil, &SourcePausedError{Host: host, Until: until}
@@ -189,6 +199,26 @@ func classifyRoundTrip(ctx context.Context, resp *http.Response, err error) outc
 		return outcomeFailed
 	}
 	return outcomeOK
+}
+
+// Выключенные источники процесса (#506): Google Books из России давно отвечает
+// только 503 и пустыми выдачами — админ выключает его целиком, а не у каждого
+// воркера и не паузами прерывателя с алертами.
+var hostsDisabled sync.Map // host → struct{}
+
+// SetHostDisabled — выключить (true) или включить хост для всех клиентов обогащения.
+func SetHostDisabled(host string, disabled bool) {
+	if disabled {
+		hostsDisabled.Store(host, struct{}{})
+		return
+	}
+	hostsDisabled.Delete(host)
+}
+
+// HostDisabled — источник выключен в настройках.
+func HostDisabled(host string) bool {
+	_, ok := hostsDisabled.Load(host)
+	return ok
 }
 
 // sources — общий прерыватель процесса: все клиенты обогащения делят состояние

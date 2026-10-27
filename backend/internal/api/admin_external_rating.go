@@ -28,6 +28,7 @@ func toExternalRatingBackfillConfig(c settings.ExternalRatingConfig) metadata.Ex
 		WholeCollection:     c.WholeCollection,
 		GoogleBooksRPM:      c.GoogleBooksRPM,
 		GoogleBooksDailyCap: c.GoogleBooksDailyCap,
+		GoogleBooksDisabled: c.GoogleBooksDisabled,
 		OpenLibraryRPM:      c.OpenLibraryRPM,
 		NotFoundRetryDays:   c.NotFoundRetryDays,
 		ErrorRetryHours:     c.ErrorRetryHours,

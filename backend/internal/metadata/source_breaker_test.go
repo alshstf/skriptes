@@ -203,3 +203,29 @@ func TestSourceBreaker_TimeoutsCount(t *testing.T) {
 	_, err := client.Get(hang.URL)
 	require.ErrorIs(t, err, ErrSourcePaused, "зависший хост (таймауты клиента) ставится на паузу")
 }
+
+// Выключенный в настройках источник (#506): запрос не уходит в сеть и
+// возвращается как пауза (воркеры и карточки пропускают его молча), прерыватель
+// не трогается; включили обратно — запросы идут.
+func TestBreakerTransport_HostDisabled(t *testing.T) {
+	f := newBreakerFixture(t)
+	u, err := url.Parse(f.srv.URL)
+	require.NoError(t, err)
+	SetHostDisabled(u.Host, true)
+	t.Cleanup(func() { SetHostDisabled(u.Host, false) })
+
+	for i := 0; i < breakerThreshold+1; i++ {
+		err = f.get(t)
+		require.ErrorIs(t, err, ErrSourcePaused)
+	}
+	var pe *SourcePausedError
+	require.True(t, errors.As(err, &pe))
+	require.True(t, pe.Disabled)
+	require.Contains(t, pe.Error(), "disabled in settings")
+	require.Zero(t, f.hits.Load(), "в сеть не ушёл ни один запрос")
+	require.Empty(t, f.b.upByHost(), "выключение — не пауза прерывателя: хост в нём не появился")
+
+	SetHostDisabled(u.Host, false)
+	require.NoError(t, f.get(t))
+	require.EqualValues(t, 1, f.hits.Load())
+}

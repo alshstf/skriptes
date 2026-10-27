@@ -215,13 +215,14 @@ type coverSource struct {
 }
 
 // sources — включённые внешние источники в порядке приоритета:
-// OpenLibrary → Google Books.
+// OpenLibrary → Google Books. Выключенный в настройках Google Books (#506) — не
+// источник: иначе воркер раз за разом выбирал бы те же книги и пропускал их.
 func (b *CoverBackfiller) sources() []coverSource {
 	var out []coverSource
 	if b.cfg.OpenLibrary && b.ol != nil {
 		out = append(out, coverSource{b.ol, b.olGate})
 	}
-	if b.cfg.GoogleBooks && b.gb != nil {
+	if b.cfg.GoogleBooks && b.gb != nil && !HostDisabled(GoogleBooksHost) {
 		out = append(out, coverSource{b.gb, b.gbGate})
 	}
 	return out

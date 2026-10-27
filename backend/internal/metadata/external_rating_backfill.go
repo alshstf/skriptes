@@ -60,7 +60,8 @@ type ExternalRatingBackfillConfig struct {
 	OpenLibrary         bool
 	WholeCollection     bool
 	GoogleBooksRPM      int
-	GoogleBooksDailyCap int // общая дневная квота Google Books на все запросы процесса (#501); 0 = без лимита
+	GoogleBooksDailyCap int  // общая дневная квота Google Books на все запросы процесса (#501); 0 = без лимита
+	GoogleBooksDisabled bool // Google Books выключен для всего процесса (#506): карточки, воркеры
 	OpenLibraryRPM      int
 	NotFoundRetryDays   int
 	ErrorRetryHours     int
@@ -259,10 +260,11 @@ type ratingSource struct {
 }
 
 // sources — включённые источники в порядке приоритета: Google Books →
-// OpenLibrary (но итоговый выбор — по числу голосов, не по порядку).
+// OpenLibrary (но итоговый выбор — по числу голосов, не по порядку). Выключенный
+// в настройках Google Books (#506) — не источник.
 func (b *ExternalRatingBackfiller) sources() []ratingSource {
 	var out []ratingSource
-	if b.cfg.GoogleBooks && b.gb != nil {
+	if b.cfg.GoogleBooks && b.gb != nil && !HostDisabled(GoogleBooksHost) {
 		out = append(out, ratingSource{b.gb, b.gbGate})
 	}
 	if b.cfg.OpenLibrary && b.ol != nil {
@@ -514,10 +516,12 @@ func (c *ExternalRatingBackfillController) SetEnabled(on bool) {
 // SetConfig применяет новые параметры. Если непрерывный воркер запущен —
 // перезапускает его, чтобы подхватить cfg.
 func (c *ExternalRatingBackfillController) SetConfig(cfg ExternalRatingBackfillConfig) {
-	// Лимит Google Books из настроек рейтинга — общая квота процесса (#501).
+	// Лимит Google Books из настроек рейтинга — общая квота процесса (#501), там
+	// же выключатель источника целиком (#506).
 	if q := HostDailyQuota(GoogleBooksHost); q != nil {
 		q.SetLimit(cfg.GoogleBooksDailyCap)
 	}
+	SetHostDisabled(GoogleBooksHost, cfg.GoogleBooksDisabled)
 	c.mu.Lock()
 	c.cfg = cfg
 	running := c.contCancel != nil
