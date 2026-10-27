@@ -324,7 +324,8 @@ describe('AdminBackgroundPage (аккордеон по типам)', () => {
     });
     expect(await screen.findByTestId('cover-mode-bg')).toHaveAttribute('aria-pressed', 'true');
     expect(screen.getByLabelText('OpenLibrary')).not.toBeChecked();
-    expect(screen.getByLabelText('Google Books')).not.toBeChecked();
+    // «Google Books» есть и в «Общих» (выключатель источника целиком, #506) — берём тумблер воркера.
+    expect(document.getElementById('cover-src-gb')).not.toBeChecked();
   });
 
   it('«Фоном» у года с выключенной Wikidata включает её', async () => {

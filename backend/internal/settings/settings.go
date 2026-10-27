@@ -412,6 +412,10 @@ type ExternalRatingConfig struct {
 	WholeCollection     bool `json:"whole_collection"`
 	GoogleBooksRPM      int  `json:"googlebooks_rpm"`
 	GoogleBooksDailyCap int  `json:"googlebooks_daily_cap"` // дневной кап вызовов GB (free ~1000/сутки); 0 = без лимита
+	// GoogleBooksDisabled — Google Books выключен для всего процесса (#506):
+	// цепочки карточки, воркеры обложек и рейтинга. Хранится здесь, рядом с
+	// общей дневной квотой GB; по умолчанию включён.
+	GoogleBooksDisabled bool `json:"googlebooks_disabled"`
 	OpenLibraryRPM      int  `json:"openlibrary_rpm"`
 	NotFoundRetryDays   int  `json:"not_found_retry_days"`
 	ErrorRetryHours     int  `json:"error_retry_hours"`

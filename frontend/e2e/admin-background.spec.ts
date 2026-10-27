@@ -1,3 +1,4 @@
+import type { Page } from '@playwright/test';
 import { test, expect } from './_fixtures';
 
 /**
@@ -6,7 +7,9 @@ import { test, expect } from './_fixtures';
  * Выкл/Лениво/Фоном. Проверяем загрузку настроек, производные режимы, покрытие и
  * таб-навигацию. mockedPage — админ.
  */
-test('admin: панель фоновых операций — аккордеон по типам', async ({ mockedPage: page }) => {
+// mockSettings — настройки всех разделов страницы; ext — поверх настроек
+// внешнего рейтинга. Возвращает тела PUT /admin/external-rating.
+async function mockSettings(page: Page, ext: Record<string, unknown> = {}) {
   await page.route(/\/api\/admin\/cover-cache$/, (route) =>
     route.fulfill({
       status: 200,
@@ -68,25 +71,31 @@ test('admin: панель фоновых операций — аккордеон
       }),
     }),
   );
-  await page.route(/\/api\/admin\/external-rating$/, (route) =>
-    route.fulfill({
-      status: 200,
-      contentType: 'application/json',
-      body: JSON.stringify({
-        enabled: false,
-        googlebooks: true,
-        openlibrary: true,
-        whole_collection: false,
-        googlebooks_rpm: 60,
-        openlibrary_rpm: 60,
-        not_found_retry_days: 90,
-        error_retry_hours: 24,
-        external_rating_running: false,
-        external_rating_mode: 'off',
-        coverage: { total: 10, with_rating: 6, with_web: 1, by_source: { googlebooks: 1 } },
-      }),
-    }),
-  );
+  let extRating: Record<string, unknown> = {
+    enabled: false,
+    googlebooks: true,
+    openlibrary: true,
+    whole_collection: false,
+    googlebooks_rpm: 60,
+    googlebooks_daily_cap: 1000,
+    googlebooks_disabled: false,
+    openlibrary_rpm: 60,
+    not_found_retry_days: 90,
+    error_retry_hours: 24,
+    external_rating_running: false,
+    external_rating_mode: 'off',
+    coverage: { total: 10, with_rating: 6, with_web: 1, by_source: { googlebooks: 1 } },
+    ...ext,
+  };
+  const puts: Record<string, unknown>[] = [];
+  await page.route(/\/api\/admin\/external-rating$/, async (route) => {
+    if (route.request().method() === 'PUT') {
+      const body = route.request().postDataJSON() as Record<string, unknown>;
+      puts.push(body);
+      extRating = { ...extRating, ...body };
+    }
+    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(extRating) });
+  });
   await page.route(/\/api\/admin\/bio-adaptation-enrichment$/, (route) =>
     route.fulfill({
       status: 200,
@@ -120,6 +129,11 @@ test('admin: панель фоновых операций — аккордеон
     }),
   );
 
+  return puts;
+}
+
+test('admin: панель фоновых операций — аккордеон по типам', async ({ mockedPage: page }) => {
+  await mockSettings(page);
   await page.goto('/admin/background');
   await expect(page.getByRole('heading', { name: 'Фоновые операции' })).toBeVisible({ timeout: 10_000 });
 
@@ -150,4 +164,26 @@ test('admin: панель фоновых операций — аккордеон
   // Таб-навигация админки.
   await expect(page.getByRole('link', { name: 'Пользователи' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'Фоновые операции' })).toBeVisible();
+});
+
+// #506: Google Books выключается целиком в «Общих»; у воркеров обложек и рейтинга
+// его переключатель тогда неактивен и подписан.
+test('admin: выключатель Google Books в «Общих»', async ({ mockedPage: page }) => {
+  const puts = await mockSettings(page);
+  await page.goto('/admin/background');
+  const gb = page.getByRole('switch', { name: 'Google Books', exact: true });
+  await expect(gb).toBeChecked({ timeout: 10_000 });
+  await gb.click();
+  await expect.poll(() => puts.length).toBe(1);
+  expect(puts[0]).toMatchObject({ googlebooks_disabled: true, googlebooks: true, googlebooks_daily_cap: 1000 });
+  await expect(gb).not.toBeChecked();
+  await expect(page.getByText('Google Books выключен')).toBeVisible();
+});
+
+test('admin: Google Books выключен — у воркеров переключатель неактивен', async ({ mockedPage: page }) => {
+  await mockSettings(page, { enabled: true, googlebooks_disabled: true });
+  await page.goto('/admin/background');
+  await expect(page.getByRole('switch', { name: 'Google Books', exact: true })).not.toBeChecked({ timeout: 10_000 });
+  await page.getByText('Внешний рейтинг', { exact: true }).click();
+  await expect(page.getByRole('switch', { name: 'Google Books (averageRating) — выключен в «Общих»' })).toBeDisabled();
 });

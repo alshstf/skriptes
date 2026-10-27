@@ -508,6 +508,8 @@ export type ExternalRatingSettings = {
   // общий дневной лимит запросов к Google Books на весь процесс — рейтинг,
   // обложки, аннотации (free-квота ~1000/сутки); 0 = без лимита
   googlebooks_daily_cap: number;
+  // Google Books выключен для всего процесса (#506): карточки и воркеры его не спрашивают
+  googlebooks_disabled: boolean;
   openlibrary_rpm: number;
   not_found_retry_days: number;
   error_retry_hours: number;
@@ -533,6 +535,7 @@ export type ExternalRatingInput = {
   whole_collection: boolean;
   googlebooks_rpm: number;
   googlebooks_daily_cap: number;
+  googlebooks_disabled: boolean;
   openlibrary_rpm: number;
   not_found_retry_days: number;
   error_retry_hours: number;

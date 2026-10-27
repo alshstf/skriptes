@@ -30,6 +30,22 @@ func TestCoverBackfiller_isDue(t *testing.T) {
 		"error старый (48ч > 24ч) → ретраим")
 }
 
+// ── sources: выключенный Google Books (#506) ───────────────────
+
+func TestCoverBackfiller_sourcesSkipDisabledGoogleBooks(t *testing.T) {
+	ol := &fakeCoverProvider{name: "openlibrary"}
+	gb := &fakeCoverProvider{name: "googlebooks"}
+	b := NewCoverBackfiller(nil, nil, ol, gb, CoverBackfillConfig{OpenLibrary: true, GoogleBooks: true}, nil)
+	require.Equal(t, []string{"openlibrary", "googlebooks"}, b.sourceNames())
+
+	SetHostDisabled(GoogleBooksHost, true)
+	t.Cleanup(func() { SetHostDisabled(GoogleBooksHost, false) })
+	require.Equal(t, []string{"openlibrary"}, b.sourceNames(), "выключенный GB — не источник воркера")
+
+	SetHostDisabled(GoogleBooksHost, false)
+	require.Equal(t, []string{"openlibrary", "googlebooks"}, b.sourceNames())
+}
+
 // ── candidateCond (pure) ────────────────────────────────────────
 
 func TestCoverBackfiller_candidateCond(t *testing.T) {
