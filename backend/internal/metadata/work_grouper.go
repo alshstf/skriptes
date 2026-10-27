@@ -6,8 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"regexp"
 	"slices"
 	"strconv"
+	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -603,6 +605,21 @@ func clusterTier1With(books []groupBook, rejected workPairs) *unionFind {
 			}
 		}
 	}
+	// «Том N. <роман>» из собрания сочинений (#537) — издание романа: союз с
+	// изданием того же языка с ровно этим названием. Только одно название без
+	// жанрового слова: «Том 1. Рассказы» и «Том 4. Чокки. Паутина» — сборники,
+	// «Том 2. Тихий Дон. Книга первая» — часть романа (tomeTitle).
+	for i, b := range books {
+		rest, ok := tomeTitle(b.normTitle)
+		if !ok {
+			continue
+		}
+		for _, j := range byTitleLang[key(rest, b.lang)] {
+			if !anthologyPair(b, books[j]) {
+				uf.union(i, j)
+			}
+		}
+	}
 	// Tier-1.5: один том серии (series_id, ser_no) у одного автора ⇒ одна работа —
 	// ловит разно-названные переводы без <src-title-info> и без сети. Гейты точности:
 	// (1) ≥2 РАЗНЫХ непустых srcTitleNorm (конфликт оригиналов) — НЕ союзим (это
@@ -631,6 +648,28 @@ func clusterTier1With(books []groupBook, rejected workPairs) *unionFind {
 		unionGated(uf, books, idxs)
 	}
 	return uf
+}
+
+// tomeRe — «Том N.» в начале нормализованного названия; volumeGenreWordRe —
+// жанровое слово остатка (как volumeGenreRe классификатора типов, #532): том из
+// нескольких вещей, а не издание одного произведения.
+var (
+	tomeRe            = regexp.MustCompile(`^\s*том\s+\d+\s*[.:]\s*`)
+	volumeGenreWordRe = regexp.MustCompile(`(^|[^\p{L}])(рассказы|повести|стихотворения|стихи|поэмы|письма|статьи|произведения|пьесы|драмы|драматические|очерки|проза|сочинения|публицистика|дневники?|записные книжки|критика|переводы|фельетоны|сказки|эссе|речи|заметки|воспоминания)([^\p{L}]|$)`)
+)
+
+// tomeTitle — название произведения в «Том N. <название>» (#537): одно название
+// без точки и точки с запятой и без жанрового слова; иначе ok=false.
+func tomeTitle(normTitle string) (string, bool) {
+	loc := tomeRe.FindStringIndex(normTitle)
+	if loc == nil {
+		return "", false
+	}
+	rest := strings.TrimSpace(normTitle[loc[1]:])
+	if rest == "" || strings.ContainsAny(rest, ".;") || volumeGenreWordRe.MatchString(rest) {
+		return "", false
+	}
+	return rest, true
 }
 
 // Гейт антологий (#464): антология или сборник с тем же названием, что у
