@@ -85,6 +85,8 @@ export type ImportReport = {
   to_read: number;
   highlights: number;
   kept: number;
+  // ненайденных, взятых в список желаний (#597): появятся — «Появилось то, что вы искали»
+  wishlist: number;
 };
 
 export type ImportBatch = ImportReport & {
@@ -103,10 +105,12 @@ function form(
   file: File,
   source: ImportSource | "",
   choices?: ImportChoice[],
+  watch?: number[],
 ): FormData {
   const fd = new FormData();
   if (source) fd.append("source", source);
   if (choices) fd.append("choices", JSON.stringify(choices));
+  if (watch?.length) fd.append("watch", JSON.stringify(watch));
   fd.append("file", file, file.name);
   return fd;
 }
@@ -128,14 +132,17 @@ export function useApplyImport() {
       file,
       source,
       choices,
+      watch,
     }: {
       file: File;
       source: ImportSource;
       choices: ImportChoice[];
+      // книги файла (индексы), которых нет в библиотеке, — в список желаний
+      watch?: number[];
     }) =>
       apiFetch<ImportReport>("/api/me/import/apply", {
         method: "POST",
-        body: form(file, source, choices),
+        body: form(file, source, choices, watch),
       }),
     onSuccess: () => invalidateAfterImport(qc),
   });

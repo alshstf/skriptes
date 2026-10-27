@@ -27,7 +27,7 @@ const preview = {
 };
 
 test('импорт: файл → выбор → применить → отменить', async ({ mockedPage: page }) => {
-  let applied: { choices: unknown; source: string; hasFile: boolean } | null = null;
+  let applied: { choices: unknown; watch: string; source: string; hasFile: boolean } | null = null;
   let undone = false;
   const batch = () => ({
     batch_id: 7, source: 'goodreads', file_name: 'goodreads_library_export.csv', items: 4, applied: 2, ratings: 1,
@@ -40,8 +40,11 @@ test('импорт: файл → выбор → применить → отме�
   await page.route(/\/api\/me\/import\/apply$/, (route) => {
     const body = route.request().postData() ?? '';
     const field = (name: string) => body.match(new RegExp(`name="${name}"\\r\\n\\r\\n([^\\r]*)`))?.[1] ?? '';
-    applied = { choices: JSON.parse(field('choices')), source: field('source'), hasFile: body.includes('filename="goodreads_library_export.csv"') };
-    return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ batch_id: 7, applied: 2, ratings: 1, reads: 1, to_read: 0, highlights: 0, kept: 1 }) });
+    applied = {
+      choices: JSON.parse(field('choices')), watch: field('watch'), source: field('source'),
+      hasFile: body.includes('filename="goodreads_library_export.csv"'),
+    };
+    return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ batch_id: 7, applied: 2, ratings: 1, reads: 1, to_read: 0, highlights: 0, kept: 1, wishlist: 1 }) });
   });
   await page.route(/\/api\/me\/import\/batches$/, (route) =>
     route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ items: applied ? [batch()] : [] }) }),
@@ -79,14 +82,17 @@ test('импорт: файл → выбор → применить → отме�
   await expect(apply).toHaveText('Применить — 2 книги');
   await page.getByText('Нет в библиотеке — 1').click();
   await expect(page.getByTestId('import-none')).toContainText('The Name of the Wind');
+  // Ненайденные — под наблюдением по умолчанию (#597).
+  await expect(page.getByRole('checkbox', { name: /Следить за ненайденными/ })).toBeChecked();
 
   await apply.click();
   await expect.poll(() => applied).not.toBeNull();
   expect(applied!.choices).toEqual([{ i: 0, work_id: 1001 }, { i: 2, work_id: 1004 }]);
+  expect(applied!.watch).toBe('[3]');
   expect(applied!.source).toBe('goodreads');
   expect(applied!.hasFile).toBe(true);
   await expect(page.getByText('Импортировано 2 книги.')).toBeVisible();
-  await expect(page.getByText('оценок — 1 · прочитано — 1 · уже было своё — 1').first()).toBeVisible();
+  await expect(page.getByText('оценок — 1 · прочитано — 1 · ждём появления — 1 · уже было своё — 1').first()).toBeVisible();
   await expect(page.getByTestId('import-summary')).toHaveCount(0);
 
   const batches = page.getByTestId('import-batches');
@@ -123,4 +129,36 @@ test.describe('телефон', () => {
     const tab = await page.getByRole('link', { name: 'Импорт' }).boundingBox();
     expect(tab!.x + tab!.width).toBeLessThanOrEqual(390);
   });
+});
+
+// #597: в файле только книги, которых нет в библиотеке, — их можно взять под
+// наблюдение без применения; без галочки применять нечего.
+test('импорт: только ненайденные — «Следить»', async ({ mockedPage: page }) => {
+  let watch = '';
+  const onlyMissing = { ...preview, items: [preview.items[3]], summary: { high: 0, medium: 0, none: 1 }, skipped: [], skipped_total: 0 };
+  await page.route(/\/api\/me\/import\/preview$/, (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(onlyMissing) }),
+  );
+  await page.route(/\/api\/me\/import\/apply$/, (route) => {
+    const body = route.request().postData() ?? '';
+    watch = body.match(/name="watch"\r\n\r\n([^\r]*)/)?.[1] ?? '';
+    return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ batch_id: 8, applied: 0, ratings: 0, reads: 0, to_read: 0, highlights: 0, kept: 0, wishlist: 1 }) });
+  });
+  await page.route(/\/api\/me\/import\/batches$/, (route) =>
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ items: [] }) }),
+  );
+  await page.goto('/me/import');
+  await page.locator('input[type=file]').setInputFiles({
+    name: 'goodreads_library_export.csv', mimeType: 'text/csv', buffer: Buffer.from('Title\nX\n'),
+  });
+  await page.getByRole('button', { name: 'Разобрать и сопоставить' }).click();
+  const go = page.getByRole('button', { name: /^Следить/ });
+  await expect(go).toHaveText('Следить — 1 книга');
+  const box = page.getByRole('checkbox', { name: /Следить за ненайденными/ });
+  await box.uncheck();
+  await expect(go).toBeDisabled();
+  await box.check();
+  await go.click();
+  await expect.poll(() => watch).toBe('[3]'); // индекс книги в файле
+  await expect(page.getByText('ждём появления — 1')).toBeVisible();
 });

@@ -23,7 +23,8 @@ import (
 // ответа не остаётся нигде.
 //
 //	POST   /api/me/import/preview            multipart: file, source? → preview
-//	POST   /api/me/import/apply              multipart: file, source, choices (JSON [{i, work_id}]) → Report
+//	POST   /api/me/import/apply              multipart: file, source, choices (JSON [{i, work_id}]),
+//	                                         watch? (JSON [i] — нет в библиотеке, в список желаний) → Report
 //	GET    /api/me/import/batches            пакеты пользователя
 //	DELETE /api/me/import/batches/{id}       откат пакета
 //	GET    /api/me/import/template.csv       универсальный шаблон
@@ -47,6 +48,7 @@ type importForm struct {
 	fileName string
 	source   histimport.Source
 	choices  string
+	watch    string
 }
 
 var errImportTooLarge = errors.New("too large")
@@ -96,6 +98,12 @@ func readImportForm(w http.ResponseWriter, r *http.Request, maxBytes int64) (imp
 				return f, err
 			}
 			f.choices = string(v)
+		case "watch":
+			v, err := io.ReadAll(io.LimitReader(p, 1<<20))
+			if err != nil {
+				return f, err
+			}
+			f.watch = string(v)
 		}
 		_ = p.Close()
 	}
@@ -212,11 +220,24 @@ func handleImportApply(d ImportDeps) http.HandlerFunc {
 			return
 		}
 		var choices []histimport.Choice
-		if err := json.Unmarshal([]byte(f.choices), &choices); err != nil || len(choices) == 0 {
+		if f.choices != "" {
+			if err := json.Unmarshal([]byte(f.choices), &choices); err != nil {
+				writeJSON(w, http.StatusBadRequest, map[string]string{"error": "неверный выбор книг"})
+				return
+			}
+		}
+		var watch []int
+		if f.watch != "" {
+			if err := json.Unmarshal([]byte(f.watch), &watch); err != nil {
+				writeJSON(w, http.StatusBadRequest, map[string]string{"error": "неверный список ненайденных"})
+				return
+			}
+		}
+		if len(choices) == 0 && len(watch) == 0 {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "нечего применять: выберите книги"})
 			return
 		}
-		rep, err := histimport.Apply(r.Context(), d.Pool, u.ID, res, f.fileName, choices)
+		rep, err := histimport.Apply(r.Context(), d.Pool, u.ID, res, f.fileName, choices, watch)
 		if errors.Is(err, histimport.ErrBadChoice) {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
 			return

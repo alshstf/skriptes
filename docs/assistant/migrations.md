@@ -146,3 +146,12 @@ nullable `import_batch_id` (FK `ON DELETE SET NULL`, частичные инде
 `user_collection_books` — что записал пакет. Пишет `histimport.Apply` (своё пользователя не перетирает), откат —
 `histimport.Undo` (удаляет помеченное; у `reads` снимает `completed_at`, строку — только пустую). Пользовательская запись
 поверх снимает метку: `history.SetRating` (оценка и авто-«прочитано»), `MarkRead`, `UnmarkRead`, `UpdateAnnotationNote`.
+
+## 0072_wishlist
+
+Список желаний (recsys/04, 4.3, #597, 1.71.0): `wishlist(id, user_id, q, norm, added_at, import_batch_id)`, UNIQUE
+`(user_id, norm)` — книги из файла импорта истории, которых нет в библиотеке («название автор»), если в предпросмотре
+стоит галочка «Следить за ненайденными». `import_batch_id` — FK `ON DELETE CASCADE`, откат пакета (`histimport.Undo`)
+удаляет его желания; `import_batches.wishlist` — сколько взято. Читает `recsys.Matcher.MatchNewWorks` после импорта INPX
+вместе с ненайденными поисками (`search_log`, hits = 0): попадание → `search_matches` («Появилось то, что вы искали»),
+исполненное желание вычёркивается. В отличие от лога поиска у списка нет срока и выключателя.
