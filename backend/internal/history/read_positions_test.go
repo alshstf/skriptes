@@ -99,14 +99,14 @@ func TestService_ReadPositions(t *testing.T) {
 	require.False(t, sp.Known())
 
 	// Компакция: 5 строк за один день 100 дней назад → остаётся 1 (последняя);
-	// свежие строки не трогаются. Якорь — 10:00 UTC того дня: пять строк через
-	// час должны лечь в ОДНИ сутки date_trunc('day') при любом часовом поясе
-	// базы (от «сейчас» после 20:00 UTC они расползались на два дня, и тест
-	// падал по вечерам).
-	old := time.Now().Add(-100 * 24 * time.Hour).UTC().Truncate(24 * time.Hour).Add(10 * time.Hour)
+	// свежие строки не трогаются. Якорь — полдень UTC того дня, строки через
+	// минуту: они ложатся в ОДНИ сутки date_trunc('day') при любом часовом поясе
+	// базы от UTC−12 до UTC+14 (от «сейчас» после 20:00 UTC строки расползались
+	// на два дня, и тест падал по вечерам, #568).
+	old := time.Now().Add(-100 * 24 * time.Hour).UTC().Truncate(24 * time.Hour).Add(12 * time.Hour)
 	for i := 0; i < 5; i++ {
 		_, err = pool.Exec(ctx, `INSERT INTO read_positions (user_id, book_id, fraction, at) VALUES ($1,$2,$3,$4)`,
-			userID, book, 0.5+float64(i)/100, old.Add(time.Duration(i)*time.Hour))
+			userID, book, 0.5+float64(i)/100, old.Add(time.Duration(i)*time.Minute))
 		require.NoError(t, err)
 	}
 	before := count()

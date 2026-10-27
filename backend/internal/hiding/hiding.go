@@ -203,8 +203,8 @@ func (s *Store) StatusOf(ctx context.Context, kind Kind, id int64) (Status, erro
 		        JOIN hidden_authors ha ON ha.author_id = ba.author_id JOIN authors a ON a.id = ha.author_id
 		        WHERE b.work_id = $1 AND b.deleted = false`
 	case KindBook:
+		// Явно книгу не скрывают — explicitQ нет (Explicit = false).
 		flagQ = `SELECT COALESCE((SELECT instance_hidden FROM books WHERE id = $1), false)`
-		explicitQ = `SELECT false`
 		viaQ = `SELECT 'author', a.id, btrim(concat_ws(' ', a.last_name, a.first_name, a.middle_name))
 		        FROM book_authors ba JOIN hidden_authors ha ON ha.author_id = ba.author_id
 		        JOIN authors a ON a.id = ha.author_id WHERE ba.book_id = $1
@@ -217,8 +217,10 @@ func (s *Store) StatusOf(ctx context.Context, kind Kind, id int64) (Status, erro
 	if err := s.pool.QueryRow(ctx, flagQ, id).Scan(&st.Hidden); err != nil {
 		return st, fmt.Errorf("hiding: status %s %d: %w", kind, id, err)
 	}
-	if err := s.pool.QueryRow(ctx, explicitQ, id).Scan(&st.Explicit); err != nil {
-		return st, fmt.Errorf("hiding: status %s %d: %w", kind, id, err)
+	if explicitQ != "" {
+		if err := s.pool.QueryRow(ctx, explicitQ, id).Scan(&st.Explicit); err != nil {
+			return st, fmt.Errorf("hiding: status %s %d: %w", kind, id, err)
+		}
 	}
 	if viaQ != "" && st.Hidden {
 		rows, err := s.pool.Query(ctx, viaQ, id)
