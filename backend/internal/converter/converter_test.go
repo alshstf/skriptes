@@ -1,6 +1,9 @@
 package converter_test
 
 import (
+	"archive/zip"
+	"os"
+	"path/filepath"
 	"testing"
 
 	"github.com/skriptes/skriptes/backend/internal/converter"
@@ -42,4 +45,26 @@ func TestNew_RejectsEmptyPaths(t *testing.T) {
 	require.Error(t, err)
 	_, err = converter.New("/tmp/books", "", "fbc")
 	require.Error(t, err)
+}
+
+func TestCheckSource(t *testing.T) {
+	books := t.TempDir()
+	f, err := os.Create(filepath.Join(books, "a.zip"))
+	require.NoError(t, err)
+	zw := zip.NewWriter(f)
+	w, err := zw.Create("sub/100.fb2")
+	require.NoError(t, err)
+	_, err = w.Write([]byte("<FictionBook/>"))
+	require.NoError(t, err)
+	require.NoError(t, zw.Close())
+	require.NoError(t, f.Close())
+
+	c, err := converter.New(books, t.TempDir(), "fbc")
+	require.NoError(t, err)
+
+	// По basename во вложенной папке — как ExtractFB2.
+	require.NoError(t, c.CheckSource(converter.SourceBook{ID: 1, Archive: "a.zip", FileName: "100", Ext: "fb2"}))
+	require.ErrorIs(t, c.CheckSource(converter.SourceBook{ID: 2, Archive: "a.zip", FileName: "200", Ext: "fb2"}), converter.ErrFileNotInArchive)
+	require.ErrorIs(t, c.CheckSource(converter.SourceBook{ID: 3, Archive: "gone.zip", FileName: "100", Ext: "fb2"}), converter.ErrSourceMissing)
+	require.ErrorIs(t, c.CheckSource(converter.SourceBook{ID: 4}), converter.ErrSourceMissing)
 }

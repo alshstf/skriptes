@@ -349,11 +349,17 @@ host.addEventListener('pointercancel', onPointerCancel)
   let blob
   try {
     const r = await fetch(src, { credentials: 'same-origin' })
-    if (!r.ok) throw new Error(`HTTP ${r.status}`)
+    if (!r.ok) {
+      // Сервер кладёт текст для читателя в message (#631): «файл книги
+      // недоступен» понятнее, чем «HTTP 404».
+      let message = ''
+      try { message = (await r.json()).message ?? '' } catch { /* не JSON */ }
+      throw new Error(message || `HTTP ${r.status}`)
+    }
     blob = await r.blob()
   } catch (e) {
     status.textContent = `Не удалось загрузить книгу: ${e.message}`
-    post({ type: 'error', reason: 'fetch', detail: String(e) })
+    post({ type: 'error', reason: 'fetch', detail: e.message })
     return
   }
 

@@ -134,7 +134,7 @@ curl -fO  $RAW/Caddyfile
 # 3) поправьте .env — минимум эти три значения:
 #    BOOKS_HOST_PATH=/srv/library/books    # путь к zip-архивам
 #    INPX_HOST_PATH=/srv/library/inpx      # путь к *.inpx
-#    SKRIPTES_VERSION=1.72.0              # тег релиза
+#    SKRIPTES_VERSION=1.73.0              # тег релиза
 #    Рекомендуется сразу задать и SKRIPTES_GOOGLE_BOOKS_API_KEY —
 #    без него обогащение из Google Books не работает (см. «Внешние источники»).
 $EDITOR .env
@@ -176,7 +176,7 @@ BOOKS_HOST_PATH/
 
 Внутри каждого zip — fb2-файлы с именами как в `LIBID` поле INPX (`749080.fb2`). Backend открывает zip и читает нужный файл по запросу — данные не дублируются на диск.
 
-Раз в 5 минут backend сверяет архивы каталога с `BOOKS_HOST_PATH`: если части нет, в логе — `ERROR library: book archives missing`, метрика `skriptes_library_archives_missing` > 0, а скачивание и ридер этих книг отвечают «archive file not available».
+Раз в 5 минут backend сверяет архивы каталога с `BOOKS_HOST_PATH`: если части нет, в логе — `ERROR library: book archives missing`, метрика `skriptes_library_archives_missing` > 0, в админке под вкладками — плашка «Сервер не видит архивы с книгами», а скачивание и ридер этих книг показывают «Файл книги сейчас недоступен на сервере».
 
 **Книги на отдельном диске с `nofail` в fstab.** Такой диск монтируется без ожидания, и Docker может стартовать раньше: bind-mount возьмёт пустую папку-точку монтирования, и контейнер не увидит книги, пока его не перезапустить. Поставьте Docker после диска — в той же строке fstab:
 

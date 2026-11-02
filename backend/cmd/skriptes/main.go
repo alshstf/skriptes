@@ -250,7 +250,8 @@ func run() error {
 	metadata.Go(func(c context.Context) { runHousekeepingLoop(c, historySvc, searchLog, logger) })
 	// Том с книгами виден (#632): архивы каталога есть в SKRIPTES_BOOKS_ROOT —
 	// метрика skriptes_library_archives_missing и ERROR, если пропали.
-	metadata.Go(func(c context.Context) { libcheck.New(pool, cfg.BooksRoot, logger).Run(c, 5*time.Minute) })
+	libCheck := libcheck.New(pool, cfg.BooksRoot, logger)
+	metadata.Go(func(c context.Context) { libCheck.Run(c, 5*time.Minute) })
 	// Пул «забытой классики» (recsys/02, 2.5): выборка по всему каталогу идёт
 	// десятки секунд на проде — считается фоном через 2 мин после старта и раз в 6 ч.
 	metadata.Go(func(c context.Context) { recsys.DefaultClassics.RefreshLoop(c, pool, 2*time.Minute, logger) })
@@ -865,6 +866,7 @@ func run() error {
 		History:     api.HistoryDeps{Service: historySvc},
 		Recs:        api.RecsDeps{SearchLog: searchLog, Feed: recsys.NewFeed(pool)},
 		Import:      api.ImportDeps{Pool: pool, Search: booksSvc, MaxBytes: int64(cfg.ImportMaxMB) << 20},
+		Library:     api.LibraryDeps{Check: libCheck},
 		Kindle: api.KindleDeps{
 			Service:   kindleSvc,
 			Email:     emailSender,

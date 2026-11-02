@@ -45,7 +45,7 @@ func handleDownload(d DownloadDeps, hist HistoryDeps) http.HandlerFunc {
 		book, err := d.Books.Get(ctx, id)
 		if err != nil {
 			if errors.Is(err, books.ErrNotFound) {
-				writeJSON(w, http.StatusNotFound, map[string]string{"error": "book not found"})
+				writeBookFileError(w, http.StatusNotFound, "book not found", msgBookNotFound)
 				return
 			}
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
@@ -61,7 +61,7 @@ func handleDownload(d DownloadDeps, hist HistoryDeps) http.HandlerFunc {
 				if !ok {
 					slog.Warn("download throttled", "via", "web", "user_id", u.ID, "retry_after", wait.Round(time.Second))
 					w.Header().Set("Retry-After", strconv.Itoa(int(wait.Seconds())+1))
-					writeJSON(w, http.StatusTooManyRequests, map[string]string{"error": "слишком много скачиваний, повторите позже"})
+					writeBookFileError(w, http.StatusTooManyRequests, "слишком много скачиваний, повторите позже", msgTooManyDownloads)
 					return
 				}
 				defer release()
@@ -78,10 +78,10 @@ func handleDownload(d DownloadDeps, hist HistoryDeps) http.HandlerFunc {
 		res, err := d.Converter.Convert(ctx, src, format)
 		if err != nil {
 			if errors.Is(err, converter.ErrSourceMissing) {
-				writeJSON(w, http.StatusNotFound, map[string]string{"error": "archive file not available"})
+				writeBookFileError(w, http.StatusNotFound, "archive file not available", msgBookFileMissing)
 				return
 			}
-			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": fmt.Sprintf("convert failed: %v", err)})
+			writeBookFileError(w, http.StatusInternalServerError, fmt.Sprintf("convert failed: %v", err), msgConvertFailed)
 			return
 		}
 
@@ -94,7 +94,7 @@ func handleDownload(d DownloadDeps, hist HistoryDeps) http.HandlerFunc {
 		if format == converter.FormatFB2 {
 			rc, size, err := converter.ExtractFB2(res.Path, src.FileName+"."+src.Ext)
 			if err != nil {
-				writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "extract failed"})
+				writeBookFileError(w, http.StatusInternalServerError, "extract failed", msgBookFileMissing)
 				return
 			}
 			defer func() { _ = rc.Close() }()
@@ -142,7 +142,7 @@ func handleEpub(d DownloadDeps) http.HandlerFunc {
 		book, err := d.Books.Get(ctx, id)
 		if err != nil {
 			if errors.Is(err, books.ErrNotFound) {
-				writeJSON(w, http.StatusNotFound, map[string]string{"error": "book not found"})
+				writeBookFileError(w, http.StatusNotFound, "book not found", msgBookNotFound)
 				return
 			}
 			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
@@ -158,10 +158,10 @@ func handleEpub(d DownloadDeps) http.HandlerFunc {
 		res, err := d.Converter.Convert(ctx, src, converter.FormatEpub3)
 		if err != nil {
 			if errors.Is(err, converter.ErrSourceMissing) {
-				writeJSON(w, http.StatusNotFound, map[string]string{"error": "archive file not available"})
+				writeBookFileError(w, http.StatusNotFound, "archive file not available", msgBookFileMissing)
 				return
 			}
-			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": fmt.Sprintf("convert failed: %v", err)})
+			writeBookFileError(w, http.StatusInternalServerError, fmt.Sprintf("convert failed: %v", err), msgConvertFailed)
 			return
 		}
 
@@ -183,6 +183,59 @@ func handleEpub(d DownloadDeps) http.HandlerFunc {
 			w.Header().Set("Content-Length", strconv.FormatInt(st.Size(), 10))
 		}
 		_, _ = io.Copy(w, f)
+	}
+}
+
+// Тексты ошибок скачивания и ридера для читателя (#631): поле message рядом с
+// прежним кодом в error — фронт показывает его тостом или на экране ридера.
+const (
+	msgBookNotFound     = "Книга не найдена."
+	msgBookFileMissing  = "Файл книги сейчас недоступен на сервере. Попробуйте позже, а если не пройдёт — сообщите администратору."
+	msgConvertFailed    = "Не удалось подготовить книгу в этом формате. Попробуйте другой формат."
+	msgTooManyDownloads = "Слишком много скачиваний подряд. Повторите чуть позже."
+)
+
+func writeBookFileError(w http.ResponseWriter, status int, code, message string) {
+	writeJSON(w, status, map[string]string{"error": code, "message": message})
+}
+
+// handleDownloadCheck — GET /api/books/{id}/download/check?format=. Фронт
+// спрашивает его перед скачиванием: ссылка с атрибутом download сохраняет
+// файлом любой ответ, и ошибку читатель получал как download.json (#631).
+// Дёшево: книга, её видимость (bookGate) и исходник на диске, без конвертации,
+// лимита скачиваний и записи в историю. 204 — можно качать.
+func handleDownloadCheck(d DownloadDeps) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id, err := strconv.ParseInt(chi.URLParam(r, "id"), 10, 64)
+		if err != nil || id <= 0 {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid id"})
+			return
+		}
+		if _, err := converter.ParseFormat(r.URL.Query().Get("format")); err != nil {
+			writeJSON(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
+			return
+		}
+		ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
+		defer cancel()
+		book, err := d.Books.Get(ctx, id)
+		if err != nil {
+			if errors.Is(err, books.ErrNotFound) {
+				writeBookFileError(w, http.StatusNotFound, "book not found", msgBookNotFound)
+				return
+			}
+			writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "query failed"})
+			return
+		}
+		err = d.Converter.CheckSource(converter.SourceBook{ID: book.ID, Archive: book.Archive, FileName: book.FileName, Ext: book.Ext})
+		switch {
+		case err == nil:
+			w.WriteHeader(http.StatusNoContent)
+		case errors.Is(err, converter.ErrSourceMissing), errors.Is(err, converter.ErrFileNotInArchive):
+			writeBookFileError(w, http.StatusNotFound, "archive file not available", msgBookFileMissing)
+		default:
+			slog.Warn("download check failed", "book_id", id, "err", err)
+			writeBookFileError(w, http.StatusInternalServerError, "archive unreadable", msgBookFileMissing)
+		}
 	}
 }
 

@@ -136,6 +136,21 @@ func New(booksRoot, cacheRoot, fbcPath string) (*Converter, error) {
 	}, nil
 }
 
+// CheckSource — дёшево (stat архива + оглавление zip, без конвертации)
+// проверить, что исходник книги на месте: так фронт узнаёт об ошибке до того,
+// как браузер сохранит её тело файлом (#631). ErrSourceMissing — нет архива,
+// ErrFileNotInArchive — архив есть, fb2 в нём нет.
+func (c *Converter) CheckSource(b SourceBook) error {
+	if b.Archive == "" || b.FileName == "" || b.Ext == "" {
+		return ErrSourceMissing
+	}
+	archivePath := filepath.Join(c.booksRoot, b.Archive)
+	if _, err := os.Stat(archivePath); err != nil {
+		return fmt.Errorf("%w: %s", ErrSourceMissing, archivePath)
+	}
+	return CheckFB2(archivePath, b.FileName+"."+b.Ext)
+}
+
 // Convert возвращает путь к файлу нужного формата для книги.
 // Для FormatFB2 — прямой путь внутри zip-архива, конвертация не нужна.
 // Для остальных форматов — путь к закэшированному файлу в cacheRoot;

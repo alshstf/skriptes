@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { downloadUrl, onDownloadClick } from '@/lib/download';
 import { downloadFormats } from '@/lib/formats';
 import { cn } from '@/lib/utils';
 
@@ -23,8 +25,9 @@ export function DownloadMenu({
   variant?: 'default' | 'outline';
   className?: string;
 }) {
+  const [open, setOpen] = useState(false);
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         {/* По умолчанию на мобиле — только иконка (текст hidden sm:inline), чтобы
             ряд действий в шапке карточки не переносился. showLabel=true заставляет
@@ -49,7 +52,8 @@ export function DownloadMenu({
               "EPUB 3" разъезжалось на "EPUB" / "3".
             */}
             <a
-              href={`/api/books/${bookId}/download?format=${f.id}`}
+              href={downloadUrl(bookId, f.id)}
+              onClick={onDownloadClick(bookId, f.id, () => setOpen(false))}
               download
               className="flex flex-col items-start gap-0.5 cursor-pointer"
             >
