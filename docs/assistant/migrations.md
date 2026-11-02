@@ -36,7 +36,7 @@
 
 ## 0064_instance_hidden
 
-Скрытие авторов и работ на инстансе (админ, план `~/projects/plans/skriptes/instance-hide-authors-works.md`): явные
+Скрытие авторов и работ на инстансе (админ, план `~/projects/plans/skriptes/archive/instance-hide-authors-works.md`): явные
 скрытия `hidden_authors(author_id PK, hidden_at, hidden_by, note)` и `hidden_works(work_id PK, …)`; флаги-материализация
 `authors/works/books.instance_hidden BOOLEAN NOT NULL DEFAULT false` (константный DEFAULT — без перезаписи таблиц) с
 частичными индексами `WHERE instance_hidden`. Флаги пересчитывает `importer.SyncInstanceHidden` (после скрытия/возврата

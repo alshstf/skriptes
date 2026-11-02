@@ -26,7 +26,7 @@ const (
 	// popLibrateMin — с какой оценки LIBRATE даёт бонус (#292): 1–2 из 5 —
 	// «плохо», и «Анти-Акунин» с оценкой 1 получал +64 и обгонял в подсказке книги
 	// самого Акунина. Проверено на 35 запросах прода: меняет 3 топ-5, все к лучшему
-	// (~/projects/plans/skriptes/ratings-renown-research.md).
+	// (~/projects/plans/skriptes/archive/ratings-renown-research.md).
 	popLibrateMin   = 3
 	popWExtVotes    = 30.0  // ·log2(1+голоса GB/OL): 2→~48, 1000→~300
 	popWAdaptation  = 150.0 // факт экранизации
