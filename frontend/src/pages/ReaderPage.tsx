@@ -408,7 +408,13 @@ export function ReaderPage() {
           }
           break;
         case 'error':
-          toast.error(`Ридер: ${msg.reason}${msg.detail ? ` — ${msg.detail}` : ''}`);
+          // Книга не загрузилась — текст сервера для читателя (#631), без
+          // служебного «Ридер: fetch — Error: …».
+          toast.error(
+            msg.reason === 'fetch'
+              ? `Не удалось загрузить книгу: ${msg.detail ?? 'ошибка сети'}`
+              : `Ридер: ${msg.reason}${msg.detail ? ` — ${msg.detail}` : ''}`,
+          );
           break;
       }
     };

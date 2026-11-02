@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { downloadUrl, onDownloadClick } from '@/lib/download';
 import { downloadFormats } from '@/lib/formats';
 import { useKindleTargets, useSendToKindle, type KindleTarget } from '@/lib/kindle';
 import { ApiError } from '@/lib/api';
@@ -32,6 +33,7 @@ export function EditionActions({
   const targetsQ = useKindleTargets();
   const send = useSendToKindle();
   const [sending, setSending] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const targets = targetsQ.data ?? [];
   // Возврат на текущую книгу после настройки Kindle (navigate replace на /me).
   const returnTo = useLocation().href;
@@ -60,7 +62,7 @@ export function EditionActions({
           <span className="hidden sm:inline">{readLabel(readingFraction)}</span>
         </Link>
       </Button>
-      <DropdownMenu>
+      <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon-sm" aria-label="Скачать или отправить на Kindle">
             <MoreHorizontal className="size-4" aria-hidden />
@@ -73,7 +75,8 @@ export function EditionActions({
           {downloadFormats.map((f) => (
             <DropdownMenuItem key={f.id} asChild>
               <a
-                href={`/api/books/${editionId}/download?format=${f.id}`}
+                href={downloadUrl(editionId, f.id)}
+                onClick={onDownloadClick(editionId, f.id, () => setMenuOpen(false))}
                 download
                 className="flex flex-col items-start gap-0.5 cursor-pointer"
               >

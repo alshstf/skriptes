@@ -41,6 +41,8 @@ type Deps struct {
 	Hiding HidingDeps
 	// Import — импорт истории чтения из файла (recsys/04); Pool == nil → ручки не монтируются.
 	Import ImportDeps
+	// Library — проверка тома с книгами (#632); Check == nil → ручка не монтируется.
+	Library LibraryDeps
 	// OPDS — опционально. Если Handler == nil, /opds/* не монтируется.
 	// BaseURL прокидывается извне (cfg.AllowedOrigins[0] обычно).
 	OPDS OPDSDeps
@@ -187,6 +189,7 @@ func NewRouter(d Deps) http.Handler {
 				}
 				if d.Download.Books != nil && d.Download.Converter != nil {
 					r.With(bookGate).Get("/books/{id}/download", handleDownload(d.Download, d.History))
+					r.With(bookGate).Get("/books/{id}/download/check", handleDownloadCheck(d.Download))
 				}
 				if d.Catalog.Service != nil {
 					// /authors — список авторов с фильтрами (раздел «Авторы»);
@@ -319,6 +322,9 @@ func NewRouter(d Deps) http.Handler {
 			// Отдельный r.Group чтобы requireAdmin не дублировался на user-роутах.
 			r.Group(func(r chi.Router) {
 				r.Use(requireAdmin(d.Auth))
+				if d.Library.Check != nil {
+					r.Get("/admin/library", handleLibraryHealth(d.Library))
+				}
 				// Ручная метка «служебный автор» (агрегат-псевдоавтор вне списка /authors).
 				if d.Catalog.Service != nil {
 					r.Put("/admin/authors/{id}/service", handleSetAuthorService(d.Catalog))

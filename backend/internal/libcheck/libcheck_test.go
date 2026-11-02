@@ -3,6 +3,7 @@ package libcheck
 import (
 	"bytes"
 	"context"
+	"io"
 	"log/slog"
 	"os"
 	"path/filepath"
@@ -101,8 +102,19 @@ func TestCheck_Integration(t *testing.T) {
 	root := t.TempDir()
 	require.NoError(t, os.WriteFile(filepath.Join(root, "live.zip"), []byte("PK"), 0o600))
 
-	res, err := New(pool, root, slog.Default()).Check(ctx)
+	c := New(pool, root, slog.New(slog.NewTextHandler(io.Discard, nil)))
+	_, at := c.Last()
+	require.True(t, at.IsZero(), "до первой проверки")
+
+	res, err := c.Check(ctx)
 	require.NoError(t, err)
 	require.Equal(t, 2, res.Archives)
 	require.Equal(t, []string{"gone.zip"}, res.Missing)
+
+	// Итог прохода — для плашки в админке.
+	c.runOnce(ctx)
+	last, at := c.Last()
+	require.False(t, at.IsZero())
+	require.Equal(t, res, last)
+	require.Equal(t, []string{"gone.zip"}, last.Sample())
 }

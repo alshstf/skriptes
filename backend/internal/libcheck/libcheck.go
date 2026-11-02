@@ -17,19 +17,28 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/skriptes/skriptes/backend/internal/metrics"
 )
 
-// sampleSize — сколько имён недоступных архивов показать в логе.
+// sampleSize — сколько имён недоступных архивов показать в логе и админке.
 const sampleSize = 5
 
 // Result — итог одной проверки.
 type Result struct {
 	Archives int      // архивов с живыми книгами в каталоге
 	Missing  []string // из них нет в booksRoot
+}
+
+// Sample — первые имена недоступных архивов (не больше sampleSize).
+func (r Result) Sample() []string {
+	if len(r.Missing) > sampleSize {
+		return r.Missing[:sampleSize]
+	}
+	return r.Missing
 }
 
 // Checker — периодическая проверка тома с книгами.
@@ -39,6 +48,10 @@ type Checker struct {
 	logger    *slog.Logger
 
 	lastMissing int // -1 — ещё не проверяли
+
+	mu        sync.RWMutex
+	last      Result
+	checkedAt time.Time // ноль — ещё не проверяли
 }
 
 // New создаёт проверку.
@@ -120,6 +133,17 @@ func (c *Checker) runOnce(ctx context.Context) {
 	}
 	metrics.SetLibrary(res.Archives, len(res.Missing))
 	c.report(res)
+	c.mu.Lock()
+	c.last, c.checkedAt = res, time.Now()
+	c.mu.Unlock()
+}
+
+// Last — итог последней удачной проверки (плашка в админке). checkedAt
+// нулевой — проверки ещё не было.
+func (c *Checker) Last() (res Result, checkedAt time.Time) {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	return c.last, c.checkedAt
 }
 
 // report пишет в лог только смену состояния: пропали архивы (или их число
@@ -131,15 +155,11 @@ func (c *Checker) report(res Result) {
 	c.lastMissing = n
 	switch {
 	case n > 0 && n != prev:
-		sample := res.Missing
-		if len(sample) > sampleSize {
-			sample = sample[:sampleSize]
-		}
 		msg := "library: book archives missing — downloads and reader fail for their books"
 		if n == res.Archives {
 			msg = "library: no book archives found — books volume not mounted? downloads and reader fail"
 		}
-		c.logger.Error(msg, "books_root", c.booksRoot, "missing", n, "archives", res.Archives, "sample", sample)
+		c.logger.Error(msg, "books_root", c.booksRoot, "missing", n, "archives", res.Archives, "sample", res.Sample())
 	case n == 0 && prev > 0:
 		c.logger.Info("library: all book archives available again", "books_root", c.booksRoot, "archives", res.Archives)
 	}

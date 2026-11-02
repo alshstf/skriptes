@@ -328,6 +328,12 @@ func (e *Enricher) ensureCover(
 		return false
 	}
 
+	// failed — провайдер упал не на «нет обложки» (архив не виден, сеть, 5xx):
+	// это не промах, отметку не ставим — следующее открытие карточки повторит
+	// (грабля 20; #632 — без тома с книгами fb2 «не находил» обложку навсегда).
+	// Пауза или выключенный источник (#299, #506) промаху не мешают: иначе
+	// выключенный навсегда хост держал бы книгу в повторах.
+	failed := false
 	for _, p := range e.coverProviders {
 		if !accept(p) {
 			continue
@@ -337,8 +343,9 @@ func (e *Enricher) ensureCover(
 			continue
 		}
 		if err != nil {
-			if !errors.Is(err, ErrSourcePaused) { // пауза или выключен (#299, #506) — без строки на каждую книгу
+			if !errors.Is(err, ErrSourcePaused) { // без строки на каждую книгу
 				e.logger.Info("metadata: provider failed", "provider", p.Name(), "book_id", q.ID, "err", err)
+				failed = true
 			}
 			continue
 		}
@@ -359,7 +366,7 @@ func (e *Enricher) ensureCover(
 		return true
 	}
 
-	if markOnMiss {
+	if markOnMiss && !failed {
 		// Никто не нашёл — помечаем попытку, чтобы не молотить каждый
 		// открытие карточки. Через TTL можно будет ретраиться.
 		if _, err := e.pool.Exec(ctx,

@@ -1177,3 +1177,23 @@ export function useSearchMisses(days = 90) {
     staleTime: 60_000,
   });
 }
+
+// ── Том с книгами (#632) ─────────────────────────────────────────────────────
+// Итог последней проверки бэкенда (раз в 5 мин): архивы каталога, которых нет
+// в SKRIPTES_BOOKS_ROOT. missing > 0 — скачивание и ридер этих книг не работают.
+export type LibraryHealth = {
+  checked: boolean;
+  checked_at?: string;
+  archives: number;
+  missing: number;
+  sample: string[];
+};
+
+export function useLibraryHealth() {
+  return useQuery<LibraryHealth>({
+    queryKey: ['admin', 'library'],
+    queryFn: () => apiFetch<LibraryHealth>('/api/admin/library'),
+    staleTime: 60_000,
+    refetchInterval: 5 * 60_000,
+  });
+}
