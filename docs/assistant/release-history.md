@@ -2,6 +2,13 @@
 
 Подробная история версий для ассистента: что вошло, какие PR, что сделать после деплоя (⚠️). Новые версии — сверху. Пользовательские release notes — на GitHub Releases. В CLAUDE.md держим только текущую версию и ссылку сюда.
 
+- **1.72.0** — **доступность тома с книгами** (#632, после прод-инцидента 2026-11-02: после ребутов DMZ-VM 28 и 30
+  октября диск книг (fstab `nofail`) монтировался позже docker, bind-mount брал пустую папку — 4 дня скачивание и
+  ридер отвечали «archive file not available», healthcheck зелёный). `internal/libcheck`: раз в 5 мин (и на старте)
+  архивы каталога (`available`, с неудалёнными книгами) против файлов в `SKRIPTES_BOOKS_ROOT` → метрики
+  `skriptes_library_archives` / `skriptes_library_archives_missing`, ERROR в лог только при смене состояния. Алерт
+  `SkriptesLibraryUnavailable` — в стеке observability docker-host-fast. README: диск книг с `nofail` → в fstab
+  `x-systemd.before=docker.service,x-systemd.wanted-by=docker.service`. Без миграций и env.
 - **1.71.1** — био (#572, после деплоя 1.71.0): перепроверка, очищая чужую био, теперь снимает и QID с годами жизни
   отвергнутого кандидата (их пишет только приём, `RecordingCandidateCheck`) — у Хукера после 1.71.0 остались QID
   богослова `Q443783` и 1554–1600, а чужой QID не даёт подтвердить его книги. `AuthorRechecker.apply` +
