@@ -66,7 +66,7 @@ export const READER_MARGINS: Record<ReaderMargins, { label: string; margin: numb
 };
 
 /**
- * Шрифты по мотивам меню Kindle (~/projects/plans/skriptes/reader-fonts.md):
+ * Шрифты по мотивам меню Kindle (~/projects/plans/skriptes/archive/reader-fonts.md):
  * по одному свободному (OFL) шрифту с кириллицей и курсивом на группу, почти-
  * дубли Kindle (Bookerly и Georgia, Palatino и Baskerville…) свёрнуты в один.
  * Файлы и @font-face — public/fonts (fonts.css), грузится только выбранный или
