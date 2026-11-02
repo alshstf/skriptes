@@ -37,6 +37,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/history"
 	"github.com/skriptes/skriptes/backend/internal/importer"
 	"github.com/skriptes/skriptes/backend/internal/kindle"
+	"github.com/skriptes/skriptes/backend/internal/libcheck"
 	"github.com/skriptes/skriptes/backend/internal/logredact"
 	"github.com/skriptes/skriptes/backend/internal/metadata"
 	"github.com/skriptes/skriptes/backend/internal/metrics"
@@ -247,6 +248,9 @@ func run() error {
 	// Уборка журналов: позиции чтения старше 90 дней — строка в день (recsys/01, 1.2),
 	// лог поиска — по сроку хранения (1.4).
 	metadata.Go(func(c context.Context) { runHousekeepingLoop(c, historySvc, searchLog, logger) })
+	// Том с книгами виден (#632): архивы каталога есть в SKRIPTES_BOOKS_ROOT —
+	// метрика skriptes_library_archives_missing и ERROR, если пропали.
+	metadata.Go(func(c context.Context) { libcheck.New(pool, cfg.BooksRoot, logger).Run(c, 5*time.Minute) })
 	// Пул «забытой классики» (recsys/02, 2.5): выборка по всему каталогу идёт
 	// десятки секунд на проде — считается фоном через 2 мин после старта и раз в 6 ч.
 	metadata.Go(func(c context.Context) { recsys.DefaultClassics.RefreshLoop(c, pool, 2*time.Minute, logger) })

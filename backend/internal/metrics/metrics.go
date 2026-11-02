@@ -90,6 +90,16 @@ var (
 		Help: "Записей INPX с ошибкой (пропущены) в последнем удачном импорте.",
 	})
 
+	libraryArchives = factory.NewGauge(prometheus.GaugeOpts{
+		Name: "skriptes_library_archives",
+		Help: "Архивов книг в каталоге (с неудалёнными книгами), которые должны лежать в SKRIPTES_BOOKS_ROOT.",
+	})
+
+	libraryArchivesMissing = factory.NewGauge(prometheus.GaugeOpts{
+		Name: "skriptes_library_archives_missing",
+		Help: "Из них не найдено на диске: скачивание и ридер для их книг не работают (том с книгами не подключён?).",
+	})
+
 	// ExternalSourcePauses — сколько раз источник ставили на паузу.
 	ExternalSourcePauses = factory.NewCounterVec(prometheus.CounterOpts{
 		Name: "skriptes_external_source_pauses_total",
@@ -193,6 +203,12 @@ func ImportFinished(result string, r ImportResult) {
 	importLastRecords.Set(float64(r.Records))
 	importLastInserted.Set(float64(r.BooksInserted))
 	importLastRecordErrors.Set(float64(r.RecordErrors))
+}
+
+// SetLibrary выставляет итог проверки тома с книгами (libcheck).
+func SetLibrary(archives, missing int) {
+	libraryArchives.Set(float64(archives))
+	libraryArchivesMissing.Set(float64(missing))
 }
 
 // HTTPMiddleware считает запросы и их длительность по шаблону маршрута chi
