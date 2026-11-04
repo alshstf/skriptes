@@ -1187,6 +1187,9 @@ export type LibraryHealth = {
   archives: number;
   missing: number;
   sample: string[];
+  // false — пробное чтение архива не прошло: хранилище под томом не отвечает.
+  readable: boolean;
+  read_error?: string;
 };
 
 export function useLibraryHealth() {
@@ -1194,6 +1197,6 @@ export function useLibraryHealth() {
     queryKey: ['admin', 'library'],
     queryFn: () => apiFetch<LibraryHealth>('/api/admin/library'),
     staleTime: 60_000,
-    refetchInterval: 5 * 60_000,
+    refetchInterval: 60_000,
   });
 }

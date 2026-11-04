@@ -248,10 +248,13 @@ func run() error {
 	// Уборка журналов: позиции чтения старше 90 дней — строка в день (recsys/01, 1.2),
 	// лог поиска — по сроку хранения (1.4).
 	metadata.Go(func(c context.Context) { runHousekeepingLoop(c, historySvc, searchLog, logger) })
-	// Том с книгами виден (#632): архивы каталога есть в SKRIPTES_BOOKS_ROOT —
-	// метрика skriptes_library_archives_missing и ERROR, если пропали.
+	// Том с книгами виден и читается (#632): архивы каталога есть в
+	// SKRIPTES_BOOKS_ROOT, пробное чтение мимо кэша проходит — метрики
+	// skriptes_library_{archives_missing,readable}, ERROR при смене состояния;
+	// нечитаемый том — скачивание и ридер отвечают 503 сразу. Раз в минуту:
+	// запрос к PG — десятки мс, проба — одно чтение 4 КБ.
 	libCheck := libcheck.New(pool, cfg.BooksRoot, logger)
-	metadata.Go(func(c context.Context) { libCheck.Run(c, 5*time.Minute) })
+	metadata.Go(func(c context.Context) { libCheck.Run(c, time.Minute) })
 	// Пул «забытой классики» (recsys/02, 2.5): выборка по всему каталогу идёт
 	// десятки секунд на проде — считается фоном через 2 мин после старта и раз в 6 ч.
 	metadata.Go(func(c context.Context) { recsys.DefaultClassics.RefreshLoop(c, pool, 2*time.Minute, logger) })
@@ -862,7 +865,7 @@ func run() error {
 		Books:       api.BooksDeps{Service: booksSvc},
 		Catalog:     api.CatalogDeps{Service: catalogSvc},
 		Collections: api.CollectionsDeps{Service: collectionsSvc},
-		Download:    api.DownloadDeps{Books: booksSvc, Converter: conv, Limiter: downloadLimiter},
+		Download:    api.DownloadDeps{Books: booksSvc, Converter: conv, Limiter: downloadLimiter, LibraryUnreadable: libCheck.Unreadable},
 		History:     api.HistoryDeps{Service: historySvc},
 		Recs:        api.RecsDeps{SearchLog: searchLog, Feed: recsys.NewFeed(pool)},
 		Import:      api.ImportDeps{Pool: pool, Search: booksSvc, MaxBytes: int64(cfg.ImportMaxMB) << 20},
@@ -910,7 +913,8 @@ func run() error {
 				g, l, _ := contentResolver.Exclusions(c, userID)
 				return g, l
 			},
-			Limiter: downloadLimiter,
+			Limiter:           downloadLimiter,
+			LibraryUnreadable: libCheck.Unreadable,
 		})},
 	})
 

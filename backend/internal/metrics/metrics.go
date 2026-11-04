@@ -100,6 +100,11 @@ var (
 		Help: "Из них не найдено на диске: скачивание и ридер для их книг не работают (том с книгами не подключён?).",
 	})
 
+	libraryReadable = factory.NewGauge(prometheus.GaugeOpts{
+		Name: "skriptes_library_readable",
+		Help: "1 — пробное чтение архива с книгами (мимо кэша, тайм-аут 30 с) прошло; 0 — том не отвечает или не читается.",
+	})
+
 	// ExternalSourcePauses — сколько раз источник ставили на паузу.
 	ExternalSourcePauses = factory.NewCounterVec(prometheus.CounterOpts{
 		Name: "skriptes_external_source_pauses_total",
@@ -206,9 +211,14 @@ func ImportFinished(result string, r ImportResult) {
 }
 
 // SetLibrary выставляет итог проверки тома с книгами (libcheck).
-func SetLibrary(archives, missing int) {
+func SetLibrary(archives, missing int, readable bool) {
 	libraryArchives.Set(float64(archives))
 	libraryArchivesMissing.Set(float64(missing))
+	if readable {
+		libraryReadable.Set(1)
+	} else {
+		libraryReadable.Set(0)
+	}
 }
 
 // HTTPMiddleware считает запросы и их длительность по шаблону маршрута chi

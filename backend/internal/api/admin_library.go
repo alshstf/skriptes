@@ -18,6 +18,10 @@ type libraryHealthResp struct {
 	Archives  int        `json:"archives"`
 	Missing   int        `json:"missing"`
 	Sample    []string   `json:"sample"` // первые недоступные архивы
+	// Readable — пробное чтение архива прошло; false — том не отвечает или не
+	// читается (хранилище под диском пропало), ReadError — почему.
+	Readable  bool   `json:"readable"`
+	ReadError string `json:"read_error,omitempty"`
 }
 
 // handleLibraryHealth — GET /api/admin/library: итог последней проверки тома —
@@ -25,7 +29,8 @@ type libraryHealthResp struct {
 func handleLibraryHealth(d LibraryDeps) http.HandlerFunc {
 	return func(w http.ResponseWriter, _ *http.Request) {
 		res, at := d.Check.Last()
-		out := libraryHealthResp{Archives: res.Archives, Missing: len(res.Missing), Sample: res.Sample()}
+		out := libraryHealthResp{Archives: res.Archives, Missing: len(res.Missing), Sample: res.Sample(),
+			Readable: res.Readable || at.IsZero(), ReadError: res.ReadErr}
 		if !at.IsZero() {
 			out.Checked, out.CheckedAt = true, &at
 		}
