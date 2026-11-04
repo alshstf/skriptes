@@ -3,12 +3,20 @@ import { test, expect } from './_fixtures';
 
 // #632: плашка под вкладками админки, когда бэкенд не видит архивы с книгами.
 
-async function mockLibrary(page: Page, missing: number, sample: string[] = []) {
+async function mockLibrary(page: Page, missing: number, sample: string[] = [], readable = true, read_error = '') {
   await page.route(/\/api\/admin\/library$/, (route) =>
     route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ checked: true, checked_at: '2026-11-03T10:00:00Z', archives: 229, missing, sample }),
+      body: JSON.stringify({
+        checked: true,
+        checked_at: '2026-11-03T10:00:00Z',
+        archives: 229,
+        missing,
+        sample,
+        readable,
+        read_error,
+      }),
     }),
   );
 }
@@ -31,5 +39,13 @@ test('админка: всё на месте — плашки нет', async ({ 
   await mockLibrary(page, 0);
   await page.goto('/admin/hidden');
   await expect(page.getByRole('navigation', { name: 'Администрирование' })).toBeVisible();
+  await expect(page.getByText(/Сервер не видит/)).toHaveCount(0);
+});
+
+test('админка: архивы на месте, но не читаются — плашка про хранилище', async ({ mockedPage: page }) => {
+  await mockLibrary(page, 0, [], false, 'books volume does not respond');
+  await page.goto('/admin/hidden');
+  await expect(page.getByText('Хранилище с книгами не отвечает')).toBeVisible();
+  await expect(page.getByText('Ошибка: books volume does not respond')).toBeVisible();
   await expect(page.getByText(/Сервер не видит/)).toHaveCount(0);
 });

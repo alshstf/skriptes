@@ -8,8 +8,10 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"syscall"
 	"testing"
 	"time"
+	"unsafe"
 
 	"github.com/skriptes/skriptes/backend/internal/testpg"
 	"github.com/stretchr/testify/require"
@@ -44,28 +46,108 @@ func TestReport(t *testing.T) {
 		return out
 	}
 
-	c.report(Result{Archives: 3})
+	ok := func(missing ...string) Result {
+		return Result{Archives: 3, Missing: missing, Readable: true}
+	}
+	c.report(ok())
 	require.Empty(t, lines(), "всё на месте с самого старта — без строк")
 
-	c.report(Result{Archives: 3, Missing: []string{"a.zip", "b.zip", "c.zip"}})
+	c.report(ok("a.zip", "b.zip", "c.zip"))
 	got := lines()
 	require.Len(t, got, 1)
 	require.Contains(t, got[0], "level=ERROR")
 	require.Contains(t, got[0], "not mounted")
 
-	c.report(Result{Archives: 3, Missing: []string{"a.zip", "b.zip", "c.zip"}})
+	c.report(ok("a.zip", "b.zip", "c.zip"))
 	require.Empty(t, lines(), "то же состояние — без повторной строки")
 
-	c.report(Result{Archives: 3, Missing: []string{"c.zip"}})
+	c.report(ok("c.zip"))
 	got = lines()
 	require.Len(t, got, 1)
 	require.Contains(t, got[0], "level=ERROR")
 	require.NotContains(t, got[0], "not mounted")
 
-	c.report(Result{Archives: 3})
+	c.report(ok())
 	got = lines()
 	require.Len(t, got, 1)
 	require.Contains(t, got[0], "level=INFO")
+
+	// Том перестал отвечать: одна строка ERROR, о пропавших архивах — ничего
+	// (диск не ответил, неизвестно); снова читается — INFO.
+	c.report(Result{Archives: 3, ReadErr: ErrDiskTimeout.Error()})
+	got = lines()
+	require.Len(t, got, 1)
+	require.Contains(t, got[0], "level=ERROR")
+	require.Contains(t, got[0], "unreadable")
+	c.report(Result{Archives: 3, ReadErr: ErrDiskTimeout.Error()})
+	require.Empty(t, lines())
+	c.report(ok())
+	got = lines()
+	require.Len(t, got, 1)
+	require.Contains(t, got[0], "readable again")
+}
+
+// TestCheckDisk_Hang — том не отвечает (open FIFO без писателя висит, как
+// чтение с пропавшего iSCSI): проверка не ждёт дольше тайм-аута, пока прошлая
+// висит — новую не запускает, а когда диск ответил — снова читаемый.
+func TestCheckDisk_Hang(t *testing.T) {
+	root := t.TempDir()
+	require.NoError(t, syscall.Mkfifo(filepath.Join(root, "a.zip"), 0o600))
+	require.NoError(t, os.WriteFile(filepath.Join(root, "b.zip"), bytes.Repeat([]byte("PK"), 8192), 0o600))
+	c := New(nil, root, slog.New(slog.NewTextHandler(io.Discard, nil)))
+	c.timeout = 200 * time.Millisecond
+	names := []string{"a.zip", "b.zip"}
+
+	start := time.Now()
+	res := c.checkDisk(names) // проба читает a.zip — висит
+	require.Less(t, time.Since(start), 2*time.Second)
+	require.False(t, res.Readable)
+	require.Equal(t, ErrDiskTimeout.Error(), res.ReadErr)
+
+	res = c.checkDisk(names)
+	require.False(t, res.Readable)
+	require.Equal(t, errDiskBusy.Error(), res.ReadErr, "прошлая проверка ещё в ядре — новую не запускаем")
+
+	// «Диск ответил»: писатель отпускает open, зависшая горутина возвращается.
+	// Открываем в цикле и без блокировки: на Linux проба открывает FIFO дважды
+	// (O_DIRECT → EINVAL → обычное открытие), и оба раза ждёт писателя.
+	require.Eventually(t, func() bool {
+		if w, err := os.OpenFile(filepath.Join(root, "a.zip"), os.O_WRONLY|syscall.O_NONBLOCK, 0); err == nil {
+			_ = w.Close()
+		}
+		c.diskMu.Lock()
+		defer c.diskMu.Unlock()
+		return !c.diskBusy
+	}, 5*time.Second, 10*time.Millisecond)
+
+	res = c.checkDisk(names) // проба по кругу — b.zip
+	require.True(t, res.Readable, res.ReadErr)
+	require.Empty(t, res.Missing)
+}
+
+func TestDiskPass(t *testing.T) {
+	root := t.TempDir()
+	require.NoError(t, os.WriteFile(filepath.Join(root, "a.zip"), []byte("PK"), 0o600))
+
+	missing, err := diskPass(root, nil, 0)
+	require.NoError(t, err, "пустой каталог — читать нечего, том в порядке")
+	require.Empty(t, missing)
+
+	missing, err = diskPass(root, []string{"a.zip", "b.zip"}, 1)
+	require.NoError(t, err, "проба берёт только архивы, которые есть")
+	require.Equal(t, []string{"b.zip"}, missing)
+
+	missing, err = diskPass(filepath.Join(root, "absent"), []string{"a.zip"}, 0)
+	require.Error(t, err, "архивов на диске нет вовсе — том нечитаемый")
+	require.Equal(t, []string{"a.zip"}, missing)
+}
+
+func TestAlignedBuf(t *testing.T) {
+	for range 8 {
+		b := alignedBuf(probeSize)
+		require.Len(t, b, probeSize)
+		require.Zero(t, uintptr(unsafe.Pointer(&b[0]))%probeSize)
+	}
 }
 
 // TestCheck_Integration — в проверку идут только архивы с неудалёнными книгами
@@ -111,10 +193,30 @@ func TestCheck_Integration(t *testing.T) {
 	require.Equal(t, 2, res.Archives)
 	require.Equal(t, []string{"gone.zip"}, res.Missing)
 
+	require.True(t, res.Readable, res.ReadErr)
+
 	// Итог прохода — для плашки в админке.
+	bad, _ := c.Unreadable()
+	require.False(t, bad, "до первой проверки — читаемый")
 	c.runOnce(ctx)
 	last, at := c.Last()
 	require.False(t, at.IsZero())
 	require.Equal(t, res, last)
 	require.Equal(t, []string{"gone.zip"}, last.Sample())
+	bad, _ = c.Unreadable()
+	require.False(t, bad)
+}
+
+// TestReadSample_Path — ручная проверка пробы на настоящем томе:
+// LIBCHECK_PROBE_PATH=/путь/к/архиву go test -run ReadSample_Path.
+func TestReadSample_Path(t *testing.T) {
+	path := os.Getenv("LIBCHECK_PROBE_PATH")
+	if path == "" {
+		t.Skip("LIBCHECK_PROBE_PATH не задан")
+	}
+	for range 5 {
+		start := time.Now()
+		require.NoError(t, readSample(path))
+		t.Logf("read %d B in %s", probeSize, time.Since(start))
+	}
 }

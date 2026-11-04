@@ -92,3 +92,16 @@ func TestDownload(t *testing.T) {
 	require.Equal(t, http.StatusTooManyRequests, rec.Code, "два скачивания за окно, третье — ждать")
 	require.NotEmpty(t, rec.Header().Get("Retry-After"))
 }
+
+// Том с книгами не читается (libcheck) — OPDS отвечает 503 сразу, до БД и
+// диска, а не держит e-reader до I/O error.
+func TestDownload_LibraryUnreadable(t *testing.T) {
+	h := opds.NewHandler(opds.Config{}, opds.Deps{
+		LibraryUnreadable: func() (bool, string) { return true, "books volume does not respond" },
+	})
+	r := chi.NewRouter()
+	r.Get("/opds/books/{id}/download", h.Download)
+	rec := httptest.NewRecorder()
+	r.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, "/opds/books/1/download?format=fb2", nil))
+	require.Equal(t, http.StatusServiceUnavailable, rec.Code)
+}

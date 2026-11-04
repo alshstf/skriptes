@@ -78,3 +78,21 @@ func TestDownloadCheck(t *testing.T) {
 	require.Equal(t, http.StatusNotFound, check(999999, "epub3").Code)
 	require.Equal(t, http.StatusBadRequest, check(ok, "doc").Code)
 }
+
+// Том не читается (libcheck) — скачивание, ридер и проверка отвечают 503
+// сразу, ещё до БД и диска: иначе запрос висит в ядре до I/O error.
+func TestLibraryUnreadable_FailsFast(t *testing.T) {
+	d := DownloadDeps{LibraryUnreadable: func() (bool, string) { return true, "books volume does not respond" }}
+	r := chi.NewRouter()
+	r.Get("/books/{id}/download/check", handleDownloadCheck(d))
+	r.Get("/books/{id}/download", handleDownload(d, HistoryDeps{}))
+	r.Get("/books/{id}/epub", handleEpub(d))
+	for _, path := range []string{"/books/1/download/check?format=epub3", "/books/1/download?format=fb2", "/books/1/epub"} {
+		rec := httptest.NewRecorder()
+		r.ServeHTTP(rec, httptest.NewRequest(http.MethodGet, path, nil))
+		require.Equal(t, http.StatusServiceUnavailable, rec.Code, path)
+		var body map[string]string
+		require.NoError(t, json.Unmarshal(rec.Body.Bytes(), &body))
+		require.Equal(t, msgLibraryUnreadable, body["message"], path)
+	}
+}

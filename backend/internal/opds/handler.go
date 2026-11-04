@@ -53,6 +53,9 @@ type Deps struct {
 	Exclusions func(ctx context.Context, userID int64) (genres, langs []string)
 	// Limiter — лимит скачиваний на пользователя (общий с веб-скачиванием); nil — без лимита.
 	Limiter *dlimit.Limiter
+	// LibraryUnreadable — том с книгами не читается (libcheck): 503 сразу,
+	// а не зависшее скачивание. nil — не проверяем.
+	LibraryUnreadable func() (bool, string)
 }
 
 // Handler — компактный объект, держащий config+deps. Методы возвращают
@@ -537,6 +540,12 @@ func (h *Handler) Download(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		h.error(w, err.Error(), err, http.StatusBadRequest)
 		return
+	}
+	if h.deps.LibraryUnreadable != nil {
+		if bad, why := h.deps.LibraryUnreadable(); bad {
+			h.error(w, "books volume unavailable, try later", errors.New(why), http.StatusServiceUnavailable)
+			return
+		}
 	}
 	ctx, cancel := context.WithTimeout(r.Context(), 60*time.Second)
 	defer cancel()

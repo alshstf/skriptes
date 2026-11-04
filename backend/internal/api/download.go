@@ -24,6 +24,23 @@ type DownloadDeps struct {
 	Converter *converter.Converter
 	// Limiter — лимит скачиваний на пользователя (общий с OPDS, #389); nil — без лимита.
 	Limiter *dlimit.Limiter
+	// LibraryUnreadable — последняя проверка тома не прочитала архив
+	// (libcheck.Checker.Unreadable); тогда скачивание и ридер отвечают сразу,
+	// а не висят в ядре до I/O error. nil — не проверяем.
+	LibraryUnreadable func() (bool, string)
+}
+
+// libraryDown отвечает 503, когда том с книгами не читается. true — ответ
+// уже записан.
+func libraryDown(w http.ResponseWriter, d DownloadDeps) bool {
+	if d.LibraryUnreadable == nil {
+		return false
+	}
+	if bad, _ := d.LibraryUnreadable(); !bad {
+		return false
+	}
+	writeBookFileError(w, http.StatusServiceUnavailable, "books volume unreadable", msgLibraryUnreadable)
+	return true
 }
 
 func handleDownload(d DownloadDeps, hist HistoryDeps) http.HandlerFunc {
@@ -36,6 +53,9 @@ func handleDownload(d DownloadDeps, hist HistoryDeps) http.HandlerFunc {
 		format, err := converter.ParseFormat(r.URL.Query().Get("format"))
 		if err != nil {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
+			return
+		}
+		if libraryDown(w, d) {
 			return
 		}
 
@@ -136,6 +156,9 @@ func handleEpub(d DownloadDeps) http.HandlerFunc {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": "invalid id"})
 			return
 		}
+		if libraryDown(w, d) {
+			return
+		}
 		ctx, cancel := context.WithTimeout(r.Context(), 60*time.Second)
 		defer cancel()
 
@@ -189,10 +212,11 @@ func handleEpub(d DownloadDeps) http.HandlerFunc {
 // Тексты ошибок скачивания и ридера для читателя (#631): поле message рядом с
 // прежним кодом в error — фронт показывает его тостом или на экране ридера.
 const (
-	msgBookNotFound     = "Книга не найдена."
-	msgBookFileMissing  = "Файл книги сейчас недоступен на сервере. Попробуйте позже, а если не пройдёт — сообщите администратору."
-	msgConvertFailed    = "Не удалось подготовить книгу в этом формате. Попробуйте другой формат."
-	msgTooManyDownloads = "Слишком много скачиваний подряд. Повторите чуть позже."
+	msgBookNotFound      = "Книга не найдена."
+	msgBookFileMissing   = "Файл книги сейчас недоступен на сервере. Попробуйте позже, а если не пройдёт — сообщите администратору."
+	msgConvertFailed     = "Не удалось подготовить книгу в этом формате. Попробуйте другой формат."
+	msgTooManyDownloads  = "Слишком много скачиваний подряд. Повторите чуть позже."
+	msgLibraryUnreadable = "Файлы книг сейчас недоступны: хранилище с книгами не отвечает. Поиск и карточки работают, а скачать и читать можно будет, когда оно вернётся."
 )
 
 func writeBookFileError(w http.ResponseWriter, status int, code, message string) {
@@ -213,6 +237,9 @@ func handleDownloadCheck(d DownloadDeps) http.HandlerFunc {
 		}
 		if _, err := converter.ParseFormat(r.URL.Query().Get("format")); err != nil {
 			writeJSON(w, http.StatusBadRequest, map[string]string{"error": err.Error()})
+			return
+		}
+		if libraryDown(w, d) {
 			return
 		}
 		ctx, cancel := context.WithTimeout(r.Context(), 15*time.Second)
