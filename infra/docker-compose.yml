@@ -72,6 +72,14 @@ services:
       SKRIPTES_INPX_WATCH_INTERVAL: ${SKRIPTES_INPX_WATCH_INTERVAL:-10m}
       # Импорт истории чтения из файла (профиль → «Импорт»): предел файла, МБ.
       SKRIPTES_IMPORT_MAX_MB: ${SKRIPTES_IMPORT_MAX_MB:-20}
+      # ИИ-функции (читалка: «Объяснить», «Напомнить, что было»…). Пустой ключ —
+      # функций нет и наружу ничего не уходит; что уходит при ключе — README, «ИИ».
+      SKRIPTES_LLM_API_KEY: ${SKRIPTES_LLM_API_KEY:-}
+      SKRIPTES_LLM_MODEL: ${SKRIPTES_LLM_MODEL:-claude-sonnet-5-5}
+      SKRIPTES_LLM_MODEL_FAST: ${SKRIPTES_LLM_MODEL_FAST:-claude-haiku-5-5}
+      SKRIPTES_LLM_DAILY_PER_USER: ${SKRIPTES_LLM_DAILY_PER_USER:-20}
+      SKRIPTES_LLM_MONTHLY_BUDGET_USD: ${SKRIPTES_LLM_MONTHLY_BUDGET_USD:-10}
+      SKRIPTES_LLM_BASE_URL: ${SKRIPTES_LLM_BASE_URL:-}
       SKRIPTES_CACHE_ROOT: /cache
       SKRIPTES_COOKIE_SECURE: ${SKRIPTES_COOKIE_SECURE:-true}
       SKRIPTES_COOKIE_DOMAIN: ${SKRIPTES_COOKIE_DOMAIN:-}

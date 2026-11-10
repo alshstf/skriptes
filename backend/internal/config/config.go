@@ -48,6 +48,22 @@ type Config struct {
 	// сохраняется.
 	ImportMaxMB int `env:"SKRIPTES_IMPORT_MAX_MB" envDefault:"20"`
 
+	// ИИ-функции (читалка: «Объяснить», «Напомнить, что было» и т. д.). Без
+	// ключа их нет вовсе — ни кнопок, ни запросов наружу. При ключе внешней
+	// модели уходит текст прочитанной части книги и вопрос читателя (README, «ИИ»).
+	LLMAPIKey string `env:"SKRIPTES_LLM_API_KEY"`
+	// LLMModel — модель ответов читателю; LLMModelFast — дешёвые операции
+	// (перевод, толкование, пересказы).
+	LLMModel     string `env:"SKRIPTES_LLM_MODEL" envDefault:"claude-sonnet-5-5"`
+	LLMModelFast string `env:"SKRIPTES_LLM_MODEL_FAST" envDefault:"claude-haiku-5-5"`
+	// LLMDailyPerUser — действий пользователя в сутки.
+	LLMDailyPerUser int `env:"SKRIPTES_LLM_DAILY_PER_USER" envDefault:"20"`
+	// LLMMonthlyBudgetUSD — месячный потолок расходов инстанса по умолчанию;
+	// действующее значение правится в админке («Общее» → «ИИ»).
+	LLMMonthlyBudgetUSD float64 `env:"SKRIPTES_LLM_MONTHLY_BUDGET_USD" envDefault:"10"`
+	// LLMBaseURL — другой адрес API (прокси); пусто — api.anthropic.com.
+	LLMBaseURL string `env:"SKRIPTES_LLM_BASE_URL"`
+
 	// FBCPath — путь к бинарю fb2cng (rupor-github/fb2cng).
 	// В production-образе лежит в /usr/local/bin/fbc; пустая строка =
 	// искать в $PATH.

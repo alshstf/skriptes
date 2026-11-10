@@ -105,6 +105,26 @@ var (
 		Help: "1 — пробное чтение архива с книгами (мимо кэша, тайм-аут 30 с) прошло; 0 — том не отвечает или не читается.",
 	})
 
+	llmRequests = factory.NewCounterVec(prometheus.CounterOpts{
+		Name: "skriptes_llm_requests_total",
+		Help: "Вызовы языковой модели по функции, модели и исходу (ok, truncated, refusal, error).",
+	}, []string{"feature", "model", "outcome"})
+
+	llmTokens = factory.NewCounterVec(prometheus.CounterOpts{
+		Name: "skriptes_llm_tokens_total",
+		Help: "Токены вызовов модели по функции и виду (input, output, cache_read, cache_write).",
+	}, []string{"feature", "kind"})
+
+	llmCost = factory.NewCounterVec(prometheus.CounterOpts{
+		Name: "skriptes_llm_cost_usd_total",
+		Help: "Стоимость вызовов модели по своей таблице цен, доллары, по функции.",
+	}, []string{"feature"})
+
+	llmBudgetUsed = factory.NewGauge(prometheus.GaugeOpts{
+		Name: "skriptes_llm_budget_used_ratio",
+		Help: "Доля месячного потолка расходов на модель, израсходованная в этом месяце (обновляется при открытии сводки в админке и раз в 10 минут).",
+	})
+
 	// ExternalSourcePauses — сколько раз источник ставили на паузу.
 	ExternalSourcePauses = factory.NewCounterVec(prometheus.CounterOpts{
 		Name: "skriptes_external_source_pauses_total",
@@ -209,6 +229,19 @@ func ImportFinished(result string, r ImportResult) {
 	importLastInserted.Set(float64(r.BooksInserted))
 	importLastRecordErrors.Set(float64(r.RecordErrors))
 }
+
+// LLMRequest учитывает один вызов языковой модели.
+func LLMRequest(feature, model, outcome string, input, output, cacheRead, cacheWrite int64, usd float64) {
+	llmRequests.WithLabelValues(feature, model, outcome).Inc()
+	llmTokens.WithLabelValues(feature, "input").Add(float64(input))
+	llmTokens.WithLabelValues(feature, "output").Add(float64(output))
+	llmTokens.WithLabelValues(feature, "cache_read").Add(float64(cacheRead))
+	llmTokens.WithLabelValues(feature, "cache_write").Add(float64(cacheWrite))
+	llmCost.WithLabelValues(feature).Add(usd)
+}
+
+// SetLLMBudgetUsed — доля израсходованного месячного потолка.
+func SetLLMBudgetUsed(ratio float64) { llmBudgetUsed.Set(ratio) }
 
 // SetLibrary выставляет итог проверки тома с книгами (libcheck).
 func SetLibrary(archives, missing int, readable bool) {

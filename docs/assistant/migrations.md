@@ -155,3 +155,11 @@ nullable `import_batch_id` (FK `ON DELETE SET NULL`, частичные инде
 удаляет его желания; `import_batches.wishlist` — сколько взято. Читает `recsys.Matcher.MatchNewWorks` после импорта INPX
 вместе с ненайденными поисками (`search_log`, hits = 0): попадание → `search_matches` («Появилось то, что вы искали»),
 исполненное желание вычёркивается. В отличие от лога поиска у списка нет срока и выключателя.
+
+## 0073_llm_usage
+
+Учёт вызовов языковой модели (ИИ-функции, этап 0 `ai-roadmap.md`): `llm_usage(id, at, user_id, feature, model, stage,
+counted, outcome, input/output/cache_read/cache_write_tokens, cost_microusd)` — строка на вызов. `counted` — первое
+обращение действия пользователя: по таким строкам считается суточная квота; сумма `cost_microusd` за календарный месяц
+— против месячного потолка (`settings.AIConfig`, дефолт из env). `user_id` — `ON DELETE SET NULL` (расход остаётся в
+сводке). Пишет только `internal/llm` (`Service.record`); текстов запросов и ответов в таблице нет.

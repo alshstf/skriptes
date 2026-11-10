@@ -43,6 +43,8 @@ type Deps struct {
 	Import ImportDeps
 	// Library — проверка тома с книгами (#632); Check == nil → ручка не монтируется.
 	Library LibraryDeps
+	// AI — ИИ-функции; Service == nil → ручки не монтируются.
+	AI AIDeps
 	// OPDS — опционально. Если Handler == nil, /opds/* не монтируется.
 	// BaseURL прокидывается извне (cfg.AllowedOrigins[0] обычно).
 	OPDS OPDSDeps
@@ -142,6 +144,9 @@ func NewRouter(d Deps) http.Handler {
 				workGate := requireNotHidden(d.Hiding, hiding.KindWork)
 				seriesGate := requireNotHidden(d.Hiding, hiding.KindSeries)
 				r.Get("/auth/me", handleMe(d.Auth))
+				if d.AI.Service != nil {
+					r.Get("/ai/status", handleAIStatus(d.AI))
+				}
 				// Self-management. /api/me — обновление своего профиля
 				// (display_name, email), /api/me/password — смена своего
 				// пароля с верификацией текущего.
@@ -324,6 +329,10 @@ func NewRouter(d Deps) http.Handler {
 				r.Use(requireAdmin(d.Auth))
 				if d.Library.Check != nil {
 					r.Get("/admin/library", handleLibraryHealth(d.Library))
+				}
+				if d.AI.Service != nil {
+					r.Get("/admin/ai", handleGetAdminAI(d.AI))
+					r.Put("/admin/ai", handleUpdateAdminAI(d.AI))
 				}
 				// Ручная метка «служебный автор» (агрегат-псевдоавтор вне списка /authors).
 				if d.Catalog.Service != nil {
