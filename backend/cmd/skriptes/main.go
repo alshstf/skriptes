@@ -38,6 +38,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/importer"
 	"github.com/skriptes/skriptes/backend/internal/kindle"
 	"github.com/skriptes/skriptes/backend/internal/libcheck"
+	"github.com/skriptes/skriptes/backend/internal/llm"
 	"github.com/skriptes/skriptes/backend/internal/logredact"
 	"github.com/skriptes/skriptes/backend/internal/metadata"
 	"github.com/skriptes/skriptes/backend/internal/metrics"
@@ -355,6 +356,34 @@ func run() error {
 	// (app_settings, раздел «Кэш обложек» в админке). Применяем лимиты
 	// (бюджет LRU + пол свободного места) на старте.
 	settingsStore := settings.New(pool)
+	// ИИ-функции — только при заданном ключе (SKRIPTES_LLM_API_KEY); без него
+	// сервис создаётся «пустым»: статус отвечает «нет ключа», наружу ничего не
+	// уходит. Транспорт — общий с внешними источниками (прерыватель по хосту);
+	// таймаут с запасом на длинный потоковый ответ.
+	llmSvc := llm.New(llm.Config{
+		APIKey: cfg.LLMAPIKey, BaseURL: cfg.LLMBaseURL, Model: cfg.LLMModel, FastModel: cfg.LLMModelFast,
+		DailyPerUser: cfg.LLMDailyPerUser, DefaultBudgetUSD: cfg.LLMMonthlyBudgetUSD,
+	}, pool, settingsStore, metadata.SourceHTTPClient(5*time.Minute), logger)
+	if llmSvc.Configured() {
+		logger.Info("llm: AI features enabled", "model", cfg.LLMModel, "fast_model", cfg.LLMModelFast,
+			"daily_per_user", cfg.LLMDailyPerUser, "default_budget_usd", cfg.LLMMonthlyBudgetUSD)
+		// Доля израсходованного потолка — метрика для алерта; считается и при
+		// открытии сводки в админке.
+		metadata.Go(func(c context.Context) {
+			t := time.NewTicker(10 * time.Minute)
+			defer t.Stop()
+			for {
+				if _, err := llmSvc.Summary(c); err != nil && c.Err() == nil {
+					logger.Warn("llm: budget summary failed", "err", err)
+				}
+				select {
+				case <-c.Done():
+					return
+				case <-t.C:
+				}
+			}
+		})
+	}
 	// Общая дневная квота Google Books (#501, metadata/daily_quota.go): лимит —
 	// поле «лимит в сутки» настроек внешнего рейтинга, действует на все запросы
 	// процесса к Books API (рейтинг, обложки, аннотации, ленивые с карточки).
@@ -870,6 +899,7 @@ func run() error {
 		Recs:        api.RecsDeps{SearchLog: searchLog, Feed: recsys.NewFeed(pool)},
 		Import:      api.ImportDeps{Pool: pool, Search: booksSvc, MaxBytes: int64(cfg.ImportMaxMB) << 20},
 		Library:     api.LibraryDeps{Check: libCheck},
+		AI:          api.AIDeps{Service: llmSvc, Store: settingsStore},
 		Kindle: api.KindleDeps{
 			Service:   kindleSvc,
 			Email:     emailSender,

@@ -10,33 +10,57 @@ import { DEFAULT_INSTANCE_NAME } from '@/lib/version';
 import { ApiError } from '@/lib/api';
 import { LoadError } from '@/components/LoadError';
 import { SearchMissesCard } from '@/components/SearchMissesCard';
+import { AiSettingsCard } from '@/components/AiSettingsCard';
+import { parseBudget, useAdminAi, useUpdateAdminAi } from '@/lib/ai';
 
 const MAX_NAME_LEN = 60;
 
 /**
- * AdminGeneralPage — /admin/general. Общие настройки инстанса. Пока одна —
- * отображаемое имя (заголовок Главной + <title> вкладки). Глобальное, правит
- * админ; читается всеми через /api/version. Применяется сразу при сохранении.
+ * AdminGeneralPage — /admin/general. Общие настройки инстанса: отображаемое имя
+ * (заголовок Главной + <title> вкладки; читается всеми через /api/version) и
+ * блок «ИИ» (потолок расходов, выключатель, расход за месяц). Поля сохраняются
+ * общим SaveBar, выключатель ИИ — сразу.
  */
 export function AdminGeneralPage() {
   const branding = useBrandingSettings();
   const update = useUpdateBrandingSettings();
 
+  const ai = useAdminAi();
+  const updateAi = useUpdateAdminAi();
+
   const [name, setName] = useState('');
+  const [budget, setBudget] = useState('');
 
   useEffect(() => {
     if (branding.data) setName(branding.data.instance_name);
   }, [branding.data]);
+  useEffect(() => {
+    if (ai.data) setBudget(String(ai.data.budget_usd));
+  }, [ai.data]);
 
   const trimmed = name.trim();
-  const dirty = branding.data ? trimmed !== branding.data.instance_name && trimmed !== '' : false;
+  const nameDirty = branding.data ? trimmed !== branding.data.instance_name && trimmed !== '' : false;
   const tooLong = trimmed.length > MAX_NAME_LEN;
+
+  const parsedBudget = ai.data ? parseBudget(budget, ai.data.max_budget_usd) : null;
+  const budgetDirty = ai.data?.configured ? budget.trim() !== String(ai.data.budget_usd) : false;
+  const budgetInvalid = budgetDirty && parsedBudget === null;
+  const dirty = nameDirty || budgetDirty;
 
   const onSave = async () => {
     try {
-      const saved = await update.mutateAsync({ instance_name: trimmed });
-      setName(saved.instance_name);
-      toast.success('Имя инстанса сохранено');
+      if (nameDirty) {
+        const saved = await update.mutateAsync({ instance_name: trimmed });
+        setName(saved.instance_name);
+      }
+      if (budgetDirty && ai.data && parsedBudget !== null) {
+        await updateAi.mutateAsync({
+          monthly_budget_usd: parsedBudget,
+          disabled: ai.data.disabled,
+          disabled_users: ai.data.disabled_users,
+        });
+      }
+      toast.success('Настройки сохранены');
     } catch (e) {
       toast.error(e instanceof ApiError ? e.message : 'Не удалось сохранить');
     }
@@ -44,6 +68,21 @@ export function AdminGeneralPage() {
 
   const onReset = () => {
     if (branding.data) setName(branding.data.instance_name);
+    if (ai.data) setBudget(String(ai.data.budget_usd));
+  };
+
+  // Выключатель ИИ — сразу, без SaveBar; несохранённый потолок при этом не трогаем.
+  const onToggleAi = async (enabled: boolean) => {
+    if (!ai.data) return;
+    try {
+      await updateAi.mutateAsync({
+        monthly_budget_usd: ai.data.budget_usd,
+        disabled: !enabled,
+        disabled_users: ai.data.disabled_users,
+      });
+    } catch (e) {
+      toast.error(e instanceof ApiError ? e.message : 'Не удалось сохранить');
+    }
   };
 
   return (
@@ -78,8 +117,19 @@ export function AdminGeneralPage() {
         </div>
       )}
 
-      {dirty && !tooLong && (
-        <SaveBar saving={update.isPending} onSave={onSave} onReset={onReset} />
+      {ai.data && (
+        <AiSettingsCard
+          data={ai.data}
+          budget={budget}
+          onBudgetChange={setBudget}
+          budgetInvalid={budgetInvalid}
+          onToggle={onToggleAi}
+          toggling={updateAi.isPending}
+        />
+      )}
+
+      {dirty && !tooLong && !budgetInvalid && (
+        <SaveBar saving={update.isPending || updateAi.isPending} onSave={onSave} onReset={onReset} />
       )}
 
       <SearchMissesCard query={useSearchMisses(90)} />
