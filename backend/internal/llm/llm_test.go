@@ -276,5 +276,34 @@ func TestService(t *testing.T) {
 		require.Equal(t, before+1, after)
 	})
 
+	t.Run("инструмент: модель зовёт его вместо ответа", func(t *testing.T) {
+		api.reply = func(w http.ResponseWriter) {
+			sse(w,
+				`{"type":"message_start","message":{"id":"msg_3","type":"message","role":"assistant","model":"m","content":[],"stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":900,"output_tokens":1}}}`,
+				`{"type":"content_block_start","index":0,"content_block":{"type":"tool_use","id":"toolu_1","name":"need_earlier_context","input":{}}}`,
+				`{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\"reason\":\"причина раньше\","}}`,
+				`{"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"\"terms\":[\"Анна\",\"письмо\"]}"}}`,
+				`{"type":"content_block_stop","index":0}`,
+				`{"type":"message_delta","delta":{"stop_reason":"tool_use","stop_sequence":null,"stop_details":null},"usage":{"input_tokens":900,"output_tokens":30}}`,
+				`{"type":"message_stop"}`)
+		}
+		res, err := s.Stream(ctx, Request{Feature: "explain", Messages: []Message{{Role: RoleUser, Text: "?"}},
+			Tools: []Tool{{Name: "need_earlier_context", Description: "Нужен более ранний текст.",
+				Properties: map[string]any{"reason": map[string]any{"type": "string"}, "terms": map[string]any{"type": "array", "items": map[string]any{"type": "string"}}},
+				Required:   []string{"reason", "terms"}}}}, nil)
+		require.NoError(t, err)
+		require.Empty(t, res.Text)
+		require.Len(t, res.ToolCalls, 1)
+		require.Equal(t, "need_earlier_context", res.ToolCalls[0].Name)
+		require.JSONEq(t, `{"reason":"причина раньше","terms":["Анна","письмо"]}`, string(res.ToolCalls[0].Input))
+
+		tool := api.bodies[len(api.bodies)-1]["tools"].([]any)[0].(map[string]any)
+		require.Equal(t, "need_earlier_context", tool["name"])
+		schema := tool["input_schema"].(map[string]any)
+		require.Equal(t, "object", schema["type"])
+		require.ElementsMatch(t, []any{"reason", "terms"}, schema["required"].([]any))
+		require.Nil(t, api.bodies[len(api.bodies)-1]["tool_choice"], "выбор инструмента — за моделью (принудительный на новых моделях запрещён)")
+	})
+
 	require.True(t, strings.HasPrefix(srv.URL, "http://127.0.0.1"), "тесты не ходят в настоящий API")
 }

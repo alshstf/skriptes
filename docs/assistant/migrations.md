@@ -163,3 +163,10 @@ counted, outcome, input/output/cache_read/cache_write_tokens, cost_microusd)` �
 обращение действия пользователя: по таким строкам считается суточная квота; сумма `cost_microusd` за календарный месяц
 — против месячного потолка (`settings.AIConfig`, дефолт из env). `user_id` — `ON DELETE SET NULL` (расход остаётся в
 сводке). Пишет только `internal/llm` (`Service.record`); текстов запросов и ответов в таблице нет.
+
+## 0074_book_summaries
+
+Пересказы кусков текста книги для ИИ-функций читалки (этап 1 `ai-roadmap.md`): `book_summaries(book_id, text_version,
+chunk_runes, chunk, summary, created_at)`, PK — все четыре ключевых поля. Кусок — ~`chunk_runes` знаков по границам
+абзацев (`booktext.Flat.Chunks`), `text_version` — хеш epub, из которого взят текст (пересобрали epub — старые строки
+не находятся, не чистятся). Общий кэш для всех читателей книги; пишет `readerai.PGSummaries` (`ON CONFLICT DO NOTHING`).
