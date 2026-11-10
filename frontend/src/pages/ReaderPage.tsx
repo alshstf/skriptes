@@ -1,7 +1,18 @@
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import { useParams, useNavigate, useSearch } from '@tanstack/react-router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ALargeSmall, ArrowLeft, Bookmark, BookmarkCheck, Check, Maximize, Minimize, NotebookPen, TableOfContents } from 'lucide-react';
+import {
+  ALargeSmall,
+  ArrowLeft,
+  Bookmark,
+  BookmarkCheck,
+  Check,
+  Maximize,
+  Minimize,
+  NotebookPen,
+  Sparkles,
+  TableOfContents,
+} from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { apiFetch } from '@/lib/api';
@@ -25,6 +36,10 @@ import {
   type Annotation,
 } from '@/lib/annotations';
 import { AnnotationsSheet, NoteDialog, SelectionBar } from '@/components/ReaderAnnotations';
+import { AiSheet } from '@/components/ReaderAi';
+import { useAiConversation } from '@/lib/readerAiConversation';
+import { useAiStatus } from '@/lib/ai';
+import type { AiPlace } from '@/lib/readerAi';
 import { ReaderSettingsSheet } from '@/components/ReaderSettings';
 import { ProgressBar, TocSheet, type ReturnPlace, type TocItem } from '@/components/ReaderNavigation';
 
@@ -68,10 +83,20 @@ import { ProgressBar, TocSheet, type ReturnPlace, type TocItem } from '@/compone
 
 type ReaderMessage =
   | { type: 'ready' }
-  | { type: 'position'; cfi: string; fraction: number | null; label?: string; tocId?: number | null }
+  | {
+      type: 'position';
+      cfi: string;
+      fraction: number | null;
+      label?: string;
+      tocId?: number | null;
+      // Место видимой страницы для ИИ-функций: раздел, доля раздела до неё, её первые слова.
+      section?: number | null;
+      hint?: number | null;
+      head?: string;
+    }
   | { type: 'toc'; items: TocItem[] }
   | { type: 'completed'; cfi: string }
-  | { type: 'selection'; cfi: string; text: string }
+  | { type: 'selection'; cfi: string; text: string; section?: number; hint?: number | null }
   | { type: 'selection-clear' }
   | { type: 'annotation-click'; cfi: string }
   | { type: 'toggle-ui' }
@@ -165,7 +190,18 @@ export function ReaderPage() {
   // Место до прыжка по оглавлению/слайдеру/заметке — для «Вернуться» (первое из
   // серии прыжков: вернуться туда, где читал).
   const [returnTo, setReturnTo] = useState<ReturnPlace | null>(null);
-  const [selection, setSelection] = useState<{ cfi: string; text: string } | null>(null);
+  const [selection, setSelection] = useState<{ cfi: string; text: string; section?: number; hint?: number | null } | null>(
+    null,
+  );
+  // ИИ-функции — только если сервер говорит, что они доступны этому читателю
+  // (ключ, потолок, квота): иначе ни кнопок, ни запросов.
+  const aiStatus = useAiStatus();
+  const aiOn = aiStatus.data?.available === true;
+  const aiConversation = useAiConversation(bookId);
+  const [aiOpen, setAiOpen] = useState(false);
+  // Выделение, о котором идёт разговор (cfi — чтобы сохранить ответ заметкой).
+  const [aiSelection, setAiSelection] = useState<(AiPlace & { cfi: string }) | null>(null);
+  const [page, setPage] = useState<AiPlace | null>(null);
   const [notesOpen, setNotesOpen] = useState(false);
   const [noteFor, setNoteFor] = useState<{ cfi: string; excerpt: string; existing?: Annotation } | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -354,13 +390,18 @@ export function ReaderPage() {
             rememberLocalPosition(bookId, msg.cfi, msg.fraction);
             scheduleSave(msg.cfi, msg.fraction);
             setPlace({ cfi: msg.cfi, fraction: msg.fraction, label: msg.label ?? '', tocId: msg.tocId ?? null });
+            setPage(
+              typeof msg.section === 'number' && msg.head
+                ? { section: msg.section, excerpt: msg.head, hint: msg.hint ?? null }
+                : null,
+            );
           }
           break;
         case 'toc':
           setToc(Array.isArray(msg.items) ? msg.items : []);
           break;
         case 'selection':
-          setSelection({ cfi: msg.cfi, text: msg.text });
+          setSelection({ cfi: msg.cfi, text: msg.text, section: msg.section, hint: msg.hint });
           break;
         case 'selection-clear':
           setSelection(null);
@@ -567,6 +608,23 @@ export function ReaderPage() {
             <span className="hidden sm:inline">Прочитано</span>
           </span>
         ) : null}
+        {aiOn ? (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            className="shrink-0"
+            disabled={!ready}
+            onClick={() => {
+              // Из панели — про прочитанное в целом: если прошлый разговор был о
+              // выделении, он остаётся на экране, новый начинается с «Напомнить».
+              if (aiConversation.items.length === 0) setAiSelection(null);
+              setAiOpen(true);
+            }}
+            aria-label="Спросить ИИ"
+          >
+            <Sparkles className="size-4" aria-hidden />
+          </Button>
+        ) : null}
         <Button
           variant="ghost"
           size="icon-sm"
@@ -665,8 +723,49 @@ export function ReaderPage() {
             )
           }
           onNote={() => setNoteFor({ cfi: selection.cfi, excerpt: selection.text })}
+          onAsk={
+            aiOn && typeof selection.section === 'number'
+              ? () => {
+                  aiConversation.reset();
+                  setAiSelection({
+                    cfi: selection.cfi,
+                    section: selection.section!,
+                    excerpt: selection.text,
+                    hint: selection.hint ?? null,
+                  });
+                  setAiOpen(true);
+                }
+              : undefined
+          }
         />
       ) : null}
+      <AiSheet
+        open={aiOpen}
+        onOpenChange={setAiOpen}
+        conversation={aiConversation}
+        selection={aiSelection}
+        page={page}
+        onGotoQuote={(q) => {
+          setAiOpen(false);
+          jump({ type: 'goto-quote', section: q.section, text: q.text });
+        }}
+        onSaveNote={
+          aiSelection
+            ? (text) =>
+                saveAnnotation.mutate(
+                  {
+                    kind: 'highlight',
+                    cfi: aiSelection.cfi,
+                    excerpt: aiSelection.excerpt,
+                    note: text,
+                    label: place.label,
+                    fraction: place.fraction ?? undefined,
+                  },
+                  { onSuccess: () => toast.success('Ответ сохранён в заметках') },
+                )
+            : undefined
+        }
+      />
       <AnnotationsSheet
         open={notesOpen}
         onOpenChange={setNotesOpen}

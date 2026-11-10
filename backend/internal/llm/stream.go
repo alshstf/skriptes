@@ -2,6 +2,7 @@ package llm
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -20,6 +21,23 @@ const (
 type Message struct {
 	Role string
 	Text string
+}
+
+// Tool — инструмент, который модель может вызвать вместо ответа. Сам пакет
+// инструменты не исполняет: вызовы возвращаются в Result.ToolCalls, что с ними
+// делать — решает вызывающий (читалка так узнаёт, что модели мало контекста).
+type Tool struct {
+	Name        string
+	Description string
+	// Properties — свойства JSON-схемы входа; Required — обязательные.
+	Properties map[string]any
+	Required   []string
+}
+
+// ToolCall — вызов инструмента моделью.
+type ToolCall struct {
+	Name  string
+	Input json.RawMessage
 }
 
 // Request — один вызов модели.
@@ -47,6 +65,8 @@ type Request struct {
 	// Effort — глубина рассуждения (low | medium | high); пусто — low: ответы
 	// читателю должны начинаться быстро.
 	Effort string
+	// Tools — инструменты; модель сама решает, звать ли их.
+	Tools []Tool
 }
 
 const defaultMaxTokens = 4000
@@ -54,6 +74,8 @@ const defaultMaxTokens = 4000
 // Result — итог вызова.
 type Result struct {
 	Text string
+	// ToolCalls — вызовы инструментов (модель остановилась на них).
+	ToolCalls []ToolCall
 	// Truncated — ответ обрезан по MaxTokens.
 	Truncated bool
 	Usage     Usage
@@ -92,6 +114,13 @@ func (s *Service) Stream(ctx context.Context, req Request, onText func(string)) 
 	if req.System != "" {
 		params.System = []anthropic.TextBlockParam{{Text: req.System}}
 	}
+	for _, t := range req.Tools {
+		params.Tools = append(params.Tools, anthropic.ToolUnionParam{OfTool: &anthropic.ToolParam{
+			Name:        t.Name,
+			Description: anthropic.String(t.Description),
+			InputSchema: anthropic.ToolInputSchemaParam{Properties: t.Properties, Required: t.Required},
+		}})
+	}
 
 	row := usageRow{userID: req.UserID, feature: req.Feature, model: model, stage: req.Stage, counted: req.Counted}
 	stream := s.client.Messages.NewStreaming(ctx, params)
@@ -121,6 +150,11 @@ func (s *Service) Stream(ctx context.Context, req Request, onText func(string)) 
 		CacheWrite: msg.Usage.CacheCreationInputTokens,
 	}
 	res := Result{Text: text.String(), Usage: row.usage}
+	for _, block := range msg.Content {
+		if tu, ok := block.AsAny().(anthropic.ToolUseBlock); ok {
+			res.ToolCalls = append(res.ToolCalls, ToolCall{Name: tu.Name, Input: tu.Input})
+		}
+	}
 	if err := stream.Err(); err != nil {
 		row.outcome = "error"
 		res.CostMicroUSD = s.record(ctx, row)

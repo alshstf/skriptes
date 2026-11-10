@@ -43,6 +43,7 @@ import (
 	"github.com/skriptes/skriptes/backend/internal/metadata"
 	"github.com/skriptes/skriptes/backend/internal/metrics"
 	"github.com/skriptes/skriptes/backend/internal/opds"
+	"github.com/skriptes/skriptes/backend/internal/readerai"
 	"github.com/skriptes/skriptes/backend/internal/recsys"
 	"github.com/skriptes/skriptes/backend/internal/settings"
 )
@@ -878,6 +879,17 @@ func run() error {
 		})
 	}
 
+	// ИИ-функции читалки — только при ключе; без него ручки /ask нет.
+	downloadDeps := api.DownloadDeps{Books: booksSvc, Converter: conv, Limiter: downloadLimiter, LibraryUnreadable: libCheck.Unreadable}
+	var askDeps api.AskDeps
+	if llmSvc.Configured() {
+		askDeps = api.AskDeps{
+			Engine:            &readerai.Engine{Model: llmSvc, Summaries: readerai.PGSummaries{Pool: pool}, Logger: logger},
+			Begin:             llmSvc.Begin,
+			OpenBook:          api.OpenBookText(downloadDeps, api.NewBookTextCache(4)),
+			LibraryUnreadable: libCheck.Unreadable,
+		}
+	}
 	router := api.NewRouter(api.Deps{
 		Version: effectiveVersion(cfg.Version),
 		DB:      pool,
@@ -894,12 +906,13 @@ func run() error {
 		Books:       api.BooksDeps{Service: booksSvc},
 		Catalog:     api.CatalogDeps{Service: catalogSvc},
 		Collections: api.CollectionsDeps{Service: collectionsSvc},
-		Download:    api.DownloadDeps{Books: booksSvc, Converter: conv, Limiter: downloadLimiter, LibraryUnreadable: libCheck.Unreadable},
+		Download:    downloadDeps,
 		History:     api.HistoryDeps{Service: historySvc},
 		Recs:        api.RecsDeps{SearchLog: searchLog, Feed: recsys.NewFeed(pool)},
 		Import:      api.ImportDeps{Pool: pool, Search: booksSvc, MaxBytes: int64(cfg.ImportMaxMB) << 20},
 		Library:     api.LibraryDeps{Check: libCheck},
 		AI:          api.AIDeps{Service: llmSvc, Store: settingsStore},
+		Ask:         askDeps,
 		Kindle: api.KindleDeps{
 			Service:   kindleSvc,
 			Email:     emailSender,

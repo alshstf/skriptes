@@ -45,6 +45,8 @@ type Deps struct {
 	Library LibraryDeps
 	// AI — ИИ-функции; Service == nil → ручки не монтируются.
 	AI AIDeps
+	// Ask — ИИ-функции читалки; Engine == nil → ручка не монтируется.
+	Ask AskDeps
 	// OPDS — опционально. Если Handler == nil, /opds/* не монтируется.
 	// BaseURL прокидывается извне (cfg.AllowedOrigins[0] обычно).
 	OPDS OPDSDeps
@@ -69,7 +71,7 @@ func NewRouter(d Deps) http.Handler {
 	// Метрики запросов — до Recoverer: 500 после паники тоже попадает в счётчик.
 	r.Use(metrics.HTTPMiddleware)
 	r.Use(middleware.Recoverer)
-	r.Use(middleware.Timeout(60 * time.Second))
+	r.Use(middleware.Timeout(routeTimeout))
 
 	if d.Auth.Service != nil && len(d.Auth.AllowedOrigins) > 0 {
 		r.Use(originCheck(d.Auth.AllowedOrigins))
@@ -311,6 +313,9 @@ func NewRouter(d Deps) http.Handler {
 				// но без Content-Disposition: attachment и без записи в reads.
 				if d.Download.Books != nil && d.Download.Converter != nil {
 					r.With(bookGate).Get("/books/{id}/epub", handleEpub(d.Download))
+					if d.Ask.Engine != nil {
+						r.With(bookGate).Post("/books/{id}/ask", handleAsk(d.Ask))
+					}
 				}
 				if d.Kindle.Service != nil {
 					r.Get("/me/kindle-targets", handleListKindleTargets(d.Kindle))

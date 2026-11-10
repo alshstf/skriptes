@@ -212,6 +212,47 @@ const turn = dir => {
 }
 
 // Сообщения от родителя (ReaderPage) — только с нашего origin.
+// Доля текста раздела до начала range (0..1): подсказка серверу, где искать
+// фрагмент, если он встречается в разделе не один раз.
+const bodyLength = new WeakMap()
+const fractionBefore = (doc, range) => {
+  try {
+    if (!doc?.body) return null
+    let total = bodyLength.get(doc)
+    if (total === undefined) {
+      total = doc.body.textContent.length
+      bodyLength.set(doc, total)
+    }
+    if (!total) return null
+    const pre = doc.createRange()
+    pre.selectNodeContents(doc.body)
+    pre.setEnd(range.startContainer, range.startOffset)
+    return Math.min(1, pre.toString().length / total)
+  } catch {
+    return null
+  }
+}
+
+// Переход к цитате из ответа ИИ: ищем её начало в разделе и встаём на первое
+// вхождение. Найденное несколько секунд остаётся обведённым (поиск foliate).
+let quoteTimer = null
+const gotoQuote = async (section, text) => {
+  const query = text.replace(/\s+/g, ' ').trim().slice(0, 80)
+  if (!view || !opened || !Number.isInteger(section) || query.length < 4) return
+  try {
+    for await (const r of view.search({ query, index: section })) {
+      if (r && r.cfi) {
+        await view.goTo(r.cfi)
+        break
+      }
+    }
+  } catch (e) {
+    console.warn('foliate-reader: quote not found', e)
+  }
+  clearTimeout(quoteTimer)
+  quoteTimer = setTimeout(() => view.clearSearch(), 4000)
+}
+
 window.addEventListener('message', (e) => {
   if (e.origin !== location.origin || e.source !== parent) return
   const msg = e.data || {}
@@ -235,6 +276,9 @@ window.addEventListener('message', (e) => {
       if (view && Number.isFinite(f)) seek(Math.min(1, Math.max(0, f)))
       break
     }
+    case 'goto-quote':
+      gotoQuote(Number(msg.section), String(msg.text || ''))
+      break
     case 'clear-selection':
       selectionDoc?.getSelection()?.removeAllRanges()
       selectionDoc = null
@@ -391,7 +435,11 @@ host.addEventListener('pointercancel', onPointerCancel)
       const text = sel.toString().trim()
       if (!text) return
       selectionDoc = doc
-      post({ type: 'selection', cfi: view.getCFI(index, sel.getRangeAt(0)), text: text.slice(0, 2000) })
+      const range = sel.getRangeAt(0)
+      // section и hint — место выделения для ИИ-функций: номер раздела и доля
+      // его текста до выделения (сервер по ним находит фрагмент в тексте книги).
+      post({ type: 'selection', cfi: view.getCFI(index, range), text: text.slice(0, 2000),
+        section: index, hint: fractionBefore(doc, range) })
     }, 0)
     doc.addEventListener('pointerup', report)
     doc.addEventListener('keyup', report)
@@ -422,7 +470,14 @@ host.addEventListener('pointercancel', onPointerCancel)
     const fraction = typeof detail.fraction === 'number' ? detail.fraction : null
     if (cfi && cfi !== lastCfi) {
       lastCfi = cfi
-      post({ type: 'position', cfi, fraction, label: detail.tocItem?.label || '', tocId: detail.tocItem?.id ?? null })
+      // section, hint, head — то же для видимой страницы («Напомнить, что было»):
+      // head — её первые слова.
+      const range = detail.range
+      const doc = range?.startContainer?.ownerDocument
+      post({ type: 'position', cfi, fraction, label: detail.tocItem?.label || '', tocId: detail.tocItem?.id ?? null,
+        section: detail.section?.current ?? null,
+        hint: doc ? fractionBefore(doc, range) : null,
+        head: range ? range.toString().trim().slice(0, 300) : '' })
     }
   })
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Bookmark, Highlighter, Trash2, X } from 'lucide-react';
+import { Bookmark, Highlighter, Sparkles, Trash2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet';
@@ -86,9 +86,12 @@ export function SelectionBar({
   raised = false,
   onHighlight,
   onNote,
+  onAsk,
   onCancel,
 }: {
   text: string;
+  /** «Спросить ИИ» о выделенном; нет — кнопки нет (ИИ-функции недоступны). */
+  onAsk?: () => void;
   /** Над нижней полосой панели ридера (слайдер прогресса), когда она видна. */
   raised?: boolean;
   busy: boolean;
@@ -113,6 +116,11 @@ export function SelectionBar({
       <Button size="sm" disabled={busy} onClick={onNote}>
         Заметка
       </Button>
+      {onAsk ? (
+        <Button size="icon-sm" variant="outline" aria-label="Спросить ИИ" onClick={onAsk}>
+          <Sparkles className="size-4" aria-hidden />
+        </Button>
+      ) : null}
       <Button size="icon-sm" variant="ghost" aria-label="Отменить" onClick={onCancel}>
         <X className="size-4" aria-hidden />
       </Button>
